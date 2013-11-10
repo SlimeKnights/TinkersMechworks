@@ -1,5 +1,5 @@
 <!-- Originally built on BuildCraft build.xml -->
-<project name="TConstruct" default="main">
+<project name="TMechworks" default="main">
 	<property environment="env"/>
 	<!-- Properties -->
 
