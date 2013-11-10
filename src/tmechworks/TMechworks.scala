@@ -8,7 +8,7 @@ import cpw.mods.fml.common.event.{FMLPostInitializationEvent, FMLInitializationE
 import cpw.mods.fml.common.Mod.EventHandler
 import tmechworks.lib.ConfigCore
 import net.minecraftforge.common.Configuration
-import tmechworks.common.CommonProxy
+import tmechworks.common.{MechContent, CommonProxy}
 
 @Mod(modid = modId, name = modName, version = modVer, modLanguage = "scala")
 @NetworkMod(serverSideRequired = false, clientSideRequired = true, channels = Array("TMechworks"), packetHandler = classOf[PacketHandler])
@@ -22,6 +22,7 @@ object TMechworks {
     logger.setParent(FMLLog.getLogger)
     logger.info(s"$modName ($modVer) starting...")
     ConfigCore.loadConfig(new Configuration(evt.getSuggestedConfigurationFile))
+    MechContent.setup()
   }
 
   @EventHandler
