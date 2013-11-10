@@ -19,7 +19,7 @@ Please include the following:
 	* ForgeModLoader-client-0.log (the FML log) from the root folder of the client
 
 ##Licenses
-Most code is public domain under the [MIT License](http://opensource.org/licenses/MIT).
+Most code is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 
 Textures and binaries are licensed under [Creative Commons 3](http://creativecommons.org/licenses/by/3.0/).
 
