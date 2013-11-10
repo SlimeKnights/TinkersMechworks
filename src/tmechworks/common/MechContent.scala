@@ -9,7 +9,7 @@ object MechContent {
   def setup() {
     registerItems()
     registerBlocks()
-    addCraftingRecipes()
+    MechRecipes.registerAllTheThings()//!
   }
 
   private def registerItems() {
@@ -22,10 +22,6 @@ object MechContent {
     // TODO: Register these with Forge
     block_signalBus = new SignalBus(blockID_signalBus)
     block_signalTerminal = new SignalTerminal(blockID_signalTerminal)
-  }
-
-  private def addCraftingRecipes() {
-
   }
 
   //---- ITEMS --------------------------------------------------------------------------
