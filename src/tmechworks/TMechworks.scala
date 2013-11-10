@@ -15,7 +15,7 @@ import tmechworks.lib.multiblock.MultiblockEventHandler
 import cpw.mods.fml.relauncher.Side
 import tmechworks.client.SignalTetherWorldOverlayRenderer
 
-@Mod(modid = modId, name = modName, version = modVer, modLanguage = "scala", dependencies = "required-after:TConstruct")
+@Mod(modid = modId, name = modName, version = modVer, modLanguage = "scala", dependencies = "after:Mantle-Core;after:Mantle-Router;required-after:TConstruct")
 @NetworkMod(serverSideRequired = false, clientSideRequired = true, channels = Array("TMechworks"), packetHandler = classOf[PacketHandler])
 object TMechworks {
 
