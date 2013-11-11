@@ -1,7 +1,7 @@
 itemGroup.TMechworks=TMechworks
 
-tile.signalbus.name=Bus per Segnale
-tile.signalterminal.name=Terminale per Segnale
+tile.signalbus.name=Signal Bus
+tile.signalterminal.name=Signal Terminal
 
 item.spoolwire.name=Rotolo di Cavi
 item.lengthwire.name=Lunghezza di Cavi
