@@ -6,8 +6,6 @@ import java.util.Queue;
 
 import org.lwjgl.opengl.GL11;
 
-import codechicken.lib.math.MathHelper;
-
 import tmechworks.TMechworks;
 import tmechworks.lib.signal.ISignalTransceiver;
 import tmechworks.lib.util.CoordTuple;
