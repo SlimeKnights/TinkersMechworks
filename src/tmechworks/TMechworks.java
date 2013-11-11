@@ -10,7 +10,9 @@ import tmechworks.client.SignalTetherWorldOverlayRenderer;
 import tmechworks.common.CommonProxy;
 import tmechworks.common.MechContent;
 import tmechworks.lib.ConfigCore;
+import tmechworks.lib.Repo;
 import tmechworks.lib.TMechworksRegistry;
+import tmechworks.lib.multiblock.MultiblockEventHandler;
 import tmechworks.lib.util.TabTools;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
@@ -27,7 +29,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = "TMechworks", name = "TMechworks", version = "1.0.0", dependencies = "required-after:TConstruct")
+@Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = "required-after:TConstruct")
 @NetworkMod(serverSideRequired = false, clientSideRequired = true, channels = { "TMechworks" }, packetHandler = tmechworks.network.PacketHandler.class)
 public class TMechworks {
 
@@ -58,6 +60,8 @@ public class TMechworks {
 
         proxy.registerRenderer();
         proxy.registerTickHandler();
+        
+        MinecraftForge.EVENT_BUS.register(new MultiblockEventHandler());
     }
 
     @EventHandler

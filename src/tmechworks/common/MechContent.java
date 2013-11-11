@@ -30,19 +30,19 @@ public class MechContent
 	private void registerItems()
 	{
 		// TODO: Register these with Forge
-		lengthWire = new LengthWire(ConfigCore.itemID_lengthWire()).setUnlocalizedName("lengthwire");
+		lengthWire = new LengthWire(ConfigCore.itemID_lengthWire).setUnlocalizedName("lengthwire");
 		GameRegistry.registerItem(lengthWire, "LengthWire");
-		spoolWire = new SpoolOfWire(ConfigCore.itemID_spoolWire()).setUnlocalizedName("spoolwire");
+		spoolWire = new SpoolOfWire(ConfigCore.itemID_spoolWire).setUnlocalizedName("spoolwire");
 		GameRegistry.registerItem(spoolWire, "SpoolWire");
 	}
 
 	private void registerBlocks()
 	{
 
-		signalBus = new SignalBus(ConfigCore.blockID_signalBus()).setUnlocalizedName("tmechworks.signalbus");
+		signalBus = new SignalBus(ConfigCore.blockID_signalBus).setUnlocalizedName("tmechworks.signalbus");
 		GameRegistry.registerBlock(signalBus, SignalBusItem.class, "SignalBus");
 		GameRegistry.registerTileEntity(SignalBusLogic.class, "SignalBus");
-		signalTerminal = new SignalTerminal(ConfigCore.blockID_signalTerminal()).setUnlocalizedName("tmechworks.signalterminal");
+		signalTerminal = new SignalTerminal(ConfigCore.blockID_signalTerminal).setUnlocalizedName("tmechworks.signalterminal");
 		GameRegistry.registerBlock(signalTerminal, SignalTerminalItem.class, "SignalTerminal");
 		GameRegistry.registerTileEntity(SignalTerminalLogic.class, "SignalTerminal");
 

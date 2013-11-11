@@ -286,7 +286,10 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 transceivers.put(coords, signals);
                 northboundSignalsChanged = true;
                 
-                updateLocalSignals(((SignalBusMasterLogic)getMultiblockMaster()).getSignals());
+                if (getMultiblockMaster() instanceof MultiblockMasterBaseLogic)
+                {
+                    updateLocalSignals(((SignalBusMasterLogic)getMultiblockMaster()).getSignals());
+                }
                 ((ISignalTransceiver) te).receiveSignalUpdate(cachedReceivedSignals);
                 return true;
             }
