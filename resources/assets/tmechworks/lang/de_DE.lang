@@ -1,10 +1,10 @@
 itemGroup.TMechworks=TMechworks
 
-tile.signalbus.name=Signal Bus
-tile.signalterminal.name=Signal Terminal
+tile.signalbus.name=Signalbus
+tile.signalterminal.name=Signal-Terminal
 
-item.spoolwire.name=Spool of Wire
-item.lengthwire.name=Length of Wire
+item.spoolwire.name=Kabelrolle
+item.lengthwire.name=Kabelbahn
 
 block.drawbridge.name=Zugbrücke
 block.firestarter.name=Entzünder
