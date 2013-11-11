@@ -16,7 +16,6 @@ import net.minecraft.util.Facing;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 
 public class SignalTerminalLogic extends TileEntity implements ISignalTransceiver
 {

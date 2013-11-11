@@ -58,7 +58,6 @@ public class SpoolRepairRecipe implements IRecipe
     public ItemStack getCraftingResult (InventoryCrafting inventorycrafting)
     {
         int invLength = inventorycrafting.getSizeInventory();
-        boolean foundSpool = false;
         ItemStack newSpool = null;
         int countWire = 0;
         ItemStack tmpStack;
@@ -70,7 +69,6 @@ public class SpoolRepairRecipe implements IRecipe
                 if (tmpStack.itemID == spool.itemID)
                 {
                     newSpool = tmpStack.copy();
-                    foundSpool = true;
                 } 
                 else if (tmpStack.itemID == wire.itemID && tmpStack.getItemDamage() == wire.getItemDamage())
                 {

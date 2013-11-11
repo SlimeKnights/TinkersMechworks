@@ -11,44 +11,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.naming.Context;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.SignalBusLogic;
-import tmechworks.blocks.logic.SignalTerminalLogic;
 import tmechworks.client.block.SignalBusRender;
-import tmechworks.items.blocks.SignalBusItem;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.multiblock.IMultiblockMember;
-import tmechworks.lib.multiblock.MultiblockMasterBaseLogic;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 
 public class SignalBus extends Block implements ITileEntityProvider {
     public static class Geometry {

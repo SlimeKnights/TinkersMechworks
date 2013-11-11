@@ -1,7 +1,6 @@
 package tmechworks.client;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import org.lwjgl.opengl.GL11;
@@ -48,7 +47,6 @@ public class SignalTetherWorldOverlayRenderer
             World world = entity.worldObj;
             int x1 = (int) entity.posX;
             int z1 = (int) entity.posZ;
-            AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
             Chunk chunks[] = new Chunk[9];
 

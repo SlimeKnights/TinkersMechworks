@@ -1,14 +1,11 @@
 package tmechworks.blocks.logic;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import javax.swing.text.MaskFormatter;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -19,12 +16,6 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.fluids.IFluidTank;
 import tmechworks.TMechworks;
 import tmechworks.blocks.component.SignalBusMasterLogic;
 import tmechworks.lib.multiblock.IMultiblockMember;
@@ -33,8 +24,6 @@ import tmechworks.lib.multiblock.MultiblockMasterBaseLogic;
 import tmechworks.lib.signal.ISignalBusConnectable;
 import tmechworks.lib.signal.ISignalTransceiver;
 import tmechworks.lib.util.CoordTuple;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusConnectable
 {
@@ -159,7 +148,6 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         if (northboundSignalsChanged)
         {
 
-            TileEntity te;
             byte[] signals;
 
             localHighSignals = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -446,8 +434,6 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
     public boolean isConnected (ForgeDirection side, ForgeDirection dir)
     {
-        TileEntity te;
-
         switch (dir)
         {
         case DOWN:
@@ -602,8 +588,6 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
         int i, j;
         ForgeDirection iDir, jDir;
-        CoordTuple coord;
-
         for (i = 0; i < 6; ++i)
         {
             if (!placedSides[i])

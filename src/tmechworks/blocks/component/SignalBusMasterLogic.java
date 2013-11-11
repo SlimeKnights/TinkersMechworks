@@ -2,11 +2,7 @@ package tmechworks.blocks.component;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -110,10 +106,6 @@ public class SignalBusMasterLogic extends MultiblockMasterBaseLogic
     @Override
     protected void onDataMerge (MultiblockMasterBaseLogic newMaster)
     {
-        byte[] oldSignals = ((SignalBusMasterLogic) newMaster).getSignals();
-
-        byte[] newMasterSignals = ((SignalBusMasterLogic) newMaster).getSignals();
-
         if (tetheredBuses.size() > 0)
         {
             ((SignalBusMasterLogic) newMaster).mergeTethered(tetheredBuses);
@@ -122,8 +114,6 @@ public class SignalBusMasterLogic extends MultiblockMasterBaseLogic
         ((SignalBusMasterLogic) newMaster).calcSignals(masterSignals);
 
         ((SignalBusMasterLogic) newMaster).forceUpdate();
-
-
     }
 
     @Override

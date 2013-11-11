@@ -7,8 +7,6 @@ import java.util.Queue;
 import tmechworks.lib.util.CoordTuple;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
@@ -215,7 +213,6 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
 
             if (masters.size() > 0)
             {
-                CoordTuple hostLoc = this.master.getReferenceCoord();
                 this.master.beginMerging();
                 for (MultiblockMasterBaseLogic masterToMerge : masters)
                 {
