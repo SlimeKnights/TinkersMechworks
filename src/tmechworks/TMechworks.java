@@ -27,7 +27,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = "TMechworks", name = "TMechworks", version = "1.0.0", modLanguage = "java", dependencies = "required-after:TConstruct")
+@Mod(modid = "TMechworks", name = "TMechworks", version = "1.0.0", dependencies = "required-after:TConstruct")
 @NetworkMod(serverSideRequired = false, clientSideRequired = true, channels = { "TMechworks" }, packetHandler = tmechworks.network.PacketHandler.class)
 public class TMechworks {
 
