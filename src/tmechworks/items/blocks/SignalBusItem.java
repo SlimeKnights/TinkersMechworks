@@ -2,7 +2,7 @@ package tmechworks.items.blocks;
 
 import java.util.List;
 
-import tconstruct.TConstruct;
+import tmechworks.TMechworks;
 import tmechworks.blocks.logic.SignalBusLogic;
 
 import cpw.mods.fml.relauncher.Side;
@@ -165,7 +165,7 @@ public class SignalBusItem extends ItemBlock
             }
         }
 
-        if (!TConstruct.instance.content.signalBus.canPlaceBlockOnSide(world, x, y, z, side))
+        if (!TMechworks.content.signalBus.canPlaceBlockOnSide(world, x, y, z, side))
         {
             return false;
         }

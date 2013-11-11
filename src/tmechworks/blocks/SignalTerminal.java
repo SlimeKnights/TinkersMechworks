@@ -9,12 +9,12 @@ import codechicken.nei.api.IHighlightHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import tconstruct.TConstruct;
-import tconstruct.library.TConstructRegistry;
+import tmechworks.TMechworks;
 import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.blocks.logic.SignalTerminalLogic;
 import tmechworks.client.block.SignalBusRender;
 import tmechworks.client.block.SignalTerminalRender;
+import tmechworks.lib.TMechworksRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -75,7 +75,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
         this.setHardness(0.1F);
         this.setResistance(1);
         this.setStepSound(soundMetalFootstep);
-        setCreativeTab(TConstructRegistry.blockTab);
+        setCreativeTab(TMechworksRegistry.Mechworks);
     }
 
     @Override
@@ -502,7 +502,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
             
             if (dropTerm > 0)
             {
-                tempStack = new ItemStack(TConstruct.instance.content.signalTerminal.blockID, dropTerm, 0);
+                tempStack = new ItemStack(TMechworks.content.signalTerminal.blockID, dropTerm, 0);
                 jumpX = rand.nextFloat() * 0.8F + 0.1F;
                 jumpY = rand.nextFloat() * 0.8F + 0.1F;
                 jumpZ = rand.nextFloat() * 0.8F + 0.1F;
@@ -517,7 +517,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
             }
             if (dropWire > 0)
             {
-                tempStack = new ItemStack(TConstruct.instance.content.lengthWire, dropWire);
+                tempStack = new ItemStack(TMechworks.content.lengthWire, dropWire);
                 jumpX = rand.nextFloat() * 0.8F + 0.1F;
                 jumpY = rand.nextFloat() * 0.8F + 0.1F;
                 jumpZ = rand.nextFloat() * 0.8F + 0.1F;

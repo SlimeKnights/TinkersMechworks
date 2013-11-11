@@ -4,9 +4,9 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import tconstruct.library.TConstructRegistry;
 import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.blocks.logic.SignalTerminalLogic;
+import tmechworks.lib.TMechworksRegistry;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +28,7 @@ public class SpoolOfWire extends Item
     public SpoolOfWire(int id)
     {
         super(id);
-        this.setCreativeTab(TConstructRegistry.toolTab);
+        this.setCreativeTab(TMechworksRegistry.Mechworks);
         this.maxStackSize = 1;
         this.setMaxDamage(256);
         this.setHasSubtypes(true);

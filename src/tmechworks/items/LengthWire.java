@@ -2,9 +2,10 @@ package tmechworks.items;
 
 import java.util.List;
 
+import tmechworks.lib.TMechworksRegistry;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import tconstruct.library.TConstructRegistry;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -23,7 +24,7 @@ public class LengthWire extends Item
     public LengthWire(int id)
     {
         super(id);
-        this.setCreativeTab(TConstructRegistry.toolTab);
+        this.setCreativeTab(TMechworksRegistry.Mechworks);
         this.maxStackSize = 64;
         this.setHasSubtypes(false);
     }

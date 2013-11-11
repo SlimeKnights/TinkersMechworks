@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.math.MathHelper;
 
-import tconstruct.TConstruct;
-import tconstruct.library.util.CoordTuple;
-import tconstruct.library.util.CoordTuplePair;
+import tmechworks.TMechworks;
 import tmechworks.lib.signal.ISignalTransceiver;
+import tmechworks.lib.util.CoordTuple;
+import tmechworks.lib.util.CoordTuplePair;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -30,7 +30,7 @@ public class SignalTetherWorldOverlayRenderer
         {
             return;
         }
-        if (event.context.mc.thePlayer.getHeldItem().itemID == TConstruct.instance.content.spoolWire.itemID)
+        if (event.context.mc.thePlayer.getHeldItem().itemID == TMechworks.instance.content.spoolWire.itemID)
         {
             GL11.glPushMatrix();
             Entity entity = event.context.mc.renderViewEntity;

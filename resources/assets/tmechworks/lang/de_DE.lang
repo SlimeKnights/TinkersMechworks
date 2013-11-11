@@ -1,0 +1,11 @@
+itemGroup.TMechworks=TMechworks
+
+tile.signalbus.name=Signal Bus
+tile.signalterminal.name=Signal Terminal
+
+item.spoolwire.name=Spool of Wire
+item.lengthwire.name=Length of Wire
+
+block.drawbridge.name=Zugbrücke
+block.firestarter.name=Entzünder
+block.advdrawbridge.name=Fortgeschrittene Zugbrücke

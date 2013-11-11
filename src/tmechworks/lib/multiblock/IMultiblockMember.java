@@ -1,7 +1,7 @@
 package tmechworks.lib.multiblock;
 
+import tmechworks.lib.util.CoordTuple;
 import net.minecraft.world.World;
-import tconstruct.library.util.CoordTuple;
 
 public interface IMultiblockMember
 {

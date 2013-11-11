@@ -2,8 +2,8 @@ package tmechworks.client.block;
 
 import org.lwjgl.opengl.GL11;
 
-import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.blocks.logic.SignalTerminalLogic;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;

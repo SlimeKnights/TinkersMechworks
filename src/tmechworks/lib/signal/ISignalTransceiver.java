@@ -1,6 +1,6 @@
 package tmechworks.lib.signal;
 
-import tconstruct.library.util.CoordTuple;
+import tmechworks.lib.util.CoordTuple;
 import net.minecraft.world.World;
 
 public interface ISignalTransceiver

@@ -2,7 +2,6 @@ package tmechworks.client.block;
 
 import org.lwjgl.opengl.GL11;
 
-import tconstruct.blocks.logic.CastingChannelLogic;
 import tmechworks.blocks.SignalBus.Geometry;
 import tmechworks.blocks.logic.SignalBusLogic;
 

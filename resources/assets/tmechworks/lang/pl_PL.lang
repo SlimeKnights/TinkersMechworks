@@ -6,6 +6,5 @@ tile.signalterminal.name=Signal Terminal
 item.spoolwire.name=Spool of Wire
 item.lengthwire.name=Length of Wire
 
-block.drawbridge.name=Drawbridge
-block.firestarter.name=Igniter
-block.advdrawbridge.name=Advanced Drawbridge
+block.drawbridge.name=Most zwodzony
+block.firestarter.name=Zapalnikr

@@ -10,10 +10,10 @@ import java.util.Set;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import tconstruct.library.util.CoordTuple;
 import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.lib.multiblock.IMultiblockMember;
 import tmechworks.lib.multiblock.MultiblockMasterBaseLogic;
+import tmechworks.lib.util.CoordTuple;
 
 public class SignalBusMasterLogic extends MultiblockMasterBaseLogic
 {

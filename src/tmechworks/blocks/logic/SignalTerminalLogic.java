@@ -2,12 +2,10 @@ package tmechworks.blocks.logic;
 
 import java.util.Arrays;
 
-import tconstruct.TConstruct;
-import tconstruct.blocks.TConstructBlock;
-import tconstruct.common.TContent;
-import tconstruct.library.util.CoordTuple;
+import tmechworks.TMechworks;
 import tmechworks.blocks.SignalTerminal;
 import tmechworks.lib.signal.ISignalTransceiver;
+import tmechworks.lib.util.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -255,8 +253,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
                         oSide = 0;
                     }
 
-                    worldObj.notifyBlockOfNeighborChange(targetX, targetY, targetZ, TConstruct.instance.content.signalTerminal.blockID);
-                    worldObj.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, TConstruct.instance.content.signalTerminal.blockID, oSide);
+                    worldObj.notifyBlockOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal.blockID);
+                    worldObj.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal.blockID, oSide);
                     //worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, TConstruct.instance.content.signalTerminal.blockID);
                 }
             }
@@ -360,15 +358,15 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
         {
             int channel = ((SignalTerminalLogic) te).sideChannel[side];
 
-            return ((SignalTerminal) TConstruct.instance.content.signalTerminal).getChannelIcon(channel);
+            return ((SignalTerminal) TMechworks.content.signalTerminal).getChannelIcon(channel);
         }
 
-        return ((SignalTerminal) TConstruct.instance.content.signalTerminal).getChannelIcon(0);
+        return ((SignalTerminal) TMechworks.instance.content.signalTerminal).getChannelIcon(0);
     }
 
     public static Icon[] getChannelIcons ()
     {
-        return ((SignalTerminal) TConstruct.instance.content.signalTerminal).channelIcons;
+        return ((SignalTerminal) TMechworks.content.signalTerminal).channelIcons;
     }
 
     public static Icon getChannelIcon (int channel)

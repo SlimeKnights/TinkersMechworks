@@ -15,14 +15,12 @@ import javax.naming.Context;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import tconstruct.TConstruct;
-import tconstruct.blocks.logic.CastingChannelLogic;
-import tconstruct.client.block.BlockRenderCastingChannel;
-import tconstruct.library.TConstructRegistry;
+import tmechworks.TMechworks;
 import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.blocks.logic.SignalTerminalLogic;
 import tmechworks.client.block.SignalBusRender;
 import tmechworks.items.blocks.SignalBusItem;
+import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.multiblock.IMultiblockMember;
 import tmechworks.lib.multiblock.MultiblockMasterBaseLogic;
 import net.minecraft.block.Block;
@@ -81,7 +79,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
         this.setHardness(0.1F);
         this.setResistance(1);
         this.setStepSound(soundMetalFootstep);
-        setCreativeTab(TConstructRegistry.blockTab);
+        setCreativeTab(TMechworksRegistry.Mechworks);
 	}
 
 	@Override
@@ -118,7 +116,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     world.setBlockToAir(x, y, z);
                 }
 
-                tempStack = new ItemStack(TConstruct.instance.content.signalBus.blockID, dropBus, 0);
+                tempStack = new ItemStack(TMechworks.content.signalBus.blockID, dropBus, 0);
                 jumpX = rand.nextFloat() * 0.8F + 0.1F;
                 jumpY = rand.nextFloat() * 0.8F + 0.1F;
                 jumpZ = rand.nextFloat() * 0.8F + 0.1F;
@@ -531,7 +529,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
             dropWire = ((SignalBusLogic) te).getDroppedWire();
             if (dropBus > 0)
             {
-                tempStack = new ItemStack(TConstruct.instance.content.signalBus.blockID, dropBus, 0);
+                tempStack = new ItemStack(TMechworks.content.signalBus.blockID, dropBus, 0);
                 jumpX = rand.nextFloat() * 0.8F + 0.1F;
                 jumpY = rand.nextFloat() * 0.8F + 0.1F;
                 jumpZ = rand.nextFloat() * 0.8F + 0.1F;
@@ -546,7 +544,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
             }
             if (dropWire > 0)
             {
-                tempStack = new ItemStack(TConstruct.instance.content.lengthWire, dropWire);
+                tempStack = new ItemStack(TMechworks.instance.content.lengthWire, dropWire);
                 jumpX = rand.nextFloat() * 0.8F + 0.1F;
                 jumpY = rand.nextFloat() * 0.8F + 0.1F;
                 jumpZ = rand.nextFloat() * 0.8F + 0.1F;

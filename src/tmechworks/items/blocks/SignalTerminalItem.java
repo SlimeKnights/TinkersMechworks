@@ -2,7 +2,6 @@ package tmechworks.items.blocks;
 
 import java.util.List;
 
-import tconstruct.library.TConstructRegistry;
 import tmechworks.blocks.logic.SignalTerminalLogic;
 
 import cpw.mods.fml.relauncher.Side;

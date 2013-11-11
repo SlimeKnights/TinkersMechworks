@@ -25,19 +25,18 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import tconstruct.TConstruct;
-import tconstruct.library.util.CoordTuple;
-import tconstruct.library.util.IActiveLogic;
+import tmechworks.TMechworks;
 import tmechworks.blocks.component.SignalBusMasterLogic;
 import tmechworks.lib.multiblock.IMultiblockMember;
 import tmechworks.lib.multiblock.MultiblockBaseLogic;
 import tmechworks.lib.multiblock.MultiblockMasterBaseLogic;
 import tmechworks.lib.signal.ISignalBusConnectable;
 import tmechworks.lib.signal.ISignalTransceiver;
+import tmechworks.lib.util.CoordTuple;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SignalBusLogic extends MultiblockBaseLogic implements IActiveLogic, ISignalBusConnectable
+public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusConnectable
 {
     private int ticks = 0;
     private Map<CoordTuple, byte[]> transceivers = new HashMap<CoordTuple, byte[]>();
@@ -267,7 +266,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements IActiveLogic,
                 if (dropWire > 0)
                 {
                     Random rand = new Random();
-                    ItemStack tempStack = new ItemStack(TConstruct.instance.content.lengthWire, dropWire);
+                    ItemStack tempStack = new ItemStack(TMechworks.content.lengthWire, dropWire);
                     float jumpX = rand.nextFloat() * 0.8F + 0.1F;
                     float jumpY = rand.nextFloat() * 0.8F + 0.1F;
                     float jumpZ = rand.nextFloat() * 0.8F + 0.1F;
@@ -402,20 +401,6 @@ public class SignalBusLogic extends MultiblockBaseLogic implements IActiveLogic,
     {
         readCustomNBT(packet.data);
         this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
-    }
-
-    @Override
-    public boolean getActive ()
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void setActive (boolean flag)
-    {
-        // TODO Auto-generated method stub
-
     }
 
     public boolean[] placedSides ()
