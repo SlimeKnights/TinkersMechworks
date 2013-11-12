@@ -1,3 +1,6 @@
 [submodule "Mantle"]
 	path = Mantle
 	url = https://github.com/SlimeKnights/Mantle
+[submodule "TConstruct"]
+	path = TConstruct
+	url = https://github.com/SlimeKnights/TinkersConstruct.git
