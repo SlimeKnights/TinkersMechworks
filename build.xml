@@ -109,9 +109,7 @@
 		<copy todir="${mcpsrc.dir}/minecraft">
 			<fileset dir="${src.dir}"/>
             <fileset dir="${mantle.src.dir}"/>
-			<fileset dir="${tconstruct.src.dir}">
-				<exclude filename = "${tconstruct.src.dir}/tconstruct/plugins/**/*.java"/>
-			</fileset>
+			<fileset dir="${tconstruct.src.dir}" excludes="**/plugins/**/*.java"  />
 			<filterset>
 				<filter token="VERSION" value="${project.version.full}" />
 			</filterset>
