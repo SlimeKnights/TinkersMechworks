@@ -39,7 +39,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 public class SignalBus extends Block implements ITileEntityProvider {
-    public static class Geometry {
+    public static class BusGeometry {
         public static double cable_width_min = 0.375D;
         public static double cable_width_max = 1 - cable_width_min;
         public static double cable_low_height = 0.2D;
@@ -145,7 +145,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
 
         for (int i = 0; i < this.icons.length; ++i)
         {
-            this.icons[i] = iconRegister.registerIcon("tinker:" + textureNames[i]);
+            this.icons[i] = iconRegister.registerIcon("tmechworks:" + textureNames[i]);
         }
     }
 
@@ -271,12 +271,12 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     (connected[4] || placed[4] || corners[4]),
                     (connected[5] || placed[5] || corners[5])
             };
-            minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            minY = Geometry.cable_low_offset;
-            minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
-            maxY = Geometry.cable_low_height;
-            maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
+            minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            minY = BusGeometry.cable_low_offset;
+            minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
+            maxY = BusGeometry.cable_low_height;
+            maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
             
             parts[0] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
@@ -293,12 +293,12 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     (connected[4] || placed[4] || corners[4]),
                     (connected[5] || placed[5] || corners[5])
             };
-            minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            minY = Geometry.cable_high_offset;
-            minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
-            maxY = Geometry.cable_high_height;
-            maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
+            minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            minY = BusGeometry.cable_high_offset;
+            minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
+            maxY = BusGeometry.cable_high_height;
+            maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
             
             parts[1] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
@@ -315,12 +315,12 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     (connected[4] || placed[4] || corners[4]),
                     (connected[5] || placed[5] || corners[5])
             };
-            minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            minZ = Geometry.cable_low_offset;
-            maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
-            maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
-            maxZ = Geometry.cable_low_height;
+            minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            minZ = BusGeometry.cable_low_offset;
+            maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
+            maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
+            maxZ = BusGeometry.cable_low_height;
             
             
             parts[2] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
@@ -338,12 +338,12 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     (connected[4] || placed[4] || corners[4]),
                     (connected[5] || placed[5] || corners[5])
             };
-            minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            minZ = Geometry.cable_high_offset;
-            maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
-            maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
-            maxZ = Geometry.cable_high_height;
+            minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            minZ = BusGeometry.cable_high_offset;
+            maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
+            maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
+            maxZ = BusGeometry.cable_high_height;
 
             parts[3] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
@@ -360,12 +360,12 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     (connected[4] || placed[4] || corners[4]),
                     (connected[5] || placed[5] || corners[5])
             };
-            minX = Geometry.cable_low_offset;
-            minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            maxX = Geometry.cable_low_height;
-            maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
-            maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
+            minX = BusGeometry.cable_low_offset;
+            minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            maxX = BusGeometry.cable_low_height;
+            maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
+            maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
 
             parts[4] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
@@ -382,24 +382,24 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     (connected[4] || placed[4] || corners[4]),
                     (connected[5] || placed[5] || corners[5])
             };
-            minX = Geometry.cable_high_offset;
-            minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? Geometry.cable_extend_min : Geometry.cable_width_min;
-            maxX = Geometry.cable_high_height;
-            maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
-            maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? Geometry.cable_extend_max : Geometry.cable_width_max;
+            minX = BusGeometry.cable_high_offset;
+            minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
+            maxX = BusGeometry.cable_high_height;
+            maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
+            maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
             
             parts[5] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
         }
         if (!didRender)
         {
-            minX = Geometry.cable_width_min;
-            minY = Geometry.cable_low_offset;
-            minZ = Geometry.cable_width_min;
-            maxX = Geometry.cable_width_max;
-            maxY = Geometry.cable_low_height;
-            maxZ = Geometry.cable_width_max;
+            minX = BusGeometry.cable_width_min;
+            minY = BusGeometry.cable_low_offset;
+            minZ = BusGeometry.cable_width_min;
+            maxX = BusGeometry.cable_width_max;
+            maxY = BusGeometry.cable_low_height;
+            maxZ = BusGeometry.cable_width_max;
             
             parts[0] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
         }

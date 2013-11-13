@@ -134,7 +134,7 @@ public class SpoolOfWire extends Item
     @SideOnly(Side.CLIENT)
     public void registerIcons (IconRegister iconRegister)
     {
-        this.icon = iconRegister.registerIcon("tinker:" + folder + textureName);
+        this.icon = iconRegister.registerIcon("tmechworks:" + folder + textureName);
     }
 
     public void getSubItems (int id, CreativeTabs tab, List list)

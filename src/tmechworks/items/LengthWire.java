@@ -46,7 +46,7 @@ public class LengthWire extends Item
         for (int i = 0; i < this.icons.length; ++i)
         {
             if (!(textureNames[i].equals("")))
-                this.icons[i] = iconRegister.registerIcon("tinker:" + folder + textureNames[i]);
+                this.icons[i] = iconRegister.registerIcon("tmechworks:" + folder + textureNames[i]);
         }
     }
 

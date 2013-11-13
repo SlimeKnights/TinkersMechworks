@@ -94,14 +94,14 @@ public class SignalTerminal extends Block implements ITileEntityProvider
 
         for (int i = 0; i < this.icons.length; ++i)
         {
-            this.icons[i] = iconRegister.registerIcon("tinker:" + textureNames[i]);
+            this.icons[i] = iconRegister.registerIcon("tmechworks:" + textureNames[i]);
         }
 
         this.channelIcons = new Icon[channelTextureNames.length];
 
         for (int i = 0; i < this.channelIcons.length; ++i)
         {
-            this.channelIcons[i] = iconRegister.registerIcon("tinker:glass/stainedglass_" + channelTextureNames[i]);
+            this.channelIcons[i] = iconRegister.registerIcon("tmechworks:glass/stainedglass_" + channelTextureNames[i]);
         }
     }
 
