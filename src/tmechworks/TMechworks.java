@@ -21,6 +21,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = "required-after:TConstruct")
@@ -55,6 +56,8 @@ public class TMechworks {
         proxy.registerRenderer();
         proxy.registerTickHandler();
         
+        NetworkRegistry.instance().registerGuiHandler(instance, proxy);
+        
         MinecraftForge.EVENT_BUS.register(new MultiblockEventHandler());
     }
 
@@ -70,6 +73,7 @@ public class TMechworks {
     @EventHandler
     public void postInit (FMLPostInitializationEvent evt)
     {
+        content.postInit();
         proxy.postInit();
 
     }
