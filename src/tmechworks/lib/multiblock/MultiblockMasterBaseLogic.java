@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import tmechworks.lib.util.CoordTuple;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import tmechworks.lib.util.CoordTuple;
 
 
 public abstract class MultiblockMasterBaseLogic

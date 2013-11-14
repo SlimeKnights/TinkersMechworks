@@ -1,10 +1,5 @@
 package tmechworks.items.blocks;
 
-import tmechworks.TMechworks;
-import tmechworks.blocks.logic.SignalBusLogic;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -14,6 +9,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import tmechworks.TMechworks;
+import tmechworks.blocks.logic.SignalBusLogic;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SignalBusItem extends ItemBlock
 {

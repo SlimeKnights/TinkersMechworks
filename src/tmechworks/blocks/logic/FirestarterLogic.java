@@ -1,9 +1,5 @@
 package tmechworks.blocks.logic;
 
-import tconstruct.TConstruct;
-import tconstruct.library.tools.AbilityHelper;
-import tconstruct.library.util.IActiveLogic;
-import tconstruct.library.util.IFacingLogic;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +9,10 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
+import tconstruct.library.tools.AbilityHelper;
+import tconstruct.library.util.IActiveLogic;
+import tconstruct.library.util.IFacingLogic;
+import tmechworks.TMechworks;
 
 public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiveLogic
 {
@@ -71,7 +71,7 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
         Block block = Block.blocksList[worldObj.getBlockId(xPos, yPos, zPos)];
         if (active)
         {
-            TConstruct.logger.info("Setting fire");
+            TMechworks.logger.info("Setting fire");
             if (block == null || block.isAirBlock(worldObj, xPos, yPos, zPos))
             {
                 worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);

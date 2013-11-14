@@ -1,7 +1,13 @@
 package tmechworks.client;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayDeque;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
@@ -9,13 +15,6 @@ import tmechworks.TMechworks;
 import tmechworks.lib.signal.ISignalTransceiver;
 import tmechworks.lib.util.CoordTuple;
 import tmechworks.lib.util.CoordTuplePair;
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 
 public class SignalTetherWorldOverlayRenderer
 {
@@ -65,7 +64,7 @@ public class SignalTetherWorldOverlayRenderer
             chunks[7] = world.getChunkFromChunkCoords(cX, cZ + 1);
             chunks[8] = world.getChunkFromChunkCoords(cX + 1, cZ + 1);
 
-            Queue<CoordTuplePair> transceivers = new LinkedList<CoordTuplePair>();
+            ArrayDeque<CoordTuplePair> transceivers = new ArrayDeque<CoordTuplePair>();
             CoordTuple src;
             CoordTuple dst;
             for (int c = 0; c < 9; ++c)
@@ -78,7 +77,7 @@ public class SignalTetherWorldOverlayRenderer
                         if (dst != null)
                         {
                             src = new CoordTuple(((TileEntity) obj).xCoord, ((TileEntity) obj).yCoord, ((TileEntity) obj).zCoord);
-                            transceivers.add(new CoordTuplePair(src, dst));
+                            transceivers.push(new CoordTuplePair(src, dst));
                         }
                     }
                 }
@@ -91,7 +90,7 @@ public class SignalTetherWorldOverlayRenderer
             CoordTuplePair renderPair;
             while (transceivers.size() > 0)
             {
-                renderPair = transceivers.remove();
+                renderPair = transceivers.pop();
 
                 GL11.glVertex3d(renderPair.a.x + 0.5, renderPair.a.y + 0.5, renderPair.a.z + 0.5);
                 GL11.glVertex3d(renderPair.b.x + 0.5, renderPair.b.y, renderPair.b.z + 0.5);

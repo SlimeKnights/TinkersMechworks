@@ -3,7 +3,6 @@ package tmechworks.lib.multiblock;
 import java.util.EnumSet;
 
 import net.minecraft.world.World;
-
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
 

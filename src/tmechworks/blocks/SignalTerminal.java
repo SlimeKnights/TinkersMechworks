@@ -4,13 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import tmechworks.TMechworks;
-import tmechworks.blocks.logic.SignalTerminalLogic;
-import tmechworks.client.block.SignalTerminalRender;
-import tmechworks.lib.TMechworksRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -29,6 +22,12 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import tmechworks.TMechworks;
+import tmechworks.blocks.logic.SignalTerminalLogic;
+import tmechworks.client.block.SignalTerminalRender;
+import tmechworks.lib.TMechworksRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SignalTerminal extends Block implements ITileEntityProvider
 {

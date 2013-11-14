@@ -1,11 +1,11 @@
 package tmechworks.inventory;
 
-import tmechworks.blocks.logic.DrawbridgeLogic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import tmechworks.blocks.logic.DrawbridgeLogic;
 
 public class DrawbridgeContainer extends Container
 {

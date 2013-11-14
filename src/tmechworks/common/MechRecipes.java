@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import tmechworks.common.SpoolRepairRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MechRecipes {

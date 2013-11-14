@@ -1,15 +1,15 @@
 package tmechworks.client.block;
 
-import org.lwjgl.opengl.GL11;
-
-import tmechworks.blocks.SignalBus.BusGeometry;
-import tmechworks.blocks.logic.SignalBusLogic;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
+import tmechworks.blocks.SignalBus.BusGeometry;
+import tmechworks.blocks.logic.SignalBusLogic;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

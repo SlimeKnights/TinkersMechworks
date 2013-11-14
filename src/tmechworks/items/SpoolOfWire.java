@@ -2,11 +2,6 @@ package tmechworks.items;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import tmechworks.blocks.logic.SignalBusLogic;
-import tmechworks.blocks.logic.SignalTerminalLogic;
-import tmechworks.lib.TMechworksRegistry;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +11,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import tmechworks.blocks.logic.SignalBusLogic;
+import tmechworks.blocks.logic.SignalTerminalLogic;
+import tmechworks.lib.TMechworksRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SpoolOfWire extends Item
 {

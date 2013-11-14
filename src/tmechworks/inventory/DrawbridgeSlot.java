@@ -1,13 +1,10 @@
 package tmechworks.inventory;
 
-import tconstruct.library.TConstructRegistry;
-import tconstruct.library.blocks.IDrawbridgeLogicBase;
-import tmechworks.blocks.logic.DrawbridgeLogic;
-import tmechworks.lib.TMechworksRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import tconstruct.library.TConstructRegistry;
+import tconstruct.library.blocks.IDrawbridgeLogicBase;
 
 public class DrawbridgeSlot extends SlotBlocksOnly
 {

@@ -1,9 +1,19 @@
 package tmechworks.client.block;
 
-import org.lwjgl.opengl.GL11;
-
-import tmechworks.blocks.logic.SignalTerminalLogic;
-
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.center_max;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.center_min;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.channel_high_max;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.channel_high_min;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.channel_low_max;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.channel_low_min;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.channel_width_max;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.channel_width_min;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.plate_high_max;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.plate_high_min;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.plate_low_max;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.plate_low_min;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.plate_width_max;
+import static tmechworks.blocks.SignalTerminal.TerminalGeometry.plate_width_min;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,10 +21,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
+import tmechworks.blocks.logic.SignalTerminalLogic;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-
-import static tmechworks.blocks.SignalTerminal.TerminalGeometry.*;
 
 public class SignalTerminalRender implements ISimpleBlockRenderingHandler
 {

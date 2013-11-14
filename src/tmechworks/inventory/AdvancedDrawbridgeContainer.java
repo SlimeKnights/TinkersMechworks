@@ -1,10 +1,11 @@
 package tmechworks.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 import java.util.Iterator;
-import net.minecraft.entity.player.*;
-import net.minecraft.inventory.*;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.client.gui.AdvDrawbridgeGui;
@@ -59,7 +60,6 @@ public class AdvancedDrawbridgeContainer extends Container
 
         for (int i = 0; i < logic.getSizeInventory(); i++)
         {
-            int ind = (int) (Math.floor(i / 8) * 8);
             int x = i < 8 ? 10 + 20 * i : 10 + 20 * (i - 8);
             int y = 35 + (int) Math.floor(i / 8) * 18 + (i < 8 ? 0 : 1);
             this.addSlotToContainer(new DrawbridgeSlot(logic, i, x, y, logic));

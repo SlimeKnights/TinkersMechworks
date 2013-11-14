@@ -3,6 +3,7 @@ package tmechworks.blocks.component;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

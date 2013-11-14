@@ -2,10 +2,10 @@ package tmechworks.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
 
 public class AdvDrawbridgeButton extends GuiButton
 {

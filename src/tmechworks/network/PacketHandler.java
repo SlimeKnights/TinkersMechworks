@@ -4,22 +4,18 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import tmechworks.TMechworks;
-import tconstruct.library.blocks.InventoryLogic;
-import tmechworks.blocks.logic.DrawbridgeLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fluids.FluidStack;
+import tmechworks.TMechworks;
+import tmechworks.blocks.logic.DrawbridgeLogic;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
@@ -44,11 +40,9 @@ public class PacketHandler implements IPacketHandler
     {
         DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(packet.data));
 
-        byte packetID;
-
         try
         {
-            packetID = inputStream.readByte();
+            inputStream.readByte();
         }
         catch (Exception e)
         {

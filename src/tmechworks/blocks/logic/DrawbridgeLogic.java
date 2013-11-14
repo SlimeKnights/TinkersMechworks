@@ -1,24 +1,25 @@
 package tmechworks.blocks.logic;
 
-import tconstruct.library.TConstructRegistry;
-import tconstruct.library.blocks.IDrawbridgeLogicBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.*;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import tmechworks.inventory.DrawbridgeContainer;
-import tmechworks.lib.TMechworksRegistry;
-import tmechworks.lib.player.FakePlayerLogic;
+import tconstruct.library.TConstructRegistry;
+import tconstruct.library.blocks.IDrawbridgeLogicBase;
 import tconstruct.library.blocks.InventoryLogic;
-import tconstruct.library.util.*;
+import tconstruct.library.util.IActiveLogic;
+import tconstruct.library.util.IFacingLogic;
+import tmechworks.inventory.DrawbridgeContainer;
+import tmechworks.lib.player.FakePlayerLogic;
 
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {

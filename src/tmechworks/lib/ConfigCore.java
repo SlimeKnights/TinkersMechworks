@@ -2,8 +2,6 @@ package tmechworks.lib;
 
 import net.minecraftforge.common.Configuration;
 
-import tmechworks.lib.Repo;
-
 public class ConfigCore
 {
     

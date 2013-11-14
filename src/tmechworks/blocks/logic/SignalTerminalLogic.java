@@ -2,10 +2,6 @@ package tmechworks.blocks.logic;
 
 import java.util.Arrays;
 
-import tmechworks.TMechworks;
-import tmechworks.blocks.SignalTerminal;
-import tmechworks.lib.signal.ISignalTransceiver;
-import tmechworks.lib.util.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -16,6 +12,10 @@ import net.minecraft.util.Facing;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import tmechworks.TMechworks;
+import tmechworks.blocks.SignalTerminal;
+import tmechworks.lib.signal.ISignalTransceiver;
+import tmechworks.lib.util.CoordTuple;
 
 public class SignalTerminalLogic extends TileEntity implements ISignalTransceiver
 {
