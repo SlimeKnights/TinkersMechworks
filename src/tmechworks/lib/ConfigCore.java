@@ -30,14 +30,14 @@ public class ConfigCore
     
     private static void loadItems (Configuration conf)
     {
-        itemID_lengthWire = conf.getItem("Signals", "LengthWire", itemID_lengthWire).getInt();
-        itemID_spoolWire = conf.getItem("Signals", "SpoolWire", itemID_spoolWire).getInt();
+        itemID_lengthWire = conf.getItem("LogicItem", "LengthWire", itemID_lengthWire).getInt();
+        itemID_spoolWire = conf.getItem("LogicItem", "SpoolWire", itemID_spoolWire).getInt();
     }
     
     private static void loadBlocks (Configuration conf)
     {
         blockID_redstoneMachine = conf.getBlock("Machines", "Redstone", blockID_redstoneMachine).getInt();
-        blockID_signalBus = conf.getBlock("Signals", "SignalBus", blockID_signalBus).getInt();
-        blockID_signalTerminal = conf.getBlock("Signals", "SignalTerminal", blockID_signalTerminal).getInt();
+        blockID_signalBus = conf.getBlock("LogicBlock", "SignalBus", blockID_signalBus).getInt();
+        blockID_signalTerminal = conf.getBlock("LogicBlock", "SignalTerminal", blockID_signalTerminal).getInt();
     }
 }
