@@ -11,7 +11,6 @@ public class FakePlayerLogic extends FakePlayer
 {
     InventoryLogic logic;
 
-    @SideOnly(Side.SERVER)
     public FakePlayerLogic(World world, String name, InventoryLogic logic)
     {
         super(world, name);

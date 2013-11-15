@@ -74,6 +74,7 @@ public class PacketHandler implements IPacketHandler
                 if (te instanceof DrawbridgeLogic)
                 {
                     ((DrawbridgeLogic) te).setPlacementDirection(direction);
+                    te.onInventoryChanged();
                 }
             }
         }

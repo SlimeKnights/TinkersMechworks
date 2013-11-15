@@ -47,6 +47,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     public void setWorldObj (World par1World)
     {
         this.worldObj = par1World;
+        if (!par1World.isRemote)
         fakePlayer = new FakePlayerLogic(worldObj, "Player.Drawbridge", this);
     }
 

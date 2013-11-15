@@ -82,7 +82,7 @@ public class DrawbridgeGui extends GuiContainer
         }
         button.enabled = false;
 
-        logic.setPlacementDirection((byte) button.id);
+        //logic.setPlacementDirection((byte) button.id);
         updateServer((byte) button.id);
     }
 
