@@ -17,7 +17,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import tconstruct.library.blocks.InventoryBlock;
+import tmechworks.lib.blocks.InventoryBlock;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tmechworks.TMechworks;
