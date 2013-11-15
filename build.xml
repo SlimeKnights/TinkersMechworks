@@ -6,7 +6,6 @@
 	<property name="build.dir" value="build"/>
 	<property name="src.dir" value="src"/>
 	<property name="resources.dir" value="resources"/>
-    <property name="mantle.src.dir" value="Mantle/src"/>
 	<property name="tconstruct.src.dir" value = "TConstruct/src"/>
 	<property name="download.dir" value="download"/>
 
@@ -108,7 +107,6 @@
 		<!-- Copy sources -->
 		<copy todir="${mcpsrc.dir}/minecraft">
 			<fileset dir="${src.dir}"/>
-            <fileset dir="${mantle.src.dir}"/>
 			<fileset dir="${tconstruct.src.dir}" excludes="**/plugins/**/*.java"  />
 			<filterset>
 				<filter token="VERSION" value="${project.version.full}" />
@@ -176,7 +174,6 @@
 
 		<!-- Reset src dir to post-forge-install state -->
 		<delete dir="${mcpsrc.dir}/minecraft/tmechworks"/>
-        <delete dir="${mcpsrc.dir}/minecraft/mantle"/>
 		<delete dir="${mcpsrc.dir}/minecraft/tconstruct"/>
 		<!-- TCon Dependencies -->
 		<delete dir="${mcpsrc.dir}/minecraft/mods/battlegear2"/>
