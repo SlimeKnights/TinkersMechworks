@@ -6,7 +6,6 @@
 	<property name="build.dir" value="build"/>
 	<property name="src.dir" value="src"/>
 	<property name="resources.dir" value="resources"/>
-	<property name="tconstruct.src.dir" value = "TConstruct/src"/>
 	<property name="download.dir" value="download"/>
 
 	<property name="classes.dir" value="${build.dir}/classes"/>
@@ -28,6 +27,17 @@
 	<available property="forge-exists" file="${download.dir}/${forge.name}"/>
 	<available file=".git" type="dir" property="git.present"/>
 
+	<property name="build.dependencies.file" value="${build.dir}/dependencies.properties" />
+	<property name="tcon.version" value="11697b6" />
+	<property name="tcon.name" value="TConstruct-${mc.version}-DEV.${tcon.version}-Deobf.jar" />
+	<available property="tcon-downloaded" file="${download.dir}/${tcon.name}" />
+	<condition property="tcon-installed">
+		<and>
+			<isset property="forge-installed" />
+			<equals arg1="${build.dependencies.tcon}" arg2="${tcon.version}" />
+		</and>
+	</condition>
+	
 	<condition property="out-of-date">
 		<not>
 			<and>
@@ -39,6 +49,23 @@
 
 	<mkdir dir="${download.dir}"/>
 
+	<target name="download-tcon" unless="tcon-downloaded">
+		<get src="http://tanis.sunstrike.io/TConstruct/deobf/${tcon.name}" dest="${download.dir}" usetimestamp="true" />
+	</target>
+
+	<target name="install-tcon" depends="setup,download-tcon" unless="tcon-installed">
+		<echo message="Deleting old TConstruct" />
+		<delete file="${mcp.dir}/lib/${build.dependencies.tcon.name}" />
+
+		<echo message="Installing TConstruct" />
+		<copy file="${download.dir}/${tcon.name}" todir="${mcp.dir}/lib" />
+
+		<echo message="Updating build.dependencies" />
+		<propertyfile file="${build.dependencies.file}">
+			<entry key="tcon" value="${tcon.version}" />
+			<entry key="tcon.name" value="${tcon.name}" />
+		</propertyfile>
+	</target>
 	<!-- Targets -->
 
 	<!-- Clear build directory -->
@@ -71,7 +98,7 @@
 	</target>
 
 	<!-- Download necessary files -->
-	<target name="download-files" depends="download-forge"/>
+	<target name="download-files" depends="download-forge,download-tcon"/>
 
 	<!-- Download forge (if it doesn't exist) -->
 	<target name="download-forge" unless="forge-exists">
@@ -107,14 +134,13 @@
 		<!-- Copy sources -->
 		<copy todir="${mcpsrc.dir}/minecraft">
 			<fileset dir="${src.dir}"/>
-			<fileset dir="${tconstruct.src.dir}" excludes="**/plugins/**/*.java"  />
 			<filterset>
 				<filter token="VERSION" value="${project.version.full}" />
 			</filterset>
 		</copy>
 	</target>
 
-	<target name="compile" depends="initialize-version,setup,copy-src">
+	<target name="compile" depends="initialize-version,install-tcon,setup,copy-src">
 
 		<delete dir="${classes.dir}"/>
 		<mkdir dir="${classes.dir}"/>
@@ -174,16 +200,6 @@
 
 		<!-- Reset src dir to post-forge-install state -->
 		<delete dir="${mcpsrc.dir}/minecraft/tmechworks"/>
-		<delete dir="${mcpsrc.dir}/minecraft/tconstruct"/>
-		<!-- TCon Dependencies -->
-		<delete dir="${mcpsrc.dir}/minecraft/mods/battlegear2"/>
-        <delete dir="${mcpsrc.dir}/minecraft/sparrow"/>
-        <delete dir="${mcpsrc.dir}/minecraft/powercrystals"/>
-        <delete dir="${mcpsrc.dir}/minecraft/ic2"/>
-		<delete dir="${mcpsrc.dir}/minecraft/codechicken"/>
-		<delete dir="${mcpsrc.dir}/minecraft/mcp"/>
-		<delete dir="${mcpsrc.dir}/minecraft/appeng"/>
-		<delete dir="${mcpsrc.dir}/minecraft/cofh"/>
 
 	</target>
 
