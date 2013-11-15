@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.blocks.IDrawbridgeLogicBase;
-import tconstruct.library.blocks.InventoryLogic;
+import tmechworks.lib.blocks.InventoryLogic;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;
@@ -48,7 +48,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     {
         this.worldObj = par1World;
         if (!par1World.isRemote)
-        fakePlayer = new FakePlayerLogic(worldObj, "Player.Drawbridge", this);
+            fakePlayer = new FakePlayerLogic(worldObj, "Player.Drawbridge", this);
     }
 
     @Override

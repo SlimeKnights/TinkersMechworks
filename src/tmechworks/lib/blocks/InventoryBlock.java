@@ -4,7 +4,7 @@ import java.util.Random;
 
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
-import tconstruct.library.blocks.InventoryLogic;
+import tmechworks.lib.blocks.InventoryLogic;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;

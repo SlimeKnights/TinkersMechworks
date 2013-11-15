@@ -15,11 +15,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.blocks.IDrawbridgeLogicBase;
-import tconstruct.library.blocks.InventoryLogic;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tmechworks.inventory.DrawbridgeContainer;
 import tmechworks.lib.player.FakePlayerLogic;
+import tmechworks.lib.blocks.InventoryLogic;
 
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
@@ -42,8 +42,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     public void setWorldObj (World par1World)
     {
         this.worldObj = par1World;
-        if(!worldObj.isRemote)
-        fakePlayer = new FakePlayerLogic(worldObj, "Player.Drawbridge", this);
+        if (!worldObj.isRemote)
+            fakePlayer = new FakePlayerLogic(worldObj, "Player.Drawbridge", this);
     }
 
     @Override
