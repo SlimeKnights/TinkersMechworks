@@ -3,7 +3,7 @@ package tmechworks.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import tconstruct.library.blocks.InventoryLogic;
+import tmechworks.lib.blocks.InventoryLogic;
 import tmechworks.lib.multiblock.MultiblockServerTickHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.TickRegistry;
