@@ -5,21 +5,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.client.TConstructClientRegistry;
-import tmechworks.blocks.RedstoneMachine;
-import tmechworks.blocks.SignalBus;
-import tmechworks.blocks.SignalTerminal;
-import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
-import tmechworks.blocks.logic.DrawbridgeLogic;
-import tmechworks.blocks.logic.FirestarterLogic;
-import tmechworks.blocks.logic.SignalBusLogic;
-import tmechworks.blocks.logic.SignalTerminalLogic;
-import tmechworks.items.LengthWire;
-import tmechworks.items.SpoolOfWire;
-import tmechworks.items.blocks.RedstoneMachineItem;
-import tmechworks.items.blocks.SignalBusItem;
-import tmechworks.items.blocks.SignalTerminalItem;
-import tmechworks.lib.ConfigCore;
-import tmechworks.lib.TMechworksRegistry;
+import tmechworks.blocks.*;
+import tmechworks.blocks.logic.*;
+import tmechworks.items.*;
+import tmechworks.items.blocks.*;
+import tmechworks.lib.*;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MechContent
@@ -63,6 +53,10 @@ public class MechContent
         GameRegistry.registerTileEntity(DrawbridgeLogic.class, "Drawbridge");
         GameRegistry.registerTileEntity(FirestarterLogic.class, "Firestarter");
         GameRegistry.registerTileEntity(AdvancedDrawbridgeLogic.class, "AdvDrawbridge");
+        
+        dynamo = new DynamoBlock(ConfigCore.blockID_dynamo).setLightValue(1.0F).setUnlocalizedName("tmechworks.dynamo").setTextureName("tinker:compressed_alubrass");
+        GameRegistry.registerBlock(dynamo, "TMechworks:Dynamo");
+        GameRegistry.registerTileEntity(DynamoLogic.class, "TMechworks:Dynamo");
 
         //Signal blocks
 		signalBus = new SignalBus(ConfigCore.blockID_signalBus).setUnlocalizedName("tmechworks.signalbus");
@@ -102,6 +96,7 @@ public class MechContent
 	public static Block redstoneMachine;
 	public static Block signalBus;
 	public static Block signalTerminal;
+	public static Block dynamo;
 	
 	// ---- PROXY ITEMS
     // --------------------------------------------------------------------------

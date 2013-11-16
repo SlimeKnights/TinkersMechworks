@@ -9,7 +9,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MechRecipes {
 
-	public static void registerAllTheThings ()
+    public static void registerAllTheThings ()
 	{
 
         // Drawbridge Recipes
@@ -21,6 +21,8 @@ public class MechRecipes {
         // Igniter Recipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 1), "aca", "#d#", "#r#", '#', "ingotBronze", 'a', "ingotAluminumBrass", 'c', new ItemStack(MechContent.proxyItem_largePlate, 1, 7), 'r',
                 new ItemStack(Item.redstone), 'd', new ItemStack(Item.flintAndSteel)));
+        
+        // Dynamo Recipes
 
         // Advanced Drawbridge Recipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 2), " c ", "rdr", " a ", 'a', "ingotAluminumBrass", 'c', new ItemStack(MechContent.proxyItem_blankPattern, 1, 1), 'r', new ItemStack(
