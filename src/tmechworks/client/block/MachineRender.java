@@ -27,7 +27,7 @@ public class MachineRender implements ISimpleBlockRenderingHandler
         if (modelID == model)
         {
             int metadata = world.getBlockMetadata(x, y, z);
-            if (metadata == 0)
+            if (metadata != 1)
             {
                 renderer.renderStandardBlock(block, x, y, z);
             }

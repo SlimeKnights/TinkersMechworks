@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -18,8 +19,8 @@ import tconstruct.library.blocks.IDrawbridgeLogicBase;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tmechworks.inventory.DrawbridgeContainer;
-import tmechworks.lib.player.FakePlayerLogic;
 import tmechworks.lib.blocks.InventoryLogic;
+import tmechworks.lib.player.FakePlayerLogic;
 
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
@@ -27,6 +28,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     boolean working;
     int ticks;
     byte extension;
+    byte maxExtension = 15;
     byte direction;
     byte placementDirection = 4;
     FakePlayerLogic fakePlayer;
@@ -80,6 +82,11 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         return false;
     }
+    
+    public void setMaximumExtension(byte length)
+    {
+        maxExtension = length;
+    }
 
     @Override
     public void setDirection (float yaw, float pitch, EntityLivingBase player)
@@ -124,73 +131,76 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
      */
     public void setPlacementDirection (byte keycode)
     {
-        if (keycode == 4)
+        if (!worldObj.isRemote)
         {
-            fakePlayer.rotationYaw = 0;
-            fakePlayer.rotationPitch = 0;
-        }
-        else if (this.direction == 0 || this.direction == 1)
-        {
-            switch (keycode)
+            if (keycode == 4)
             {
-            case 0:
                 fakePlayer.rotationYaw = 0;
-                break;
-            case 1:
-                fakePlayer.rotationYaw = 90;
-                break;
-            case 2:
-                fakePlayer.rotationYaw = 180;
-                break;
-            case 3:
-                fakePlayer.rotationYaw = 270;
-                break;
-            }
-
-            if (this.direction == 0)
-                fakePlayer.rotationPitch = -90;
-            else
-                fakePlayer.rotationPitch = 90;
-        }
-        else
-        {
-            if (keycode == 0) //Forward
-            {
-                fakePlayer.rotationYaw = mapDirection() * 90;
-
-                if (keycode == 0)
-                    fakePlayer.rotationPitch = 90;
-                else
-                    fakePlayer.rotationPitch = -90;
-            }
-            else if (keycode == 2) //Backward
-            {
-                int face = mapDirection() + 2;
-                if (face > 3)
-                    face -= 4;
-                fakePlayer.rotationYaw = face * 90;
-
-                if (keycode == 0)
-                    fakePlayer.rotationPitch = 90;
-                else
-                    fakePlayer.rotationPitch = -90;
-            }
-            else
-            {
                 fakePlayer.rotationPitch = 0;
+            }
+            else if (this.direction == 0 || this.direction == 1)
+            {
+                switch (keycode)
+                {
+                case 0:
+                    fakePlayer.rotationYaw = 0;
+                    break;
+                case 1:
+                    fakePlayer.rotationYaw = 90;
+                    break;
+                case 2:
+                    fakePlayer.rotationYaw = 180;
+                    break;
+                case 3:
+                    fakePlayer.rotationYaw = 270;
+                    break;
+                }
 
-                int facing = mapDirection();
-                if (keycode == 1)
-                    facing += 1;
+                if (this.direction == 0)
+                    fakePlayer.rotationPitch = -90;
                 else
-                    facing -= 1;
+                    fakePlayer.rotationPitch = 90;
+            }
+            else
+            {
+                if (keycode == 0) //Forward
+                {
+                    fakePlayer.rotationYaw = mapDirection() * 90;
 
-                if (facing >= 4)
-                    facing = 0;
-                if (facing < 0)
-                    facing = 3;
+                    if (keycode == 0)
+                        fakePlayer.rotationPitch = 90;
+                    else
+                        fakePlayer.rotationPitch = -90;
+                }
+                else if (keycode == 2) //Backward
+                {
+                    int face = mapDirection() + 2;
+                    if (face > 3)
+                        face -= 4;
+                    fakePlayer.rotationYaw = face * 90;
 
-                fakePlayer.rotationYaw = facing * 90;
+                    if (keycode == 0)
+                        fakePlayer.rotationPitch = 90;
+                    else
+                        fakePlayer.rotationPitch = -90;
+                }
+                else
+                {
+                    fakePlayer.rotationPitch = 0;
+
+                    int facing = mapDirection();
+                    if (keycode == 1)
+                        facing += 1;
+                    else
+                        facing -= 1;
+
+                    if (facing >= 4)
+                        facing = 0;
+                    if (facing < 0)
+                        facing = 3;
+
+                    fakePlayer.rotationYaw = facing * 90;
+                }
             }
         }
         placementDirection = keycode;
@@ -252,7 +262,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                 ticks = 0;
                 if (active) //Placement
                 {
-                    if (inventory[0] != null && inventory[0].stackSize > 0 && extension < 15)
+                    if (inventory[0] != null && inventory[0].stackSize > 0 && extension < maxExtension)
                     {
                         extension++;
                         int xPos = xCoord;
@@ -351,7 +361,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                         if (block != null)
                         {
                             int meta = worldObj.getBlockMetadata(xPos, yPos, zPos);
-                            if (bufferStack != null && validBlock(block) && validMetadata(block.blockID, meta))
+                            if (bufferStack != null && validBlock(block) && validMetadata(block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
                                 worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
                                 if (worldObj.setBlock(xPos, yPos, zPos, 0))
@@ -405,6 +415,15 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         return true;
     }
 
+    boolean validDrawbridge (int x, int y, int z)
+    {
+        TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+        if (te instanceof IDrawbridgeLogicBase && ((IDrawbridgeLogicBase) te).hasExtended())
+            return false;
+
+        return true;
+    }
+
     boolean validBlock (Block block)
     {
         int type = TConstructRegistry.interchangableBlockMapping[block.blockID];
@@ -422,9 +441,9 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         return block.blockID == bufferStack.itemID;
     }
 
-    boolean validMetadata (int blockID, int metadata)
+    boolean validMetadata (Block block, int metadata)
     {
-        int type = TConstructRegistry.drawbridgeState[blockID];
+        int type = TConstructRegistry.drawbridgeState[block.blockID];
         if (type == 0)
         {
             return metadata == bufferStack.getItemDamage();
@@ -459,6 +478,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         active = tags.getBoolean("Active");
         working = tags.getBoolean("Working");
         extension = tags.getByte("Extension");
+        maxExtension = tags.getByte("MaxExtension");
 
         NBTTagCompound bufferInv = (NBTTagCompound) tags.getTag("BufferInv");
         if (bufferInv != null)
@@ -480,6 +500,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         tags.setBoolean("Active", active);
         tags.setBoolean("Working", working);
         tags.setByte("Extension", extension);
+        tags.setByte("MaxExtension", maxExtension);
 
         if (bufferStack != null)
         {

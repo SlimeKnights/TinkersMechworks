@@ -106,6 +106,10 @@ public class RedstoneMachine extends InventoryBlock
             return new FirestarterLogic();
         case 2:
             return new AdvancedDrawbridgeLogic();
+        case 3:
+            DrawbridgeLogic logic = new DrawbridgeLogic();
+            logic.setMaximumExtension((byte) 64);
+            return logic;
         default:
             return null;
         }
@@ -118,6 +122,7 @@ public class RedstoneMachine extends InventoryBlock
         switch (meta)
         {
         case 0:
+        case 3:
             return TMechworks.proxy.drawbridgeID;
         case 2:
             return TMechworks.proxy.advDrawbridgeID;
@@ -137,7 +142,8 @@ public class RedstoneMachine extends InventoryBlock
     public String[] getTextureNames ()
     {
         String[] textureNames = { "drawbridge_top", "drawbridge_side", "drawbridge_bottom", "drawbridge_top_face", "drawbridge_side_face", "drawbridge_bottom_face", "firestarter_top",
-                "firestarter_side", "firestarter_bottom" };
+                "firestarter_side", "firestarter_bottom", "drawbridge_side_advanced", "drawbridge_top_extended", "drawbridge_side_extended", "drawbridge_bottom_extended",
+                "drawbridge_top_face_extended", "drawbridge_side_face_extended", "drawbridge_bottom_face_extended" };
 
         return textureNames;
     }
@@ -157,7 +163,7 @@ public class RedstoneMachine extends InventoryBlock
     @Override
     public Icon getIcon (int side, int meta)
     {
-        if (meta == 0 || meta == 2)
+        if (meta == 0)
         {
             if (side == 5)
                 return icons[5];
@@ -167,6 +173,18 @@ public class RedstoneMachine extends InventoryBlock
         {
             return icons[getTextureIndex(side) + 6];
         }
+        if (meta == 2)
+        {
+            if (side == 5)
+                return icons[5];
+            return icons[getTextureIndex(side, true)];
+        }
+        if (meta == 3)
+        {
+            if (side == 5)
+                return icons[13];
+            return icons[getTextureIndex(side) + 10];
+        }
         return icons[0];
     }
 
@@ -175,8 +193,9 @@ public class RedstoneMachine extends InventoryBlock
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         short direction = (logic instanceof IFacingLogic) ? ((IFacingLogic) logic).getRenderDirection() : 0;
         int meta = world.getBlockMetadata(x, y, z);
-        if (meta == 0)
+        if (meta == 0 || meta == 3)
         {
+            int offset = meta == 0 ? 0 : 10;
             DrawbridgeLogic drawbridge = (DrawbridgeLogic) logic;
             ItemStack stack = drawbridge.getStackInSlot(1);
             if (stack != null && stack.itemID < 4096)
@@ -187,11 +206,11 @@ public class RedstoneMachine extends InventoryBlock
             }
             if (side == direction)
             {
-                return icons[getTextureIndex(side) + 3];
+                return icons[getTextureIndex(side) + 3 + offset];
             }
             else
             {
-                return icons[getTextureIndex(side)];
+                return icons[getTextureIndex(side) + offset];
             }
         }
 
@@ -211,7 +230,7 @@ public class RedstoneMachine extends InventoryBlock
             }
             else
             {
-                return icons[getTextureIndex(side)];
+                return icons[getTextureIndex(side, true)];
             }
         }
 
@@ -232,12 +251,17 @@ public class RedstoneMachine extends InventoryBlock
 
     public int getTextureIndex (int side)
     {
+        return getTextureIndex(side, false);
+    }
+    
+    public int getTextureIndex(int side, boolean alt)
+    {
         if (side == 0)
             return 2;
         if (side == 1)
             return 0;
 
-        return 1;
+        return alt ? 9 : 1;
     }
 
     public int getRenderType ()
@@ -255,7 +279,7 @@ public class RedstoneMachine extends InventoryBlock
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {
-        for (int iter = 0; iter < 3; iter++)
+        for (int iter = 0; iter < 4; iter++)
         {
             list.add(new ItemStack(id, 1, iter));
         }

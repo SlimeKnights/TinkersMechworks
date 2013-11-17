@@ -9,3 +9,4 @@ item.lengthwire.name=Length of Wire
 block.drawbridge.name=Drawbridge
 block.firestarter.name=Igniter
 block.advdrawbridge.name=Advanced Drawbridge
+block.extdrawbridge.name=Extended Drawbridge
