@@ -1,11 +1,12 @@
-itemGroup.TMechworks=TMechworks
+itemGroup.TMechworks=匠魂|机关
 
-tile.signalbus.name=Signal Bus
-tile.signalterminal.name=Signal Terminal
+tile.signalbus.name=信号总线
+tile.signalterminal.name=信号终端
 
-item.spoolwire.name=Spool of Wire
-item.lengthwire.name=Length of Wire
+item.spoolwire.name=线轴
+item.lengthwire.name=长线
 
 block.drawbridge.name=造桥器
 block.firestarter.name=点火器
 block.advdrawbridge.name=高级造桥器
+block.extdrawbridge.name=拓展造桥器
