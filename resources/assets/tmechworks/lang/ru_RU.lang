@@ -1,12 +1,12 @@
 itemGroup.TMechworks=TMechworks
 
-block.drawbridge.name=Разводной мост
-block.firestarter.name=Воспламенитель
-block.advdrawbridge.name=Advanced Drawbridge
+tile.signalbus.name=Сигнальная шина
+tile.signalterminal.name=Сигнальный терминал
 
-tile.signalbus.name=Signal Bus
-tile.signalterminal.name=Signal Terminal
-
-item.spoolwire.name=Spool of Wire
+item.spoolwire.name=Проводная катушка
 item.lengthwire.name=Length of Wire
 
+block.drawbridge.name=Разводной мост
+block.firestarter.name=Воспламенитель
+block.advdrawbridge.name=Продвинутый разводной мост
+block.extdrawbridge.name=Расширенный разводной мост
