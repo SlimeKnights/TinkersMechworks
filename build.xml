@@ -1,5 +1,4 @@
 <!-- Originally built on BuildCraft build.xml -->
-<!-- WARNING! This version of the file contains a specific Forge fix; remove it before 1.7! -->
 <project name="TMechworks" default="main">
 	<property environment="env"/>
 	<!-- Properties -->
@@ -141,19 +140,7 @@
 		</copy>
 	</target>
 
-    <!-- Temporary 1.6.x-specific target; used to apply a fix for MCP/Retroguard/SpecialSource -->
-    <target name="get-and-apply-reobf-fix">
-        <echo message="WARNING! This version of build.xml applies a 1.6.x specific fix to MCP."/>
-        <echo message="Make sure to REMOVE the get-and-apply-reobf-fix target and dep from compile target."/>
-
-        <!-- Delete existing reobf.py -->
-        <delete file="${mcp.dir}/runtime/reobfuscate.py" failonerror="true"/>
-
-        <!-- Get new copy to replace MCP's broken one -->
-        <get src="https://raw.github.com/MinecraftForge/FML/1.6.4/reobf-fml.py" dest="${mcp.dir}/runtime/reobfuscate.py"/>
-    </target>
-
-	<target name="compile" depends="initialize-version,install-tcon,setup,copy-src,get-and-apply-reobf-fix">
+	<target name="compile" depends="initialize-version,install-tcon,setup,copy-src">
 
 		<delete dir="${classes.dir}"/>
 		<mkdir dir="${classes.dir}"/>
