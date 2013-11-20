@@ -18,8 +18,8 @@ import tconstruct.library.TConstructRegistry;
 import tconstruct.library.blocks.IDrawbridgeLogicBase;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
-import tconstruct.library.blocks.InventoryLogic;
 import tmechworks.inventory.DrawbridgeContainer;
+import tmechworks.lib.blocks.InventoryLogic;
 import tmechworks.lib.player.FakePlayerLogic;
 
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
@@ -82,8 +82,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         return false;
     }
-
-    public void setMaximumExtension (byte length)
+    
+    public void setMaximumExtension(byte length)
     {
         maxExtension = length;
     }

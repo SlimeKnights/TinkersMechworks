@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.blocks.IDrawbridgeLogicBase;
-import tconstruct.library.blocks.InventoryLogic;
+import tmechworks.lib.blocks.InventoryLogic;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;
@@ -372,7 +372,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                         if (block != null)
                         {
                             int meta = worldObj.getBlockMetadata(xPos, yPos, zPos);
-                            if (getStackInBufferSlot(extension - 1) != null && validBlock(extension - 1, block) && validMetadata(extension - 1, block, meta) && validDrawbridge(xPos, yPos, zPos))
+                            if (getStackInBufferSlot(extension - 1) != null && validBlock(extension - 1, block) && validMetadata(extension - 1, block, meta)
+                                    && validDrawbridge(xPos, yPos, zPos))
                             {
                                 worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
                                 if (worldObj.setBlock(xPos, yPos, zPos, 0))
