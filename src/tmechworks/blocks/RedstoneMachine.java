@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -291,42 +292,29 @@ public class RedstoneMachine extends InventoryBlock
         IActiveLogic logic = (IActiveLogic) world.getBlockTileEntity(x, y, z);
         IFacingLogic facing = (IFacingLogic) logic;
         int direction = facing.getRenderDirection();
+        int maxStrength = 0, tmpStrength = 0;
         boolean active = false;
+        CoordTuple coord;
+
         for (int i = 0; i < 6; i++)
         {
             if (direction == i)
                 continue;
 
-            CoordTuple coord = directions.get(i);
-            if (this.getIndirectPowerLevelTo(world, x + coord.x, y + coord.y, z + coord.z, i) > 0 || activeRedstone(world, coord.x, y + coord.y, z + coord.z))
+            coord = directions.get(i);
+            tmpStrength = world.getIndirectPowerLevelTo(x + coord.x, y + coord.y, z + coord.z, (i == 2 || i == 3) ? i : i^1);
+            if (tmpStrength > maxStrength)
             {
-                active = true;
-                break;
+                maxStrength = tmpStrength;
             }
         }
+        if (maxStrength > 0)
+        {
+            active = true;
+        }
         logic.setActive(active);
-    }
-
-    public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
-    {
-        if (world.isBlockNormalCube(x, y, z))
-        {
-            return world.getBlockPowerInput(x, y, z);
-        }
-        else
-        {
-            int i1 = world.getBlockId(x, y, z);
-            return i1 == 0 ? 0 : Block.blocksList[i1].isProvidingWeakPower(world, x, y, z, side);
-        }
-    }
-
-    boolean activeRedstone (World world, int x, int y, int z)
-    {
-        Block wire = Block.blocksList[world.getBlockId(x, y, z)];
-        if (wire != null && wire.blockID == Block.redstoneWire.blockID)
-            return world.getBlockMetadata(x, y, z) > 0;
-
-        return false;
+        if (logic instanceof DrawbridgeLogic)
+            ((DrawbridgeLogic) logic).setMaximumExtension((byte)maxStrength);
     }
 
     /* Keep inventory */
@@ -423,13 +411,6 @@ public class RedstoneMachine extends InventoryBlock
         }
     }
 
-    /* Redstone connections */
-
-    public boolean canConnectRedstone (IBlockAccess world, int x, int y, int z, int side)
-    {
-        return true;
-    }
-
     static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
 
     static
@@ -438,7 +419,7 @@ public class RedstoneMachine extends InventoryBlock
         directions.add(new CoordTuple(0, 1, 0));
         directions.add(new CoordTuple(0, 0, -1));
         directions.add(new CoordTuple(0, 0, 1));
-        directions.add(new CoordTuple(-1, 0, 0));
         directions.add(new CoordTuple(1, 0, 0));
+        directions.add(new CoordTuple(-1, 0, 0));
     }
 }
