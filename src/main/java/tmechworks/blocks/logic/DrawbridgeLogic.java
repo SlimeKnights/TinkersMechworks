@@ -19,7 +19,7 @@ import tconstruct.library.blocks.IDrawbridgeLogicBase;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tmechworks.inventory.DrawbridgeContainer;
-import tmechworks.lib.blocks.InventoryLogic;
+import tconstruct.library.blocks.InventoryLogic;
 import tmechworks.lib.player.FakePlayerLogic;
 
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
