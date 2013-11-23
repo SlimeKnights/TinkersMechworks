@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.blocks.IDrawbridgeLogicBase;
-import tmechworks.lib.blocks.InventoryLogic;
+import tconstruct.library.blocks.InventoryLogic;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;
