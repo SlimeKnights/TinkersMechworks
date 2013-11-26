@@ -20,9 +20,9 @@ buildscript {
 }
 
 repositories {
-	ivy {
-		name 'Tanis Deobf'
-		artifactPattern "http://tanis.sunstrike.io/TConstruct/deobf/[module]-[revision]-Deobf.[ext]"
+	maven {
+	      name 'SlimeKnights Maven FS'
+          url 'http://aeon.sunstrike.io'
 	}
 	maven {
           name 'ForgeFS'
@@ -34,10 +34,9 @@ repositories {
      }
 }
 
-
 apply plugin: 'forge'
 dependencies {
-     compile name: 'TConstruct', version: '1.6.4-DEV.26ce581', ext: 'jar'
+	 compile 'TConstruct:TinkersConstruct::dev'
 }
 
 minecraft {
