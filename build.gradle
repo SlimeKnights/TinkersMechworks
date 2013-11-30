@@ -46,8 +46,8 @@ configFile.withReader {
 }
 
 dependencies {
-     compile "mantle:Mantle:${mantle_version}:dev"
-	 compile "tconstruct:TConstruct:${tconstruct_version}:dev"
+     compile "mantle:Mantle:${config.mantle_version}:dev"
+	 compile "tconstruct:TConstruct:${config.tconstruct_version}:dev"
 }
 
 minecraft {
