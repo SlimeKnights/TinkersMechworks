@@ -4,13 +4,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import mantle.world.CoordTuple;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.lib.multiblock.IMultiblockMember;
 import tmechworks.lib.multiblock.MultiblockMasterBaseLogic;
-import tmechworks.lib.util.CoordTuple;
 
 public class SignalBusMasterLogic extends MultiblockMasterBaseLogic
 {
@@ -59,9 +59,9 @@ public class SignalBusMasterLogic extends MultiblockMasterBaseLogic
             // Send updates to SignalBuses
             for (CoordTuple coord : tetheredBuses.keySet())
             {
-                if (worldObj.getChunkProvider().chunkExists(coord.x >> 4, coord.z >> 4))
+                if (worldObj.getChunkProvider().chunkExists(coord.x() >> 4, coord.z() >> 4))
                 {
-                    te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+                    te = worldObj.getBlockTileEntity(coord.x(), coord.y(), coord.z());
                     if (te instanceof SignalBusLogic)
                     {
                         ((SignalBusLogic) te).updateLocalSignals(masterSignals);

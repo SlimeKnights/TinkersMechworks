@@ -21,13 +21,13 @@ import net.minecraftforge.common.ForgeDirection;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.blocks.abstracts.InventoryBlock;
 import mantle.blocks.iface.IActiveLogic;
+import mantle.world.CoordTuple;
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.blocks.logic.DrawbridgeLogic;
 import tmechworks.blocks.logic.FirestarterLogic;
 import tmechworks.client.block.MachineRender;
 import tmechworks.lib.TMechworksRegistry;
-import tmechworks.lib.util.CoordTuple;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -302,7 +302,7 @@ public class RedstoneMachine extends InventoryBlock
                 continue;
 
             coord = directions.get(i);
-            tmpStrength = world.getIndirectPowerLevelTo(x + coord.x, y + coord.y, z + coord.z, (i == 2 || i == 3) ? i : i ^ 1);
+            tmpStrength = world.getIndirectPowerLevelTo(x + coord.x(), y + coord.y(), z + coord.z(), (i == 2 || i == 3) ? i : i ^ 1);
             if (tmpStrength > maxStrength)
             {
                 maxStrength = tmpStrength;
