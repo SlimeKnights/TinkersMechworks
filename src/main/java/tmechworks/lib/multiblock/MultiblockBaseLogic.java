@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import mantle.world.CoordTuple;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
-import tmechworks.lib.util.CoordTuple;
 
 public abstract class MultiblockBaseLogic extends TileEntity implements IMultiblockMember
 {
@@ -142,7 +142,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
         List<IMultiblockMember> neighborMembers = new LinkedList<IMultiblockMember>();
         for (CoordTuple neighbor : neighbors)
         {
-            te = this.worldObj.getBlockTileEntity(neighbor.x, neighbor.y, neighbor.z);
+            te = this.worldObj.getBlockTileEntity(neighbor.x(), neighbor.y(), neighbor.z());
             if (te instanceof IMultiblockMember)
             {
                 // Verify compatible member
@@ -242,7 +242,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
         CoordTuple[] neighborCoords = getNeighborCoords();
         for (CoordTuple coord : neighborCoords)
         {
-            TileEntity neighborTE = this.worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+            TileEntity neighborTE = this.worldObj.getBlockTileEntity(coord.x(), coord.y(), coord.z());
             if (neighborTE instanceof IMultiblockMember && !((IMultiblockMember) neighborTE).isConnected() && ((IMultiblockMember) neighborTE).willConnect(getCoordInWorld()))
             {
                 membersToCheck.add((IMultiblockMember) neighborTE);

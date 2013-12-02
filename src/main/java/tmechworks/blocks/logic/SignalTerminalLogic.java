@@ -2,6 +2,7 @@ package tmechworks.blocks.logic;
 
 import java.util.Arrays;
 
+import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -15,7 +16,6 @@ import net.minecraft.world.World;
 import tmechworks.TMechworks;
 import tmechworks.blocks.SignalTerminal;
 import tmechworks.lib.signal.ISignalTransceiver;
-import tmechworks.lib.util.CoordTuple;
 
 public class SignalTerminalLogic extends TileEntity implements ISignalTransceiver
 {
@@ -61,7 +61,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
             return;
         }
 
-        TileEntity te = worldObj.getBlockTileEntity(signalBus.x, signalBus.y, signalBus.z);
+        TileEntity te = worldObj.getBlockTileEntity(signalBus.x(), signalBus.y(), signalBus.z());
         if (!(te instanceof SignalBusLogic))
         {
             return;
@@ -138,9 +138,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 
         if (signalBus != null)
         {
-            data.setInteger("BusX", signalBus.x);
-            data.setInteger("BusY", signalBus.y);
-            data.setInteger("BusZ", signalBus.z);
+            data.setInteger("BusX", signalBus.x());
+            data.setInteger("BusY", signalBus.y());
+            data.setInteger("BusZ", signalBus.z());
         }
         else
         {
@@ -423,7 +423,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
             return;
         }
 
-        TileEntity te = worldObj.getBlockTileEntity(signalBus.x, signalBus.y, signalBus.z);
+        TileEntity te = worldObj.getBlockTileEntity(signalBus.x(), signalBus.y(), signalBus.z());
         if (te == null || !(te instanceof SignalBusLogic))
         {
             return;
@@ -446,7 +446,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
     {
         if (signalBus != null && signalBus instanceof CoordTuple)
         {
-            TileEntity te = worldObj.getBlockTileEntity(signalBus.x, signalBus.y, signalBus.z);
+            TileEntity te = worldObj.getBlockTileEntity(signalBus.x(), signalBus.y(), signalBus.z());
 
             if (te instanceof SignalBusLogic)
             {
@@ -617,8 +617,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
         
         if (signalBus != null)
         {
-            TileEntity te = worldObj.getBlockTileEntity(signalBus.x, signalBus.y, signalBus.z);
-            dropWire = Math.abs(xCoord - signalBus.x) + Math.abs(yCoord - signalBus.y) + Math.abs(zCoord - signalBus.z);
+            TileEntity te = worldObj.getBlockTileEntity(signalBus.x(), signalBus.y(), signalBus.z());
+            dropWire = Math.abs(xCoord - signalBus.x()) + Math.abs(yCoord - signalBus.y()) + Math.abs(zCoord - signalBus.z());
             if (te instanceof SignalBusLogic)
             {
                 ((SignalBusLogic)te).unregisterTerminal(worldObj, xCoord, yCoord, zCoord);
@@ -660,9 +660,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
         int calcWire = 0;
         if (signalBus instanceof CoordTuple)
         {
-            calcWire += Math.abs(signalBus.x - xCoord);
-            calcWire += Math.abs(signalBus.y - yCoord);
-            calcWire += Math.abs(signalBus.z - zCoord);
+            calcWire += Math.abs(signalBus.x() - xCoord);
+            calcWire += Math.abs(signalBus.y() - yCoord);
+            calcWire += Math.abs(signalBus.z() - zCoord);
             
             return calcWire;
         }
