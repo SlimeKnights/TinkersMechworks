@@ -10,8 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
 import tconstruct.library.tools.AbilityHelper;
-import tconstruct.library.util.IActiveLogic;
-import tconstruct.library.util.IFacingLogic;
+import mantle.blocks.iface.*;
 import tmechworks.TMechworks;
 
 public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiveLogic
