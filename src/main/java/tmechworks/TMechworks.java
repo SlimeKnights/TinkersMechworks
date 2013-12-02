@@ -24,7 +24,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = "required-after:TConstruct")
+@Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = "required-after:TConstruct;required-after:Mantle")
 @NetworkMod(serverSideRequired = false, clientSideRequired = true, channels = { "TMechworks" }, packetHandler = tmechworks.network.PacketHandler.class)
 public class TMechworks {
 
