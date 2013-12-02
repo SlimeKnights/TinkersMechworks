@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.FakePlayer;
-import tconstruct.library.blocks.InventoryLogic;
+import mantle.blocks.abstracts.InventoryLogic;
 
 public class FakePlayerLogic extends FakePlayer
 {

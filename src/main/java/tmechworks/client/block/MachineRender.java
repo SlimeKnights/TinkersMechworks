@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 import tconstruct.client.TProxyClient;
-import tconstruct.library.util.IFacingLogic;
+import mantle.blocks.iface.IFacingLogic;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
