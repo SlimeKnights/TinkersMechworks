@@ -92,8 +92,8 @@ public class SignalTetherWorldOverlayRenderer
             {
                 renderPair = transceivers.pop();
 
-                GL11.glVertex3d(renderPair.a().x() + 0.5, renderPair.a().y() + 0.5, renderPair.a().z() + 0.5);
-                GL11.glVertex3d(renderPair.b().x() + 0.5, renderPair.b().y(), renderPair.b().z() + 0.5);
+                GL11.glVertex3d(renderPair.a.x + 0.5, renderPair.a.y + 0.5, renderPair.a.z + 0.5);
+                GL11.glVertex3d(renderPair.b.x + 0.5, renderPair.b.y, renderPair.b.z + 0.5);
             }
 
             GL11.glEnd();

@@ -101,9 +101,9 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
             for (CoordTuple coord : transceivers.keySet())
             {
-                if (worldObj.getChunkProvider().chunkExists(coord.x() >> 4, coord.z() >> 4))
+                if (worldObj.getChunkProvider().chunkExists(coord.x >> 4, coord.z >> 4))
                 {
-                    te = worldObj.getBlockTileEntity(coord.x(), coord.y(), coord.z());
+                    te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
                     if (te instanceof ISignalTransceiver)
                     {
                         ((ISignalTransceiver) te).receiveSignalUpdate(cachedReceivedSignals);
@@ -556,7 +556,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                     continue;
                 }
                 jDir = ForgeDirection.VALID_DIRECTIONS[j];
-                if (xCoord + jDir.offsetX == coord.x() && yCoord + jDir.offsetY == coord.y() && zCoord + jDir.offsetZ == coord.z())
+                if (xCoord + jDir.offsetX == coord.x && yCoord + jDir.offsetY == coord.y && zCoord + jDir.offsetZ == coord.z)
                 {
                     te = worldObj.getBlockTileEntity(xCoord + jDir.offsetX, yCoord + jDir.offsetY, zCoord + jDir.offsetZ);
                     if (te instanceof ISignalBusConnectable && ((ISignalBusConnectable)te).connectableOnFace(iDir))
@@ -568,7 +568,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 {
                     continue;
                 }
-                if (xCoord + iDir.offsetX + jDir.offsetX == coord.x() && yCoord + iDir.offsetY + jDir.offsetY == coord.y() && zCoord + iDir.offsetZ + jDir.offsetZ == coord.z())
+                if (xCoord + iDir.offsetX + jDir.offsetX == coord.x && yCoord + iDir.offsetY + jDir.offsetY == coord.y && zCoord + iDir.offsetZ + jDir.offsetZ == coord.z)
                 {
                     te = worldObj.getBlockTileEntity(xCoord + iDir.offsetX + jDir.offsetX, yCoord + iDir.offsetY + jDir.offsetY, zCoord + iDir.offsetZ + jDir.offsetZ);
                     if (te instanceof ISignalBusConnectable && ((ISignalBusConnectable)te).connectableOnCorner(iDir.getOpposite(), jDir.getOpposite()))
@@ -640,7 +640,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         TileEntity te;
         for (CoordTuple coord : transceivers.keySet())
         {
-            te = worldObj.getBlockTileEntity(coord.x(), coord.y(), coord.z());
+            te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
             if (te instanceof ISignalTransceiver)
             {
                 calc += ((ISignalTransceiver) te).getDroppedWire();
@@ -657,7 +657,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         TileEntity te;
         for (CoordTuple coord : scan)
         {
-            te = worldObj.getBlockTileEntity(coord.x(), coord.y(), coord.z());
+            te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
             if (te instanceof ISignalTransceiver)
             {
                 ((ISignalTransceiver) te).doUnregister(true);
