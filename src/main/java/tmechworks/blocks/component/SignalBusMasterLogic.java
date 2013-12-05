@@ -59,9 +59,9 @@ public class SignalBusMasterLogic extends MultiblockMasterBaseLogic
             // Send updates to SignalBuses
             for (CoordTuple coord : tetheredBuses.keySet())
             {
-                if (worldObj.getChunkProvider().chunkExists(coord.x() >> 4, coord.z() >> 4))
+                if (worldObj.getChunkProvider().chunkExists(coord.x >> 4, coord.z >> 4))
                 {
-                    te = worldObj.getBlockTileEntity(coord.x(), coord.y(), coord.z());
+                    te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
                     if (te instanceof SignalBusLogic)
                     {
                         ((SignalBusLogic) te).updateLocalSignals(masterSignals);
