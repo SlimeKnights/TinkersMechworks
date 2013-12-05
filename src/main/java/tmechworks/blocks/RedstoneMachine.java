@@ -303,6 +303,9 @@ public class RedstoneMachine extends InventoryBlock
 
             coord = directions.get(i);
             tmpStrength = world.getIndirectPowerLevelTo(x + coord.x, y + coord.y, z + coord.z, (i == 2 || i == 3) ? i : i ^ 1);
+=======
+            tmpStrength = world.getIndirectPowerLevelTo(x + coord.x, y + coord.y, z + coord.z, (i == 2 || i == 3) ? i : i^1);
+>>>>>>> c178abde9f423f7d3b2823cba7a778acde53c773:src/tmechworks/blocks/RedstoneMachine.java
             if (tmpStrength > maxStrength)
             {
                 maxStrength = tmpStrength;
@@ -314,7 +317,11 @@ public class RedstoneMachine extends InventoryBlock
         }
         logic.setActive(active);
         if (logic instanceof DrawbridgeLogic)
+<<<<<<< HEAD:src/main/java/tmechworks/blocks/RedstoneMachine.java
             ((DrawbridgeLogic) logic).setMaximumExtension((byte) maxStrength);
+=======
+            ((DrawbridgeLogic) logic).setMaximumExtension((byte)maxStrength);
+>>>>>>> c178abde9f423f7d3b2823cba7a778acde53c773:src/tmechworks/blocks/RedstoneMachine.java
     }
 
     /* Keep inventory */
