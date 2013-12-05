@@ -1,0 +1,114 @@
+/*
+ * TMechworks
+ * Master build file
+ * based on TConstruct's master build file
+ * Authors: Sunstrike, ProgWML6
+ * Help from AbrarSyed
+ */
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'ForgeFS'
+            url = 'http://files.minecraftforge.net/maven'
+        }
+	}
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
+}
+
+repositories {
+	maven {
+	      name 'SlimeKnights Maven FS'
+          url 'http://aeon.sunstrike.io'
+	}
+	maven {
+          name 'ForgeFS'
+          url 'http://files.minecraftforge.net/maven'
+     }
+     maven {
+          name 'MinecraftS3'
+          url 'http://s3.amazonaws.com/Minecraft.Download/libraries'
+     }
+}
+
+apply plugin: 'forge'
+// define the properties file
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    // read config.  it shall from now on be referenced as simply config or as project.config
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+dependencies {
+     compile "mantle:Mantle:${config.mantle_version}:dev"
+	 compile "tconstruct:TConstruct:${config.tconstruct_version}:dev"
+}
+
+minecraft {
+    version = config.minecraft_version + "-" + config.forge_version
+    assetDir = 'run/assets'
+}
+
+// sets version to the slimeKnights version format
+task buildInfo {
+    def cmd = "git rev-parse --short HEAD"
+    def proc = cmd.execute()
+    proc.waitFor()
+    if (proc.exitValue() == 0) {
+        ext.revision = proc.text.trim()
+    } else {
+        ext.revision = "GITBORK"
+    }
+
+    if (System.getenv().BUILD_NUMBER != null) {
+        ext.buildNum = System.getenv().BUILD_NUMBER
+    } else {
+        ext.buildNum = "DEV"
+    }
+}
+version = "${minecraft.version}-${project.buildInfo.buildNum}.${project.buildInfo.revision}"
+
+sourceSets {
+	main {
+		resources {
+			srcDir 'resources'
+		}
+	}
+}
+processResources
+{
+        // replace stuff in text files, not binary ones.
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.info'
+                // replace version and MCVersion
+                // forge version is also accessible via project.minecraftforgeVersion
+                // it contains the full minecraft version, including buildNumber
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+        // copy everything else, thats not text
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.info'
+    }
+}
+task deobfJar(type: Jar) {
+        from sourceSets.main.output
+        classifier = 'deobf'
+}
+task libJar(type: Jar) {
+    from(sourceSets.main.java) {
+	     include "tmechworks/lib/*"
+	}
+	classifier = 'lib'
+}
+artifacts {
+        archives deobfJar
+		archives libJar
+}
+
