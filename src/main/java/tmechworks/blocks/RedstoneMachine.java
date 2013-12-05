@@ -302,7 +302,7 @@ public class RedstoneMachine extends InventoryBlock
                 continue;
 
             coord = directions.get(i);
-            tmpStrength = world.getIndirectPowerLevelTo(x + coord.x, y + coord.y, z + coord.z, (i == 2 || i == 3) ? i : i ^ 1);
+            tmpStrength = world.getIndirectPowerLevelTo(x + coord.x, y + coord.y, z + coord.z, i);
             if (tmpStrength > maxStrength)
             {
                 maxStrength = tmpStrength;
@@ -419,7 +419,7 @@ public class RedstoneMachine extends InventoryBlock
         directions.add(new CoordTuple(0, 1, 0));
         directions.add(new CoordTuple(0, 0, -1));
         directions.add(new CoordTuple(0, 0, 1));
-        directions.add(new CoordTuple(1, 0, 0));
         directions.add(new CoordTuple(-1, 0, 0));
+        directions.add(new CoordTuple(1, 0, 0));
     }
 }

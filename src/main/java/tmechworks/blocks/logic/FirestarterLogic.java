@@ -70,7 +70,7 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
         Block block = Block.blocksList[worldObj.getBlockId(xPos, yPos, zPos)];
         if (active)
         {
-            TMechworks.logger.info("Setting fire");
+//            TMechworks.logger.info("Setting fire");
             if (block == null || block.isAirBlock(worldObj, xPos, yPos, zPos))
             {
                 worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
