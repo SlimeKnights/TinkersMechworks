@@ -13,7 +13,6 @@ Thumbs.db
 #gradle stuff
 /.gradle
 /build/
-<<<<<<< HEAD
 /run/
 #IDEA files from Gradle
 .idea/
@@ -22,6 +21,5 @@ Thumbs.db
 /*.iws
 #Vim backups
 *~
-=======
-/run/
->>>>>>> ant be gone!
+#manual version override
+version.properties

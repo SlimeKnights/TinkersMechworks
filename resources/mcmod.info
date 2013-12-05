@@ -3,8 +3,8 @@
     "modid": "TMechworks",
     "name": "Tinkers' Mechworks",
     "description": "",
-    "version": "@VERSION@",
-    "mcversion": "@MCVERSION@",
+    "version": "${version}",
+    "mcversion": "${MCversion}",
     "url": "",
     "updateUrl": "",
     "authors": [
