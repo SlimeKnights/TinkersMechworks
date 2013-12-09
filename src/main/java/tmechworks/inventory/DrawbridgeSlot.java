@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.blocks.IDrawbridgeLogicBase;
+import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 
 public class DrawbridgeSlot extends SlotBlocksOnly
 {

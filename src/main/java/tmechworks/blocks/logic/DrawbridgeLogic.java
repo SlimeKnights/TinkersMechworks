@@ -15,11 +15,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.blocks.IDrawbridgeLogicBase;
 import mantle.blocks.iface.*;
 import tmechworks.inventory.DrawbridgeContainer;
 import mantle.blocks.abstracts.InventoryLogic;
 import tmechworks.lib.player.FakePlayerLogic;
+import tmechworks.lib.blocks.IDrawbridgeLogicBase;
+
 
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
