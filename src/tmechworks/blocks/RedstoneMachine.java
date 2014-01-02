@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,7 +17,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import tmechworks.lib.blocks.InventoryBlock;
+import tconstruct.library.blocks.IDrawbridgeLogicBase;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tmechworks.TMechworks;
@@ -27,6 +26,8 @@ import tmechworks.blocks.logic.DrawbridgeLogic;
 import tmechworks.blocks.logic.FirestarterLogic;
 import tmechworks.client.block.MachineRender;
 import tmechworks.lib.TMechworksRegistry;
+import tmechworks.lib.blocks.InventoryBlock;
+import tmechworks.lib.blocks.InventoryLogic;
 import tmechworks.lib.util.CoordTuple;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -254,8 +255,8 @@ public class RedstoneMachine extends InventoryBlock
     {
         return getTextureIndex(side, false);
     }
-    
-    public int getTextureIndex(int side, boolean alt)
+
+    public int getTextureIndex (int side, boolean alt)
     {
         if (side == 0)
             return 2;
@@ -292,29 +293,42 @@ public class RedstoneMachine extends InventoryBlock
         IActiveLogic logic = (IActiveLogic) world.getBlockTileEntity(x, y, z);
         IFacingLogic facing = (IFacingLogic) logic;
         int direction = facing.getRenderDirection();
-        int maxStrength = 0, tmpStrength = 0;
         boolean active = false;
-        CoordTuple coord;
-
         for (int i = 0; i < 6; i++)
         {
             if (direction == i)
                 continue;
 
-            coord = directions.get(i);
-            tmpStrength = world.getIndirectPowerLevelTo(x + coord.x, y + coord.y, z + coord.z, (i == 2 || i == 3) ? i : i^1);
-            if (tmpStrength > maxStrength)
+            CoordTuple coord = directions.get(i);
+            if (this.getIndirectPowerLevelTo(world, x + coord.x, y + coord.y, z + coord.z, i) > 0 || activeRedstone(world, coord.x, y + coord.y, z + coord.z))
             {
-                maxStrength = tmpStrength;
+                active = true;
+                break;
             }
         }
-        if (maxStrength > 0)
-        {
-            active = true;
-        }
         logic.setActive(active);
-        if (logic instanceof DrawbridgeLogic)
-            ((DrawbridgeLogic) logic).setMaximumExtension((byte)maxStrength);
+    }
+
+    public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
+    {
+        if (world.isBlockNormalCube(x, y, z))
+        {
+            return world.getBlockPowerInput(x, y, z);
+        }
+        else
+        {
+            int i1 = world.getBlockId(x, y, z);
+            return i1 == 0 ? 0 : Block.blocksList[i1].isProvidingWeakPower(world, x, y, z, side);
+        }
+    }
+
+    boolean activeRedstone (World world, int x, int y, int z)
+    {
+        Block wire = Block.blocksList[world.getBlockId(x, y, z)];
+        if (wire != null && wire.blockID == Block.redstoneWire.blockID)
+            return world.getBlockMetadata(x, y, z) > 0;
+
+        return false;
     }
 
     /* Keep inventory */
@@ -323,23 +337,44 @@ public class RedstoneMachine extends InventoryBlock
     {
         player.addExhaustion(0.025F);
         int meta = world.getBlockMetadata(x, y, z);
-        if (meta == 0)
+        if (meta < 4 && meta != 1)
         {
             ItemStack stack = new ItemStack(this.blockID, 1, meta);
-            DrawbridgeLogic logic = (DrawbridgeLogic) world.getBlockTileEntity(x, y, z);
+            InventoryLogic logic = (InventoryLogic) world.getBlockTileEntity(x, y, z);
             NBTTagCompound tag = new NBTTagCompound();
+            ItemStack camo = null;
 
             boolean hasTag = false;
-            ItemStack contents = logic.getStackInSlot(0);
-            if (contents != null)
+            if (meta == 0 || meta == 3)
             {
-                NBTTagCompound contentTag = new NBTTagCompound();
-                contents.writeToNBT(contentTag);
-                tag.setCompoundTag("Contents", contentTag);
-                hasTag = true;
+                ItemStack contents = logic.getStackInSlot(0);
+                if (contents != null)
+                {
+                    NBTTagCompound contentTag = new NBTTagCompound();
+                    contents.writeToNBT(contentTag);
+                    tag.setCompoundTag("Contents", contentTag);
+                    hasTag = true;
+                }
+
+                camo = logic.getStackInSlot(1);
+            }
+            else if (meta == 2)
+            {
+                AdvancedDrawbridgeLogic advDrawbridge = (AdvancedDrawbridgeLogic) logic;
+                camo = advDrawbridge.camoInventory.getCamoStack();
+                for (int i = 1; i <= 16; i++)
+                {
+                    ItemStack slot = logic.getStackInSlot(i-1);
+                    if (slot != null)
+                    {
+                        NBTTagCompound contentTag = new NBTTagCompound();
+                        slot.writeToNBT(contentTag);
+                        tag.setCompoundTag("Slot" + i, contentTag);
+                        hasTag = true;
+                    }
+                }
             }
 
-            ItemStack camo = logic.getStackInSlot(1);
             if (camo != null)
             {
                 NBTTagCompound camoTag = new NBTTagCompound();
@@ -348,9 +383,10 @@ public class RedstoneMachine extends InventoryBlock
                 hasTag = true;
             }
 
-            if (logic.getPlacementDirection() != 4)
+            IDrawbridgeLogicBase drawbridge = (IDrawbridgeLogicBase) logic;
+            if (drawbridge.getPlacementDirection() != 4)
             {
-                tag.setByte("Placement", logic.getPlacementDirection());
+                tag.setByte("Placement", drawbridge.getPlacementDirection());
                 hasTag = true;
             }
             if (hasTag == true)
@@ -389,26 +425,62 @@ public class RedstoneMachine extends InventoryBlock
         super.onBlockPlacedBy(world, x, y, z, living, stack);
         if (stack.hasTagCompound())
         {
-            DrawbridgeLogic logic = (DrawbridgeLogic) world.getBlockTileEntity(x, y, z);
-            NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Contents");
-            if (contentTag != null)
+            int meta = stack.getItemDamage();
+            if (meta == 0 || meta == 3)
             {
-                ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
-                logic.setInventorySlotContents(0, contents);
-            }
+                DrawbridgeLogic logic = (DrawbridgeLogic) world.getBlockTileEntity(x, y, z);
+                NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Contents");
+                if (contentTag != null)
+                {
+                    ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
+                    logic.setInventorySlotContents(0, contents);
+                }
 
-            NBTTagCompound camoTag = stack.getTagCompound().getCompoundTag("Camoflauge");
-            if (camoTag != null)
-            {
-                ItemStack camoflauge = ItemStack.loadItemStackFromNBT(camoTag);
-                logic.setInventorySlotContents(1, camoflauge);
-            }
+                NBTTagCompound camoTag = stack.getTagCompound().getCompoundTag("Camoflauge");
+                if (camoTag != null)
+                {
+                    ItemStack camoflauge = ItemStack.loadItemStackFromNBT(camoTag);
+                    logic.setInventorySlotContents(1, camoflauge);
+                }
 
-            if (stack.getTagCompound().hasKey("Placement"))
+                if (stack.getTagCompound().hasKey("Placement"))
+                {
+                    logic.setPlacementDirection(stack.getTagCompound().getByte("Placement"));
+                }
+            }
+            else if (meta == 2)
             {
-                logic.setPlacementDirection(stack.getTagCompound().getByte("Placement"));
+                AdvancedDrawbridgeLogic logic = (AdvancedDrawbridgeLogic) world.getBlockTileEntity(x, y, z);
+                for (int i = 1; i <= 16; i++)
+                {
+                    NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Slot"+i);
+                    if (contentTag != null)
+                    {
+                        ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
+                        logic.setInventorySlotContents(i-1, contents);
+                    }
+                }
+
+                NBTTagCompound camoTag = stack.getTagCompound().getCompoundTag("Camoflauge");
+                if (camoTag != null)
+                {
+                    ItemStack camoflauge = ItemStack.loadItemStackFromNBT(camoTag);
+                    logic.camoInventory.setInventorySlotContents(0, camoflauge);
+                }
+
+                if (stack.getTagCompound().hasKey("Placement"))
+                {
+                    logic.setPlacementDirection(stack.getTagCompound().getByte("Placement"));
+                }
             }
         }
+    }
+
+    /* Redstone connections */
+
+    public boolean canConnectRedstone (IBlockAccess world, int x, int y, int z, int side)
+    {
+        return false;
     }
 
     static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
@@ -419,7 +491,7 @@ public class RedstoneMachine extends InventoryBlock
         directions.add(new CoordTuple(0, 1, 0));
         directions.add(new CoordTuple(0, 0, -1));
         directions.add(new CoordTuple(0, 0, 1));
-        directions.add(new CoordTuple(1, 0, 0));
         directions.add(new CoordTuple(-1, 0, 0));
+        directions.add(new CoordTuple(1, 0, 0));
     }
 }

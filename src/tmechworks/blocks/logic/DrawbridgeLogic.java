@@ -28,7 +28,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     boolean working;
     int ticks;
     byte extension;
-    byte maxExtension = 15;
+    byte maxExtension = 15; //Absolute maximum
     byte direction;
     byte placementDirection = 4;
     FakePlayerLogic fakePlayer;
