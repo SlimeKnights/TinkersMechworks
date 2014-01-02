@@ -10,10 +10,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -339,63 +341,69 @@ public class RedstoneMachine extends InventoryBlock
         int meta = world.getBlockMetadata(x, y, z);
         if (meta < 4 && meta != 1)
         {
-            ItemStack stack = new ItemStack(this.blockID, 1, meta);
-            InventoryLogic logic = (InventoryLogic) world.getBlockTileEntity(x, y, z);
-            NBTTagCompound tag = new NBTTagCompound();
-            ItemStack camo = null;
-
-            boolean hasTag = false;
-            if (meta == 0 || meta == 3)
-            {
-                ItemStack contents = logic.getStackInSlot(0);
-                if (contents != null)
-                {
-                    NBTTagCompound contentTag = new NBTTagCompound();
-                    contents.writeToNBT(contentTag);
-                    tag.setCompoundTag("Contents", contentTag);
-                    hasTag = true;
-                }
-
-                camo = logic.getStackInSlot(1);
-            }
-            else if (meta == 2)
-            {
-                AdvancedDrawbridgeLogic advDrawbridge = (AdvancedDrawbridgeLogic) logic;
-                camo = advDrawbridge.camoInventory.getCamoStack();
-                for (int i = 1; i <= 16; i++)
-                {
-                    ItemStack slot = logic.getStackInSlot(i-1);
-                    if (slot != null)
-                    {
-                        NBTTagCompound contentTag = new NBTTagCompound();
-                        slot.writeToNBT(contentTag);
-                        tag.setCompoundTag("Slot" + i, contentTag);
-                        hasTag = true;
-                    }
-                }
-            }
-
-            if (camo != null)
-            {
-                NBTTagCompound camoTag = new NBTTagCompound();
-                camo.writeToNBT(camoTag);
-                tag.setCompoundTag("Camoflauge", camoTag);
-                hasTag = true;
-            }
-
-            IDrawbridgeLogicBase drawbridge = (IDrawbridgeLogicBase) logic;
-            if (drawbridge.getPlacementDirection() != 4)
-            {
-                tag.setByte("Placement", drawbridge.getPlacementDirection());
-                hasTag = true;
-            }
-            if (hasTag == true)
-                stack.setTagCompound(tag);
-
+            ItemStack stack = getDrawbridgeBlock(world, x, y, z, meta);
             dropDrawbridgeLogic(world, x, y, z, stack);
         }
 
         return world.setBlockToAir(x, y, z);
+    }
+    
+    private ItemStack getDrawbridgeBlock(World world, int x, int y, int z, int meta)
+    {
+        ItemStack stack = new ItemStack(this.blockID, 1, meta);
+        InventoryLogic logic = (InventoryLogic) world.getBlockTileEntity(x, y, z);
+        NBTTagCompound tag = new NBTTagCompound();
+        ItemStack camo = null;
+
+        boolean hasTag = false;
+        if (meta == 0 || meta == 3)
+        {
+            ItemStack contents = logic.getStackInSlot(0);
+            if (contents != null)
+            {
+                NBTTagCompound contentTag = new NBTTagCompound();
+                contents.writeToNBT(contentTag);
+                tag.setCompoundTag("Contents", contentTag);
+                hasTag = true;
+            }
+
+            camo = logic.getStackInSlot(1);
+        }
+        else if (meta == 2)
+        {
+            AdvancedDrawbridgeLogic advDrawbridge = (AdvancedDrawbridgeLogic) logic;
+            camo = advDrawbridge.camoInventory.getCamoStack();
+            for (int i = 1; i <= 16; i++)
+            {
+                ItemStack slot = logic.getStackInSlot(i-1);
+                if (slot != null)
+                {
+                    NBTTagCompound contentTag = new NBTTagCompound();
+                    slot.writeToNBT(contentTag);
+                    tag.setCompoundTag("Slot" + i, contentTag);
+                    hasTag = true;
+                }
+            }
+        }
+
+        if (camo != null)
+        {
+            NBTTagCompound camoTag = new NBTTagCompound();
+            camo.writeToNBT(camoTag);
+            tag.setCompoundTag("Camoflauge", camoTag);
+            hasTag = true;
+        }
+
+        IDrawbridgeLogicBase drawbridge = (IDrawbridgeLogicBase) logic;
+        if (drawbridge.getPlacementDirection() != 4)
+        {
+            tag.setByte("Placement", drawbridge.getPlacementDirection());
+            hasTag = true;
+        }
+        if (hasTag == true)
+            stack.setTagCompound(tag);
+        
+        return stack;
     }
 
     protected void dropDrawbridgeLogic (World world, int x, int y, int z, ItemStack stack)
@@ -410,6 +418,30 @@ public class RedstoneMachine extends InventoryBlock
             entityitem.delayBeforeCanPickup = 10;
             world.spawnEntityInWorld(entityitem);
         }
+    }
+    
+    @Override
+    public ItemStack getPickBlock (MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        int id = idPicked(world, x, y, z);
+
+        if (id == 0)
+        {
+            return null;
+        }
+
+        Item item = Item.itemsList[id];
+        if (item == null)
+        {
+            return null;
+        }
+
+        int meta = getDamageValue(world, x, y, z);
+        if (meta != 1 && meta < 4)
+        {
+            return getDrawbridgeBlock(world, x, y, z, meta);
+        }
+        return new ItemStack(id, 1, meta);
     }
 
     @Override

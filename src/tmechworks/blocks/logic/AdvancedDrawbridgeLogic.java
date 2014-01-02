@@ -1,6 +1,11 @@
 package tmechworks.blocks.logic;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,6 +18,8 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -324,6 +331,27 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                                 placeBlockAt(getStackInSlot(extension - 1), fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
                             }
                             worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
+                            List pushedObjects = new ArrayList();
+
+                            AxisAlignedBB axisalignedbb = Block.blocksList[worldObj.getBlockId(xPos, yPos, zPos)].getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
+
+                            if (axisalignedbb != null)
+                            {
+                                List list = worldObj.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
+                                if (!list.isEmpty())
+                                {
+                                    pushedObjects.addAll(list);
+                                    Iterator iterator = pushedObjects.iterator();
+
+                                    while (iterator.hasNext())
+                                    {
+                                        Entity entity = (Entity) iterator.next();
+                                        entity.moveEntity(Facing.offsetsXForSide[this.direction], Facing.offsetsYForSide[this.direction], Facing.offsetsZForSide[this.direction]);
+                                    }
+
+                                    pushedObjects.clear();
+                                }
+                            }
                             decrStackSize(extension - 1, 1);
                         }
                         else
@@ -372,8 +400,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                         if (block != null)
                         {
                             int meta = worldObj.getBlockMetadata(xPos, yPos, zPos);
-                            if (getStackInBufferSlot(extension - 1) != null && validBlock(extension - 1, block) && validMetadata(extension - 1, block, meta)
-                                    && validDrawbridge(xPos, yPos, zPos))
+                            if (getStackInBufferSlot(extension - 1) != null && validBlock(extension - 1, block) && validMetadata(extension - 1, block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
                                 worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
                                 if (worldObj.setBlock(xPos, yPos, zPos, 0))
