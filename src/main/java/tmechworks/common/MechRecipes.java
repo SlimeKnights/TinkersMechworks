@@ -1,7 +1,7 @@
 package tmechworks.common;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -14,28 +14,28 @@ public class MechRecipes
     {
         // Drawbridge Recipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 0), "aca", "#d#", "#r#", '#', "ingotBronze", 'a', "ingotAluminumBrass", 'c', new ItemStack(
-                MechContent.proxyItem_blankPattern, 1, 1), 'r', new ItemStack(Item.redstone), 'd', new ItemStack(Block.dispenser)));
+                MechContent.proxyItem_blankPattern, 1, 1), 'r', new ItemStack(Items.redstone), 'd', new ItemStack(Blocks.dispenser)));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 0), "aca", "#d#", "#r#", '#', "ingotBronze", 'a', "ingotAluminumBrass", 'c', new ItemStack(
-                MechContent.proxyItem_blankPattern, 1, 2), 'r', new ItemStack(Item.redstone), 'd', new ItemStack(Block.dispenser)));
+                MechContent.proxyItem_blankPattern, 1, 2), 'r', new ItemStack(Items.redstone), 'd', new ItemStack(Blocks.dispenser)));
 
         // Igniter Recipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 1), "aca", "#d#", "#r#", '#', "ingotBronze", 'a', "ingotAluminumBrass", 'c', new ItemStack(
-                MechContent.proxyItem_largePlate, 1, 7), 'r', new ItemStack(Item.redstone), 'd', new ItemStack(Item.flintAndSteel)));
+                MechContent.proxyItem_largePlate, 1, 7), 'r', new ItemStack(Items.redstone), 'd', new ItemStack(Items.flint_and_steel)));
 
         // Dynamo Recipes
 
         // Advanced Drawbridge Recipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 2), " c ", "rdr", " a ", 'a', "ingotAluminumBrass", 'c', new ItemStack(
-                MechContent.proxyItem_blankPattern, 1, 1), 'r', new ItemStack(Item.redstone), 'd', new ItemStack(MechContent.redstoneMachine, 1, 0)));
+                MechContent.proxyItem_blankPattern, 1, 1), 'r', new ItemStack(Items.redstone), 'd', new ItemStack(MechContent.redstoneMachine, 1, 0)));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 2), " c ", "rdr", " a ", 'a', "ingotAluminumBrass", 'c', new ItemStack(
-                MechContent.proxyItem_blankPattern, 1, 2), 'r', new ItemStack(Item.redstone), 'd', new ItemStack(MechContent.redstoneMachine, 1, 0)));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 3), "blockCobalt", "blockArdite", new ItemStack(Block.blockRedstone), new ItemStack(
+                MechContent.proxyItem_blankPattern, 1, 2), 'r', new ItemStack(Items.redstone), 'd', new ItemStack(MechContent.redstoneMachine, 1, 0)));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 3), "blockCobalt", "blockArdite", new ItemStack(Blocks.redstone_block), new ItemStack(
                 MechContent.redstoneMachine, 1, 0)));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.signalBus.blockID, 1, 0), "www", "sss", 'w', MechContent.lengthWire, 's', new ItemStack(Block.stoneSingleSlab, 1,
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.signalBus, 1, 0), "www", "sss", 'w', MechContent.lengthWire, 's', new ItemStack(Blocks.stone_slab, 1,
                 OreDictionary.WILDCARD_VALUE)));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.signalTerminal.blockID, 1, 0), "b", "g", "b", 'b', new ItemStack(MechContent.signalBus.blockID, 1, 0), 'g', new ItemStack(
-                Block.glass, 1, OreDictionary.WILDCARD_VALUE)));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.signalTerminal, 1, 0), "b", "g", "b", 'b', new ItemStack(MechContent.signalBus, 1, 0), 'g', new ItemStack(
+                Blocks.glass, 1, OreDictionary.WILDCARD_VALUE)));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.lengthWire, 8), "a", "a", "a", 'a', "ingotAluminumBrass"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.spoolWire, 1, 256 - 8), "www", "wrw", "www", 'w', MechContent.lengthWire, 'r', "stoneRod"));

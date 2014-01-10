@@ -46,50 +46,50 @@ public class MachineRender implements ISimpleBlockRenderingHandler
 
         if (direction == 0)
         {
-            renderer.uvRotateEast = 3;
-            renderer.uvRotateWest = 3;
-            renderer.uvRotateNorth = 3;
-            renderer.uvRotateSouth = 3;
+            renderer.field_147875_q = 3;
+            renderer.field_147873_r = 3;
+            renderer.field_147869_t = 3;
+            renderer.field_147871_s = 3;
         }
         if (direction == 2)
         {
-            renderer.uvRotateNorth = 2;
-            renderer.uvRotateSouth = 1;
+            renderer.field_147869_t = 2;
+            renderer.field_147871_s = 1;
         }
         if (direction == 3)
         {
-            renderer.uvRotateNorth = 1;
-            renderer.uvRotateSouth = 2;
-            renderer.uvRotateTop = 3;
-            renderer.uvRotateBottom = 3;
+            renderer.field_147869_t = 1;
+            renderer.field_147871_s = 2;
+            renderer.field_147867_u = 3;
+            renderer.field_147865_v = 3;
         }
         if (direction == 4)
         {
-            renderer.uvRotateEast = 1;
-            renderer.uvRotateWest = 2;
-            renderer.uvRotateTop = 2;
-            renderer.uvRotateBottom = 1;
+            renderer.field_147875_q = 1;
+            renderer.field_147873_r = 2;
+            renderer.field_147867_u = 2;
+            renderer.field_147865_v = 1;
         }
         if (direction == 5)
         {
-            renderer.uvRotateEast = 2;
-            renderer.uvRotateWest = 1;
-            renderer.uvRotateTop = 1;
-            renderer.uvRotateBottom = 2;
+            renderer.field_147875_q = 2;
+            renderer.field_147873_r = 1;
+            renderer.field_147867_u = 1;
+            renderer.field_147865_v = 2;
         }
 
         boolean flag = renderer.renderStandardBlock(block, x, y, z);
-        renderer.uvRotateSouth = 0;
-        renderer.uvRotateEast = 0;
-        renderer.uvRotateWest = 0;
-        renderer.uvRotateNorth = 0;
-        renderer.uvRotateTop = 0;
-        renderer.uvRotateBottom = 0;
+        renderer.field_147871_s = 0;
+        renderer.field_147875_q = 0;
+        renderer.field_147873_r = 0;
+        renderer.field_147869_t = 0;
+        renderer.field_147867_u = 0;
+        renderer.field_147865_v = 0;
         return flag;
     }
 
     @Override
-    public boolean shouldRender3DInInventory ()
+    public boolean shouldRender3DInInventory (int modelID)
     {
         return true;
     }

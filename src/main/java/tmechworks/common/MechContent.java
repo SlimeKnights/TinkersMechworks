@@ -2,6 +2,8 @@ package tmechworks.common;
 
 import mantle.lib.client.MantleClientRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
@@ -33,9 +35,9 @@ public class MechContent
 	private void registerItems()
 	{
 		// TODO: Register these with Forge
-		lengthWire = new LengthWire(ConfigCore.itemID_lengthWire).setUnlocalizedName("lengthwire");
+		lengthWire = new LengthWire().setUnlocalizedName("lengthwire");
 		GameRegistry.registerItem(lengthWire, "LengthWire");
-		spoolWire = new SpoolOfWire(ConfigCore.itemID_spoolWire).setUnlocalizedName("spoolwire");
+		spoolWire = new SpoolOfWire().setUnlocalizedName("spoolwire");
 		GameRegistry.registerItem(spoolWire, "SpoolWire");
 		
 		// Fetch TCon Items
@@ -49,21 +51,21 @@ public class MechContent
 	private void registerBlocks()
 	{
         //Redstone machines
-        redstoneMachine = new RedstoneMachine(ConfigCore.blockID_redstoneMachine).setUnlocalizedName("tmechworks.redstoneMachine");
+        redstoneMachine = new RedstoneMachine().setUnlocalizedName("tmechworks.redstoneMachine");
         GameRegistry.registerBlock(redstoneMachine, RedstoneMachineItem.class, "RedstoneMachine");
         GameRegistry.registerTileEntity(DrawbridgeLogic.class, "Drawbridge");
         GameRegistry.registerTileEntity(FirestarterLogic.class, "Firestarter");
         GameRegistry.registerTileEntity(AdvancedDrawbridgeLogic.class, "AdvDrawbridge");
         
-        dynamo = new DynamoBlock(ConfigCore.blockID_dynamo).setLightValue(1.0F).setUnlocalizedName("tmechworks.dynamo").setTextureName("tinker:compressed_alubrass");
+        dynamo = new DynamoBlock().setLightValue(1.0F).setUnlocalizedName("tmechworks.dynamo").setTextureName("tinker:compressed_alubrass");
         GameRegistry.registerBlock(dynamo, "TMechworks:Dynamo");
         GameRegistry.registerTileEntity(DynamoLogic.class, "TMechworks:Dynamo");
 
         //Signal blocks
-		signalBus = new SignalBus(ConfigCore.blockID_signalBus).setUnlocalizedName("tmechworks.signalbus");
+		signalBus = new SignalBus().setUnlocalizedName("tmechworks.signalbus");
 		GameRegistry.registerBlock(signalBus, SignalBusItem.class, "SignalBus");
 		GameRegistry.registerTileEntity(SignalBusLogic.class, "SignalBus");
-		signalTerminal = new SignalTerminal(ConfigCore.blockID_signalTerminal).setUnlocalizedName("tmechworks.signalterminal");
+		signalTerminal = new SignalTerminal().setUnlocalizedName("tmechworks.signalterminal");
 		GameRegistry.registerBlock(signalTerminal, SignalTerminalItem.class, "SignalTerminal");
 		GameRegistry.registerTileEntity(SignalTerminalLogic.class, "SignalTerminal");
 
@@ -77,13 +79,13 @@ public class MechContent
 	
 	private void setupTConManual()
 	{
-	    ItemStack redstone = new ItemStack(Item.redstone);
+	    ItemStack redstone = new ItemStack(Items.redstone);
 	    ItemStack blankCast = new ItemStack(proxyItem_blankPattern, 1, 1);
 	    
         MantleClientRegistry.registerManualLargeRecipe("drawbridge", new ItemStack(redstoneMachine, 1, 0), proxyIS_alubrassIngot, blankCast, proxyIS_alubrassIngot, proxyIS_bronzeIngot, new ItemStack(
-                Block.dispenser), proxyIS_bronzeIngot, proxyIS_bronzeIngot, redstone, proxyIS_bronzeIngot);
+                Blocks.dispenser), proxyIS_bronzeIngot, proxyIS_bronzeIngot, redstone, proxyIS_bronzeIngot);
         MantleClientRegistry.registerManualLargeRecipe("igniter", new ItemStack(redstoneMachine, 1, 1), proxyIS_alubrassIngot, new ItemStack(proxyItem_largePlate, 1, 7), proxyIS_alubrassIngot,
-                proxyIS_bronzeIngot, new ItemStack(Item.flintAndSteel), proxyIS_bronzeIngot, proxyIS_bronzeIngot, redstone, proxyIS_bronzeIngot);
+                proxyIS_bronzeIngot, new ItemStack(Items.flint_and_steel), proxyIS_bronzeIngot, proxyIS_bronzeIngot, redstone, proxyIS_bronzeIngot);
 
 	}
 

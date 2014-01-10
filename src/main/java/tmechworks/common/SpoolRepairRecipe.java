@@ -28,7 +28,7 @@ public class SpoolRepairRecipe implements IRecipe
             tmpStack = inventorycrafting.getStackInSlot(i);
             if (tmpStack instanceof ItemStack)
             {
-                if (tmpStack.itemID == spool.itemID)
+                if (tmpStack == spool)
                 {
                     if (foundSpool)
                     {
@@ -36,7 +36,7 @@ public class SpoolRepairRecipe implements IRecipe
                     }
                     foundSpool = true;
                 } 
-                else if (tmpStack.itemID == wire.itemID && tmpStack.getItemDamage() == wire.getItemDamage())
+                else if (tmpStack == wire && tmpStack.getItemDamage() == wire.getItemDamage())
                 {
                     ++countWire;
                 }
@@ -66,11 +66,11 @@ public class SpoolRepairRecipe implements IRecipe
             tmpStack = inventorycrafting.getStackInSlot(i);
             if (tmpStack instanceof ItemStack)
             {
-                if (tmpStack.itemID == spool.itemID)
+                if (tmpStack == spool)
                 {
                     newSpool = tmpStack.copy();
                 } 
-                else if (tmpStack.itemID == wire.itemID && tmpStack.getItemDamage() == wire.getItemDamage())
+                else if (tmpStack == wire && tmpStack.getItemDamage() == wire.getItemDamage())
                 {
                     ++countWire;
                 }

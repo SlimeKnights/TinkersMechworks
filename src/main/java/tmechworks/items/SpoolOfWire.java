@@ -2,14 +2,15 @@ package tmechworks.items;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.blocks.logic.SignalTerminalLogic;
@@ -22,11 +23,11 @@ public class SpoolOfWire extends Item
     public String textureName = "spoolwire";
     public String unlocalizedName = "spoolwire";
     public String folder = "logic/";
-    public Icon icon;
+    public IIcon icon;
 
-    public SpoolOfWire(int id)
+    public SpoolOfWire()
     {
-        super(id);
+        super();
         this.setCreativeTab(TMechworksRegistry.Mechworks);
         this.maxStackSize = 1;
         this.setMaxDamage(256);
@@ -36,7 +37,7 @@ public class SpoolOfWire extends Item
     @Override
     public ItemStack getContainerItemStack (ItemStack itemStack)
     {
-        return new ItemStack(this.itemID, 1, this.getMaxDamage());
+        return new ItemStack(this, 1, this.getMaxDamage());
     }
 
     @Override
@@ -59,7 +60,7 @@ public class SpoolOfWire extends Item
     @Override
     public boolean onItemUse (ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = world.func_147438_o(x, y, z);
         NBTTagCompound data = itemstack.stackTagCompound;
         NBTTagCompound spoolData = null;
 
@@ -116,7 +117,7 @@ public class SpoolOfWire extends Item
             spoolData.setInteger("targetY", y);
             spoolData.setInteger("targetZ", z);
 
-            data.setCompoundTag("spoolWireData", spoolData);
+            data.setTag("spoolWireData", spoolData);
 
             return true;
         }
@@ -125,20 +126,20 @@ public class SpoolOfWire extends Item
     }
 
     @SideOnly(Side.CLIENT)
-    public Icon getIconFromDamage (int meta)
+    public IIcon getIconFromDamage (int meta)
     {
         return icon;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons (IconRegister iconRegister)
+    public void registerIcons (IIconRegister iconRegister)
     {
         this.icon = iconRegister.registerIcon("tmechworks:" + folder + textureName);
     }
 
-    public void getSubItems (int id, CreativeTabs tab, List list)
+    public void getSubItems (Block b, CreativeTabs tab, List list)
     {
-        list.add(new ItemStack(id, 1, 0));
+        list.add(new ItemStack(b, 1, 0));
     }
 }

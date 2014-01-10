@@ -2,7 +2,7 @@ package tmechworks;
 
 import java.util.logging.Logger;
 
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import tmechworks.client.SignalTetherWorldOverlayRenderer;
 import tmechworks.common.CommonProxy;
@@ -20,12 +20,10 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = "required-after:TConstruct;required-after:Mantle")
-@NetworkMod(serverSideRequired = false, clientSideRequired = true, channels = { "TMechworks" }, packetHandler = tmechworks.network.PacketHandler.class)
 public class TMechworks {
 
     // Shared mod logger

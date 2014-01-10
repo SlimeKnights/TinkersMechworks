@@ -1,11 +1,11 @@
 package tmechworks.blocks;
 
-import static net.minecraftforge.common.ForgeDirection.DOWN;
-import static net.minecraftforge.common.ForgeDirection.EAST;
-import static net.minecraftforge.common.ForgeDirection.NORTH;
-import static net.minecraftforge.common.ForgeDirection.SOUTH;
-import static net.minecraftforge.common.ForgeDirection.UP;
-import static net.minecraftforge.common.ForgeDirection.WEST;
+import static net.minecraftforge.common.util.ForgeDirection.DOWN;
+import static net.minecraftforge.common.util.ForgeDirection.EAST;
+import static net.minecraftforge.common.util.ForgeDirection.NORTH;
+import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
+import static net.minecraftforge.common.util.ForgeDirection.UP;
+import static net.minecraftforge.common.util.ForgeDirection.WEST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -24,12 +24,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.client.block.SignalBusRender;
@@ -59,11 +59,11 @@ public class SignalBus extends Block implements ITileEntityProvider {
     
     public static int HITBOXES = 6;
     
-    public Icon[] icons;
+    public IIcon[] icons;
     public String[] textureNames = new String[] { "signalbus" };
 
-	public SignalBus(int par1) {
-		super(par1, Material.circuits);
+	public SignalBus() {
+		super(Material.circuits);
         this.setHardness(0.1F);
         this.setResistance(1);
         this.setStepSound(soundMetalFootstep);
@@ -104,7 +104,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     world.setBlockToAir(x, y, z);
                 }
 
-                tempStack = new ItemStack(TMechworks.content.signalBus.blockID, dropBus, 0);
+                tempStack = new ItemStack(TMechworks.content.signalBus, dropBus, 0);
                 jumpX = rand.nextFloat() * 0.8F + 0.1F;
                 jumpY = rand.nextFloat() * 0.8F + 0.1F;
                 jumpZ = rand.nextFloat() * 0.8F + 0.1F;
@@ -132,16 +132,16 @@ public class SignalBus extends Block implements ITileEntityProvider {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon (int side, int metadata)
+    public IIcon getIcon (int side, int metadata)
     {
         return icons[0];
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons (IconRegister iconRegister)
+    public void registerIcons (IIconRegister iconRegister)
     {
-        this.icons = new Icon[textureNames.length];
+        this.icons = new IIcon[textureNames.length];
 
         for (int i = 0; i < this.icons.length; ++i)
         {
@@ -411,7 +411,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
     {
         int closest = -1;
 
-        Vec3 playerPosition = Vec3.createVectorHelper(player.posX - terminal.xCoord, player.posY - terminal.yCoord + player.getEyeHeight(), player.posZ - terminal.zCoord);
+        Vec3 playerPosition = Vec3.createVectorHelper(player.posX - terminal.field_145851_c, player.posY - terminal.field_145848_d + player.getEyeHeight(), player.posZ - terminal.field_145849_e);
         Vec3 playerLook = player.getLookVec();
 
         Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord
@@ -517,7 +517,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
             dropWire = ((SignalBusLogic) te).getDroppedWire();
             if (dropBus > 0)
             {
-                tempStack = new ItemStack(TMechworks.content.signalBus.blockID, dropBus, 0);
+                tempStack = new ItemStack(TMechworks.content.signalBus, dropBus, 0);
                 jumpX = rand.nextFloat() * 0.8F + 0.1F;
                 jumpY = rand.nextFloat() * 0.8F + 0.1F;
                 jumpZ = rand.nextFloat() * 0.8F + 0.1F;
@@ -558,12 +558,12 @@ public class SignalBus extends Block implements ITileEntityProvider {
     public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
         ForgeDirection dir = ForgeDirection.getOrientation(par5);
-        return (dir == DOWN  && par1World.isBlockSolidOnSide(par2, par3 + 1, par4, DOWN )) ||
-               (dir == UP    && par1World.isBlockSolidOnSide(par2, par3 - 1, par4, UP   )) ||
-               (dir == NORTH && par1World.isBlockSolidOnSide(par2, par3, par4 + 1, NORTH)) ||
-               (dir == SOUTH && par1World.isBlockSolidOnSide(par2, par3, par4 - 1, SOUTH)) ||
-               (dir == WEST  && par1World.isBlockSolidOnSide(par2 + 1, par3, par4, WEST )) ||
-               (dir == EAST  && par1World.isBlockSolidOnSide(par2 - 1, par3, par4, EAST ));
+        return (dir == DOWN  && par1World.isSideSolid(par2, par3 + 1, par4, DOWN )) ||
+               (dir == UP    && par1World.isSideSolid(par2, par3 - 1, par4, UP   )) ||
+               (dir == NORTH && par1World.isSideSolid(par2, par3, par4 + 1, NORTH)) ||
+               (dir == SOUTH && par1World.isSideSolid(par2, par3, par4 - 1, SOUTH)) ||
+               (dir == WEST  && par1World.isSideSolid(par2 + 1, par3, par4, WEST )) ||
+               (dir == EAST  && par1World.isSideSolid(par2 - 1, par3, par4, EAST ));
     }
 
     /**
@@ -572,23 +572,23 @@ public class SignalBus extends Block implements ITileEntityProvider {
     @Override
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        return par1World.isBlockSolidOnSide(par2 - 1, par3, par4, EAST ) ||
-               par1World.isBlockSolidOnSide(par2 + 1, par3, par4, WEST ) ||
-               par1World.isBlockSolidOnSide(par2, par3, par4 - 1, SOUTH) ||
-               par1World.isBlockSolidOnSide(par2, par3, par4 + 1, NORTH) ||
-               par1World.isBlockSolidOnSide(par2, par3 - 1, par4, UP   ) ||
-               par1World.isBlockSolidOnSide(par2, par3 + 1, par4, DOWN );
+        return par1World.isSideSolid(par2 - 1, par3, par4, EAST ) ||
+               par1World.isSideSolid(par2 + 1, par3, par4, WEST ) ||
+               par1World.isSideSolid(par2, par3, par4 - 1, SOUTH) ||
+               par1World.isSideSolid(par2, par3, par4 + 1, NORTH) ||
+               par1World.isSideSolid(par2, par3 - 1, par4, UP   ) ||
+               par1World.isSideSolid(par2, par3 + 1, par4, DOWN );
     }
 
     @Override
     public boolean canBlockStay (World par1World, int par2, int par3, int par4)
     {
-        return par1World.isBlockSolidOnSide(par2 - 1, par3, par4, EAST ) ||
-                par1World.isBlockSolidOnSide(par2 + 1, par3, par4, WEST ) ||
-                par1World.isBlockSolidOnSide(par2, par3, par4 - 1, SOUTH) ||
-                par1World.isBlockSolidOnSide(par2, par3, par4 + 1, NORTH) ||
-                par1World.isBlockSolidOnSide(par2, par3 - 1, par4, UP   ) ||
-                par1World.isBlockSolidOnSide(par2, par3 + 1, par4, DOWN );
+        return par1World.isSideSolid(par2 - 1, par3, par4, EAST ) ||
+                par1World.isSideSolid(par2 + 1, par3, par4, WEST ) ||
+                par1World.isSideSolid(par2, par3, par4 - 1, SOUTH) ||
+                par1World.isSideSolid(par2, par3, par4 + 1, NORTH) ||
+                par1World.isSideSolid(par2, par3 - 1, par4, UP   ) ||
+                par1World.isSideSolid(par2, par3 + 1, par4, DOWN );
     }
 
 }

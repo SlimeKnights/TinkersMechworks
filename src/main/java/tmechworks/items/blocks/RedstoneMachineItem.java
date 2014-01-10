@@ -2,6 +2,7 @@ package tmechworks.items.blocks;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -12,9 +13,9 @@ public class RedstoneMachineItem extends ItemBlock
 {
     public static final String blockType[] = { "drawbridge", "firestarter", "advdrawbridge", "extdrawbridge" };
 
-    public RedstoneMachineItem(int id)
+    public RedstoneMachineItem(Block b)
     {
-        super(id);
+        super(b);
         setMaxDamage(0);
         setHasSubtypes(true);
     }

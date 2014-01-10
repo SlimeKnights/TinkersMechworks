@@ -8,16 +8,17 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
+import mantle.blocks.BlockUtils;
 import mantle.blocks.iface.*;
 import tmechworks.inventory.DrawbridgeContainer;
 import mantle.blocks.abstracts.InventoryLogic;
+import mantle.common.ComparisonHelper;
 import tmechworks.lib.player.FakePlayerLogic;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 
@@ -41,11 +42,11 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     }
 
     @Override
-    public void setWorldObj (World par1World)
+    public void setfield_145850_b (World par1World)
     {
-        this.worldObj = par1World;
-        if (!worldObj.isRemote)
-            fakePlayer = new FakePlayerLogic(worldObj, "Player.Drawbridge", this);
+        this.field_145850_b = par1World;
+        if (!field_145850_b.isRemote)
+            fakePlayer = new FakePlayerLogic(field_145850_b, "Player.Drawbridge", this);
     }
 
     @Override
@@ -131,7 +132,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
      */
     public void setPlacementDirection (byte keycode)
     {
-        if (!worldObj.isRemote)
+        if (!field_145850_b.isRemote)
         {
             if (keycode == 4)
             {
@@ -240,7 +241,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         super.setInventorySlotContents(slot, itemstack);
         if (slot == 1)
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
     }
 
     @Override
@@ -248,7 +249,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         ItemStack stack = super.decrStackSize(slot, quantity);
         if (slot == 1)
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
         return stack;
     }
 
@@ -265,9 +266,9 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                     if (inventory[0] != null && inventory[0].stackSize > 0 && extension < maxExtension)
                     {
                         extension++;
-                        int xPos = xCoord;
-                        int yPos = yCoord;
-                        int zPos = zCoord;
+                        int xPos = field_145851_c;
+                        int yPos = field_145848_d;
+                        int zPos = field_145849_e;
 
                         bufferStack = inventory[0].copy();
                         bufferStack.stackSize = 1;
@@ -294,24 +295,24 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             break;
                         }
 
-                        Block block = Block.blocksList[worldObj.getBlockId(xPos, yPos, zPos)];
-                        if (block == null || block.isAirBlock(worldObj, xPos, yPos, zPos) || block.isBlockReplaceable(worldObj, xPos, yPos, zPos))
+                        Block block = field_145850_b.getBlock(xPos, yPos, zPos)];
+                        if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
                         {
-                            //tryExtend(worldObj, xPos, yPos, zPos, direction);
-                            int blockToItem = TConstructRegistry.blockToItemMapping[bufferStack.itemID];
+                            //tryExtend(field_145850_b, xPos, yPos, zPos, direction);
+                            int blockToItem = TConstructRegistry.blockToItemMapping[bufferStack];
                             if (blockToItem == 0)
                             {
-                                if (inventory[0].itemID >= 4096 || Block.blocksList[inventory[0].itemID] == null)
+                                if (inventory[0].itemID >= 4096 || BlockUtils.getBlockFromItem(inventory[0].getItem()) == null)
                                     return;
-                                Block placeBlock = Block.blocksList[bufferStack.itemID];
-                                placeBlockAt(bufferStack, fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
+                                Block placeBlock = BlockUtils.getBlockFromItem(bufferStack.getItem());
+                                placeBlockAt(bufferStack, fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
                             }
                             else
                             {
                                 Block placeBlock = Block.blocksList[blockToItem];
-                                placeBlockAt(bufferStack, fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
+                                placeBlockAt(bufferStack, fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
                             }
-                            worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
+                            field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, field_145850_b.rand.nextFloat() * 0.25F + 0.6F);
                             decrStackSize(0, 1);
                         }
                         else
@@ -331,9 +332,9 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                 {
                     if ((inventory[0] == null || inventory[0].stackSize < inventory[0].getMaxStackSize()) && extension > 0)
                     {
-                        int xPos = xCoord;
-                        int yPos = yCoord;
-                        int zPos = zCoord;
+                        int xPos = field_145851_c;
+                        int yPos = field_145848_d;
+                        int zPos = field_145849_e;
 
                         switch (direction)
                         {
@@ -357,14 +358,14 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             break;
                         }
 
-                        Block block = Block.blocksList[worldObj.getBlockId(xPos, yPos, zPos)];
+                        Block block = field_145850_b.getBlock(xPos, yPos, zPos);
                         if (block != null)
                         {
-                            int meta = worldObj.getBlockMetadata(xPos, yPos, zPos);
+                            int meta = field_145850_b.getBlockMetadata(xPos, yPos, zPos);
                             if (bufferStack != null && validBlock(block) && validMetadata(block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
-                                worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
-                                if (worldObj.setBlock(xPos, yPos, zPos, 0))
+                                field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, field_145850_b.rand.nextFloat() * 0.15F + 0.6F);
+                                if (field_145850_b.setBlock(xPos, yPos, zPos, 0))
                                     if (inventory[0] == null)
                                     {
                                         inventory[0] = bufferStack.copy();
@@ -401,12 +402,12 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
      */
     public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata, Block block)
     {
-        if (!world.setBlock(x, y, z, block.blockID, metadata, 3))
+        if (!world.setBlock(x, y, z, block, metadata, 3))
         {
             return false;
         }
 
-        if (world.getBlockId(x, y, z) == block.blockID)
+        if (world.func_147439_a(x, y, z) == block)
         {
             block.onBlockPlacedBy(world, x, y, z, player, stack);
             block.onPostBlockPlaced(world, x, y, z, metadata);
@@ -417,7 +418,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validDrawbridge (int x, int y, int z)
     {
-        TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+        TileEntity te = field_145850_b.func_147438_o(x, y, z);
         if (te instanceof IDrawbridgeLogicBase && ((IDrawbridgeLogicBase) te).hasExtended())
             return false;
 
@@ -426,24 +427,24 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validBlock (Block block)
     {
-        int type = TConstructRegistry.interchangableBlockMapping[block.blockID];
+        int type = TConstructRegistry.interchangableBlockMapping[block];
         if (type != 0)
         {
             if (type == bufferStack.itemID)
                 return true;
         }
-        int blockToItem = TConstructRegistry.blockToItemMapping[block.blockID];
+        int blockToItem = TConstructRegistry.blockToItemMapping[block];
         if (blockToItem != 0)
         {
             if (blockToItem == bufferStack.itemID)
                 return true;
         }
-        return block.blockID == bufferStack.itemID;
+        return ComparisonHelper.areEquivalent(bufferStack.getItem(), block);
     }
 
     boolean validMetadata (Block block, int metadata)
     {
-        int type = TConstructRegistry.drawbridgeState[block.blockID];
+        int type = TConstructRegistry.drawbridgeState[block];
         if (type == 0)
         {
             return metadata == bufferStack.getItemDamage();
@@ -530,14 +531,14 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
-        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+        return new Packet132TileEntityData(field_145851_c, field_145848_d, field_145849_e, 1, tag);
     }
 
     @Override
     public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
     {
         readFromNBT(packet.data);
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        field_145850_b.markBlockForRenderUpdate(field_145851_c, field_145848_d, field_145849_e);
     }
 
     public boolean hasExtended ()
@@ -554,6 +555,6 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
             bufferStack = getStackInSlot(0).copy();
             bufferStack.stackSize = 1;
         }
-        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        this.field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
     }
 }

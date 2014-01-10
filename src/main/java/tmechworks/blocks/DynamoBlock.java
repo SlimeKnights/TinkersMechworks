@@ -10,9 +10,9 @@ import tmechworks.lib.TMechworksRegistry;
 
 public class DynamoBlock extends BlockContainer
 {
-    public DynamoBlock(int id)
+    public DynamoBlock()
     {
-        super(id, Material.iron);
+        super(Material.iron);
         this.setCreativeTab(TMechworksRegistry.Mechworks);
     }
     

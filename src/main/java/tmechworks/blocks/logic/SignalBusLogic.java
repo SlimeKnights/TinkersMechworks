@@ -12,11 +12,11 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import tmechworks.TMechworks;
 import tmechworks.blocks.component.SignalBusMasterLogic;
 import tmechworks.lib.multiblock.IMultiblockMember;
@@ -70,17 +70,17 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 {
                     continue;
                 }
-                tX = ForgeDirection.VALID_DIRECTIONS[j].offsetX + xCoord;
-                tY = ForgeDirection.VALID_DIRECTIONS[j].offsetY + yCoord;
-                tZ = ForgeDirection.VALID_DIRECTIONS[j].offsetZ + zCoord;
-                if (worldObj.isBlockOpaqueCube(tX, tY, tZ))
+                tX = ForgeDirection.VALID_DIRECTIONS[j].offsetX + field_145851_c;
+                tY = ForgeDirection.VALID_DIRECTIONS[j].offsetY + field_145848_d;
+                tZ = ForgeDirection.VALID_DIRECTIONS[j].offsetZ + field_145849_e;
+                if (field_145850_b.isBlockOpaqueCube(tX, tY, tZ))
                 {
                     continue;
                 }
                 tX += ForgeDirection.VALID_DIRECTIONS[i].offsetX;
                 tY += ForgeDirection.VALID_DIRECTIONS[i].offsetY;
                 tZ += ForgeDirection.VALID_DIRECTIONS[i].offsetZ;
-                te = worldObj.getBlockTileEntity(tX, tY, tZ);
+                te = field_145850_b.func_147438_o(tX, tY, tZ);
                 if (te instanceof IMultiblockMember && ((IMultiblockMember) te).isCompatible((Object) this) && ((IMultiblockMember) te).willConnect(getCoordInWorld()))
                 {
                     corners.add((IMultiblockMember) te);
@@ -101,9 +101,9 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
             for (CoordTuple coord : transceivers.keySet())
             {
-                if (worldObj.getChunkProvider().chunkExists(coord.x >> 4, coord.z >> 4))
+                if (field_145850_b.getChunkProvider().chunkExists(coord.x >> 4, coord.z >> 4))
                 {
-                    te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+                    te = field_145850_b.func_147438_o(coord.x, coord.y, coord.z);
                     if (te instanceof ISignalTransceiver)
                     {
                         ((ISignalTransceiver) te).receiveSignalUpdate(cachedReceivedSignals);
@@ -123,7 +123,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
     @Override
     public void updateEntity ()
     {
-        if (worldObj.isRemote)
+        if (field_145850_b.isRemote)
         {
             return;
         }
@@ -140,7 +140,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
             if (connectableCount != cachedConnectableCount)
             {
                 cachedConnectableCount = connectableCount;
-                super.onBlockAdded(worldObj, xCoord, yCoord, zCoord);
+                super.onBlockAdded(field_145850_b, field_145851_c, field_145848_d, field_145849_e);
 //                this.getMultiblockMaster().revisitBlocks();
             }
         }
@@ -234,15 +234,15 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
     public boolean registerTerminal (World world, int x, int y, int z, boolean rehome)
     {
-        if (worldObj.isRemote)
+        if (field_145850_b.isRemote)
         {
             return false;
         }
-        if (world == worldObj && world.isRemote == worldObj.isRemote)
+        if (world == field_145850_b && world.isRemote == field_145850_b.isRemote)
         {
-            if (worldObj.getBlockTileEntity(x, y, z) instanceof ISignalTransceiver)
+            if (field_145850_b.func_147438_o(x, y, z) instanceof ISignalTransceiver)
             {
-                TileEntity te = world.getBlockTileEntity(x, y, z);
+                TileEntity te = world.func_147438_o(x, y, z);
                 CoordTuple coords = new CoordTuple(x, y, z);
                 byte[] signals = null;
 
@@ -259,7 +259,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                     float jumpY = rand.nextFloat() * 0.8F + 0.1F;
                     float jumpZ = rand.nextFloat() * 0.8F + 0.1F;
 
-                    EntityItem entityitem = new EntityItem(world, (double) ((float) xCoord + jumpX), (double) ((float) yCoord + jumpY), (double) ((float) zCoord + jumpZ), tempStack);
+                    EntityItem entityitem = new EntityItem(world, (double) ((float) field_145851_c + jumpX), (double) ((float) field_145848_d + jumpY), (double) ((float) field_145849_e + jumpZ), tempStack);
 
                     float offset = 0.05F;
                     entityitem.motionX = (double) ((float) rand.nextGaussian() * offset);
@@ -267,7 +267,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                     entityitem.motionZ = (double) ((float) rand.nextGaussian() * offset);
                     world.spawnEntityInWorld(entityitem);
                 }
-                ((ISignalTransceiver) te).setBusCoords(world, xCoord, yCoord, zCoord);
+                ((ISignalTransceiver) te).setBusCoords(world, field_145851_c, field_145848_d, field_145849_e);
 
                 signals = ((ISignalTransceiver) te).getReceivedSignals();
 
@@ -308,7 +308,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
     public boolean isRegisteredTerminal (World world, int x, int y, int z)
     {
-        if (worldObj.isRemote)
+        if (field_145850_b.isRemote)
         {
             return false;
         }
@@ -317,7 +317,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
     public boolean unregisterTerminal (World world, int x, int y, int z)
     {
-        if (worldObj.isRemote)
+        if (field_145850_b.isRemote)
         {
             return false;
         }
@@ -384,14 +384,14 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
     {
         NBTTagCompound tag = new NBTTagCompound();
         writeCustomNBT(tag);
-        return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, tag);
+        return new Packet132TileEntityData(this.field_145851_c, this.field_145848_d, this.field_145849_e, 1, tag);
     }
 
     @Override
     public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
     {
         readCustomNBT(packet.data);
-        this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
+        this.field_145850_b.markBlockForRenderUpdate(this.field_145851_c, this.field_145848_d, this.field_145849_e);
     }
 
     public boolean[] placedSides ()
@@ -415,11 +415,11 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 continue;
             }
             dir = ForgeDirection.getOrientation(i);
-            neighborX = xCoord + dir.offsetX;
-            neighborY = yCoord + dir.offsetY;
-            neighborZ = zCoord + dir.offsetZ;
+            neighborX = field_145851_c + dir.offsetX;
+            neighborY = field_145848_d + dir.offsetY;
+            neighborZ = field_145849_e + dir.offsetZ;
 
-            te = worldObj.getBlockTileEntity(neighborX, neighborY, neighborZ);
+            te = field_145850_b.func_147438_o(neighborX, neighborY, neighborZ);
             connected[i] = (te instanceof ISignalBusConnectable && ((ISignalBusConnectable) te).connectableOnFace(fromFace));
         }
 
@@ -437,15 +437,15 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         switch (dir)
         {
         case DOWN:
-            return (this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord) instanceof SignalBusLogic);
+            return (this.field_145850_b.func_147438_o(this.field_145851_c, this.field_145848_d - 1, this.field_145849_e) instanceof SignalBusLogic);
         case NORTH:
-            return (this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord - 1) instanceof SignalBusLogic);
+            return (this.field_145850_b.func_147438_o(this.field_145851_c, this.field_145848_d, this.field_145849_e - 1) instanceof SignalBusLogic);
         case SOUTH:
-            return (this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord + 1) instanceof SignalBusLogic);
+            return (this.field_145850_b.func_147438_o(this.field_145851_c, this.field_145848_d, this.field_145849_e + 1) instanceof SignalBusLogic);
         case WEST:
-            return (this.worldObj.getBlockTileEntity(this.xCoord - 1, this.yCoord, this.zCoord) instanceof SignalBusLogic);
+            return (this.field_145850_b.func_147438_o(this.field_145851_c - 1, this.field_145848_d, this.field_145849_e) instanceof SignalBusLogic);
         case EAST:
-            return (this.worldObj.getBlockTileEntity(this.xCoord + 1, this.yCoord, this.zCoord) instanceof SignalBusLogic);
+            return (this.field_145850_b.func_147438_o(this.field_145851_c + 1, this.field_145848_d, this.field_145849_e) instanceof SignalBusLogic);
         default:
             return false;
         }
@@ -454,7 +454,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
     @Override
     public MultiblockMasterBaseLogic getNewMultiblockMasterObject ()
     {
-        return new SignalBusMasterLogic(this.worldObj);
+        return new SignalBusMasterLogic(this.field_145850_b);
     }
 
     public byte[] getLocalSignals ()
@@ -484,7 +484,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
     public void addPlacedSide (int side)
     {
         placedSides[side] = true;
-        if (!worldObj.isRemote)
+        if (!field_145850_b.isRemote)
         {
             forceCheck = true;
         }
@@ -506,10 +506,10 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 continue;
             }
             dir = ForgeDirection.getOrientation(i);
-            neighborX = xCoord + dir.offsetX;
-            neighborY = yCoord + dir.offsetY;
-            neighborZ = zCoord + dir.offsetZ;
-            if (worldObj.isBlockOpaqueCube(neighborX, neighborY, neighborZ))
+            neighborX = field_145851_c + dir.offsetX;
+            neighborY = field_145848_d + dir.offsetY;
+            neighborZ = field_145849_e + dir.offsetZ;
+            if (field_145850_b.isBlockOpaqueCube(neighborX, neighborY, neighborZ))
             {
                 continue;
             }
@@ -517,7 +517,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
             neighborY += fromFace.offsetY;
             neighborZ += fromFace.offsetZ;
 
-            te = worldObj.getBlockTileEntity(neighborX, neighborY, neighborZ);
+            te = field_145850_b.func_147438_o(neighborX, neighborY, neighborZ);
             corners[i] = (te instanceof ISignalBusConnectable && ((ISignalBusConnectable) te).connectableOnCorner(fromFace.getOpposite(), dir.getOpposite()));
         }
 
@@ -556,21 +556,21 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                     continue;
                 }
                 jDir = ForgeDirection.VALID_DIRECTIONS[j];
-                if (xCoord + jDir.offsetX == coord.x && yCoord + jDir.offsetY == coord.y && zCoord + jDir.offsetZ == coord.z)
+                if (field_145851_c + jDir.offsetX == coord.x && field_145848_d + jDir.offsetY == coord.y && field_145849_e + jDir.offsetZ == coord.z)
                 {
-                    te = worldObj.getBlockTileEntity(xCoord + jDir.offsetX, yCoord + jDir.offsetY, zCoord + jDir.offsetZ);
+                    te = field_145850_b.func_147438_o(field_145851_c + jDir.offsetX, field_145848_d + jDir.offsetY, field_145849_e + jDir.offsetZ);
                     if (te instanceof ISignalBusConnectable && ((ISignalBusConnectable)te).connectableOnFace(iDir))
                     {
                         return true;
                     }
                 }
-                if (worldObj.isBlockOpaqueCube(xCoord + jDir.offsetX, yCoord + jDir.offsetY, zCoord + jDir.offsetZ))
+                if (field_145850_b.isBlockOpaqueCube(field_145851_c + jDir.offsetX, field_145848_d + jDir.offsetY, field_145849_e + jDir.offsetZ))
                 {
                     continue;
                 }
-                if (xCoord + iDir.offsetX + jDir.offsetX == coord.x && yCoord + iDir.offsetY + jDir.offsetY == coord.y && zCoord + iDir.offsetZ + jDir.offsetZ == coord.z)
+                if (field_145851_c + iDir.offsetX + jDir.offsetX == coord.x && field_145848_d + iDir.offsetY + jDir.offsetY == coord.y && field_145849_e + iDir.offsetZ + jDir.offsetZ == coord.z)
                 {
-                    te = worldObj.getBlockTileEntity(xCoord + iDir.offsetX + jDir.offsetX, yCoord + iDir.offsetY + jDir.offsetY, zCoord + iDir.offsetZ + jDir.offsetZ);
+                    te = field_145850_b.func_147438_o(field_145851_c + iDir.offsetX + jDir.offsetX, field_145848_d + iDir.offsetY + jDir.offsetY, field_145849_e + iDir.offsetZ + jDir.offsetZ);
                     if (te instanceof ISignalBusConnectable && ((ISignalBusConnectable)te).connectableOnCorner(iDir.getOpposite(), jDir.getOpposite()))
                     {
                         return true;
@@ -602,11 +602,11 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                     continue;
                 }
                 jDir = ForgeDirection.VALID_DIRECTIONS[j];
-                if (worldObj.isBlockOpaqueCube(xCoord + jDir.offsetX, yCoord + jDir.offsetY, zCoord + jDir.offsetZ))
+                if (field_145850_b.isBlockOpaqueCube(field_145851_c + jDir.offsetX, field_145848_d + jDir.offsetY, field_145849_e + jDir.offsetZ))
                 {
                     continue;
                 }
-                cornerCoords.add(new CoordTuple(xCoord + iDir.offsetX + jDir.offsetX, yCoord + iDir.offsetY + jDir.offsetY, zCoord + iDir.offsetZ + jDir.offsetZ));
+                cornerCoords.add(new CoordTuple(field_145851_c + iDir.offsetX + jDir.offsetX, field_145848_d + iDir.offsetY + jDir.offsetY, field_145849_e + iDir.offsetZ + jDir.offsetZ));
             }
         }
 
@@ -640,7 +640,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         TileEntity te;
         for (CoordTuple coord : transceivers.keySet())
         {
-            te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+            te = field_145850_b.func_147438_o(coord.x, coord.y, coord.z);
             if (te instanceof ISignalTransceiver)
             {
                 calc += ((ISignalTransceiver) te).getDroppedWire();
@@ -657,7 +657,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         TileEntity te;
         for (CoordTuple coord : scan)
         {
-            te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+            te = field_145850_b.func_147438_o(coord.x, coord.y, coord.z);
             if (te instanceof ISignalTransceiver)
             {
                 ((ISignalTransceiver) te).doUnregister(true);
@@ -698,7 +698,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
             {
                 sDir = sDir.getOpposite();
             }
-            if (!worldObj.isBlockSolidOnSide(xCoord + iDir.offsetX, yCoord + iDir.offsetY, zCoord + iDir.offsetZ, iDir.getOpposite()))
+            if (!field_145850_b.isBlockSolidOnSide(field_145851_c + iDir.offsetX, field_145848_d + iDir.offsetY, field_145849_e + iDir.offsetZ, iDir.getOpposite()))
             {
                 placedSides[i] = false;
                 ++dropCount;

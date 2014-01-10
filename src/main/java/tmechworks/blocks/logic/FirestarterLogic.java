@@ -2,13 +2,14 @@ package tmechworks.blocks.logic;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import tconstruct.library.tools.AbilityHelper;
 import mantle.blocks.iface.*;
 import tmechworks.TMechworks;
@@ -41,9 +42,9 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
 
     void setFire ()
     {
-        int xPos = xCoord;
-        int yPos = yCoord;
-        int zPos = zCoord;
+        int xPos = field_145851_c;
+        int yPos = field_145848_d;
+        int zPos = field_145849_e;
 
         switch (direction)
         {
@@ -67,24 +68,24 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
             break;
         }
 
-        Block block = Block.blocksList[worldObj.getBlockId(xPos, yPos, zPos)];
+        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
         if (active)
         {
 //            TMechworks.logger.info("Setting fire");
-            if (block == null || block.isAirBlock(worldObj, xPos, yPos, zPos))
+            if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos))
             {
-                worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
-                worldObj.setBlock(xPos, yPos, zPos, Block.fire.blockID);
+                field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
+                field_145850_b.setBlock(xPos, yPos, zPos, Blocks.fire);
             }
         }
         else
         {
             //TConstruct.logger.info("Stopping fire "+putOut);
-            if (block == Block.fire)
+            if (block == Blocks.fire)
             {
-                //worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "random.fizz", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
-                worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
-                worldObj.setBlock(xPos, yPos, zPos, 0, 0, 3);
+                //field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "random.fizz", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
+                field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
+                field_145850_b.setBlock(xPos, yPos, zPos, 0, 0, 3);
                 //putOut = false;
                 shouldActivate = true;
             }
@@ -184,13 +185,13 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
     {
         NBTTagCompound tag = new NBTTagCompound();
         writeCustomNBT(tag);
-        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+        return new Packet132TileEntityData(field_145851_c, field_145848_d, field_145849_e, 1, tag);
     }
 
     @Override
     public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
     {
         readCustomNBT(packet.data);
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        field_145850_b.markBlockForRenderUpdate(field_145851_c, field_145848_d, field_145849_e);
     }
 }

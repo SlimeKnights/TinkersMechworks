@@ -6,21 +6,24 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
+import mantle.blocks.BlockUtils;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.blocks.abstracts.InventoryBlock;
 import mantle.blocks.iface.IActiveLogic;
+import mantle.common.ComparisonHelper;
 import mantle.world.CoordTuple;
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
@@ -33,9 +36,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class RedstoneMachine extends InventoryBlock
 {
-    public RedstoneMachine(int id)
+    public RedstoneMachine()
     {
-        super(id, Material.iron);
+        super(Material.iron);
         this.setCreativeTab(TMechworksRegistry.Mechworks);
         setHardness(12);
         setStepSound(soundMetalFootstep);
@@ -46,14 +49,14 @@ public class RedstoneMachine extends InventoryBlock
     {
         if (world.getBlockMetadata(x, y, z) == 0 || world.getBlockMetadata(x, y, z) == 2)
         {
-            TileEntity logic = world.getBlockTileEntity(x, y, z);
+            TileEntity logic = world.func_147438_o(x, y, z);
 
             if (logic != null && logic instanceof DrawbridgeLogic)
             {
                 if (((DrawbridgeLogic) logic).getStackInSlot(1) != null)
                 {
                     ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
-                    if (stack.itemID < 4096 && Block.blocksList[stack.itemID] != null)
+                    if (stack.itemID < 4096 && BlockUtils.getBlockFromItem(stack.getItem()) != null)
                         return lightValue[stack.itemID];
                 }
             }
@@ -63,7 +66,7 @@ public class RedstoneMachine extends InventoryBlock
                 if (((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack() != null)
                 {
                     ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
-                    if (stack.itemID < 4096 && Block.blocksList[stack.itemID] != null)
+                    if (stack.itemID < 4096 && BlockUtils.getBlockFromItem(stack.getItem()) != null)
                         return lightValue[stack.itemID];
                 }
             }
@@ -77,19 +80,19 @@ public class RedstoneMachine extends InventoryBlock
     {
         if (world.getBlockMetadata(x, y, z) == 0 && world.getBlockMetadata(x, y, z) == 2)
         {
-            TileEntity logic = world.getBlockTileEntity(x, y, z);
+            TileEntity logic = world.func_147438_o(x, y, z);
 
             if (logic != null && logic instanceof DrawbridgeLogic)
             {
                 ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
-                if (stack != null && stack.itemID < 4096 && Block.blocksList[stack.itemID] != null && stack.itemID != this.blockID)
-                    return Block.blocksList[stack.itemID].colorMultiplier(world, x, y, z);
+                if (stack != null && stack.itemID < 4096 && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem() != this)
+                    return BlockUtils.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
             }
             else if (logic != null && logic instanceof AdvancedDrawbridgeLogic)
             {
                 ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
-                if (stack != null && stack.itemID < 4096 && Block.blocksList[stack.itemID] != null && stack.itemID != this.blockID)
-                    return Block.blocksList[stack.itemID].colorMultiplier(world, x, y, z);
+                if (stack != null && stack.itemID < 4096 && BlockUtils.getBlockFromItem(stack.getItem()) != null &&! ComparisonHelper.areEquivalent(stack.getItem(),this)
+                    return BlockUtils.getBlockFromItem(stack.getItem().colorMultiplier(world, x, y, z);
             }
         }
 
@@ -150,10 +153,10 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void registerIcons (IconRegister iconRegister)
+    public void registerIcons (IIconRegister iconRegister)
     {
         String[] textureNames = getTextureNames();
-        this.icons = new Icon[textureNames.length];
+        this.icons = new IIcon[textureNames.length];
 
         for (int i = 0; i < this.icons.length; ++i)
         {
@@ -162,7 +165,7 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public Icon getIcon (int side, int meta)
+    public IIcon getIcon (int side, int meta)
     {
         if (meta == 0)
         {
@@ -189,9 +192,9 @@ public class RedstoneMachine extends InventoryBlock
         return icons[0];
     }
 
-    public Icon getBlockTexture (IBlockAccess world, int x, int y, int z, int side)
+    public IIcon getBlockTexture (IBlockAccess world, int x, int y, int z, int side)
     {
-        TileEntity logic = world.getBlockTileEntity(x, y, z);
+        TileEntity logic = world.func_147438_o(x, y, z);
         short direction = (logic instanceof IFacingLogic) ? ((IFacingLogic) logic).getRenderDirection() : 0;
         int meta = world.getBlockMetadata(x, y, z);
         if (meta == 0 || meta == 3)
@@ -201,7 +204,7 @@ public class RedstoneMachine extends InventoryBlock
             ItemStack stack = drawbridge.getStackInSlot(1);
             if (stack != null && stack.itemID < 4096)
             {
-                Block block = Block.blocksList[stack.itemID];
+                Block block = BlockUtils.getBlockFromItem(stack.getItem());
                 if (block != null && block.renderAsNormalBlock())
                     return block.getIcon(side, stack.getItemDamage());
             }
@@ -221,7 +224,7 @@ public class RedstoneMachine extends InventoryBlock
             ItemStack stack = drawbridge.camoInventory.getCamoStack();
             if (stack != null && stack.itemID < 4096)
             {
-                Block block = Block.blocksList[stack.itemID];
+                Block block = BlockUtils.getBlockFromItem(stack.getItem());
                 if (block != null && block.renderAsNormalBlock())
                     return block.getIcon(side, stack.getItemDamage());
             }
@@ -278,18 +281,18 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void getSubBlocks (int id, CreativeTabs tab, List list)
+    public void getSubBlocks (Item b, CreativeTabs tab, List list)
     {
         for (int iter = 0; iter < 4; iter++)
         {
-            list.add(new ItemStack(id, 1, iter));
+            list.add(new ItemStack(b, 1, iter));
         }
     }
 
     /* Redstone */
     public void onNeighborBlockChange (World world, int x, int y, int z, int neighborBlockID)
     {
-        IActiveLogic logic = (IActiveLogic) world.getBlockTileEntity(x, y, z);
+        IActiveLogic logic = (IActiveLogic) world.func_147438_o(x, y, z);
         IFacingLogic facing = (IFacingLogic) logic;
         int direction = facing.getRenderDirection();
         int maxStrength = 0, tmpStrength = 0;
@@ -325,8 +328,8 @@ public class RedstoneMachine extends InventoryBlock
         int meta = world.getBlockMetadata(x, y, z);
         if (meta == 0)
         {
-            ItemStack stack = new ItemStack(this.blockID, 1, meta);
-            DrawbridgeLogic logic = (DrawbridgeLogic) world.getBlockTileEntity(x, y, z);
+            ItemStack stack = new ItemStack(this, 1, meta);
+            DrawbridgeLogic logic = (DrawbridgeLogic) world.func_147438_o(x, y, z);
             NBTTagCompound tag = new NBTTagCompound();
 
             boolean hasTag = false;
@@ -335,7 +338,7 @@ public class RedstoneMachine extends InventoryBlock
             {
                 NBTTagCompound contentTag = new NBTTagCompound();
                 contents.writeToNBT(contentTag);
-                tag.setCompoundTag("Contents", contentTag);
+                tag.setTag("Contents", contentTag);
                 hasTag = true;
             }
 
@@ -344,7 +347,7 @@ public class RedstoneMachine extends InventoryBlock
             {
                 NBTTagCompound camoTag = new NBTTagCompound();
                 camo.writeToNBT(camoTag);
-                tag.setCompoundTag("Camoflauge", camoTag);
+                tag.setTag("Camoflauge", camoTag);
                 hasTag = true;
             }
 
@@ -389,7 +392,7 @@ public class RedstoneMachine extends InventoryBlock
         super.onBlockPlacedBy(world, x, y, z, living, stack);
         if (stack.hasTagCompound())
         {
-            DrawbridgeLogic logic = (DrawbridgeLogic) world.getBlockTileEntity(x, y, z);
+            DrawbridgeLogic logic = (DrawbridgeLogic) world.func_147438_o(x, y, z);
             NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Contents");
             if (contentTag != null)
             {

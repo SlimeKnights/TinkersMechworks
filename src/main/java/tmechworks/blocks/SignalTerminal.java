@@ -7,7 +7,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -16,12 +16,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.SignalTerminalLogic;
 import tmechworks.client.block.SignalTerminalRender;
@@ -53,15 +53,15 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     public static int HITBOXES = 13;
     public static int[] sideBoxMapping = new int[] { -1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5 };
 
-    public Icon[] icons;
-    public Icon[] channelIcons;
+    public IIcon[] icons;
+    public IIcon[] channelIcons;
     public String[] textureNames = new String[] { "signalbus" };
     public String[] channelTextureNames = new String[] { "white", "orange", "magenta", "lightblue", "yellow", "lime", "pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red",
             "black" };
 
-    public SignalTerminal(int par1)
+    public SignalTerminal()
     {
-        super(par1, Material.circuits);
+        super(Material.circuits);
         this.setHardness(0.1F);
         this.setResistance(1);
         this.setStepSound(soundMetalFootstep);
@@ -70,12 +70,12 @@ public class SignalTerminal extends Block implements ITileEntityProvider
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon (int side, int metadata)
+    public IIcon getIcon (int side, int metadata)
     {
         return icons[0];
     }
 
-    public Icon getChannelIcon (int channel)
+    public IIcon getChannelIcon (int channel)
     {
         if (channel < 0 || channel >= channelIcons.length)
         {
@@ -87,16 +87,16 @@ public class SignalTerminal extends Block implements ITileEntityProvider
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons (IconRegister iconRegister)
+    public void registerIcons (IIconRegister iconRegister)
     {
-        this.icons = new Icon[textureNames.length];
+        this.icons = new IIcon[textureNames.length];
 
         for (int i = 0; i < this.icons.length; ++i)
         {
             this.icons[i] = iconRegister.registerIcon("tmechworks:" + textureNames[i]);
         }
 
-        this.channelIcons = new Icon[channelTextureNames.length];
+        this.channelIcons = new IIcon[channelTextureNames.length];
 
         for (int i = 0; i < this.channelIcons.length; ++i)
         {
@@ -381,7 +381,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     {
         int closest = -1;
 
-        Vec3 playerPosition = Vec3.createVectorHelper(player.posX - terminal.xCoord, player.posY - terminal.yCoord + player.getEyeHeight(), player.posZ - terminal.zCoord);
+        Vec3 playerPosition = Vec3.createVectorHelper(player.posX - terminal.field_145851_c, player.posY - terminal.field_145848_d + player.getEyeHeight(), player.posZ - terminal.field_145848_d);
         Vec3 playerLook = player.getLookVec();
 
         Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord
@@ -492,7 +492,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
             
             if (dropTerm > 0)
             {
-                tempStack = new ItemStack(TMechworks.content.signalTerminal.blockID, dropTerm, 0);
+                tempStack = new ItemStack(TMechworks.content.signalTerminal, dropTerm, 0);
                 jumpX = rand.nextFloat() * 0.8F + 0.1F;
                 jumpY = rand.nextFloat() * 0.8F + 0.1F;
                 jumpZ = rand.nextFloat() * 0.8F + 0.1F;

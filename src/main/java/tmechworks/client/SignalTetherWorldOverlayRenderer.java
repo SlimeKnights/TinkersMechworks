@@ -9,17 +9,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import tmechworks.TMechworks;
 import tmechworks.lib.signal.ISignalTransceiver;
 
 public class SignalTetherWorldOverlayRenderer
 {
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onWorldRenderLast (RenderWorldLastEvent event)
     {
         if (event.context.mc.thePlayer == null || event.context.mc.thePlayer.getHeldItem() == null)
@@ -76,7 +76,7 @@ public class SignalTetherWorldOverlayRenderer
                         dst = ((ISignalTransceiver) obj).getBusCoords();
                         if (dst != null)
                         {
-                            src = new CoordTuple(((TileEntity) obj).xCoord, ((TileEntity) obj).yCoord, ((TileEntity) obj).zCoord);
+                            src = new CoordTuple(((TileEntity) obj).field_145851_c, ((TileEntity) obj).field_145848_d, ((TileEntity) obj).field_145849_e);
                             transceivers.push(new CoordTuplePair(src, dst));
                         }
                     }

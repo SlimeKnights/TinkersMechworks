@@ -1,6 +1,6 @@
 package tmechworks.lib.signal;
 
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public interface ISignalBusConnectable
 {

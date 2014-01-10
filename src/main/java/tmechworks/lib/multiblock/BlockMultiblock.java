@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 public abstract class BlockMultiblock extends BlockContainer
 {
 
-    protected BlockMultiblock(int par1, Material par2Material)
+    protected BlockMultiblock(Material par2Material)
     {
-        super(par1, par2Material);
+        super(par2Material);
     }
 
     @Override

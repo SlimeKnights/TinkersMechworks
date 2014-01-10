@@ -79,7 +79,7 @@ public abstract class MultiblockMasterBaseLogic
         }
         else if (coords.compareTo(referenceCoord) < 0)
         {
-            TileEntity te = this.worldObj.getBlockTileEntity(referenceCoord.x, referenceCoord.y, referenceCoord.z);
+            TileEntity te = this.worldObj.func_147438_o(referenceCoord.x, referenceCoord.y, referenceCoord.z);
             ((IMultiblockMember) te).forfeitMultiblockSaveDelegate();
 
             referenceCoord = coords;
@@ -147,7 +147,7 @@ public abstract class MultiblockMasterBaseLogic
             {
                 for (CoordTuple tcoord : connectedBlocks)
                 {
-                    TileEntity te = this.worldObj.getBlockTileEntity(tcoord.x, tcoord.y, tcoord.z);
+                    TileEntity te = this.worldObj.func_147438_o(tcoord.x, tcoord.y, tcoord.z);
                     if (te == null)
                     {
                         continue;
@@ -166,7 +166,7 @@ public abstract class MultiblockMasterBaseLogic
 
             if (referenceCoord != null)
             {
-                TileEntity te = this.worldObj.getBlockTileEntity(referenceCoord.x, referenceCoord.y, referenceCoord.z);
+                TileEntity te = this.worldObj.func_147438_o(referenceCoord.x, referenceCoord.y, referenceCoord.z);
                 ((IMultiblockMember) te).becomeMultiblockSaveDelegate();
             }
         }
@@ -207,7 +207,7 @@ public abstract class MultiblockMasterBaseLogic
         for (CoordTuple coord : acquiredMembers)
         {
             this.connectedBlocks.add(coord);
-            te = this.worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+            te = this.worldObj.func_147438_o(coord.x, coord.y, coord.z);
             acquiredMember = (IMultiblockMember) te;
             acquiredMember.onMasterMerged(this);
             this.onBlockAdded(acquiredMember);
@@ -220,7 +220,7 @@ public abstract class MultiblockMasterBaseLogic
 
         if (referenceCoord != null)
         {
-            TileEntity te = this.worldObj.getBlockTileEntity(referenceCoord.x, referenceCoord.y, referenceCoord.z);
+            TileEntity te = this.worldObj.func_147438_o(referenceCoord.x, referenceCoord.y, referenceCoord.z);
             if (te instanceof IMultiblockMember)
             {
                 ((IMultiblockMember) te).forfeitMultiblockSaveDelegate();
@@ -265,7 +265,7 @@ public abstract class MultiblockMasterBaseLogic
                 {
                     for (CoordTuple tcoord : connectedBlocks)
                     {
-                        TileEntity te = this.worldObj.getBlockTileEntity(tcoord.x, tcoord.y, tcoord.z);
+                        TileEntity te = this.worldObj.func_147438_o(tcoord.x, tcoord.y, tcoord.z);
                         if (!(te instanceof IMultiblockMember))
                         {
                             continue;
@@ -284,7 +284,7 @@ public abstract class MultiblockMasterBaseLogic
 
                 if (referenceCoord != null)
                 {
-                    TileEntity te = this.worldObj.getBlockTileEntity(referenceCoord.x, referenceCoord.y, referenceCoord.z);
+                    TileEntity te = this.worldObj.func_147438_o(referenceCoord.x, referenceCoord.y, referenceCoord.z);
                     ((IMultiblockMember) te).becomeMultiblockSaveDelegate();
                 }
             }
@@ -331,7 +331,7 @@ public abstract class MultiblockMasterBaseLogic
     {
         TileEntity te;
         // Ensure that our current reference coords are valid. If not, invalidate it.
-        if (referenceCoord != null && this.worldObj.getBlockTileEntity(referenceCoord.x, referenceCoord.y, referenceCoord.z) == null)
+        if (referenceCoord != null && this.worldObj.func_147438_o(referenceCoord.x, referenceCoord.y, referenceCoord.z) == null)
         {
             referenceCoord = null;
         }
@@ -345,7 +345,7 @@ public abstract class MultiblockMasterBaseLogic
                 continue;
             }
 
-            te = this.worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+            te = this.worldObj.func_147438_o(coord.x, coord.y, coord.z);
             if (!(te instanceof IMultiblockMember))
             {
                 continue;
@@ -372,7 +372,7 @@ public abstract class MultiblockMasterBaseLogic
         // Now visit all connected parts, breadth-first, starting from reference coord.
         LinkedList<IMultiblockMember> membersToCheck = new LinkedList<IMultiblockMember>();
         IMultiblockMember[] nearbyMembers = null;
-        IMultiblockMember member = (IMultiblockMember) this.worldObj.getBlockTileEntity(referenceCoord.x, referenceCoord.y, referenceCoord.z);
+        IMultiblockMember member = (IMultiblockMember) this.worldObj.func_147438_o(referenceCoord.x, referenceCoord.y, referenceCoord.z);
 
         membersToCheck.add(member);
         while (!membersToCheck.isEmpty())
@@ -407,7 +407,7 @@ public abstract class MultiblockMasterBaseLogic
                 deadBlocks.add(coord);
                 continue;
             }
-            member = (IMultiblockMember) this.worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+            member = (IMultiblockMember) this.worldObj.func_147438_o(coord.x, coord.y, coord.z);
             if (!member.isVisited())
             {
                 orphans.add(member);

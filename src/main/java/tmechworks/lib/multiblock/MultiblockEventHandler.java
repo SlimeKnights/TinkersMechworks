@@ -1,16 +1,16 @@
 package tmechworks.lib.multiblock;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.event.EventPriority;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class MultiblockEventHandler
 {
-    @ForgeSubscribe(priority = EventPriority.NORMAL)
+    @SubscribeEvent(priority = EventPriority.NORMAL)
     public void onChunkLoad (ChunkEvent.Load loadEvent)
     {
         Chunk chunk = loadEvent.getChunk();
@@ -22,7 +22,7 @@ public class MultiblockEventHandler
         MultiblockRegistry.onChunkLoaded(world, ChunkCoordIntPair.chunkXZ2Int(chunk.xPosition, chunk.zPosition));
     }
 
-    @ForgeSubscribe(priority = EventPriority.NORMAL)
+    @SubscribeEvent(priority = EventPriority.NORMAL)
     public void onChunkUnload (ChunkEvent.Unload unloadEvent)
     {
         Chunk chunk = unloadEvent.getChunk();
@@ -34,7 +34,7 @@ public class MultiblockEventHandler
         MultiblockRegistry.onChunkUnloaded(world, ChunkCoordIntPair.chunkXZ2Int(chunk.xPosition, chunk.zPosition));
     }
 
-    @ForgeSubscribe(priority = EventPriority.NORMAL)
+    @SubscribeEvent(priority = EventPriority.NORMAL)
     public void onWorldUnload (WorldEvent.Unload unloadWorldEvent)
     {
         MultiblockRegistry.onWorldUnloaded(unloadWorldEvent.world);

@@ -1,5 +1,6 @@
 package tmechworks.items.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -7,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import tmechworks.blocks.logic.SignalTerminalLogic;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,9 +17,9 @@ public class SignalTerminalItem extends ItemBlock
 {
     public static final String blockType[] = { "signalterminal" };
 
-    public SignalTerminalItem(int id)
+    public SignalTerminalItem(Block b)
     {
-        super(id);
+        super(b);
         this.maxStackSize = 64;
         this.setHasSubtypes(false);
     }
@@ -110,7 +111,7 @@ public class SignalTerminalItem extends ItemBlock
             return false;
         }
 
-        TileEntity te = world.getBlockTileEntity(tmpX, tmpY, tmpZ);
+        TileEntity te = world.func_147438_o(tmpX, tmpY, tmpZ);
 
         ((SignalTerminalLogic) te).addPendingSide(tside);
         ((SignalTerminalLogic) te).connectPending();
@@ -157,7 +158,7 @@ public class SignalTerminalItem extends ItemBlock
 
         if (world.getBlockId(tmpX, tmpY, tmpZ) == this.getBlockID())
         {
-            TileEntity te = world.getBlockTileEntity(tmpX, tmpY, tmpZ);
+            TileEntity te = world.func_147438_o(tmpX, tmpY, tmpZ);
             if (te == null || !(te instanceof SignalTerminalLogic))
             {
                 return false;
