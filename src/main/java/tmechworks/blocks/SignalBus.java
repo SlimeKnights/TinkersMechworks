@@ -63,7 +63,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
     public String[] textureNames = new String[] { "signalbus" };
 
 	public SignalBus() {
-		super(Material.circuits);
+		super(Material.field_151594_q);
         this.setHardness(0.1F);
         this.setResistance(1);
         this.setStepSound(soundMetalFootstep);
@@ -81,13 +81,13 @@ public class SignalBus extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-    public void onNeighborBlockChange (World world, int x, int y, int z, int blockID)
+    public void onNeighborBlockChange (World world, int x, int y, int z, Block block)
     {
-	    if (blockID == this.blockID)
+	    if (block == this)
 	    {
 	        return;
 	    }
-	    super.onNeighborBlockChange(world, x, y, z, blockID);
+	    super.onNeighborBlockChange(world, x, y, z, block);
 	    
 	    TileEntity te = world.getBlockTileEntity(x, y, z);
 	    if (te instanceof SignalBusLogic)

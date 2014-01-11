@@ -26,7 +26,7 @@ public class SignalTetherWorldOverlayRenderer
         {
             return;
         }
-        if (event.context.mc.thePlayer.getHeldItem().itemID == TMechworks.instance.content.spoolWire.itemID)
+        if (event.context.mc.thePlayer.getHeldItem() == TMechworks.instance.content.spoolWire)
         {
             GL11.glPushMatrix();
             Entity entity = event.context.mc.renderViewEntity;
@@ -69,7 +69,7 @@ public class SignalTetherWorldOverlayRenderer
             CoordTuple dst;
             for (int c = 0; c < 9; ++c)
             {
-                for (Object obj : chunks[c].chunkTileEntityMap.values())
+                for (Object obj : chunks[c].field_150816_i.values())
                 {
                     if (obj instanceof ISignalTransceiver && obj instanceof TileEntity)
                     {

@@ -61,7 +61,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
 
     public SignalTerminal()
     {
-        super(Material.circuits);
+        super(Material.field_151594_q);
         this.setHardness(0.1F);
         this.setResistance(1);
         this.setStepSound(soundMetalFootstep);

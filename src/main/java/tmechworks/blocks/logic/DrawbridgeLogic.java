@@ -4,10 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -427,16 +429,16 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validBlock (Block block)
     {
-        int type = TConstructRegistry.interchangableBlockMapping[block];
-        if (type != 0)
+        Item type = TConstructRegistry.interchangableBlockMapping[block].getItem();
+        if (type != null)
         {
-            if (type == bufferStack.itemID)
+            if (type == bufferStack.getItem())
                 return true;
         }
-        int blockToItem = TConstructRegistry.blockToItemMapping[block];
-        if (blockToItem != 0)
+        Item blockToItem = TConstructRegistry.blockToItemMapping[new ItemStack(block).getItem()];
+        if (blockToItem != null)
         {
-            if (blockToItem == bufferStack.itemID)
+            if (blockToItem == bufferStack.getItem())
                 return true;
         }
         return ComparisonHelper.areEquivalent(bufferStack.getItem(), block);
@@ -535,7 +537,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     }
 
     @Override
-    public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
+    public void onDataPacket (NetworkManager net, Packet132TileEntityData packet)
     {
         readFromNBT(packet.data);
         field_145850_b.markBlockForRenderUpdate(field_145851_c, field_145848_d, field_145849_e);

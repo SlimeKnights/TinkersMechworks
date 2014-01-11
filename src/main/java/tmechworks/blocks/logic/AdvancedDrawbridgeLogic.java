@@ -6,10 +6,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
@@ -442,14 +443,14 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     boolean validBlock (int slot, Block block)
     {
-        int type = TConstructRegistry.interchangableBlockMapping[block];
-        if (type != 0)
+        ItemStack type = TConstructRegistry.interchangableBlockMapping[block];
+        if (type != null)
         {
             if (type == getStackInBufferSlot(slot))
                 return true;
         }
-        int blockToItem = TConstructRegistry.blockToItemMapping[block];
-        if (blockToItem != 0)
+        Item blockToItem = TConstructRegistry.blockToItemMapping[block];
+        if (blockToItem != null)
         {
             if (blockToItem == getStackInBufferSlot(slot).getItem())
                 return true;
@@ -580,7 +581,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
+    public void onDataPacket (NetworkManager net, Packet132TileEntityData packet)
     {
         readFromNBT(packet.data);
         field_145850_b.markBlockForRenderUpdate(field_145851_c, field_145848_d, field_145849_e);

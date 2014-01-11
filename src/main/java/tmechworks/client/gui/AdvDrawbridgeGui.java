@@ -115,7 +115,7 @@ public class AdvDrawbridgeGui extends GuiContainer
             }
             else
             {
-                b.drawButton = !flag;
+                b.field_146125_m = !flag;
             }
         }
         ((AdvancedDrawbridgeContainer) this.inventorySlots).updateContainerSlots();
@@ -123,7 +123,7 @@ public class AdvDrawbridgeGui extends GuiContainer
 
     protected void actionPerformed (GuiButton button)
     {
-        if (button.id == 5)
+        if (button.field_146127_k == 5)
         {
             setExpanded(!isGuiExpanded);
             return;

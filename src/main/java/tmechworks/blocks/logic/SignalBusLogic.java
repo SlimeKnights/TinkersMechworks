@@ -11,7 +11,7 @@ import mantle.world.CoordTuple;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
@@ -388,7 +388,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
     }
 
     @Override
-    public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
+    public void onDataPacket (NetworkManager net, Packet132TileEntityData packet)
     {
         readCustomNBT(packet.data);
         this.field_145850_b.markBlockForRenderUpdate(this.field_145851_c, this.field_145848_d, this.field_145849_e);

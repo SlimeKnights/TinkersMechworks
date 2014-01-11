@@ -12,7 +12,7 @@ public class DynamoBlock extends BlockContainer
 {
     public DynamoBlock()
     {
-        super(Material.iron);
+        super(Material.field_151573_f);
         this.setCreativeTab(TMechworksRegistry.Mechworks);
     }
     

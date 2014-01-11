@@ -38,7 +38,7 @@ public class RedstoneMachine extends InventoryBlock
 {
     public RedstoneMachine()
     {
-        super(Material.iron);
+        super(Material.field_151573_f);
         this.setCreativeTab(TMechworksRegistry.Mechworks);
         setHardness(12);
         setStepSound(soundMetalFootstep);
@@ -56,8 +56,8 @@ public class RedstoneMachine extends InventoryBlock
                 if (((DrawbridgeLogic) logic).getStackInSlot(1) != null)
                 {
                     ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
-                    if (stack.itemID < 4096 && BlockUtils.getBlockFromItem(stack.getItem()) != null)
-                        return lightValue[stack.itemID];
+                    if (BlockUtils.getBlockFromItem(stack.getItem()) != null)
+                        return lightValue[stack];
                 }
             }
 
@@ -66,8 +66,8 @@ public class RedstoneMachine extends InventoryBlock
                 if (((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack() != null)
                 {
                     ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
-                    if (stack.itemID < 4096 && BlockUtils.getBlockFromItem(stack.getItem()) != null)
-                        return lightValue[stack.itemID];
+                    if (BlockUtils.getBlockFromItem(stack.getItem()) != null)
+                        return lightValue[stack];
                 }
             }
         }
@@ -85,13 +85,13 @@ public class RedstoneMachine extends InventoryBlock
             if (logic != null && logic instanceof DrawbridgeLogic)
             {
                 ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
-                if (stack != null && stack.itemID < 4096 && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem() != this)
+                if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this)
                     return BlockUtils.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
             }
             else if (logic != null && logic instanceof AdvancedDrawbridgeLogic)
             {
                 ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
-                if (stack != null && stack.itemID < 4096 && BlockUtils.getBlockFromItem(stack.getItem()) != null &&! ComparisonHelper.areEquivalent(stack.getItem(),this)
+                if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null &&! ComparisonHelper.areEquivalent(stack.getItem(),this)
                     return BlockUtils.getBlockFromItem(stack.getItem().colorMultiplier(world, x, y, z);
             }
         }
@@ -202,7 +202,7 @@ public class RedstoneMachine extends InventoryBlock
             int offset = meta == 0 ? 0 : 10;
             DrawbridgeLogic drawbridge = (DrawbridgeLogic) logic;
             ItemStack stack = drawbridge.getStackInSlot(1);
-            if (stack != null && stack.itemID < 4096)
+            if (stack != null)
             {
                 Block block = BlockUtils.getBlockFromItem(stack.getItem());
                 if (block != null && block.renderAsNormalBlock())
@@ -222,7 +222,7 @@ public class RedstoneMachine extends InventoryBlock
         {
             AdvancedDrawbridgeLogic drawbridge = (AdvancedDrawbridgeLogic) logic;
             ItemStack stack = drawbridge.camoInventory.getCamoStack();
-            if (stack != null && stack.itemID < 4096)
+            if (stack != null)
             {
                 Block block = BlockUtils.getBlockFromItem(stack.getItem());
                 if (block != null && block.renderAsNormalBlock())
