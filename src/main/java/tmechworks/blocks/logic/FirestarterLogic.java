@@ -12,6 +12,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import tconstruct.library.tools.AbilityHelper;
 import mantle.blocks.iface.*;
+import mantle.world.WorldHelper;
 import tmechworks.TMechworks;
 
 public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiveLogic
@@ -72,10 +73,10 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
         if (active)
         {
 //            TMechworks.logger.info("Setting fire");
-            if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos))
+            if (block == null || WorldHelper.isAirBlock(field_145850_b, xPos, yPos, zPos))
             {
                 field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
-                field_145850_b.setBlock(xPos, yPos, zPos, Blocks.fire);
+                field_145850_b.func_147449_b(xPos, yPos, zPos, Blocks.fire);
             }
         }
         else
@@ -85,7 +86,7 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
             {
                 //field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "random.fizz", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
                 field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
-                field_145850_b.setBlock(xPos, yPos, zPos, 0, 0, 3);
+                field_145850_b.func_147465_d(xPos, yPos, zPos, Blocks.air, 0, 3);
                 //putOut = false;
                 shouldActivate = true;
             }
@@ -162,9 +163,9 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound tags)
+    public void func_145839_a (NBTTagCompound tags)
     {
-        super.writeToNBT(tags);
+        super.func_145839_a(tags);
         active = tags.getBoolean("Active");
         writeCustomNBT(tags);
     }

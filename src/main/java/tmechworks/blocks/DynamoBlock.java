@@ -13,7 +13,7 @@ public class DynamoBlock extends BlockContainer
     public DynamoBlock()
     {
         super(Material.field_151573_f);
-        this.setCreativeTab(TMechworksRegistry.Mechworks);
+        this.func_149647_a(TMechworksRegistry.Mechworks);
     }
     
     public int getRenderType ()
@@ -22,7 +22,7 @@ public class DynamoBlock extends BlockContainer
     }
     
     @Override
-    public boolean shouldSideBeRendered (IBlockAccess iblockaccess, int x, int y, int z, int side)
+    public boolean func_149646_a (IBlockAccess iblockaccess, int x, int y, int z, int side)
     {
         return true;
     }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import mantle.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -64,10 +65,10 @@ public class SignalBus extends Block implements ITileEntityProvider {
 
 	public SignalBus() {
 		super(Material.field_151594_q);
-        this.setHardness(0.1F);
-        this.setResistance(1);
+        this.func_149711_c(0.1F);
+        this.func_149752_b(1);
         this.setStepSound(soundMetalFootstep);
-        setCreativeTab(TMechworksRegistry.Mechworks);
+        func_149647_a(TMechworksRegistry.Mechworks);
 	}
 
 	@Override
@@ -101,7 +102,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
             {
                 if (((SignalBusLogic)te).checkShouldDestroy())
                 {
-                    world.setBlockToAir(x, y, z);
+                    WorldHelper.setBlockToAir(world, x, y, z);
                 }
 
                 tempStack = new ItemStack(TMechworks.content.signalBus, dropBus, 0);
@@ -201,7 +202,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
     
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered (IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
+    public boolean func_149646_a (IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
     {
         return true;
     }
@@ -224,7 +225,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
                 {
                     continue;
                 }
-                this.setBlockBounds((float)boxes[i].minX, (float)boxes[i].minY, (float)boxes[i].minZ, (float)boxes[i].maxX, (float)boxes[i].maxY, (float)boxes[i].maxZ);
+                this.func_149676_a((float)boxes[i].minX, (float)boxes[i].minY, (float)boxes[i].minZ, (float)boxes[i].maxX, (float)boxes[i].maxY, (float)boxes[i].maxZ);
                 MovingObjectPosition hit = super.collisionRayTrace(world, x, y, z, start, end);
                 if (hit != null)
                 {
@@ -589,6 +590,12 @@ public class SignalBus extends Block implements ITileEntityProvider {
                 par1World.isSideSolid(par2, par3, par4 + 1, NORTH) ||
                 par1World.isSideSolid(par2, par3 - 1, par4, UP   ) ||
                 par1World.isSideSolid(par2, par3 + 1, par4, DOWN );
+    }
+
+    @Override
+    public TileEntity func_149915_a (World var1, int var2)
+    {
+        return new SignalBusLogic();
     }
 
 }

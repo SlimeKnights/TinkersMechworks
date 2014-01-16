@@ -25,6 +25,7 @@ import mantle.blocks.abstracts.InventoryBlock;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.common.ComparisonHelper;
 import mantle.world.CoordTuple;
+import mantle.world.WorldHelper;
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.blocks.logic.DrawbridgeLogic;
@@ -39,8 +40,8 @@ public class RedstoneMachine extends InventoryBlock
     public RedstoneMachine()
     {
         super(Material.field_151573_f);
-        this.setCreativeTab(TMechworksRegistry.Mechworks);
-        setHardness(12);
+        this.func_149647_a(TMechworksRegistry.Mechworks);
+        func_149711_c(12);
         setStepSound(soundMetalFootstep);
     }
 
@@ -165,7 +166,7 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public IIcon getIcon (int side, int meta)
+    public IIcon func_149691_a (int side, int meta)
     {
         if (meta == 0)
         {
@@ -205,8 +206,8 @@ public class RedstoneMachine extends InventoryBlock
             if (stack != null)
             {
                 Block block = BlockUtils.getBlockFromItem(stack.getItem());
-                if (block != null && block.renderAsNormalBlock())
-                    return block.getIcon(side, stack.getItemDamage());
+                if (block != null && block.func_149686_d())
+                    return block.func_149691_a(side, stack.getItemDamage());
             }
             if (side == direction)
             {
@@ -225,8 +226,8 @@ public class RedstoneMachine extends InventoryBlock
             if (stack != null)
             {
                 Block block = BlockUtils.getBlockFromItem(stack.getItem());
-                if (block != null && block.renderAsNormalBlock())
-                    return block.getIcon(side, stack.getItemDamage());
+                if (block != null && block.func_149686_d())
+                    return block.func_149691_a(side, stack.getItemDamage());
             }
             if (side == direction)
             {
@@ -281,7 +282,7 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void getSubBlocks (Item b, CreativeTabs tab, List list)
+    public void func_149666_a (Item b, CreativeTabs tab, List list)
     {
         for (int iter = 0; iter < 4; iter++)
         {
@@ -362,7 +363,7 @@ public class RedstoneMachine extends InventoryBlock
             dropDrawbridgeLogic(world, x, y, z, stack);
         }
 
-        return world.setBlockToAir(x, y, z);
+        return WorldHelper.setBlockToAirBool(world, x, y, z);
     }
 
     protected void dropDrawbridgeLogic (World world, int x, int y, int z, ItemStack stack)
@@ -374,7 +375,7 @@ public class RedstoneMachine extends InventoryBlock
             double d1 = (double) (world.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
             double d2 = (double) (world.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
             EntityItem entityitem = new EntityItem(world, (double) x + d0, (double) y + d1, (double) z + d2, stack);
-            entityitem.delayBeforeCanPickup = 10;
+            entityitem.field_145804_b = 10;
             world.spawnEntityInWorld(entityitem);
         }
     }

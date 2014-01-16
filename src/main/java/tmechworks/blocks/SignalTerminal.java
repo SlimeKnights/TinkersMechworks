@@ -62,10 +62,10 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     public SignalTerminal()
     {
         super(Material.field_151594_q);
-        this.setHardness(0.1F);
-        this.setResistance(1);
+        this.func_149711_c(0.1F);
+        this.func_149752_b(1);
         this.setStepSound(soundMetalFootstep);
-        setCreativeTab(TMechworksRegistry.Mechworks);
+        this.func_149647_a(TMechworksRegistry.Mechworks);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     }
 
     @Override
-    public boolean isBlockSolidOnSide (World world, int x, int y, int z, ForgeDirection side)
+    public boolean isSideSolid (World world, int x, int y, int z, ForgeDirection side)
     {
         TileEntity te = world.getBlockTileEntity(x, y, z);
         if (te != null && te instanceof SignalTerminalLogic)
@@ -166,15 +166,15 @@ public class SignalTerminal extends Block implements ITileEntityProvider
      */
     public boolean canPlaceBlockAt (World world, int x, int y, int z)
     {
-        return world.isBlockSolidOnSide(x - 1, y, z, ForgeDirection.EAST) || world.isBlockSolidOnSide(x + 1, y, z, ForgeDirection.WEST) || world.isBlockSolidOnSide(x, y, z - 1, ForgeDirection.SOUTH)
-                || world.isBlockSolidOnSide(x, y, z + 1, ForgeDirection.NORTH) || world.isBlockSolidOnSide(x, y - 1, z, ForgeDirection.UP)
-                || world.isBlockSolidOnSide(x, y + 1, z, ForgeDirection.DOWN);
+        return world.isSideSolid(x - 1, y, z, ForgeDirection.EAST) || world.isSideSolid(x + 1, y, z, ForgeDirection.WEST) || world.isSideSolid(x, y, z - 1, ForgeDirection.SOUTH)
+                || world.isSideSolid(x, y, z + 1, ForgeDirection.NORTH) || world.isSideSolid(x, y - 1, z, ForgeDirection.UP)
+                || world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN);
     }
 
     /**
     * Updates the blocks bounds based on its current state. Args: world, x, y, z
     */
-    public void setBlockBoundsBasedOnState (IBlockAccess world, int x, int y, int z)
+    public void func_149676_aBasedOnState (IBlockAccess world, int x, int y, int z)
     {
         float minX = 1;
         float minY = 1;
@@ -201,11 +201,11 @@ public class SignalTerminal extends Block implements ITileEntityProvider
                 maxZ = Math.max(maxZ, (float) aabb.maxZ);
             }
 
-            setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+            func_149676_a(minX, minY, minZ, maxX, maxY, maxZ);
         }
         else
         {
-            this.setBlockBounds(0.375F, 0.375F, 0.375F, 0.625F, 0.625F, 0.625F);
+            this.func_149676_a(0.375F, 0.375F, 0.375F, 0.625F, 0.625F, 0.625F);
         }
         return;
     }
@@ -213,9 +213,9 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     @Override
     public boolean canBlockStay (World world, int x, int y, int z)
     {
-        return world.isBlockSolidOnSide(x - 1, y, z, ForgeDirection.EAST) || world.isBlockSolidOnSide(x + 1, y, z, ForgeDirection.WEST) || world.isBlockSolidOnSide(x, y, z - 1, ForgeDirection.SOUTH)
-                || world.isBlockSolidOnSide(x, y, z + 1, ForgeDirection.NORTH) || world.isBlockSolidOnSide(x, y - 1, z, ForgeDirection.UP)
-                || world.isBlockSolidOnSide(x, y + 1, z, ForgeDirection.DOWN);
+        return world.isSideSolid(x - 1, y, z, ForgeDirection.EAST) || world.isSideSolid(x + 1, y, z, ForgeDirection.WEST) || world.isSideSolid(x, y, z - 1, ForgeDirection.SOUTH)
+                || world.isSideSolid(x, y, z + 1, ForgeDirection.NORTH) || world.isSideSolid(x, y - 1, z, ForgeDirection.UP)
+                || world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN);
     }
 
     public void addCollisionBoxesToList (World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
@@ -268,7 +268,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered (IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
+    public boolean func_149646_a (IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
     {
         return true;
     }

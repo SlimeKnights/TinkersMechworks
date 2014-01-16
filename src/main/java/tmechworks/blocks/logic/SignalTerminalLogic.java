@@ -128,9 +128,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound data)
+    public void func_145839_a (NBTTagCompound data)
     {
-        super.writeToNBT(data);
+        super.func_145839_a(data);
 
         data.setByteArray("sideChannel", sideChannel);
         data.setByteArray("receivingSides", receivingSides);
@@ -337,7 +337,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
     public Packet getDescriptionPacket ()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
+        func_145839_a(tag);
         return new Packet132TileEntityData(field_145851_c, field_145848_d, field_145849_e, 1, tag);
     }
 

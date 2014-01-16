@@ -1,6 +1,7 @@
 package tmechworks;
 
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,7 +28,7 @@ import cpw.mods.fml.relauncher.Side;
 public class TMechworks {
 
     // Shared mod logger
-    public static final Logger logger = Logger.getLogger("TMechworks");
+    public static final Logger logger = LogManager.getLogger("TMechworks");
 
     /* Instance of this mod, used for grabbing prototype fields */
     @Instance("TMechworks")
@@ -38,7 +39,7 @@ public class TMechworks {
 
     public TMechworks ()
     {
-        logger.setParent(FMLCommonHandler.instance().getFMLLogger());
+        //logger.setParent(FMLCommonHandler.instance().getFMLLogger());
     }
 
     @EventHandler

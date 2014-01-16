@@ -22,6 +22,7 @@ import mantle.blocks.BlockUtils;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.*;
 import mantle.common.ComparisonHelper;
+import mantle.world.WorldHelper;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;
 import tmechworks.lib.player.FakePlayerLogic;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
@@ -47,7 +48,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public void setfield_145850_b (World par1World)
+    public void setworldObj (World par1World)
     {
         this.field_145850_b = par1World;
         if (!par1World.isRemote)
@@ -377,7 +378,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             if (getStackInBufferSlot(extension - 1) != null && validBlock(extension - 1, block) && validMetadata(extension - 1, block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
                                 field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, field_145850_b.rand.nextFloat() * 0.15F + 0.6F);
-                                if (field_145850_b.setBlock(xPos, yPos, zPos, 0))
+                                if (WorldHelper.setBlockToAirBool(field_145850_b, xPos, yPos, zPos))
                                     if (getStackInSlot(extension - 1) == null)
                                     {
                                         setInventorySlotContents(extension - 1, getStackInBufferSlot(extension - 1).copy());
@@ -418,7 +419,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
      */
     public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata, Block block)
     {
-        if (!world.setBlock(x, y, z, block, metadata, 3))
+        if (!world.func_147465_d(x, y, z, block, metadata, 3))
         {
             return false;
         }
@@ -508,9 +509,9 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound tags)
+    public void func_145839_a (NBTTagCompound tags)
     {
-        super.writeToNBT(tags);
+        super.func_145839_a(tags);
         tags.setBoolean("Active", active);
         tags.setBoolean("Working", working);
         tags.setByte("Extension", extension);
@@ -518,7 +519,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
         if (camoInventory.getStackInSlot(0) != null)
         {
             NBTTagCompound camoTag = new NBTTagCompound();
-            camoInventory.getStackInSlot(0).writeToNBT(camoTag);
+            camoInventory.getStackInSlot(0).func_145839_a(camoTag);
             tags.setTag("Camo", camoTag);
         }
 
@@ -551,7 +552,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
             {
                 NBTTagCompound tagList = new NBTTagCompound();
                 tagList.setByte("Slot", (byte) iter);
-                getStackInBufferSlot(iter).writeToNBT(tagList);
+                getStackInBufferSlot(iter).func_145839_a(tagList);
                 nbttaglist.appendTag(tagList);
             }
         }
@@ -576,7 +577,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     public Packet getDescriptionPacket ()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
+        func_145839_a(tag);
         return new Packet132TileEntityData(field_145851_c, field_145848_d, field_145849_e, 1, tag);
     }
 

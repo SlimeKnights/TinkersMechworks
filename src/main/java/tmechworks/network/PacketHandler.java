@@ -46,7 +46,7 @@ public class PacketHandler implements IPacketHandler
         }
         catch (Exception e)
         {
-            TMechworks.logger.warning("Failed at reading client packet for TMechworks.");
+            TMechworks.logger.warn("Failed at reading client packet for TMechworks.");
             e.printStackTrace();
         }
     }
@@ -80,7 +80,7 @@ public class PacketHandler implements IPacketHandler
         }
         catch (IOException e)
         {
-            TMechworks.logger.warning("Failed at reading server packet for TMechworks.");
+            TMechworks.logger.warn("Failed at reading server packet for TMechworks.");
             e.printStackTrace();
         }
     }

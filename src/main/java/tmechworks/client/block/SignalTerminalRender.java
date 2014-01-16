@@ -36,16 +36,16 @@ public class SignalTerminalRender implements ISimpleBlockRenderingHandler
     public void renderInventoryBlock (Block block, int metadata, int modelID, RenderBlocks renderer)
     {
         // Render X-
-        renderer.setRenderBounds(plate_low_min, plate_width_min, plate_width_min, plate_low_max, plate_width_max, plate_width_max);
-        this.renderStandardBlock(block, metadata, renderer);
+        renderer.func_147782_a(plate_low_min, plate_width_min, plate_width_min, plate_low_max, plate_width_max, plate_width_max);
+        this.func_147784_q(block, metadata, renderer);
 
-        renderer.setRenderBounds(center_min, center_min, center_min, center_max, center_max, center_max);
-        this.renderStandardBlock(block, metadata, renderer);
+        renderer.func_147782_a(center_min, center_min, center_min, center_max, center_max, center_max);
+        this.func_147784_q(block, metadata, renderer);
 
-        renderer.setRenderBounds(channel_low_min, channel_width_min, channel_width_min, channel_low_max, channel_width_max, channel_width_max);
-        renderer.setOverrideBlockTexture(SignalTerminalLogic.getChannelIcon(0));
-        this.renderStandardBlock(block, metadata, renderer);
-        renderer.clearOverrideBlockTexture();
+        renderer.func_147782_a(channel_low_min, channel_width_min, channel_width_min, channel_low_max, channel_width_max, channel_width_max);
+        renderer.func_147757_a(SignalTerminalLogic.getChannelIcon(0));
+        this.func_147784_q(block, metadata, renderer);
+        renderer.func_147771_a();
     }
 
     @Override
@@ -59,16 +59,16 @@ public class SignalTerminalRender implements ISimpleBlockRenderingHandler
             if (!(te instanceof SignalTerminalLogic))
             {
                 // Render X-
-                renderer.setRenderBounds(plate_low_min, plate_width_min, plate_width_min, plate_low_max, plate_width_max, plate_width_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(plate_low_min, plate_width_min, plate_width_min, plate_low_max, plate_width_max, plate_width_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(center_min, center_min, center_min, center_max, center_max, center_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(center_min, center_min, center_min, center_max, center_max, center_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(channel_low_min, channel_width_min, channel_width_min, channel_low_max, channel_width_max, channel_width_max);
-                renderer.setOverrideBlockTexture(SignalTerminalLogic.getChannelIcon(0));
-                renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
+                renderer.func_147782_a(channel_low_min, channel_width_min, channel_width_min, channel_low_max, channel_width_max, channel_width_max);
+                renderer.func_147757_a(SignalTerminalLogic.getChannelIcon(0));
+                renderer.func_147784_q(block, x, y, z);
+                renderer.func_147771_a();
 
                 return true;
             }
@@ -76,84 +76,84 @@ public class SignalTerminalRender implements ISimpleBlockRenderingHandler
             IIcon channelIcons[] = ((SignalTerminalLogic) te).getSideIcons();
 
             // Center
-            renderer.setRenderBounds(center_min, center_min, center_min, center_max, center_max, center_max);
-            renderer.renderStandardBlock(block, x, y, z);
+            renderer.func_147782_a(center_min, center_min, center_min, center_max, center_max, center_max);
+            renderer.func_147784_q(block, x, y, z);
 
             if (connectedSides[ForgeDirection.WEST.ordinal()] != -1)
             {
                 // Render X-
-                renderer.setRenderBounds(plate_low_min, plate_width_min, plate_width_min, plate_low_max, plate_width_max, plate_width_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(plate_low_min, plate_width_min, plate_width_min, plate_low_max, plate_width_max, plate_width_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(channel_low_min, channel_width_min, channel_width_min, channel_low_max, channel_width_max, channel_width_max);
-                renderer.setOverrideBlockTexture(channelIcons[ForgeDirection.WEST.ordinal()]);
-                renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
+                renderer.func_147782_a(channel_low_min, channel_width_min, channel_width_min, channel_low_max, channel_width_max, channel_width_max);
+                renderer.func_147757_a(channelIcons[ForgeDirection.WEST.ordinal()]);
+                renderer.func_147784_q(block, x, y, z);
+                renderer.func_147771_a();
 
                 sidesRendered++;
             }
             if (connectedSides[ForgeDirection.EAST.ordinal()] != -1)
             {
                 //Extend X+
-                renderer.setRenderBounds(plate_high_min, plate_width_min, plate_width_min, plate_high_max, plate_width_max, plate_width_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(plate_high_min, plate_width_min, plate_width_min, plate_high_max, plate_width_max, plate_width_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(channel_high_min, channel_width_min, channel_width_min, channel_high_max, channel_width_max, channel_width_max);
-                renderer.setOverrideBlockTexture(channelIcons[ForgeDirection.EAST.ordinal()]);
-                renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
+                renderer.func_147782_a(channel_high_min, channel_width_min, channel_width_min, channel_high_max, channel_width_max, channel_width_max);
+                renderer.func_147757_a(channelIcons[ForgeDirection.EAST.ordinal()]);
+                renderer.func_147784_q(block, x, y, z);
+                renderer.func_147771_a();
 
                 sidesRendered++;
             }
             if (connectedSides[ForgeDirection.SOUTH.ordinal()] != -1)
             {
                 //Extend Z-
-                renderer.setRenderBounds(plate_width_min, plate_width_min, plate_low_min, plate_width_max, plate_width_max, plate_low_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(plate_width_min, plate_width_min, plate_low_min, plate_width_max, plate_width_max, plate_low_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(channel_width_min, channel_width_min, channel_low_min, channel_width_max, channel_width_max, channel_low_max);
-                renderer.setOverrideBlockTexture(channelIcons[ForgeDirection.SOUTH.ordinal()]);
-                renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
+                renderer.func_147782_a(channel_width_min, channel_width_min, channel_low_min, channel_width_max, channel_width_max, channel_low_max);
+                renderer.func_147757_a(channelIcons[ForgeDirection.SOUTH.ordinal()]);
+                renderer.func_147784_q(block, x, y, z);
+                renderer.func_147771_a();
 
                 sidesRendered++;
             }
             if (connectedSides[ForgeDirection.NORTH.ordinal()] != -1)
             {
                 //Extend Z+
-                renderer.setRenderBounds(plate_width_min, plate_width_min, plate_high_min, plate_width_max, plate_width_max, plate_high_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(plate_width_min, plate_width_min, plate_high_min, plate_width_max, plate_width_max, plate_high_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(channel_width_min, channel_width_min, channel_high_min, channel_width_max, channel_width_max, channel_high_max);
-                renderer.setOverrideBlockTexture(channelIcons[ForgeDirection.NORTH.ordinal()]);
-                renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
+                renderer.func_147782_a(channel_width_min, channel_width_min, channel_high_min, channel_width_max, channel_width_max, channel_high_max);
+                renderer.func_147757_a(channelIcons[ForgeDirection.NORTH.ordinal()]);
+                renderer.func_147784_q(block, x, y, z);
+                renderer.func_147771_a();
 
                 sidesRendered++;
             }
             if (connectedSides[ForgeDirection.DOWN.ordinal()] != -1)
             {
                 //Extend Y-
-                renderer.setRenderBounds(plate_width_min, plate_low_min, plate_width_min, plate_width_max, plate_low_max, plate_width_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(plate_width_min, plate_low_min, plate_width_min, plate_width_max, plate_low_max, plate_width_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(channel_width_min, channel_low_min, channel_width_min, channel_width_max, channel_low_max, channel_width_max);
-                renderer.setOverrideBlockTexture(channelIcons[ForgeDirection.DOWN.ordinal()]);
-                renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
+                renderer.func_147782_a(channel_width_min, channel_low_min, channel_width_min, channel_width_max, channel_low_max, channel_width_max);
+                renderer.func_147757_a(channelIcons[ForgeDirection.DOWN.ordinal()]);
+                renderer.func_147784_q(block, x, y, z);
+                renderer.func_147771_a();
 
                 sidesRendered++;
             }
             if (connectedSides[ForgeDirection.UP.ordinal()] != -1)
             {
                 //Extend Y+
-                renderer.setRenderBounds(plate_width_min, plate_high_min, plate_width_min, plate_width_max, plate_high_max, plate_width_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(plate_width_min, plate_high_min, plate_width_min, plate_width_max, plate_high_max, plate_width_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(channel_width_min, channel_high_min, channel_width_min, channel_width_max, channel_high_max, channel_width_max);
-                renderer.setOverrideBlockTexture(channelIcons[ForgeDirection.UP.ordinal()]);
-                renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
+                renderer.func_147782_a(channel_width_min, channel_high_min, channel_width_min, channel_width_max, channel_high_max, channel_width_max);
+                renderer.func_147757_a(channelIcons[ForgeDirection.UP.ordinal()]);
+                renderer.func_147784_q(block, x, y, z);
+                renderer.func_147771_a();
 
                 sidesRendered++;
             }
@@ -161,13 +161,13 @@ public class SignalTerminalRender implements ISimpleBlockRenderingHandler
             if (sidesRendered == 0)
             {
                 // Render X-
-                renderer.setRenderBounds(plate_low_min, plate_width_min, plate_width_min, plate_low_max, plate_width_max, plate_width_max);
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147782_a(plate_low_min, plate_width_min, plate_width_min, plate_low_max, plate_width_max, plate_width_max);
+                renderer.func_147784_q(block, x, y, z);
 
-                renderer.setRenderBounds(channel_low_min, channel_width_min, channel_width_min, channel_low_max, channel_width_max, channel_width_max);
-                renderer.setOverrideBlockTexture(SignalTerminalLogic.getChannelIcon(0));
-                renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
+                renderer.func_147782_a(channel_low_min, channel_width_min, channel_width_min, channel_low_max, channel_width_max, channel_width_max);
+                renderer.func_147757_a(SignalTerminalLogic.getChannelIcon(0));
+                renderer.func_147784_q(block, x, y, z);
+                renderer.func_147771_a();
 
             }
             return true;
@@ -175,33 +175,33 @@ public class SignalTerminalRender implements ISimpleBlockRenderingHandler
         return false;
     }
 
-    private void renderStandardBlock (Block block, int meta, RenderBlocks renderer)
+    private void func_147784_q (Block block, int meta, RenderBlocks renderer)
     {
         Tessellator tessellator = Tessellator.instance;
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
-        renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(0, meta));
+        renderer.func_147768_a(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(0, meta));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(1, meta));
+        renderer.func_147806_b(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(1, meta));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, -1.0F);
-        renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(2, meta));
+        renderer.func_147761_c(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(2, meta));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, 1.0F);
-        renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(3, meta));
+        renderer.func_147734_d(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(3, meta));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(4, meta));
+        renderer.func_147798_e(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(4, meta));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(1.0F, 0.0F, 0.0F);
-        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(5, meta));
+        renderer.func_147764_f(block, 0.0D, 0.0D, 0.0D, block.func_149691_a(5, meta));
         tessellator.draw();
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }

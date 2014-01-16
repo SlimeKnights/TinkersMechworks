@@ -29,7 +29,7 @@ public class MachineRender implements ISimpleBlockRenderingHandler
             int metadata = world.getBlockMetadata(x, y, z);
             if (metadata != 1)
             {
-                renderer.renderStandardBlock(block, x, y, z);
+                renderer.func_147784_q(block, x, y, z);
             }
             else
             {
@@ -78,7 +78,7 @@ public class MachineRender implements ISimpleBlockRenderingHandler
             renderer.field_147865_v = 2;
         }
 
-        boolean flag = renderer.renderStandardBlock(block, x, y, z);
+        boolean flag = renderer.func_147784_q(block, x, y, z);
         renderer.field_147871_s = 0;
         renderer.field_147875_q = 0;
         renderer.field_147873_r = 0;

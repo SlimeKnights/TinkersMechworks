@@ -1,5 +1,6 @@
 package tmechworks.inventory;
 
+import mantle.blocks.BlockUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
@@ -22,7 +23,7 @@ public class DrawbridgeSlot extends SlotBlocksOnly
     {
         if (!super.isItemValid(par1ItemStack))
         {
-            if (TConstructRegistry.blockToItemMapping[par1ItemStack.getItem()] == Blocks.air)
+            if (BlockUtils.getBlockFromItem((TConstructRegistry.blockToItemMapping[BlockUtils.getBlockFromItem(par1ItemStack.getItem())]) == Blocks.air)
             {
                 return false;
             }
