@@ -85,9 +85,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound data)
+    public void func_145839_a (NBTTagCompound data)
     {
-        super.readFromNBT(data);
+        super.func_145839_a(data);
 
         sideChannel = data.getByteArray("sideChannel");
         receivingSides = data.getByteArray("receivingSides");
@@ -128,9 +128,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
     }
 
     @Override
-    public void func_145839_a (NBTTagCompound data)
+    public void func_145841_b (NBTTagCompound data)
     {
-        super.func_145839_a(data);
+        super.func_145841_b(data);
 
         data.setByteArray("sideChannel", sideChannel);
         data.setByteArray("receivingSides", receivingSides);
@@ -337,14 +337,14 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
     public Packet getDescriptionPacket ()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        func_145839_a(tag);
+        func_145841_b(tag);
         return new Packet132TileEntityData(field_145851_c, field_145848_d, field_145849_e, 1, tag);
     }
 
     @Override
     public void onDataPacket (NetworkManager net, Packet132TileEntityData packet)
     {
-        readFromNBT(packet.data);
+        func_145839_a(packet.data);
         onInventoryChanged();
         field_145850_b.markBlockForRenderUpdate(field_145851_c, field_145848_d, field_145849_e);
         this.doUpdate = true;

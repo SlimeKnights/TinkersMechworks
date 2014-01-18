@@ -341,9 +341,9 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tags)
+    public void func_145839_a (NBTTagCompound tags)
     {
-        super.readFromNBT(tags);
+        super.func_145839_a(tags);
         readCustomNBT(tags);
     }
 
@@ -358,9 +358,9 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound tags)
+    public void func_145841_b (NBTTagCompound tags)
     {
-        super.writeToNBT(tags);
+        super.func_145841_b(tags);
         writeCustomNBT(tags);
     }
 

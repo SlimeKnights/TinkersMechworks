@@ -140,7 +140,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons (IIconRegister iconRegister)
+    public void func_149651_a (IIconRegister iconRegister)
     {
         this.icons = new IIcon[textureNames.length];
 
@@ -151,7 +151,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public boolean renderAsNormalBlock ()
+    public boolean func_149686_d ()
     {
         return false;
     }

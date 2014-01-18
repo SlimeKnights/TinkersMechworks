@@ -305,14 +305,14 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             int blockToItem = TConstructRegistry.blockToItemMapping[bufferStack];
                             if (blockToItem == 0)
                             {
-                                if (inventory[0].itemID >= 4096 || BlockUtils.getBlockFromItem(inventory[0].getItem()) == null)
+                                if (BlockUtils.getBlockFromItem(inventory[0].getItem()) == null)
                                     return;
                                 Block placeBlock = BlockUtils.getBlockFromItem(bufferStack.getItem());
                                 placeBlockAt(bufferStack, fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
                             }
                             else
                             {
-                                Block placeBlock = Block.blocksList[blockToItem];
+                                Block placeBlock = BlockUtils.getBlockFromItem(blockToItem);
                                 placeBlockAt(bufferStack, fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
                             }
                             field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, field_145850_b.rand.nextFloat() * 0.25F + 0.6F);
@@ -476,9 +476,9 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tags)
+    public void func_145839_a (NBTTagCompound tags)
     {
-        super.readFromNBT(tags);
+        super.func_145839_a(tags);
         active = tags.getBoolean("Active");
         working = tags.getBoolean("Working");
         extension = tags.getByte("Extension");
@@ -498,9 +498,9 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     }
 
     @Override
-    public void func_145839_a (NBTTagCompound tags)
+    public void func_145841_b (NBTTagCompound tags)
     {
-        super.func_145839_a(tags);
+        super.func_145841_b(tags);
         tags.setBoolean("Active", active);
         tags.setBoolean("Working", working);
         tags.setByte("Extension", extension);
@@ -509,7 +509,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         if (bufferStack != null)
         {
             NBTTagCompound bufferInv = new NBTTagCompound();
-            bufferStack.func_145839_a(bufferInv);
+            bufferStack.func_145841_b(bufferInv);
             tags.setTag("BufferInv", bufferInv);
         }
 
@@ -533,14 +533,14 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     public Packet getDescriptionPacket ()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        func_145839_a(tag);
+        func_145841_b(tag);
         return new Packet132TileEntityData(field_145851_c, field_145848_d, field_145849_e, 1, tag);
     }
 
     @Override
     public void onDataPacket (NetworkManager net, Packet132TileEntityData packet)
     {
-        readFromNBT(packet.data);
+        func_145839_a(packet.data);
         field_145850_b.markBlockForRenderUpdate(field_145851_c, field_145848_d, field_145849_e);
     }
 

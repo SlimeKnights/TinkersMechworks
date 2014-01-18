@@ -155,17 +155,17 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound tags)
+    public void func_145839_a (NBTTagCompound tags)
     {
-        super.readFromNBT(tags);
+        super.func_145839_a(tags);
         tags.setBoolean("Active", active);
         readCustomNBT(tags);
     }
 
     @Override
-    public void func_145839_a (NBTTagCompound tags)
+    public void func_145841_b (NBTTagCompound tags)
     {
-        super.func_145839_a(tags);
+        super.func_145841_b(tags);
         active = tags.getBoolean("Active");
         writeCustomNBT(tags);
     }

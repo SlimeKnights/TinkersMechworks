@@ -275,9 +275,9 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     }
 
     @Override
-    public void readFromNBT (NBTTagCompound data)
+    public void func_145839_a (NBTTagCompound data)
     {
-        super.readFromNBT(data);
+        super.func_145839_a(data);
 
         // We can't directly initialize a multiblock master yet, so we cache the data here until
         // we receive a validate() call, which creates the controller and hands off the cached data.
@@ -288,9 +288,9 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     }
 
     @Override
-    public void writeToNBT (NBTTagCompound data)
+    public void func_145841_b (NBTTagCompound data)
     {
-        super.writeToNBT(data);
+        super.func_145841_b(data);
 
         if (this.saveMultiblockData)
         {
