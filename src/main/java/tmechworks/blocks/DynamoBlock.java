@@ -34,13 +34,13 @@ public class DynamoBlock extends BlockContainer
     }
 
     @Override
-    public boolean isOpaqueCube ()
+    public boolean func_149662_c ()
     {
         return false;
     }
 
     @Override
-    public TileEntity createNewTileEntity (World world)
+    public TileEntity func_149915_a (World world, int meta)
     {
         return new DynamoLogic();
     }

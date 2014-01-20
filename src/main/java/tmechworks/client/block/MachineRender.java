@@ -41,7 +41,7 @@ public class MachineRender implements ISimpleBlockRenderingHandler
 
     public boolean renderRotatedBlock (Block block, int x, int y, int z, IBlockAccess world, RenderBlocks renderer)
     {
-        IFacingLogic logic = (IFacingLogic) world.getBlockTileEntity(x, y, z);
+        IFacingLogic logic = (IFacingLogic) world.func_147438_o(x, y, z);
         byte direction = logic.getRenderDirection();
 
         if (direction == 0)

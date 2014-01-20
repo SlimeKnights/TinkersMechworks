@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 
 import mantle.world.CoordTuple;
 import mantle.world.CoordTuplePair;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -12,9 +13,9 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import tmechworks.TMechworks;
 import tmechworks.lib.signal.ISignalTransceiver;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class SignalTetherWorldOverlayRenderer
 {
@@ -22,14 +23,15 @@ public class SignalTetherWorldOverlayRenderer
     @SubscribeEvent
     public void onWorldRenderLast (RenderWorldLastEvent event)
     {
-        if (event.context.mc.thePlayer == null || event.context.mc.thePlayer.getHeldItem() == null)
+    	Minecraft mc = Minecraft.getMinecraft();
+        if (mc.thePlayer == null || mc.thePlayer.getHeldItem() == null)
         {
             return;
         }
-        if (event.context.mc.thePlayer.getHeldItem() == TMechworks.instance.content.spoolWire)
+        if (mc.thePlayer.getHeldItem().getItem() == TMechworks.instance.content.spoolWire)
         {
             GL11.glPushMatrix();
-            Entity entity = event.context.mc.renderViewEntity;
+            Entity entity = mc.renderViewEntity;
 
             double posX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * event.partialTicks;
             double posY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * event.partialTicks;

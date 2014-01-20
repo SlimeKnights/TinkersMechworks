@@ -35,7 +35,7 @@ public class SpoolOfWire extends Item
     }
 
     @Override
-    public ItemStack getContainerItemStack (ItemStack itemStack)
+    public ItemStack getContainerItem (ItemStack itemStack)
     {
         return new ItemStack(this, 1, this.getMaxDamage());
     }

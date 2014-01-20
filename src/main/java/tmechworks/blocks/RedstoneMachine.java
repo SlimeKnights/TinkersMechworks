@@ -42,7 +42,7 @@ public class RedstoneMachine extends InventoryBlock
         super(Material.field_151573_f);
         this.func_149647_a(TMechworksRegistry.Mechworks);
         func_149711_c(12);
-        setStepSound(soundMetalFootstep);
+        func_149672_a(field_149777_j);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class RedstoneMachine extends InventoryBlock
                 {
                     ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
                     if (BlockUtils.getBlockFromItem(stack.getItem()) != null)
-                        return lightValue[stack];
+                    	return (BlockUtils.getBlockFromItem(((DrawbridgeLogic)logic).getStackInSlot(3).getItem())).func_149750_m();
                 }
             }
 
@@ -68,7 +68,7 @@ public class RedstoneMachine extends InventoryBlock
                 {
                     ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
                     if (BlockUtils.getBlockFromItem(stack.getItem()) != null)
-                        return lightValue[stack];
+                    	return (BlockUtils.getBlockFromItem(((AdvancedDrawbridgeLogic)logic).getStackInSlot(3).getItem())).func_149750_m();
                 }
             }
         }
@@ -77,7 +77,7 @@ public class RedstoneMachine extends InventoryBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int colorMultiplier (IBlockAccess world, int x, int y, int z)
+    public int func_149720_d (IBlockAccess world, int x, int y, int z)
     {
         if (world.getBlockMetadata(x, y, z) == 0 && world.getBlockMetadata(x, y, z) == 2)
         {
@@ -86,14 +86,14 @@ public class RedstoneMachine extends InventoryBlock
             if (logic != null && logic instanceof DrawbridgeLogic)
             {
                 ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
-                if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this)
-                    return BlockUtils.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
+                if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this))
+                    return BlockUtils.getBlockFromItem(stack.getItem()).func_149720_d(world, x, y, z);
             }
             else if (logic != null && logic instanceof AdvancedDrawbridgeLogic)
             {
                 ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
-                if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null &&! ComparisonHelper.areEquivalent(stack.getItem(),this)
-                    return BlockUtils.getBlockFromItem(stack.getItem().colorMultiplier(world, x, y, z);
+                if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null &&! ComparisonHelper.areEquivalent(stack.getItem(),this))
+                    return BlockUtils.getBlockFromItem(stack.getItem()).func_149720_d(world, x, y, z);
             }
         }
 
@@ -323,7 +323,7 @@ public class RedstoneMachine extends InventoryBlock
 
     /* Keep inventory */
     @Override
-    public boolean removeBlockByPlayer (World world, EntityPlayer player, int x, int y, int z)
+    public boolean removedByPlayer (World world, EntityPlayer player, int x, int y, int z)
     {
         player.addExhaustion(0.025F);
         int meta = world.getBlockMetadata(x, y, z);
@@ -381,16 +381,16 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void harvestBlock (World world, EntityPlayer player, int x, int y, int z, int meta)
+    public void func_149636_a (World world, EntityPlayer player, int x, int y, int z, int meta)
     {
         if (meta != 0)
-            super.harvestBlock(world, player, x, y, z, meta);
+            super.func_149636_a(world, player, x, y, z, meta);
     }
 
     @Override
-    public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase living, ItemStack stack)
+    public void func_149689_a (World world, int x, int y, int z, EntityLivingBase living, ItemStack stack)
     {
-        super.onBlockPlacedBy(world, x, y, z, living, stack);
+        super.func_149689_a(world, x, y, z, living, stack);
         if (stack.hasTagCompound())
         {
             DrawbridgeLogic logic = (DrawbridgeLogic) world.func_147438_o(x, y, z);

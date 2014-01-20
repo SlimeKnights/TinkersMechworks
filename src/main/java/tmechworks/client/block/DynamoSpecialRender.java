@@ -23,7 +23,7 @@ public class DynamoSpecialRender extends TileEntitySpecialRenderer
 
     public void renderModel (DynamoLogic par1TileEntitySign, double x, double y, double z, float notDeltaTime)
     {
-        Block block = par1TileEntitySign.getBlockType();
+        Block block = par1TileEntitySign.func_145838_q();
         GL11.glPushMatrix();
         float f1 = 1F;
         float f2;
@@ -32,7 +32,7 @@ public class DynamoSpecialRender extends TileEntitySpecialRenderer
         GL11.glRotatef(-f3, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(90, 0.0F, 1.0F, 0.0F);
 
-        this.bindTexture(texture);
+        this.func_147499_a(texture);
         GL11.glPushMatrix();
         GL11.glScalef(f1, -f1, -f1);
         this.model.render(0.0625f, notDeltaTime);
@@ -50,7 +50,8 @@ public class DynamoSpecialRender extends TileEntitySpecialRenderer
         GL11.glPopMatrix();
     }
 
-    public void renderTileEntityAt (TileEntity par1TileEntity, double par2, double par4, double par6, float par8)
+    @Override
+    public void func_147500_a (TileEntity par1TileEntity, double par2, double par4, double par6, float par8)
     {
         this.renderModel((DynamoLogic) par1TileEntity, par2, par4, par6, par8);
     }

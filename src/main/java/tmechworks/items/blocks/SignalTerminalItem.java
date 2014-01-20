@@ -120,7 +120,7 @@ public class SignalTerminalItem extends ItemBlock
 
         --stack.stackSize;
         
-        world.markBlockForRenderUpdate(x, y, z);
+        world.func_147479_m(x, y, z);
         
         return true;
 
@@ -156,7 +156,7 @@ public class SignalTerminalItem extends ItemBlock
             break;
         }
 
-        if (world.getBlockId(tmpX, tmpY, tmpZ) == this.getBlockID())
+        if (world.func_147439_a(tmpX, tmpY, tmpZ) == this.field_150939_a)
         {
             TileEntity te = world.func_147438_o(tmpX, tmpY, tmpZ);
             if (te == null || !(te instanceof SignalTerminalLogic))

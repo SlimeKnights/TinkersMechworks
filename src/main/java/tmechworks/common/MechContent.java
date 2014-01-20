@@ -57,7 +57,7 @@ public class MechContent
         GameRegistry.registerTileEntity(FirestarterLogic.class, "Firestarter");
         GameRegistry.registerTileEntity(AdvancedDrawbridgeLogic.class, "AdvDrawbridge");
         
-        dynamo = new DynamoBlock().setLightValue(1.0F).func_149663_c("tmechworks.dynamo").setTextureName("tinker:compressed_alubrass");
+        dynamo = new DynamoBlock().func_149715_a(1.0F).func_149663_c("tmechworks.dynamo").func_149658_d("tinker:compressed_alubrass");
         GameRegistry.registerBlock(dynamo, "TMechworks:Dynamo");
         GameRegistry.registerTileEntity(DynamoLogic.class, "TMechworks:Dynamo");
 

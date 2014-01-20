@@ -308,9 +308,9 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     }
 
     @Override
-    public void invalidate ()
+    public void func_145843_s ()
     {
-        super.invalidate();
+        super.func_145843_s();
 
         detachSelf(false);
     }
@@ -355,9 +355,9 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     }
 
     @Override
-    public void validate ()
+    public void func_145829_t ()
     {
-        super.validate();
+        super.func_145829_t();
 
         if (!this.field_145850_b.isRemote)
         {

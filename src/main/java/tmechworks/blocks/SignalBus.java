@@ -67,7 +67,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
 		super(Material.field_151594_q);
         this.func_149711_c(0.1F);
         this.func_149752_b(1);
-        this.setStepSound(soundMetalFootstep);
+        func_149672_a(field_149777_j);
         func_149647_a(TMechworksRegistry.Mechworks);
 	}
 
@@ -82,15 +82,15 @@ public class SignalBus extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-    public void onNeighborBlockChange (World world, int x, int y, int z, Block block)
+    public void func_149695_a (World world, int x, int y, int z, Block block)
     {
 	    if (block == this)
 	    {
 	        return;
 	    }
-	    super.onNeighborBlockChange(world, x, y, z, block);
+	    super.func_149695_a(world, x, y, z, block);
 	    
-	    TileEntity te = world.getBlockTileEntity(x, y, z);
+	    TileEntity te = world.func_147438_o(x, y, z);
 	    if (te instanceof SignalBusLogic)
 	    {
 	        ItemStack tempStack;
@@ -118,14 +118,14 @@ public class SignalBus extends Block implements ITileEntityProvider {
                 entityitem.motionZ = (double) ((float) rand.nextGaussian() * offset);
                 world.spawnEntityInWorld(entityitem);
                 
-                world.markBlockForUpdate(x, y, z);
+                world.func_147471_g(x, y, z);
             }
 	    }
     }
 
     @Override
-	public void onBlockAdded(World world, int x, int y, int z) {
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+	public void func_149726_b(World world, int x, int y, int z) {
+		TileEntity te = world.func_147438_o(x, y, z);
 		if (te != null && te instanceof SignalBusLogic) {
 			((SignalBusLogic)te).onBlockAdded(world, x, y, z);
 		}
@@ -133,7 +133,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getIcon (int side, int metadata)
+    public IIcon func_149691_a (int side, int metadata)
     {
         return icons[0];
     }
@@ -157,20 +157,21 @@ public class SignalBus extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public boolean isOpaqueCube ()
+    public boolean func_149662_c ()
     {
         return false;
     }
 
     @Override
-    public int getRenderType ()
+    public int func_149645_b ()
     {
         return SignalBusRender.renderID;
     }
     
-    public void addCollisionBoxesToList (World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
+    @Override
+    public void func_149743_a (World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
     {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = world.func_147438_o(x, y, z);
         if (te instanceof SignalBusLogic)
         {
             for (AxisAlignedBB aabb : getBoxes((SignalBusLogic) te))
@@ -196,7 +197,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
         }
         else
         {
-            super.addCollisionBoxesToList(world, x, y, z, collisionTest, collisionBoxList, entity);
+            super.func_149743_a(world, x, y, z, collisionTest, collisionBoxList, entity);
         }
     }
     
@@ -208,9 +209,9 @@ public class SignalBus extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public MovingObjectPosition collisionRayTrace (World world, int x, int y, int z, Vec3 start, Vec3 end)
+    public MovingObjectPosition func_149731_a (World world, int x, int y, int z, Vec3 start, Vec3 end)
     {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = world.func_147438_o(x, y, z);
         if (te instanceof SignalBusLogic)
         {
             MovingObjectPosition closest = null;
@@ -226,7 +227,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
                     continue;
                 }
                 this.func_149676_a((float)boxes[i].minX, (float)boxes[i].minY, (float)boxes[i].minZ, (float)boxes[i].maxX, (float)boxes[i].maxY, (float)boxes[i].maxZ);
-                MovingObjectPosition hit = super.collisionRayTrace(world, x, y, z, start, end);
+                MovingObjectPosition hit = super.func_149731_a(world, x, y, z, start, end);
                 if (hit != null)
                 {
                     hitDistance = start.distanceTo(hit.hitVec);
@@ -478,20 +479,15 @@ public class SignalBus extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world) {
-		return new SignalBusLogic();
-	}
-	
-	@Override
-    public ArrayList<ItemStack> getBlockDropped (World world, int x, int y, int z, int metadata, int fortune)
+    public ArrayList<ItemStack> getDrops (World world, int x, int y, int z, int metadata, int fortune)
     {
 	    return new ArrayList<ItemStack>();
     }
 
     @Override
-    public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
+    public void func_149689_a (World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
     {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = world.func_147438_o(x, y, z);
         if (te instanceof SignalBusLogic)
         {
             NBTTagCompound data = itemStack.stackTagCompound;
@@ -504,14 +500,14 @@ public class SignalBus extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public void breakBlock (World world, int x, int y, int z, int id, int meta)
+    public void func_149749_a (World world, int x, int y, int z, Block block, int meta)
     {
         int dropBus, dropWire = 0;
         float jumpX, jumpY, jumpZ;
         ItemStack tempStack;
         Random rand = new Random();
         
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = world.func_147438_o(x, y, z);
         if (te instanceof SignalBusLogic)
         {
             dropBus = ((SignalBusLogic) te).getDroppedBuses();
@@ -549,14 +545,14 @@ public class SignalBus extends Block implements ITileEntityProvider {
             ((SignalBusLogic) te).notifyBreak();
         }
 
-        super.breakBlock(world, x, y, z, id, meta);
+        super.func_149749_a(world, x, y, z, block, meta);
     }
     
     /**
      * checks to see if you can place this block can be placed on that side of a block: BlockLever overrides
      */
     @Override
-    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
+    public boolean func_149707_d(World par1World, int par2, int par3, int par4, int par5)
     {
         ForgeDirection dir = ForgeDirection.getOrientation(par5);
         return (dir == DOWN  && par1World.isSideSolid(par2, par3 + 1, par4, DOWN )) ||
@@ -571,7 +567,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
      * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
      */
     @Override
-    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
+    public boolean func_149742_c(World par1World, int par2, int par3, int par4)
     {
         return par1World.isSideSolid(par2 - 1, par3, par4, EAST ) ||
                par1World.isSideSolid(par2 + 1, par3, par4, WEST ) ||
@@ -582,7 +578,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public boolean canBlockStay (World par1World, int par2, int par3, int par4)
+    public boolean func_149718_j (World par1World, int par2, int par3, int par4)
     {
         return par1World.isSideSolid(par2 - 1, par3, par4, EAST ) ||
                 par1World.isSideSolid(par2 + 1, par3, par4, WEST ) ||

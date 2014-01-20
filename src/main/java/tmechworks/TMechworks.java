@@ -55,7 +55,7 @@ public class TMechworks {
         proxy.registerRenderer();
         proxy.registerTickHandler();
         
-        NetworkRegistry.instance().registerGuiHandler(instance, proxy);
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
         
         MinecraftForge.EVENT_BUS.register(new MultiblockEventHandler());
     }

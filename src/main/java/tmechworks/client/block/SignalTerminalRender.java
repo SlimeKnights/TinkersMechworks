@@ -55,7 +55,7 @@ public class SignalTerminalRender implements ISimpleBlockRenderingHandler
 
         if (modelId == renderID)
         {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+            TileEntity te = world.func_147438_o(x, y, z);
             if (!(te instanceof SignalTerminalLogic))
             {
                 // Render X-

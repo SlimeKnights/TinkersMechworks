@@ -65,7 +65,7 @@ public abstract class MultiblockMasterBaseLogic
         connectedBlocks.add(coords);
         member.onAttached(this);
         this.onBlockAdded(member);
-        this.worldObj.markBlockForUpdate(coords.x, coords.y, coords.z);
+        this.worldObj.func_147471_g(coords.x, coords.y, coords.z);
 
         if (newMultiblock)
         {
