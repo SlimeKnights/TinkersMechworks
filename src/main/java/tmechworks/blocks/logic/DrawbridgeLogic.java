@@ -22,6 +22,7 @@ import tmechworks.inventory.DrawbridgeContainer;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.common.ComparisonHelper;
 import mantle.world.WorldHelper;
+import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.player.FakePlayerLogic;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 
@@ -298,11 +299,11 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             break;
                         }
 
-                        Block block = field_145850_b.getBlock(xPos, yPos, zPos)];
+                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
                         if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
                         {
                             //tryExtend(field_145850_b, xPos, yPos, zPos, direction);
-                            int blockToItem = TConstructRegistry.blockToItemMapping[bufferStack];
+                            int blockToItem = TMechworksRegistry.blockToItemMapping.get(bufferStack.getItem());
                             if (blockToItem == 0)
                             {
                                 if (BlockUtils.getBlockFromItem(inventory[0].getItem()) == null)
@@ -361,7 +362,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             break;
                         }
 
-                        Block block = field_145850_b.getBlock(xPos, yPos, zPos);
+                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
                         if (block != null)
                         {
                             int meta = field_145850_b.getBlockMetadata(xPos, yPos, zPos);
@@ -430,13 +431,13 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validBlock (Block block)
     {
-        Item type = TConstructRegistry.interchangableBlockMapping[block].getItem();
+        Item type = new ItemStack(TMechworksRegistry.interchangableBlockMapping.get(block)).getItem();
         if (type != null)
         {
             if (type == bufferStack.getItem())
                 return true;
         }
-        Item blockToItem = TConstructRegistry.blockToItemMapping[new ItemStack(block).getItem()];
+        Item blockToItem = TMechworksRegistry.blockToItemMapping.get(new ItemStack(block).getItem());
         if (blockToItem != null)
         {
             if (blockToItem == bufferStack.getItem())
@@ -447,7 +448,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validMetadata (Block block, int metadata)
     {
-        int type = TConstructRegistry.drawbridgeState[block];
+        int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
         if (type == 0)
         {
             return metadata == bufferStack.getItemDamage();
@@ -509,7 +510,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         if (bufferStack != null)
         {
             NBTTagCompound bufferInv = new NBTTagCompound();
-            bufferStack.func_145841_b(bufferInv);
+            bufferStack.writeToNBT(bufferInv);
             tags.setTag("BufferInv", bufferInv);
         }
 

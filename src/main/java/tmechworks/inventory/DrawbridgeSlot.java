@@ -23,7 +23,7 @@ public class DrawbridgeSlot extends SlotBlocksOnly
     {
         if (!super.isItemValid(par1ItemStack))
         {
-            if (BlockUtils.getBlockFromItem((TConstructRegistry.blockToItemMapping[BlockUtils.getBlockFromItem(par1ItemStack.getItem())]) == Blocks.air)
+            if (BlockUtils.getBlockFromItem((TConstructRegistry.blockToItemMapping[BlockUtils.getBlockFromItem(par1ItemStack.getItem())]) == Blocks.air))
             {
                 return false;
             }

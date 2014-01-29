@@ -28,28 +28,28 @@ public class AdvDrawbridgeGui extends GuiContainer
     public AdvDrawbridgeGui(EntityPlayer player, AdvancedDrawbridgeLogic frypan, World world, int x, int y, int z)
     {
         super(frypan.getGuiContainer(player.inventory, world, x, y, z));
-        this.field_147002_h = new AdvancedDrawbridgeContainer(player.inventory, frypan, this);
-        player.openContainer = this.field_147002_h;
+        this.inventorySlots = new AdvancedDrawbridgeContainer(player.inventory, frypan, this);
+        player.openContainer = this.inventorySlots;
         logic = frypan;
     }
 
     @Override
-    protected void func_146979_b(int par1, int par2)
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         field_146289_q.drawString("Advanced Drawbridge", 8, 6, 0x404040);
-        field_146289_q.drawString(StatCollector.translateToLocal("container.inventory"), 8, (field_147000_g - 96) + 2, 0x404040);
+        field_146289_q.drawString(StatCollector.translateToLocal("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
     }
 
     private static final ResourceLocation background = new ResourceLocation("tmechworks", "textures/gui/drawbridgeAdvanced.png");
 
     @Override
-    protected void func_146976_a (float f, int i, int j)
+    protected void drawGuiContainerBackgroundLayer (float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.field_146297_k.getTextureManager().bindTexture(background);
-        int cornerX = (field_146294_l - field_146999_f) / 2;
-        int cornerY = (field_146295_m - field_147000_g) / 2;
-        drawTexturedModalRect(cornerX, cornerY, 0, 0, field_146999_f, field_147000_g);
+        int cornerX = (field_146294_l - xSize) / 2;
+        int cornerY = (field_146295_m - ySize) / 2;
+        drawTexturedModalRect(cornerX, cornerY, 0, 0, xSize, ySize);
         if (!isGuiExpanded)
         {
             drawTexturedModalRect(cornerX + 34, cornerY + 35, 238, 0, 18, 18);
@@ -74,8 +74,8 @@ public class AdvDrawbridgeGui extends GuiContainer
     public void initGui ()
     {
         super.initGui();
-        int cornerX = (this.field_146294_l - field_146999_f) / 2;
-        int cornerY = (this.field_146295_m - this.field_147000_g) / 2;
+        int cornerX = (this.field_146294_l - xSize) / 2;
+        int cornerY = (this.field_146295_m - this.ySize) / 2;
 
         this.setExpanded(false);
         this.field_146292_n.clear();
@@ -120,7 +120,7 @@ public class AdvDrawbridgeGui extends GuiContainer
                 b.field_146125_m = !flag;
             }
         }
-        ((AdvancedDrawbridgeContainer) this.field_147002_h).updateContainerSlots();
+        ((AdvancedDrawbridgeContainer) this.inventorySlots).updateContainerSlots();
     }
 
     protected void actionPerformed (GuiButton button)

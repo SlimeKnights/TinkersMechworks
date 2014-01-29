@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -539,7 +540,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
                     {
                         // Let's make sure we're not dealing with vanilla redstone
 
-                        int bid = 0;
+                        Block bid;
                         int power = 0;
                         int temp = 0;
 
@@ -554,9 +555,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
                             if (temp > power)
                             {
 
-                                bid = field_145850_b.getBlockId(field_145851_c + offset[0] + Facing.offsetsXForSide[j], field_145848_d + offset[1] + Facing.offsetsYForSide[j], field_145849_e + offset[2]
+                                bid = field_145850_b.func_147439_a(field_145851_c + offset[0] + Facing.offsetsXForSide[j], field_145848_d + offset[1] + Facing.offsetsYForSide[j], field_145849_e + offset[2]
                                         + Facing.offsetsZForSide[j]);
-                                if (bid != Block.redstoneWire.blockID)
+                                if (bid != Blocks.redstone_wire)
                                 {
                                     power = temp;
                                 }
