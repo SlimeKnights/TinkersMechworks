@@ -300,11 +300,11 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                         }
 
                         Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
-                        if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
+                        if (block == null || WorldHelper.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
                         {
                             //tryExtend(field_145850_b, xPos, yPos, zPos, direction);
-                            int blockToItem = TMechworksRegistry.blockToItemMapping.get(bufferStack.getItem());
-                            if (blockToItem == 0)
+                            Item blockToItem = TMechworksRegistry.blockToItemMapping.get(bufferStack.getItem());
+                            if (blockToItem == null)
                             {
                                 if (BlockUtils.getBlockFromItem(inventory[0].getItem()) == null)
                                     return;
@@ -413,8 +413,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
         if (world.func_147439_a(x, y, z) == block)
         {
-            block.onBlockPlacedBy(world, x, y, z, player, stack);
-            block.onPostBlockPlaced(world, x, y, z, metadata);
+            block.func_149689_a(world, x, y, z, player, stack);
+            block.func_149714_e(world, x, y, z, metadata);
         }
 
         return true;

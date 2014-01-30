@@ -428,8 +428,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
         if (world.func_147439_a(x, y, z) == block)
         {
-            block.onBlockPlacedBy(world, x, y, z, player, stack);
-            block.onPostBlockPlaced(world, x, y, z, metadata);
+            block.func_149689_a(world, x, y, z, player, stack);
+            block.func_149714_e(world, x, y, z, metadata);
         }
 
         return true;
