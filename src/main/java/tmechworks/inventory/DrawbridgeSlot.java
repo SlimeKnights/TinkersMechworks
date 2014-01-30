@@ -6,6 +6,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
+import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 
 public class DrawbridgeSlot extends SlotBlocksOnly
@@ -23,7 +24,7 @@ public class DrawbridgeSlot extends SlotBlocksOnly
     {
         if (!super.isItemValid(par1ItemStack))
         {
-            if (BlockUtils.getBlockFromItem((TConstructRegistry.blockToItemMapping[BlockUtils.getBlockFromItem(par1ItemStack.getItem())]) == Blocks.air))
+            if (BlockUtils.getBlockFromItem((TMechworksRegistry.blockToItemMapping.get(BlockUtils.getBlockFromItem(par1ItemStack.getItem())))) == Blocks.air)
             {
                 return false;
             }

@@ -152,7 +152,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
     }
 
     @Override
-    public void updateEntity ()
+    public void func_145845_h ()
     {
         if (pendingSide >= 0 && pendingSide < 6 && connectedSides[pendingSide] == -1)
         {
@@ -253,8 +253,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
                         oSide = 0;
                     }
 
-                    field_145850_b.notifyBlockOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal);
-                    field_145850_b.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal, oSide);
+                    field_145850_b.func_147460_e(targetX, targetY, targetZ, TMechworks.content.signalTerminal);
+                    field_145850_b.func_147441_b(targetX, targetY, targetZ, TMechworks.content.signalTerminal, oSide);
                     //field_145850_b.notifyBlocksOfNeighborChange(field_145851_c, field_145848_d, field_145849_e, TConstruct.instance.content.signalTerminal.blockID);
                 }
             }

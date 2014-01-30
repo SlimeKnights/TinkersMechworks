@@ -426,4 +426,24 @@ public class RedstoneMachine extends InventoryBlock
         directions.add(new CoordTuple(-1, 0, 0));
         directions.add(new CoordTuple(1, 0, 0));
     }
+
+    @Override
+    public TileEntity func_149915_a (World var1, int metadata)
+    {
+        switch (metadata)
+        {
+        case 0:
+            return new DrawbridgeLogic();
+        case 1:
+            return new FirestarterLogic();
+        case 2:
+            return new AdvancedDrawbridgeLogic();
+        case 3:
+            DrawbridgeLogic logic = new DrawbridgeLogic();
+            logic.setMaximumExtension((byte) 64);
+            return logic;
+        default:
+            return null;
+        }
+    }
 }

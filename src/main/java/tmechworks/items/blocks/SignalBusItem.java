@@ -107,7 +107,7 @@ public class SignalBusItem extends ItemBlock
             return false;
         }
 
-        TileEntity te = world.getBlockTileEntity(tmpX, tmpY, tmpZ);
+        TileEntity te = world.func_147438_o(tmpX, tmpY, tmpZ);
 
         ((SignalBusLogic) te).addPlacedSide(tside);
         
