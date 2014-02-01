@@ -3,35 +3,28 @@ package tmechworks.lib.multiblock;
 import java.util.EnumSet;
 
 import net.minecraft.world.World;
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
 
-public class MultiblockServerTickHandler implements IScheduledTickHandler
+public class MultiblockServerTickHandler// implements IScheduledTickHandler
 {
-
-    @Override
-    public void tickStart (EnumSet<TickType> type, Object... tickData)
+    public MultiblockServerTickHandler()
     {
-        return;
     }
 
-    @Override
-    public void tickEnd (EnumSet<TickType> type, Object... tickData)
+    @SubscribeEvent
+    public void onTick (ClientTickEvent event)
     {
-        if (type.contains(TickType.WORLD))
+        if (event.phase.equals(Phase.END) && event.type.equals(Type.WORLD))
         {
-            World world = (World) tickData[0];
+            World world = (World) event.tickData[0];
             MultiblockRegistry.tick(world);
         }
     }
 
-    @Override
-    public EnumSet<TickType> ticks ()
-    {
-        return EnumSet.of(TickType.WORLD);
-    }
-
-    @Override
+  /*  @Override
     public String getLabel ()
     {
         return "TConstruct:MultiblockServerTickHandler";
@@ -42,5 +35,5 @@ public class MultiblockServerTickHandler implements IScheduledTickHandler
     {
         return 1;
     }
-
+*/
 }

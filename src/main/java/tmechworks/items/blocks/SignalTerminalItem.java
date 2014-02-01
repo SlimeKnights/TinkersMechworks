@@ -43,9 +43,10 @@ public class SignalTerminalItem extends ItemBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean canPlaceItemBlockOnSide (World world, int x, int y, int z, int side, EntityPlayer entityPlayer, ItemStack itemStack)
+    public boolean func_150936_a (World world, int x, int y, int z, int side, EntityPlayer entityPlayer, ItemStack itemStack)
     {
-        if (super.canPlaceItemBlockOnSide(world, x, y, z, side, entityPlayer, itemStack) || _canPlaceItemBlockOnSide(world, x, y, z, side))
+        
+        if (super.func_150936_a(world, x, y, z, side, entityPlayer, itemStack) || _canPlaceItemBlockOnSide(world, x, y, z, side))
         {
             return true;
         }

@@ -72,8 +72,8 @@ public class SignalBus extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-	public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-		TileEntity te = world.getBlockTileEntity(tileX, tileY, tileZ);
+	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
+		TileEntity te = world.func_147438_o(tileX, tileY, tileZ);
 		if (te instanceof SignalBusLogic) {
 			if (((SignalBusLogic)te).getMultiblockMaster() != null) {
 				((SignalBusLogic)te).getMultiblockMaster().detachBlock((IMultiblockMember)te, false);

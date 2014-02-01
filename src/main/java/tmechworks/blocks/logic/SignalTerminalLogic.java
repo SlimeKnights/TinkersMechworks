@@ -1,8 +1,10 @@
 package tmechworks.blocks.logic;
 
 import java.util.Arrays;
+
 import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -124,7 +126,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 	}
 
 	@Override
-	public void updateEntity() {
+	public void func_145845_h() {
 		if (pendingSide >= 0 && pendingSide < 6 && connectedSides[pendingSide] == -1) {
 			connectedSides[pendingSide] = 0;
 			pendingSide = -1;
@@ -211,8 +213,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 						oSide = 0;
 					}
 
-					field_145850_b.notifyBlockOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal);
-					field_145850_b.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal, oSide);
+					field_145850_b.func_147459_d(targetX, targetY, targetZ, TMechworks.content.signalTerminal);
+					field_145850_b.func_147441_b(targetX, targetY, targetZ, TMechworks.content.signalTerminal, oSide);
 					//field_145850_b.notifyBlocksOfNeighborChange(field_145851_c, field_145848_d, field_145849_e, TConstruct.instance.content.signalTerminal.blockID);
 				}
 			}
@@ -453,7 +455,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 					if (tempStrength > 0 && tempStrength == (temporarySide - 1)) {
 						// Let's make sure we're not dealing with vanilla redstone
 
-						int bid = 0;
+						Block bid;
 						int power = 0;
 						int temp = 0;
 
@@ -465,8 +467,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 
 							if (temp > power) {
 
-								bid = field_145850_b.getBlockId(field_145851_c + offset[0] + Facing.offsetsXForSide[j], field_145848_d + offset[1] + Facing.offsetsYForSide[j], field_145849_e + offset[2] + Facing.offsetsZForSide[j]);
-								if (bid != Block.redstoneWire.blockID) {
+								bid = field_145850_b.func_147439_a(field_145851_c + offset[0] + Facing.offsetsXForSide[j], field_145848_d + offset[1] + Facing.offsetsYForSide[j], field_145849_e + offset[2] + Facing.offsetsZForSide[j]);
+								if (bid != Blocks.redstone_wire) {
 									power = temp;
 								}
 							}

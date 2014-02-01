@@ -25,7 +25,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 	private boolean southboundSignalsChanged = false;
 	private boolean northboundSignalsChanged = false;
 	private boolean forceCheck = false;
-
+	private World world;
 	private boolean[] placedSides = new boolean[] { false, false, false, false, false, false };
 
 	public SignalBusLogic() {
@@ -55,7 +55,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 				tX = ForgeDirection.VALID_DIRECTIONS[j].offsetX + field_145851_c;
 				tY = ForgeDirection.VALID_DIRECTIONS[j].offsetY + field_145848_d;
 				tZ = ForgeDirection.VALID_DIRECTIONS[j].offsetZ + field_145849_e;
-				if (field_145850_b.isBlockOpaqueCube(tX, tY, tZ)) {
+				if (field_145850_b.func_147439_a(tX, tY, tZ).func_149662_c()) {
 					continue;
 				}
 				tX += ForgeDirection.VALID_DIRECTIONS[i].offsetX;
@@ -95,7 +95,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 	}
 
 	@Override
-	public void updateEntity() {
+	public void func_145845_h() {
 		if (field_145850_b.isRemote) {
 			return;
 		}
@@ -187,6 +187,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 		if (field_145850_b.isRemote) {
 			return false;
 		}
+		this.world = world;
 		if (world == field_145850_b && world.isRemote == field_145850_b.isRemote) {
 			if (field_145850_b.func_147438_o(x, y, z) instanceof ISignalTransceiver) {
 				TileEntity te = world.func_147438_o(x, y, z);
@@ -416,7 +417,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 			neighborX = field_145851_c + dir.offsetX;
 			neighborY = field_145848_d + dir.offsetY;
 			neighborZ = field_145849_e + dir.offsetZ;
-			if (field_145850_b.isBlockOpaqueCube(neighborX, neighborY, neighborZ)) {
+			if (field_145850_b.func_147439_a(neighborX, neighborY, neighborZ).func_149662_c()) {
 				continue;
 			}
 			neighborX += fromFace.offsetX;
@@ -461,7 +462,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 						return true;
 					}
 				}
-				if (field_145850_b.isBlockOpaqueCube(field_145851_c + jDir.offsetX, field_145848_d + jDir.offsetY, field_145849_e + jDir.offsetZ)) {
+				if (field_145850_b.func_147439_a(field_145851_c + jDir.offsetX, field_145848_d + jDir.offsetY, field_145849_e + jDir.offsetZ).func_149662_c()) {
 					continue;
 				}
 				if (field_145851_c + iDir.offsetX + jDir.offsetX == coord.x && field_145848_d + iDir.offsetY + jDir.offsetY == coord.y && field_145849_e + iDir.offsetZ + jDir.offsetZ == coord.z) {
@@ -491,7 +492,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 					continue;
 				}
 				jDir = ForgeDirection.VALID_DIRECTIONS[j];
-				if (field_145850_b.isBlockOpaqueCube(field_145851_c + jDir.offsetX, field_145848_d + jDir.offsetY, field_145849_e + jDir.offsetZ)) {
+				if (field_145850_b.func_147439_a(field_145851_c + jDir.offsetX, field_145848_d + jDir.offsetY, field_145849_e + jDir.offsetZ).func_149662_c()) {
 					continue;
 				}
 				cornerCoords.add(new CoordTuple(field_145851_c + iDir.offsetX + jDir.offsetX, field_145848_d + iDir.offsetY + jDir.offsetY, field_145849_e + iDir.offsetZ + jDir.offsetZ));
@@ -568,7 +569,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 			if (sDir == ForgeDirection.NORTH || sDir == ForgeDirection.SOUTH) {
 				sDir = sDir.getOpposite();
 			}
-			if (!field_145850_b.isBlockSolidOnSide(field_145851_c + iDir.offsetX, field_145848_d + iDir.offsetY, field_145849_e + iDir.offsetZ, iDir.getOpposite())) {
+			if (!field_145850_b.isSideSolid(field_145851_c + iDir.offsetX, field_145848_d + iDir.offsetY, field_145849_e + iDir.offsetZ, iDir.getOpposite())) {
 				placedSides[i] = false;
 				++dropCount;
 			}
@@ -585,4 +586,10 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 		}
 		return true;
 	}
+
+    @Override
+    public World getWorldObj ()
+    {
+        return world;
+    }
 }

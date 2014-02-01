@@ -18,10 +18,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class SignalBusItem extends ItemBlock
 {
     public static final String blockType[] = { "signalbus" };
-
+    private Block b;
     public SignalBusItem(Block b)
     {
         super(b);
+        this.b = b;
         this.maxStackSize = 64;
         this.setHasSubtypes(false);
     }
@@ -40,9 +41,9 @@ public class SignalBusItem extends ItemBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean canPlaceItemBlockOnSide (World world, int x, int y, int z, int side, EntityPlayer entityPlayer, ItemStack itemStack)
+    public boolean func_150936_a (World world, int x, int y, int z, int side, EntityPlayer entityPlayer, ItemStack itemStack)
     {
-        return super.canPlaceItemBlockOnSide(world, x, y, z, side, entityPlayer, itemStack) || _canPlaceItemBlockOnSide(world, x, y, z, side);
+        return super.func_150936_a(world, x, y, z, side, entityPlayer, itemStack) || _canPlaceItemBlockOnSide(world, x, y, z, side);
     }
 
     @Override
@@ -115,8 +116,8 @@ public class SignalBusItem extends ItemBlock
         
         --stack.stackSize;
         
-        world.markBlockForRenderUpdate(x, y, z);
-        
+        world.func_147479_m(x, y, z);
+
         return true;
 
     }
@@ -168,9 +169,9 @@ public class SignalBusItem extends ItemBlock
             return false;
         }
 
-        if (world.func_147439_a(x, y, z) == this.func_147439_a())
+        if (world.func_147439_a(x, y, z) == b)
         {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+            TileEntity te = world.func_147438_o(x, y, z);
             if (te == null || !(te instanceof SignalBusLogic))
             {
                 return false;

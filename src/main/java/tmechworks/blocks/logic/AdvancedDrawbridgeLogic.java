@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;
+import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 import tmechworks.lib.player.FakePlayerLogic;
 
@@ -308,7 +309,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                         if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
                         {
                             // tryExtend(field_145850_b, xPos, yPos, zPos, direction);
-                            int blockToItem = getStackInBufferSlot(extension - 1) != null ? TConstructRegistry.blockToItemMapping[getStackInBufferSlot(extension - 1).getItem()] : 0;
+                            Item blockToItem = (Item) (getStackInBufferSlot(extension - 1) != null ? TMechworksRegistry.blockToItemMapping.get(getStackInBufferSlot(extension - 1).getItem()) : 0);
                             if (blockToItem == 0)
                             {
                                 if (getStackInSlot(extension - 1) == null || getStackInSlot(extension - 1).itemID >= 4096 || BlockUtils.getBlockFromItem(getStackInSlot(extension - 1).getItem()) == null)
@@ -318,7 +319,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             }
                             else
                             {
-                                Block placeBlock = Block.blocksList[blockToItem];
+                                Block placeBlock = BlockUtils.getBlockFromItem(blockToItem);
                                 placeBlockAt(getStackInSlot(extension - 1), fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
                             }
                             field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, field_145850_b.rand.nextFloat() * 0.25F + 0.6F);
@@ -456,7 +457,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     boolean validMetadata (int slot, Block block, int metadata)
     {
-        int type = TConstructRegistry.drawbridgeState[block];
+        int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
         if (type == 0)
         {
             return metadata == getStackInBufferSlot(slot).getItemDamage();

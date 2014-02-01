@@ -67,7 +67,7 @@ public class TMechworks {
     @EventHandler
     public void init (FMLInitializationEvent event)
     {
-    	packetPipeline.initialise();
+    	packetPipeline.initalise();
         if (event.getSide() == Side.CLIENT)
         {
         	MinecraftForge.EVENT_BUS.register(new SignalTetherWorldOverlayRenderer());
