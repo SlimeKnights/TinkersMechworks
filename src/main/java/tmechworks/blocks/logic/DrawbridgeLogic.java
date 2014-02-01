@@ -1,5 +1,7 @@
 package tmechworks.blocks.logic;
 
+import com.mojang.authlib.GameProfile;
+
 import mantle.blocks.BlockUtils;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.*;
@@ -47,7 +49,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         this.field_145850_b = par1World;
         if (!field_145850_b.isRemote)
-            fakePlayer = new FakePlayerLogic(field_145850_b, "Player.Drawbridge", this);
+            fakePlayer = new FakePlayerLogic((WorldServer)field_145850_b, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic)this);
     }
 
     @Override
@@ -551,5 +553,17 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
             bufferStack.stackSize = 1;
         }
         this.field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
+    }
+
+    @Override
+    public String func_145825_b ()
+    {
+        return getDefaultName();
+    }
+
+    @Override
+    public boolean func_145818_k_ ()
+    {
+        return true;
     }
 }

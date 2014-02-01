@@ -1,5 +1,7 @@
 package tmechworks.blocks.logic;
 
+import com.mojang.authlib.GameProfile;
+
 import mantle.blocks.BlockUtils;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.*;
@@ -48,7 +50,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     {
         this.field_145850_b = par1World;
         if (!par1World.isRemote)
-            fakePlayer = new FakePlayerLogic(field_145850_b, "Player.Drawbridge", this);
+            fakePlayer = new FakePlayerLogic((WorldServer)field_145850_b, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic)this);
     }
 
     @Override
