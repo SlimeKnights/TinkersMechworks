@@ -22,8 +22,8 @@ public class AdvDrawbridgeGui extends GuiContainer
     public AdvDrawbridgeGui(EntityPlayer player, AdvancedDrawbridgeLogic frypan, World world, int x, int y, int z)
     {
         super(frypan.getGuiContainer(player.inventory, world, x, y, z));
-        this.inventorySlots = new AdvancedDrawbridgeContainer(player.inventory, frypan, this);
-        player.openContainer = this.inventorySlots;
+        this.field_147002_h = new AdvancedDrawbridgeContainer(player.inventory, frypan, this);
+        player.openContainer = this.field_147002_h;
         logic = frypan;
     }
 
@@ -114,7 +114,7 @@ public class AdvDrawbridgeGui extends GuiContainer
                 b.field_146125_m = !flag;
             }
         }
-        ((AdvancedDrawbridgeContainer) this.inventorySlots).updateContainerSlots();
+        ((AdvancedDrawbridgeContainer) this.field_147002_h).updateContainerSlots();
     }
 
     protected void actionPerformed (GuiButton button)
