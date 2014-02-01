@@ -1,22 +1,16 @@
 package tmechworks.client.gui;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.util.Iterator;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
-
+import tmechworks.TMechworks;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import tmechworks.network.packet.PacketDrawbridge;
 
 public class AdvDrawbridgeGui extends GuiContainer
 {
@@ -28,28 +22,28 @@ public class AdvDrawbridgeGui extends GuiContainer
     public AdvDrawbridgeGui(EntityPlayer player, AdvancedDrawbridgeLogic frypan, World world, int x, int y, int z)
     {
         super(frypan.getGuiContainer(player.inventory, world, x, y, z));
-        this.inventorySlots = new AdvancedDrawbridgeContainer(player.inventory, frypan, this);
-        player.openContainer = this.inventorySlots;
+        this.field_147002_h = new AdvancedDrawbridgeContainer(player.inventory, frypan, this);
+        player.openContainer = this.field_147002_h;
         logic = frypan;
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void func_146979_b(int par1, int par2)
     {
         field_146289_q.drawString("Advanced Drawbridge", 8, 6, 0x404040);
-        field_146289_q.drawString(StatCollector.translateToLocal("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
+        field_146289_q.drawString(StatCollector.translateToLocal("container.inventory"), 8, (field_147000_g - 96) + 2, 0x404040);
     }
 
     private static final ResourceLocation background = new ResourceLocation("tmechworks", "textures/gui/drawbridgeAdvanced.png");
 
     @Override
-    protected void drawGuiContainerBackgroundLayer (float f, int i, int j)
+    protected void func_146976_a (float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.field_146297_k.getTextureManager().bindTexture(background);
-        int cornerX = (field_146294_l - xSize) / 2;
-        int cornerY = (field_146295_m - ySize) / 2;
-        drawTexturedModalRect(cornerX, cornerY, 0, 0, xSize, ySize);
+        int cornerX = (field_146294_l - field_146999_f) / 2;
+        int cornerY = (field_146295_m - field_147000_g) / 2;
+        drawTexturedModalRect(cornerX, cornerY, 0, 0, field_146999_f, field_147000_g);
         if (!isGuiExpanded)
         {
             drawTexturedModalRect(cornerX + 34, cornerY + 35, 238, 0, 18, 18);
@@ -74,8 +68,8 @@ public class AdvDrawbridgeGui extends GuiContainer
     public void initGui ()
     {
         super.initGui();
-        int cornerX = (this.field_146294_l - xSize) / 2;
-        int cornerY = (this.field_146295_m - this.ySize) / 2;
+        int cornerX = (this.field_146294_l - field_146999_f) / 2;
+        int cornerY = (this.field_146295_m - this.field_147000_g) / 2;
 
         this.setExpanded(false);
         this.field_146292_n.clear();
@@ -120,7 +114,7 @@ public class AdvDrawbridgeGui extends GuiContainer
                 b.field_146125_m = !flag;
             }
         }
-        ((AdvancedDrawbridgeContainer) this.inventorySlots).updateContainerSlots();
+        ((AdvancedDrawbridgeContainer) this.field_147002_h).updateContainerSlots();
     }
 
     protected void actionPerformed (GuiButton button)
@@ -144,7 +138,7 @@ public class AdvDrawbridgeGui extends GuiContainer
 
     void updateServer (byte direction)
     {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
+        /*ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
         DataOutputStream outputStream = new DataOutputStream(bos);
         try
         {
@@ -165,7 +159,9 @@ public class AdvDrawbridgeGui extends GuiContainer
         packet.data = bos.toByteArray();
         packet.length = bos.size();
 
-        PacketDispatcher.sendPacketToServer(packet);
+        PacketDispatcher.sendPacketToServer(packet);*/
+        
+        TMechworks.packetPipeline.sendToServer(new PacketDrawbridge(logic.field_145851_c, logic.field_145848_d, logic.field_145849_e, direction));
     }
 
     @Override

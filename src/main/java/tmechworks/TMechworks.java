@@ -1,5 +1,7 @@
 package tmechworks;
 
+import tmechworks.network.packet.PacketPipeline;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +38,8 @@ public class TMechworks {
     /* Proxies for sides, used for graphics processing */
     @SidedProxy(clientSide = "tmechworks.client.ClientProxy", serverSide = "tmechworks.common.CommonProxy")
     public static CommonProxy proxy;
+    
+    public static final PacketPipeline packetPipeline = new PacketPipeline();
 
     public TMechworks ()
     {
@@ -63,6 +67,7 @@ public class TMechworks {
     @EventHandler
     public void init (FMLInitializationEvent event)
     {
+    	packetPipeline.initialise();
         if (event.getSide() == Side.CLIENT)
         {
         	MinecraftForge.EVENT_BUS.register(new SignalTetherWorldOverlayRenderer());
@@ -72,6 +77,7 @@ public class TMechworks {
     @EventHandler
     public void postInit (FMLPostInitializationEvent evt)
     {
+    	packetPipeline.postInitialise();
         content.postInit();
         proxy.postInit();
 

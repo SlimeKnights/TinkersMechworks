@@ -1,21 +1,14 @@
 package tmechworks.client.gui;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
-
+import tmechworks.TMechworks;
 import tmechworks.blocks.logic.DrawbridgeLogic;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import tmechworks.network.packet.PacketDrawbridge;
 
 public class DrawbridgeGui extends GuiContainer
 {
@@ -28,30 +21,30 @@ public class DrawbridgeGui extends GuiContainer
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer (int par1, int par2)
+    protected void func_146979_b (int par1, int par2)
     {
         //fontRenderer.drawString(StatCollector.translateToLocal("aggregator.glowstone"), 60, 6, 0x404040);
         field_146289_q.drawString("Drawbridge", 8, 6, 0x404040);
-        field_146289_q.drawString(StatCollector.translateToLocal("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
+        field_146289_q.drawString(StatCollector.translateToLocal("container.inventory"), 8, (field_147000_g - 96) + 2, 0x404040);
     }
 
     private static final ResourceLocation background = new ResourceLocation("tmechworks", "textures/gui/drawbridge.png");
 
     @Override
-    protected void drawGuiContainerBackgroundLayer (float f, int i, int j)
+    protected void func_146976_a (float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.field_146297_k.getTextureManager().bindTexture(background);
-        int cornerX = (field_146294_l - xSize) / 2;
-        int cornerY = (field_146295_m - ySize) / 2;
-        drawTexturedModalRect(cornerX, cornerY, 0, 0, xSize, ySize);
+        int cornerX = (field_146294_l - field_146999_f) / 2;
+        int cornerY = (field_146295_m - field_147000_g) / 2;
+        drawTexturedModalRect(cornerX, cornerY, 0, 0, field_146999_f, field_147000_g);
     }
 
     public void initGui ()
     {
         super.initGui();
-        int cornerX = (this.field_146294_l - this.xSize) / 2;
-        int cornerY = (this.field_146295_m - this.ySize) / 2;
+        int cornerX = (this.field_146294_l - this.field_146999_f) / 2;
+        int cornerY = (this.field_146295_m - this.field_147000_g) / 2;
 
         this.field_146292_n.clear();
         GuiButton button = new DrawbridgeButton(0, cornerX + 131, cornerY + 18, 176, 0, 21, 22);
@@ -91,7 +84,7 @@ public class DrawbridgeGui extends GuiContainer
 
     void updateServer (byte direction)
     {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
+        /*ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
         DataOutputStream outputStream = new DataOutputStream(bos);
         try
         {
@@ -112,6 +105,8 @@ public class DrawbridgeGui extends GuiContainer
         packet.data = bos.toByteArray();
         packet.length = bos.size();
 
-        PacketDispatcher.sendPacketToServer(packet);
+        PacketDispatcher.sendPacketToServer(packet);*/
+        
+        TMechworks.packetPipeline.sendToServer(new PacketDrawbridge(logic.field_145851_c, logic.field_145848_d, logic.field_145849_e, direction));
     }
 }

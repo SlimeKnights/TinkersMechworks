@@ -1,33 +1,26 @@
 package tmechworks.blocks.logic;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import tconstruct.library.TConstructRegistry;
 import mantle.blocks.BlockUtils;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.*;
 import mantle.common.ComparisonHelper;
 import mantle.world.WorldHelper;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.network.*;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import tconstruct.library.TConstructRegistry;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;
-import tmechworks.lib.TMechworksRegistry;
-import tmechworks.lib.player.FakePlayerLogic;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
+import tmechworks.lib.player.FakePlayerLogic;
 
 public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
@@ -268,7 +261,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     {
         ItemStack stack = super.decrStackSize(slot, quantity);
         if (slot == 1)
-            field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
+            field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
         return stack;
     }
 
@@ -315,17 +308,17 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                         if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
                         {
                             // tryExtend(field_145850_b, xPos, yPos, zPos, direction);
-                            Item blockToItem = getStackInBufferSlot(extension - 1) != null ? TMechworksRegistry.blockToItemMapping.get(getStackInBufferSlot(extension - 1).getItem()) : null;
-                            if (blockToItem == null)
+                            int blockToItem = getStackInBufferSlot(extension - 1) != null ? TConstructRegistry.blockToItemMapping[getStackInBufferSlot(extension - 1).getItem()] : 0;
+                            if (blockToItem == 0)
                             {
-                                if (getStackInSlot(extension - 1) == null || BlockUtils.getBlockFromItem(getStackInSlot(extension - 1).getItem()) == null)
+                                if (getStackInSlot(extension - 1) == null || getStackInSlot(extension - 1).itemID >= 4096 || BlockUtils.getBlockFromItem(getStackInSlot(extension - 1).getItem()) == null)
                                     return;
                                 Block placeBlock = BlockUtils.getBlockFromItem(getStackInBufferSlot(extension - 1).getItem());
                                 placeBlockAt(getStackInSlot(extension - 1), fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
                             }
                             else
                             {
-                                Block placeBlock = BlockUtils.getBlockFromItem(blockToItem);
+                                Block placeBlock = Block.blocksList[blockToItem];
                                 placeBlockAt(getStackInSlot(extension - 1), fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
                             }
                             field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, field_145850_b.rand.nextFloat() * 0.25F + 0.6F);
@@ -373,7 +366,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             break;
                         }
 
-                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
+                        Block block = field_145850_b.getBlock(xPos, yPos, zPos);
                         if (block != null)
                         {
                             int meta = field_145850_b.getBlockMetadata(xPos, yPos, zPos);
@@ -428,8 +421,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
         if (world.func_147439_a(x, y, z) == block)
         {
-            block.func_149689_a(world, x, y, z, player, stack);
-            block.func_149714_e(world, x, y, z, metadata);
+            block.onBlockPlacedBy(world, x, y, z, player, stack);
+            block.onPostBlockPlaced(world, x, y, z, metadata);
         }
 
         return true;
@@ -446,13 +439,13 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     boolean validBlock (int slot, Block block)
     {
-        ItemStack type = new ItemStack(TMechworksRegistry.interchangableBlockMapping.get(block));
+        ItemStack type = TConstructRegistry.interchangableBlockMapping[block];
         if (type != null)
         {
             if (type == getStackInBufferSlot(slot))
                 return true;
         }
-        Item blockToItem = TMechworksRegistry.blockToItemMapping.get(new ItemStack(block).getItem());
+        Item blockToItem = TConstructRegistry.blockToItemMapping[block];
         if (blockToItem != null)
         {
             if (blockToItem == getStackInBufferSlot(slot).getItem())
@@ -463,7 +456,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     boolean validMetadata (int slot, Block block, int metadata)
     {
-        int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
+        int type = TConstructRegistry.drawbridgeState[block];
         if (type == 0)
         {
             return metadata == getStackInBufferSlot(slot).getItemDamage();
@@ -521,7 +514,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
         if (camoInventory.getStackInSlot(0) != null)
         {
             NBTTagCompound camoTag = new NBTTagCompound();
-            camoInventory.getStackInSlot(0).readFromNBT(camoTag);
+            camoInventory.getStackInSlot(0).func_145839_a(camoTag);
             tags.setTag("Camo", camoTag);
         }
 
@@ -554,7 +547,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
             {
                 NBTTagCompound tagList = new NBTTagCompound();
                 tagList.setByte("Slot", (byte) iter);
-                getStackInBufferSlot(iter).writeToNBT(tagList);
+                getStackInBufferSlot(iter).func_145839_a(tagList);
                 nbttaglist.appendTag(tagList);
             }
         }
@@ -576,18 +569,18 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     /* Packets */
     @Override
-    public Packet getDescriptionPacket ()
+    public Packet func_145844_m ()
     {
         NBTTagCompound tag = new NBTTagCompound();
         func_145841_b(tag);
-        return new Packet132TileEntityData(field_145851_c, field_145848_d, field_145849_e, 1, tag);
+        return new S35PacketUpdateTileEntity(field_145851_c, field_145848_d, field_145849_e, 1, tag);
     }
 
     @Override
-    public void onDataPacket (NetworkManager net, Packet132TileEntityData packet)
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
     {
-        func_145839_a(packet.data);
-        field_145850_b.markBlockForRenderUpdate(field_145851_c, field_145848_d, field_145849_e);
+        func_145839_a(packet.func_148857_g());
+        field_145850_b.func_147479_m(field_145851_c, field_145848_d, field_145849_e);
     }
 
     public boolean hasExtended ()
@@ -607,7 +600,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                 getStackInBufferSlot(i).stackSize = 1;
             }
         }
-        this.field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
+        this.field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
     }
 
     //	@Override
@@ -639,7 +632,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
         {
             super.setInventorySlotContents(slot, content);
             if (slot == 0 && field_145850_b != null)
-                field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
+                field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
         }
 
         @Override
@@ -648,7 +641,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
             super.onInventoryChanged();
             if (field_145850_b != null)
             {
-                field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
+                field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
             }
         }
 

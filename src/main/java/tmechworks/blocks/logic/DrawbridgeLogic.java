@@ -1,30 +1,26 @@
 package tmechworks.blocks.logic;
 
+import mantle.blocks.BlockUtils;
+import mantle.blocks.abstracts.InventoryLogic;
+import mantle.blocks.iface.*;
+import mantle.common.ComparisonHelper;
+import mantle.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
+import net.minecraft.network.*;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
-import mantle.blocks.BlockUtils;
-import mantle.blocks.iface.*;
 import tmechworks.inventory.DrawbridgeContainer;
-import mantle.blocks.abstracts.InventoryLogic;
-import mantle.common.ComparisonHelper;
-import mantle.world.WorldHelper;
-import tmechworks.lib.TMechworksRegistry;
-import tmechworks.lib.player.FakePlayerLogic;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
+import tmechworks.lib.player.FakePlayerLogic;
 
 
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
@@ -245,7 +241,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         super.setInventorySlotContents(slot, itemstack);
         if (slot == 1)
-            field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
+            field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
     }
 
     @Override
@@ -253,7 +249,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         ItemStack stack = super.decrStackSize(slot, quantity);
         if (slot == 1)
-            field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
+            field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
         return stack;
     }
 
@@ -299,12 +295,12 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             break;
                         }
 
-                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
-                        if (block == null || WorldHelper.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
+                        Block block = field_145850_b.getBlock(xPos, yPos, zPos)];
+                        if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
                         {
                             //tryExtend(field_145850_b, xPos, yPos, zPos, direction);
-                            Item blockToItem = TMechworksRegistry.blockToItemMapping.get(bufferStack.getItem());
-                            if (blockToItem == null)
+                            int blockToItem = TConstructRegistry.blockToItemMapping[bufferStack];
+                            if (blockToItem == 0)
                             {
                                 if (BlockUtils.getBlockFromItem(inventory[0].getItem()) == null)
                                     return;
@@ -362,7 +358,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             break;
                         }
 
-                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
+                        Block block = field_145850_b.getBlock(xPos, yPos, zPos);
                         if (block != null)
                         {
                             int meta = field_145850_b.getBlockMetadata(xPos, yPos, zPos);
@@ -413,8 +409,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
         if (world.func_147439_a(x, y, z) == block)
         {
-            block.func_149689_a(world, x, y, z, player, stack);
-            block.func_149714_e(world, x, y, z, metadata);
+            block.onBlockPlacedBy(world, x, y, z, player, stack);
+            block.onPostBlockPlaced(world, x, y, z, metadata);
         }
 
         return true;
@@ -431,13 +427,13 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validBlock (Block block)
     {
-        Item type = new ItemStack(TMechworksRegistry.interchangableBlockMapping.get(block)).getItem();
+        Item type = TConstructRegistry.interchangableBlockMapping[block].getItem();
         if (type != null)
         {
             if (type == bufferStack.getItem())
                 return true;
         }
-        Item blockToItem = TMechworksRegistry.blockToItemMapping.get(new ItemStack(block).getItem());
+        Item blockToItem = TConstructRegistry.blockToItemMapping[new ItemStack(block).getItem()];
         if (blockToItem != null)
         {
             if (blockToItem == bufferStack.getItem())
@@ -448,7 +444,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validMetadata (Block block, int metadata)
     {
-        int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
+        int type = TConstructRegistry.drawbridgeState[block];
         if (type == 0)
         {
             return metadata == bufferStack.getItemDamage();
@@ -510,7 +506,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         if (bufferStack != null)
         {
             NBTTagCompound bufferInv = new NBTTagCompound();
-            bufferStack.writeToNBT(bufferInv);
+            bufferStack.func_145841_b(bufferInv);
             tags.setTag("BufferInv", bufferInv);
         }
 
@@ -531,18 +527,18 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     /* Packets */
     @Override
-    public Packet getDescriptionPacket ()
+    public Packet func_145844_m ()
     {
         NBTTagCompound tag = new NBTTagCompound();
         func_145841_b(tag);
-        return new Packet132TileEntityData(field_145851_c, field_145848_d, field_145849_e, 1, tag);
+        return new S35PacketUpdateTileEntity(field_145851_c, field_145848_d, field_145849_e, 1, tag);
     }
 
     @Override
-    public void onDataPacket (NetworkManager net, Packet132TileEntityData packet)
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
     {
-        func_145839_a(packet.data);
-        field_145850_b.markBlockForRenderUpdate(field_145851_c, field_145848_d, field_145849_e);
+        func_145839_a(packet.func_148857_g());
+        field_145850_b.func_147479_m(field_145851_c, field_145848_d, field_145849_e);
     }
 
     public boolean hasExtended ()
@@ -559,6 +555,6 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
             bufferStack = getStackInSlot(0).copy();
             bufferStack.stackSize = 1;
         }
-        this.field_145850_b.markBlockForUpdate(field_145851_c, field_145848_d, field_145849_e);
+        this.field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
     }
 }
