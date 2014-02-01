@@ -164,7 +164,7 @@ public class SignalBusItem extends ItemBlock
             }
         }
 
-        if (!TMechworks.content.signalBus.canPlaceBlockOnSide(world, x, y, z, side))
+        if (!TMechworks.content.signalBus.func_149707_d(world, x, y, z, side))
         {
             return false;
         }
