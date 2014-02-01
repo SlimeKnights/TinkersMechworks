@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
 import tmechworks.inventory.DrawbridgeContainer;
+import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 import tmechworks.lib.player.FakePlayerLogic;
 
@@ -295,12 +296,12 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             break;
                         }
 
-                        Block block = field_145850_b.getBlock(xPos, yPos, zPos)];
-                        if (block == null || block.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
+                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
+                        if (block == null || WorldHelper.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
                         {
                             //tryExtend(field_145850_b, xPos, yPos, zPos, direction);
-                            int blockToItem = TConstructRegistry.blockToItemMapping[bufferStack];
-                            if (blockToItem == 0)
+                            Item blockToItem = TMechworksRegistry.blockToItemMapping.get(BlockUtils.getBlockFromItemStack(bufferStack));
+                            if (blockToItem == null)
                             {
                                 if (BlockUtils.getBlockFromItem(inventory[0].getItem()) == null)
                                     return;
@@ -358,7 +359,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             break;
                         }
 
-                        Block block = field_145850_b.getBlock(xPos, yPos, zPos);
+                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
                         if (block != null)
                         {
                             int meta = field_145850_b.getBlockMetadata(xPos, yPos, zPos);
@@ -409,8 +410,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
         if (world.func_147439_a(x, y, z) == block)
         {
-            block.onBlockPlacedBy(world, x, y, z, player, stack);
-            block.onPostBlockPlaced(world, x, y, z, metadata);
+            block.func_149689_a(world, x, y, z, player, stack);
+            block.func_149714_e(world, x, y, z, metadata);
         }
 
         return true;
@@ -427,13 +428,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validBlock (Block block)
     {
-        Item type = TConstructRegistry.interchangableBlockMapping[block].getItem();
-        if (type != null)
-        {
-            if (type == bufferStack.getItem())
-                return true;
-        }
-        Item blockToItem = TConstructRegistry.blockToItemMapping[new ItemStack(block).getItem()];
+        Item blockToItem = TMechworksRegistry.blockToItemMapping.get(new ItemStack(block).getItem());
         if (blockToItem != null)
         {
             if (blockToItem == bufferStack.getItem())
@@ -444,7 +439,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validMetadata (Block block, int metadata)
     {
-        int type = TConstructRegistry.drawbridgeState[block];
+        int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
         if (type == 0)
         {
             return metadata == bufferStack.getItemDamage();
@@ -506,7 +501,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         if (bufferStack != null)
         {
             NBTTagCompound bufferInv = new NBTTagCompound();
-            bufferStack.func_145841_b(bufferInv);
+            bufferStack.writeToNBT(bufferInv);
             tags.setTag("BufferInv", bufferInv);
         }
 
