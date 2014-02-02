@@ -654,4 +654,16 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
             return 1;
         }
     }
+
+    @Override
+    public String func_145825_b ()
+    {
+        return getDefaultName();
+    }
+
+    @Override
+    public boolean func_145818_k_ ()
+    {
+        return true;
+    }
 }
