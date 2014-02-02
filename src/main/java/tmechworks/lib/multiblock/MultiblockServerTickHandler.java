@@ -7,6 +7,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.relauncher.Side;
 
 public class MultiblockServerTickHandler// implements IScheduledTickHandler
 {
@@ -17,7 +18,7 @@ public class MultiblockServerTickHandler// implements IScheduledTickHandler
     @SubscribeEvent
     public void onTick (ClientTickEvent event)
     {
-        if (event.phase.equals(Phase.END) && event.type.equals(Type.WORLD))
+        if (event.phase.equals(Phase.END) && event.type.equals(Type.WORLD) && event.side == Side.SERVER)
         {
             World world = (World) event.tickData[0];
             MultiblockRegistry.tick(world);

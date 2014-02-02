@@ -131,7 +131,7 @@ public class SignalBusItem extends ItemBlock
             side = 1;
         }
         else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush
-                && (block == null || block.isBlockReplaceable(world, x, y, z)))
+                && (block == null || block.func_149742_c(world, x, y, z)))
         {
             if (side == 0)
             {

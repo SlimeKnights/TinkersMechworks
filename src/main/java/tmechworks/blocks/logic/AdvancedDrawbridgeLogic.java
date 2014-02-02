@@ -308,7 +308,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                         }
 
                         Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
-                        if (block == null || WorldHelper.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.isBlockReplaceable(field_145850_b, xPos, yPos, zPos))
+                        if (block == null || WorldHelper.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.func_149742_c(field_145850_b, xPos, yPos, zPos))
                         {
                             // tryExtend(field_145850_b, xPos, yPos, zPos, direction);
                             Item blockToItem = (Item) (getStackInBufferSlot(extension - 1) != null ? TMechworksRegistry.blockToItemMapping.get(getStackInBufferSlot(extension - 1).getItem()) : 0);
