@@ -1,12 +1,10 @@
 package tmechworks.lib.multiblock;
 
-import java.util.EnumSet;
-
 import net.minecraft.world.World;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.relauncher.Side;
 
 public class MultiblockServerTickHandler// implements IScheduledTickHandler
@@ -16,11 +14,11 @@ public class MultiblockServerTickHandler// implements IScheduledTickHandler
     }
 
     @SubscribeEvent
-    public void onTick (ClientTickEvent event)
+    public void onTick (WorldTickEvent event)
     {
         if (event.phase.equals(Phase.END) && event.type.equals(Type.WORLD) && event.side == Side.SERVER)
         {
-            World world = (World) event.tickData[0];
+            World world = (World) event.world;
             MultiblockRegistry.tick(world);
         }
     }
