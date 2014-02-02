@@ -18,6 +18,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import tconstruct.library.TConstructRegistry;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;
@@ -46,7 +47,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public void setworldObj (World par1World)
+    public void func_145834_a (World par1World)
     {
         this.field_145850_b = par1World;
         if (!par1World.isRemote)
