@@ -1,16 +1,20 @@
 #[Tinkers' Mechworks](http://www.minecraftforum.net/topic/1659892-tinkers-construct/)
 
 ##Development
-Install Forge as usual, and setup your IDE as with any other Forge project. Tinkers Construct must be installed to `forge/mcp/jars/mods/` from [Kalen](tanis.sunstrike.io/TConstruct/development/)
+Install Forge as usual, and setup your IDE as with any other Forge project.
 
 ##Compile from Source
-Run [Apache Ant](http://ant.apache.org/bindownload.cgi) in the repository root: `ant package`
+Note: Git MUST be installed and in the system path to use our scripts.
+* setup: Run [gradle]in the repository root: `gradlew[.bat] [setupDevWorkspace|setupDecompWorkspace] [eclipse|idea]`
+* build: Run [gradle]in the repository root: `gradlew[.bat] build'
+* if obscure gradle issues are found try running 'gradlew clean' or/and 'gradlew cleanCache'
 
 ##Issue reporting
 Please include the following:
 
 * Minecraft version
 * Tinkers Mechworks version
+* Tinkers Construct version
 * Forge version/build
 * Versions of any mods potentially related to the issue 
 * Any relevant screenshots are greatly appreciated.
