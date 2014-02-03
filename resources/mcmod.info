@@ -1,0 +1,19 @@
+[
+  {
+    "modid": "TMechworks",
+    "name": "Tinkers' Mechworks",
+    "description": "",
+    "version": "${version}",
+    "mcversion": "${MCversion}",
+    "url": "",
+    "updateUrl": "",
+    "authors": [
+      "mDiyo", "fuj1n", "ProgWML6", "Sunstrike", "Pillbox"
+    ],
+    "credits": "Slime Knights",
+    "logoFile": "",
+    "screenshots": [],
+    "parent":"",
+    "dependencies": []
+  }
+]
