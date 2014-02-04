@@ -20,7 +20,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
-import tconstruct.library.TConstructRegistry;
 import tmechworks.inventory.DrawbridgeContainer;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
