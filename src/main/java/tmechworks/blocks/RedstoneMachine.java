@@ -43,10 +43,10 @@ public class RedstoneMachine extends InventoryBlock
 {
     public RedstoneMachine()
     {
-        super(Material.field_151573_f);
-        this.func_149647_a(TMechworksRegistry.Mechworks);
-        func_149711_c(12);
-        func_149672_a(field_149777_j);
+        super(Material.iron);
+        this.setCreativeTab(TMechworksRegistry.Mechworks);
+        setHardness(12);
+        setStepSound(soundTypeMetal);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class RedstoneMachine extends InventoryBlock
     {
         if (world.getBlockMetadata(x, y, z) == 0 || world.getBlockMetadata(x, y, z) == 2)
         {
-            TileEntity logic = world.func_147438_o(x, y, z);
+            TileEntity logic = world.getTileEntity(x, y, z);
 
             if (logic != null && logic instanceof DrawbridgeLogic)
             {
@@ -62,7 +62,7 @@ public class RedstoneMachine extends InventoryBlock
                 {
                     ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
                     if (BlockUtils.getBlockFromItem(stack.getItem()) != null)
-                        return (BlockUtils.getBlockFromItem(((DrawbridgeLogic) logic).getStackInSlot(3).getItem())).func_149750_m();
+                        return (BlockUtils.getBlockFromItem(((DrawbridgeLogic) logic).getStackInSlot(3).getItem())).getLightValue();
                 }
             }
 
@@ -72,7 +72,7 @@ public class RedstoneMachine extends InventoryBlock
                 {
                     ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
                     if (BlockUtils.getBlockFromItem(stack.getItem()) != null)
-                        return (BlockUtils.getBlockFromItem(((AdvancedDrawbridgeLogic) logic).getStackInSlot(3).getItem())).func_149750_m();
+                        return (BlockUtils.getBlockFromItem(((AdvancedDrawbridgeLogic) logic).getStackInSlot(3).getItem())).getLightValue();
                 }
             }
         }
@@ -81,23 +81,23 @@ public class RedstoneMachine extends InventoryBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int func_149720_d (IBlockAccess world, int x, int y, int z)
+    public int colorMultiplier (IBlockAccess world, int x, int y, int z)
     {
         if (world.getBlockMetadata(x, y, z) == 0 && world.getBlockMetadata(x, y, z) == 2)
         {
-            TileEntity logic = world.func_147438_o(x, y, z);
+            TileEntity logic = world.getTileEntity(x, y, z);
 
             if (logic != null && logic instanceof DrawbridgeLogic)
             {
                 ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
                 if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this))
-                    return BlockUtils.getBlockFromItem(stack.getItem()).func_149720_d(world, x, y, z);
+                    return BlockUtils.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
             }
             else if (logic != null && logic instanceof AdvancedDrawbridgeLogic)
             {
                 ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
                 if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this))
-                    return BlockUtils.getBlockFromItem(stack.getItem()).func_149720_d(world, x, y, z);
+                    return BlockUtils.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
             }
         }
 
@@ -158,7 +158,7 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void func_149651_a (IIconRegister iconRegister)
+    public void registerBlockIcons (IIconRegister iconRegister)
     {
         String[] textureNames = getTextureNames();
         this.icons = new IIcon[textureNames.length];
@@ -170,7 +170,7 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public IIcon func_149691_a (int side, int meta)
+    public IIcon getIcon (int side, int meta)
     {
         if (meta == 0)
         {
@@ -199,7 +199,7 @@ public class RedstoneMachine extends InventoryBlock
 
     public IIcon getBlockTexture (IBlockAccess world, int x, int y, int z, int side)
     {
-        TileEntity logic = world.func_147438_o(x, y, z);
+        TileEntity logic = world.getTileEntity(x, y, z);
         short direction = (logic instanceof IFacingLogic) ? ((IFacingLogic) logic).getRenderDirection() : 0;
         int meta = world.getBlockMetadata(x, y, z);
         if (meta == 0 || meta == 3)
@@ -210,8 +210,8 @@ public class RedstoneMachine extends InventoryBlock
             if (stack != null)
             {
                 Block block = BlockUtils.getBlockFromItem(stack.getItem());
-                if (block != null && block.func_149686_d())
-                    return block.func_149691_a(side, stack.getItemDamage());
+                if (block != null && block.renderAsNormalBlock())
+                    return block.getIcon(side, stack.getItemDamage());
             }
             if (side == direction)
             {
@@ -230,8 +230,8 @@ public class RedstoneMachine extends InventoryBlock
             if (stack != null)
             {
                 Block block = BlockUtils.getBlockFromItem(stack.getItem());
-                if (block != null && block.func_149686_d())
-                    return block.func_149691_a(side, stack.getItemDamage());
+                if (block != null && block.renderAsNormalBlock())
+                    return block.getIcon(side, stack.getItemDamage());
             }
             if (side == direction)
             {
@@ -286,7 +286,7 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void func_149666_a (Item b, CreativeTabs tab, List list)
+    public void getSubBlocks (Item b, CreativeTabs tab, List list)
     {
         for (int iter = 0; iter < 4; iter++)
         {
@@ -297,7 +297,7 @@ public class RedstoneMachine extends InventoryBlock
     /* Redstone */
     public void onNeighborBlockChange (World world, int x, int y, int z, int neighborBlockID)
     {
-        IActiveLogic logic = (IActiveLogic) world.func_147438_o(x, y, z);
+        IActiveLogic logic = (IActiveLogic) world.getTileEntity(x, y, z);
         IFacingLogic facing = (IFacingLogic) logic;
         int direction = facing.getRenderDirection();
         boolean active = false;
@@ -319,20 +319,20 @@ public class RedstoneMachine extends InventoryBlock
 
     public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
     {
-        if (world.func_147439_a(x, y, z).func_149637_q())
+        if (world.getBlock(x, y, z).isBlockNormalCube())
         {
             return world.getBlockPowerInput(x, y, z);
         }
         else
         {
-            Block i1 = world.func_147439_a(x, y, z);
-            return i1 == null ? null : i1.func_149709_b(world, x, y, z, side);
+            Block i1 = world.getBlock(x, y, z);
+            return i1 == null ? null : i1.isProvidingWeakPower(world, x, y, z, side);
         }
     }
 
     boolean activeRedstone (World world, int x, int y, int z)
     {
-        Block wire = world.func_147439_a(x, y, z);
+        Block wire = world.getBlock(x, y, z);
         if (wire != null && wire == Blocks.redstone_wire)
             return world.getBlockMetadata(x, y, z) > 0;
 
@@ -357,7 +357,7 @@ public class RedstoneMachine extends InventoryBlock
     private ItemStack getDrawbridgeBlock (World world, int x, int y, int z, int meta)
     {
         ItemStack stack = new ItemStack(this, 1, meta);
-        InventoryLogic logic = (InventoryLogic) world.func_147438_o(x, y, z);
+        InventoryLogic logic = (InventoryLogic) world.getTileEntity(x, y, z);
         NBTTagCompound tag = new NBTTagCompound();
         ItemStack camo = null;
 
@@ -421,7 +421,7 @@ public class RedstoneMachine extends InventoryBlock
             double d1 = (double) (world.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
             double d2 = (double) (world.rand.nextFloat() * f) + (double) (1.0F - f) * 0.5D;
             EntityItem entityitem = new EntityItem(world, (double) x + d0, (double) y + d1, (double) z + d2, stack);
-            entityitem.field_145804_b = 10;
+            entityitem.delayBeforeCanPickup = 10;
             world.spawnEntityInWorld(entityitem);
         }
     }
@@ -429,9 +429,9 @@ public class RedstoneMachine extends InventoryBlock
     @Override
     public ItemStack getPickBlock (MovingObjectPosition target, World world, int x, int y, int z)
     {
-        Item id = func_149694_d(world, x, y, z);
+        Item id = getItem(world, x, y, z);
         
-        int meta = func_149643_k(world, x, y, z);
+        int meta = getDamageValue(world, x, y, z);
         if (meta != 1 && meta < 4)
         {
             return getDrawbridgeBlock(world, x, y, z, meta);
@@ -440,15 +440,15 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void func_149689_a (World world, int x, int y, int z, EntityLivingBase living, ItemStack stack)
+    public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase living, ItemStack stack)
     {
-        super.func_149689_a(world, x, y, z, living, stack);
+        super.onBlockPlacedBy(world, x, y, z, living, stack);
         if (stack.hasTagCompound())
         {
             int meta = stack.getItemDamage();
             if (meta == 0 || meta == 3)
             {
-                DrawbridgeLogic logic = (DrawbridgeLogic) world.func_147438_o(x, y, z);
+                DrawbridgeLogic logic = (DrawbridgeLogic) world.getTileEntity(x, y, z);
                 NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Contents");
                 if (contentTag != null)
                 {
@@ -470,7 +470,7 @@ public class RedstoneMachine extends InventoryBlock
             }
             else if (meta == 2)
             {
-                AdvancedDrawbridgeLogic logic = (AdvancedDrawbridgeLogic) world.func_147438_o(x, y, z);
+                AdvancedDrawbridgeLogic logic = (AdvancedDrawbridgeLogic) world.getTileEntity(x, y, z);
                 for (int i = 1; i <= 16; i++)
                 {
                     NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Slot" + i);
@@ -497,10 +497,10 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void func_149636_a (World world, EntityPlayer player, int x, int y, int z, int meta)
+    public void harvestBlock (World world, EntityPlayer player, int x, int y, int z, int meta)
     {
         if (meta != 0)
-            super.func_149636_a(world, player, x, y, z, meta);
+            super.harvestBlock(world, player, x, y, z, meta);
     }
 
     /* Redstone connections */
@@ -523,7 +523,7 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public TileEntity func_149915_a (World var1, int metadata)
+    public TileEntity createNewTileEntity (World var1, int metadata)
     {
         switch (metadata)
         {

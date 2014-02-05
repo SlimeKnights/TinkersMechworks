@@ -71,14 +71,14 @@ public class SignalTetherWorldOverlayRenderer
             CoordTuple dst;
             for (int c = 0; c < 9; ++c)
             {
-                for (Object obj : chunks[c].field_150816_i.values())
+                for (Object obj : chunks[c].chunkTileEntityMap.values())
                 {
                     if (obj instanceof ISignalTransceiver && obj instanceof TileEntity)
                     {
                         dst = ((ISignalTransceiver) obj).getBusCoords();
                         if (dst != null)
                         {
-                            src = new CoordTuple(((TileEntity) obj).field_145851_c, ((TileEntity) obj).field_145848_d, ((TileEntity) obj).field_145849_e);
+                            src = new CoordTuple(((TileEntity) obj).xCoord, ((TileEntity) obj).yCoord, ((TileEntity) obj).zCoord);
                             transceivers.push(new CoordTuplePair(src, dst));
                         }
                     }

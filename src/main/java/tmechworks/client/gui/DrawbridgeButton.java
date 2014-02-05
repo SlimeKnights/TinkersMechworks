@@ -32,18 +32,18 @@ public class DrawbridgeButton extends GuiButton
      */
     public void drawButton (Minecraft mc, int par2, int par3)
     {
-        if (this.field_146125_m)
+        if (this.visible)
         {
-            boolean hovering = par2 >= this.field_146128_h && par3 >= this.field_146129_i && par2 < this.field_146128_h + this.field_146120_f && par3 < this.field_146129_i + this.field_146121_g;
+            boolean hovering = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             mc.getTextureManager().bindTexture(background);
             int offset = 0;
-            if (!this.field_146124_l)
+            if (!this.enabled)
                 offset = 46;
             else if (hovering)
                 offset = 92;
 
-            this.drawTexturedModalRect(this.field_146128_h, this.field_146129_i, uPos, vPos + offset, field_146120_f, field_146121_g);
+            this.drawTexturedModalRect(this.xPosition, this.yPosition, uPos, vPos + offset, width, height);
         }
     }
 }

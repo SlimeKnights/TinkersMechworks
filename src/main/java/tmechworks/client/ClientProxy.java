@@ -16,9 +16,9 @@ public class ClientProxy extends CommonProxy
     public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z)
     {
         if (ID == drawbridgeID)
-            return new DrawbridgeGui(player.inventory, (DrawbridgeLogic) world.func_147438_o(x, y, z), world, x, y, z);
+            return new DrawbridgeGui(player.inventory, (DrawbridgeLogic) world.getTileEntity(x, y, z), world, x, y, z);
         if (ID == advDrawbridgeID)
-            return new AdvDrawbridgeGui(player, (AdvancedDrawbridgeLogic) world.func_147438_o(x, y, z), world, x, y, z);
+            return new AdvDrawbridgeGui(player, (AdvancedDrawbridgeLogic) world.getTileEntity(x, y, z), world, x, y, z);
         return null;
     }
 

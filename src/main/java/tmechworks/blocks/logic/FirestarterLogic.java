@@ -41,9 +41,9 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
 
     void setFire ()
     {
-        int xPos = field_145851_c;
-        int yPos = field_145848_d;
-        int zPos = field_145849_e;
+        int xPos = xCoord;
+        int yPos = yCoord;
+        int zPos = zCoord;
 
         switch (direction)
         {
@@ -67,14 +67,14 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
             break;
         }
 
-        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
+        Block block = worldObj.getBlock(xPos, yPos, zPos);
         if (active)
         {
 //            TMechworks.logger.info("Setting fire");
-            if (block == null || WorldHelper.isAirBlock(field_145850_b, xPos, yPos, zPos))
+            if (block == null || WorldHelper.isAirBlock(worldObj, xPos, yPos, zPos))
             {
-                field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
-                field_145850_b.func_147449_b(xPos, yPos, zPos, Blocks.fire);
+                worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
+                worldObj.setBlock(xPos, yPos, zPos, Blocks.fire);
             }
         }
         else
@@ -82,9 +82,9 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
             //TConstruct.logger.info("Stopping fire "+putOut);
             if (block == Blocks.fire)
             {
-                //field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "random.fizz", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
-                field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
-                field_145850_b.func_147465_d(xPos, yPos, zPos, Blocks.air, 0, 3);
+                //worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "random.fizz", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
+                worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
+                worldObj.setBlock(xPos, yPos, zPos, Blocks.air, 0, 3);
                 //putOut = false;
                 shouldActivate = true;
             }
@@ -153,17 +153,17 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
     }
 
     @Override
-    public void func_145839_a (NBTTagCompound tags)
+    public void readFromNBT (NBTTagCompound tags)
     {
-        super.func_145839_a(tags);
+        super.readFromNBT(tags);
         tags.setBoolean("Active", active);
         readCustomNBT(tags);
     }
 
     @Override
-    public void func_145841_b (NBTTagCompound tags)
+    public void writeToNBT (NBTTagCompound tags)
     {
-        super.func_145841_b(tags);
+        super.writeToNBT(tags);
         active = tags.getBoolean("Active");
         writeCustomNBT(tags);
     }
@@ -180,17 +180,17 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
 
     /* Packets */
     @Override
-    public Packet func_145844_m ()
+    public Packet getDescriptionPacket ()
     {
         NBTTagCompound tag = new NBTTagCompound();
         writeCustomNBT(tag);
-        return new S35PacketUpdateTileEntity(field_145851_c, field_145848_d, field_145849_e, 1, tag);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
     }
 
     @Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
     {
         readCustomNBT(packet.func_148857_g());
-        field_145850_b.func_147479_m(field_145851_c, field_145848_d, field_145849_e);
+        worldObj.func_147479_m(xCoord, yCoord, zCoord);
     }
 }

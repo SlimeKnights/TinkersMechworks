@@ -22,6 +22,6 @@ public class FakePlayerLogic extends FakePlayer
 
     public ChunkCoordinates getPlayerCoordinates ()
     {
-        return new ChunkCoordinates(logic.field_145851_c, logic.field_145848_d, logic.field_145849_e);
+        return new ChunkCoordinates(logic.xCoord, logic.yCoord, logic.zCoord);
     }
 }

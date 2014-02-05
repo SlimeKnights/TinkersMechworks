@@ -63,7 +63,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     @Override
     public CoordTuple getCoordInWorld ()
     {
-        return new CoordTuple(this.field_145851_c, this.field_145848_d, this.field_145849_e);
+        return new CoordTuple(this.xCoord, this.yCoord, this.zCoord);
     }
 
     @Override
@@ -142,7 +142,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
         List<IMultiblockMember> neighborMembers = new LinkedList<IMultiblockMember>();
         for (CoordTuple neighbor : neighbors)
         {
-            te = this.field_145850_b.func_147438_o(neighbor.x, neighbor.y, neighbor.z);
+            te = this.worldObj.getTileEntity(neighbor.x, neighbor.y, neighbor.z);
             if (te instanceof IMultiblockMember)
             {
                 // Verify compatible member
@@ -242,7 +242,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
         CoordTuple[] neighborCoords = getNeighborCoords();
         for (CoordTuple coord : neighborCoords)
         {
-            TileEntity neighborTE = this.field_145850_b.func_147438_o(coord.x, coord.y, coord.z);
+            TileEntity neighborTE = this.worldObj.getTileEntity(coord.x, coord.y, coord.z);
             if (neighborTE instanceof IMultiblockMember && !((IMultiblockMember) neighborTE).isConnected() && ((IMultiblockMember) neighborTE).willConnect(getCoordInWorld()))
             {
                 membersToCheck.add((IMultiblockMember) neighborTE);
@@ -275,9 +275,9 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     }
 
     @Override
-    public void func_145839_a (NBTTagCompound data)
+    public void readFromNBT (NBTTagCompound data)
     {
-        super.func_145839_a(data);
+        super.readFromNBT(data);
 
         // We can't directly initialize a multiblock master yet, so we cache the data here until
         // we receive a validate() call, which creates the controller and hands off the cached data.
@@ -288,9 +288,9 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     }
 
     @Override
-    public void func_145841_b (NBTTagCompound data)
+    public void writeToNBT (NBTTagCompound data)
     {
-        super.func_145841_b(data);
+        super.writeToNBT(data);
 
         if (this.saveMultiblockData)
         {
@@ -308,9 +308,9 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     }
 
     @Override
-    public void func_145843_s ()
+    public void invalidate ()
     {
-        super.func_145843_s();
+        super.invalidate();
 
         detachSelf(false);
     }
@@ -320,7 +320,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     {
         super.onChunkUnload();
 
-        if (this.field_145850_b.isRemote)
+        if (this.worldObj.isRemote)
         {
             detachSelf(true);
         }
@@ -343,7 +343,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
             if (!this.isConnected())
             {
                 // Ignore blocks that are already connected
-                this.onBlockAdded(this.field_145850_b, field_145851_c, field_145848_d, field_145849_e);
+                this.onBlockAdded(this.worldObj, xCoord, yCoord, zCoord);
             }
         }
     }
@@ -355,18 +355,18 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     }
 
     @Override
-    public void func_145829_t ()
+    public void validate ()
     {
-        super.func_145829_t();
+        super.validate();
 
-        if (!this.field_145850_b.isRemote)
+        if (!this.worldObj.isRemote)
         {
-            MultiblockRegistry.registerMember(this.field_145850_b, ChunkCoordIntPair.chunkXZ2Int(field_145851_c >> 4, field_145849_e >> 4), this);
+            MultiblockRegistry.registerMember(this.worldObj, ChunkCoordIntPair.chunkXZ2Int(xCoord >> 4, zCoord >> 4), this);
 
-            if (!this.field_145850_b.getChunkProvider().chunkExists(field_145851_c >> 4, field_145849_e >> 4))
+            if (!this.worldObj.getChunkProvider().chunkExists(xCoord >> 4, zCoord >> 4))
             {
                 boolean master = this.cachedMultiblockData != null;
-                MultiblockRegistry.onMemberLoad(this.field_145850_b, ChunkCoordIntPair.chunkXZ2Int(field_145851_c >> 4, field_145849_e >> 4), this, master);
+                MultiblockRegistry.onMemberLoad(this.worldObj, ChunkCoordIntPair.chunkXZ2Int(xCoord >> 4, zCoord >> 4), this, master);
             }
         }
     }
@@ -398,8 +398,8 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
 
     protected CoordTuple[] getNeighborCoords ()
     {
-        return new CoordTuple[] { new CoordTuple(this.field_145851_c - 1, this.field_145848_d, this.field_145849_e), new CoordTuple(this.field_145851_c, this.field_145848_d - 1, this.field_145849_e),
-                new CoordTuple(this.field_145851_c, this.field_145848_d, this.field_145849_e - 1), new CoordTuple(this.field_145851_c, this.field_145848_d, this.field_145849_e + 1), new CoordTuple(this.field_145851_c, this.field_145848_d + 1, this.field_145849_e),
-                new CoordTuple(this.field_145851_c + 1, this.field_145848_d, this.field_145849_e) };
+        return new CoordTuple[] { new CoordTuple(this.xCoord - 1, this.yCoord, this.zCoord), new CoordTuple(this.xCoord, this.yCoord - 1, this.zCoord),
+                new CoordTuple(this.xCoord, this.yCoord, this.zCoord - 1), new CoordTuple(this.xCoord, this.yCoord, this.zCoord + 1), new CoordTuple(this.xCoord, this.yCoord + 1, this.zCoord),
+                new CoordTuple(this.xCoord + 1, this.yCoord, this.zCoord) };
     }
 }

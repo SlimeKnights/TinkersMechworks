@@ -14,6 +14,6 @@ public abstract class BlockMultiblock extends BlockContainer
     }
 
     @Override
-    public abstract TileEntity func_149915_a (World world, int meta);
+    public abstract TileEntity createNewTileEntity (World world, int meta);
 
 }

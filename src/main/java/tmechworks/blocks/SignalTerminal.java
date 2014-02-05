@@ -61,16 +61,16 @@ public class SignalTerminal extends Block implements ITileEntityProvider
 
     public SignalTerminal()
     {
-        super(Material.field_151594_q);
-        this.func_149711_c(0.1F);
-        this.func_149752_b(1);
-        func_149672_a(field_149777_j);
-        this.func_149647_a(TMechworksRegistry.Mechworks);
+        super(Material.circuits);
+        this.setHardness(0.1F);
+        this.setResistance(1);
+        setStepSound(soundTypeMetal);
+        this.setCreativeTab(TMechworksRegistry.Mechworks);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon func_149691_a (int side, int metadata)
+    public IIcon getIcon (int side, int metadata)
     {
         return icons[0];
     }
@@ -87,7 +87,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void func_149651_a (IIconRegister iconRegister)
+    public void registerBlockIcons (IIconRegister iconRegister)
     {
         this.icons = new IIcon[textureNames.length];
 
@@ -133,7 +133,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     @Override
     public boolean isSideSolid (IBlockAccess world, int x, int y, int z, ForgeDirection side)
     {
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof SignalTerminalLogic)
         {
             if (((SignalTerminalLogic) te).getConnectedSides()[side.ordinal()] != -1)
@@ -148,7 +148,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
      * The type of render function that is called for this block
      */
     @Override
-    public int func_149645_b ()
+    public int getRenderType ()
     {
         return SignalTerminalRender.renderID;
     }
@@ -174,7 +174,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     /**
     * Updates the blocks bounds based on its current state. Args: world, x, y, z
     */
-    public void func_149676_aBasedOnState (IBlockAccess world, int x, int y, int z)
+    public void setBlockBoundsBasedOnState (IBlockAccess world, int x, int y, int z)
     {
         float minX = 1;
         float minY = 1;
@@ -183,7 +183,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
         float maxY = 0;
         float maxZ = 0;
 
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalTerminalLogic)
         {
             for (AxisAlignedBB aabb : getBoxes((SignalTerminalLogic) te))
@@ -201,17 +201,17 @@ public class SignalTerminal extends Block implements ITileEntityProvider
                 maxZ = Math.max(maxZ, (float) aabb.maxZ);
             }
 
-            func_149676_a(minX, minY, minZ, maxX, maxY, maxZ);
+            setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
         }
         else
         {
-            this.func_149676_a(0.375F, 0.375F, 0.375F, 0.625F, 0.625F, 0.625F);
+            this.setBlockBounds(0.375F, 0.375F, 0.375F, 0.625F, 0.625F, 0.625F);
         }
         return;
     }
 
     @Override
-    public boolean func_149718_j (World world, int x, int y, int z)
+    public boolean canBlockStay (World world, int x, int y, int z)
     {
         return world.isSideSolid(x - 1, y, z, ForgeDirection.EAST) || world.isSideSolid(x + 1, y, z, ForgeDirection.WEST) || world.isSideSolid(x, y, z - 1, ForgeDirection.SOUTH)
                 || world.isSideSolid(x, y, z + 1, ForgeDirection.NORTH) || world.isSideSolid(x, y - 1, z, ForgeDirection.UP)
@@ -219,9 +219,9 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void func_149743_a (World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
+    public void addCollisionBoxesToList (World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
     {
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalTerminalLogic)
         {
             for (AxisAlignedBB aabb : getBoxes((SignalTerminalLogic) te))
@@ -247,7 +247,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
         }
         else
         {
-            super.func_149743_a(world, x, y, z, collisionTest, collisionBoxList, entity);
+            super.addCollisionBoxesToList(world, x, y, z, collisionTest, collisionBoxList, entity);
         }
     }
 
@@ -258,7 +258,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
      */
     public int isProvidingWeakPower (IBlockAccess world, int x, int y, int z, int localSide)
     {
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalTerminalLogic)
         {
             return ((SignalTerminalLogic) te).isProvidingWeakPower(localSide);
@@ -269,7 +269,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean func_149646_a (IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
+    public boolean shouldSideBeRendered (IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
     {
         return true;
     }
@@ -280,7 +280,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
      */
     public int isProvidingStrongPower (IBlockAccess world, int x, int y, int z, int localSide)
     {
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalTerminalLogic)
         {
             return ((SignalTerminalLogic) te).isProvidingStrongPower(localSide);
@@ -298,17 +298,17 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     }
 
     @Override
-    public TileEntity func_149915_a (World world, int meta)
+    public TileEntity createNewTileEntity (World world, int meta)
     {
         return new SignalTerminalLogic();
     }
 
     @Override
-    public void func_149695_a (World world, int x, int y, int z, Block neighborID)
+    public void onNeighborBlockChange (World world, int x, int y, int z, Block neighborID)
     {
-        super.func_149695_a(world, x, y, z, neighborID);
+        super.onNeighborBlockChange(world, x, y, z, neighborID);
 
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalTerminalLogic)
         {
             ((SignalTerminalLogic) te).onNeighborBlockChange();
@@ -382,7 +382,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     {
         int closest = -1;
 
-        Vec3 playerPosition = Vec3.createVectorHelper(player.posX - terminal.field_145851_c, player.posY - terminal.field_145848_d + player.getEyeHeight(), player.posZ - terminal.field_145848_d);
+        Vec3 playerPosition = Vec3.createVectorHelper(player.posX - terminal.xCoord, player.posY - terminal.yCoord + player.getEyeHeight(), player.posZ - terminal.yCoord);
         Vec3 playerLook = player.getLookVec();
 
         Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord
@@ -411,9 +411,9 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     }
 
     @Override
-    public boolean func_149727_a (World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+    public boolean onBlockActivated (World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
-        TileEntity te = par1World.func_147438_o(par2, par3, par4);
+        TileEntity te = par1World.getTileEntity(par2, par3, par4);
 
         if (!par1World.isRemote)
         {
@@ -421,7 +421,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
             {
                 if (!par1World.isRemote)
                 {
-                    par1World.func_147471_g(par2, par3, par4);
+                    par1World.markBlockForUpdate(par2, par3, par4);
                 }
                 int boxHit = closestClicked(par5EntityPlayer, 3.0F, (SignalTerminalLogic) te, getBoxes((SignalTerminalLogic) te));
                 if (boxHit < 0 || boxHit >= HITBOXES)
@@ -454,9 +454,9 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void func_149689_a (World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
+    public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
     {
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalTerminalLogic)
         {
             NBTTagCompound data = itemStack.stackTagCompound;
@@ -478,14 +478,14 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void func_149749_a (World world, int x, int y, int z, Block id, int meta)
+    public void breakBlock (World world, int x, int y, int z, Block id, int meta)
     {
         int dropTerm, dropWire = 0;
         float jumpX, jumpY, jumpZ;
         ItemStack tempStack;
         Random rand = new Random();
         
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalTerminalLogic)
         {
             dropTerm = ((SignalTerminalLogic) te).getDroppedTerminals();
@@ -524,7 +524,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
             ((SignalTerminalLogic) te).notifyBreak();
         }
 
-        super.func_149749_a(world, x, y, z, id, meta);
+        super.breakBlock(world, x, y, z, id, meta);
     }
 
 }

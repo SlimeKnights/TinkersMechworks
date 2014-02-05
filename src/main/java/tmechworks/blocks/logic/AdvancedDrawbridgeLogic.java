@@ -53,11 +53,11 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public void func_145834_a (World par1World)
+    public void setWorldObj (World par1World)
     {
-        this.field_145850_b = par1World;
+        this.worldObj = par1World;
         if (!par1World.isRemote)
-            fakePlayer = new FakePlayerLogic((WorldServer)field_145850_b, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic)this);
+            fakePlayer = new FakePlayerLogic((WorldServer)worldObj, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic)this);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
      */
     public void setPlacementDirection (byte keycode)
     {
-        if (!field_145850_b.isRemote)
+        if (!worldObj.isRemote)
         {
             if (keycode == 4)
             {
@@ -271,7 +271,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     {
         ItemStack stack = super.decrStackSize(slot, quantity);
         if (slot == 1)
-            field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         return stack;
     }
 
@@ -288,9 +288,9 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                     if (getStackInSlot(extension) != null && getStackInSlot(extension).stackSize > 0 && extension < 15)
                     {
                         extension++;
-                        int xPos = field_145851_c;
-                        int yPos = field_145848_d;
-                        int zPos = field_145849_e;
+                        int xPos = xCoord;
+                        int yPos = yCoord;
+                        int zPos = zCoord;
 
                         switch (direction)
                         {
@@ -314,30 +314,30 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             break;
                         }
 
-                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
-                        if (block == null || WorldHelper.isAirBlock(field_145850_b, xPos, yPos, zPos) || block.func_149742_c(field_145850_b, xPos, yPos, zPos))
+                        Block block = worldObj.getBlock(xPos, yPos, zPos);
+                        if (block == null || WorldHelper.isAirBlock(worldObj, xPos, yPos, zPos) || block.canPlaceBlockAt(worldObj, xPos, yPos, zPos))
                         {
-                            // tryExtend(field_145850_b, xPos, yPos, zPos, direction);
+                            // tryExtend(worldObj, xPos, yPos, zPos, direction);
                             Item blockToItem = (Item) (getStackInBufferSlot(extension - 1) != null ? TMechworksRegistry.blockToItemMapping.get(getStackInBufferSlot(extension - 1).getItem()) : 0);
                             if (blockToItem == null)
                             {
                                 if (getStackInSlot(extension - 1) == null || BlockUtils.getBlockFromItem(getStackInSlot(extension - 1).getItem()) == null)
                                     return;
                                 Block placeBlock = BlockUtils.getBlockFromItem(getStackInBufferSlot(extension - 1).getItem());
-                                placeBlockAt(getStackInSlot(extension - 1), fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
+                                placeBlockAt(getStackInSlot(extension - 1), fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
                             }
                             else
                             {
                                 Block placeBlock = BlockUtils.getBlockFromItem(blockToItem);
-                                placeBlockAt(getStackInSlot(extension - 1), fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
+                                placeBlockAt(getStackInSlot(extension - 1), fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
                             }
-                            field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, field_145850_b.rand.nextFloat() * 0.25F + 0.6F);
+                            worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
                             List pushedObjects = new ArrayList();
 
-                            AxisAlignedBB axisalignedbb = block.func_149668_a(field_145850_b, xPos, yPos, zPos);
+                            AxisAlignedBB axisalignedbb = block.getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
                             if (axisalignedbb != null)
                             {
-                                List list = field_145850_b.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
+                                List list = worldObj.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
                                 if (!list.isEmpty())
                                 {
                                     pushedObjects.addAll(list);
@@ -370,9 +370,9 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                 {
                     if ((getStackInSlot(extension) == null || getStackInSlot(extension).stackSize < getStackInSlot(extension).getMaxStackSize()) && extension > 0)
                     {
-                        int xPos = field_145851_c;
-                        int yPos = field_145848_d;
-                        int zPos = field_145849_e;
+                        int xPos = xCoord;
+                        int yPos = yCoord;
+                        int zPos = zCoord;
 
                         switch (direction)
                         {
@@ -396,14 +396,14 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             break;
                         }
 
-                        Block block = field_145850_b.func_147439_a(xPos, yPos, zPos);
+                        Block block = worldObj.getBlock(xPos, yPos, zPos);
                         if (block != null)
                         {
-                            int meta = field_145850_b.getBlockMetadata(xPos, yPos, zPos);
+                            int meta = worldObj.getBlockMetadata(xPos, yPos, zPos);
                             if (getStackInBufferSlot(extension - 1) != null && validBlock(extension - 1, block) && validMetadata(extension - 1, block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
-                                field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, field_145850_b.rand.nextFloat() * 0.15F + 0.6F);
-                                if (WorldHelper.setBlockToAirBool(field_145850_b, xPos, yPos, zPos))
+                                worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
+                                if (WorldHelper.setBlockToAirBool(worldObj, xPos, yPos, zPos))
                                     if (getStackInSlot(extension - 1) == null)
                                     {
                                         setInventorySlotContents(extension - 1, getStackInBufferSlot(extension - 1).copy());
@@ -444,15 +444,15 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
      */
     public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata, Block block)
     {
-        if (!world.func_147465_d(x, y, z, block, metadata, 3))
+        if (!world.setBlock(x, y, z, block, metadata, 3))
         {
             return false;
         }
 
-        if (world.func_147439_a(x, y, z) == block)
+        if (world.getBlock(x, y, z) == block)
         {
-            block.func_149689_a(world, x, y, z, player, stack);
-            block.func_149714_e(world, x, y, z, metadata);
+            block.onBlockPlacedBy(world, x, y, z, player, stack);
+            block.onPostBlockPlaced(world, x, y, z, metadata);
         }
 
         return true;
@@ -460,7 +460,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     boolean validDrawbridge (int x, int y, int z)
     {
-        TileEntity te = field_145850_b.func_147438_o(x, y, z);
+        TileEntity te = worldObj.getTileEntity(x, y, z);
         if (te instanceof IDrawbridgeLogicBase && ((IDrawbridgeLogicBase) te).hasExtended())
             return false;
 
@@ -516,9 +516,9 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public void func_145839_a (NBTTagCompound tags)
+    public void readFromNBT (NBTTagCompound tags)
     {
-        super.func_145839_a(tags);
+        super.readFromNBT(tags);
         active = tags.getBoolean("Active");
         working = tags.getBoolean("Working");
         extension = tags.getByte("Extension");
@@ -534,9 +534,9 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public void func_145841_b (NBTTagCompound tags)
+    public void writeToNBT (NBTTagCompound tags)
     {
-        super.func_145841_b(tags);
+        super.writeToNBT(tags);
         tags.setBoolean("Active", active);
         tags.setBoolean("Working", working);
         tags.setByte("Extension", extension);
@@ -554,12 +554,12 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     public void readBufferFromNBT (NBTTagCompound tags)
     {
-        NBTTagList nbttaglist = tags.func_150295_c("Buffer", 9);
+        NBTTagList nbttaglist = tags.getTagList("Buffer", 9);
         bufferStacks = new ItemStack[getSizeInventory()];
         //		bufferStacks.ensureCapacity(nbttaglist.tagCount() > getSizeInventory() ? getSizeInventory() : nbttaglist.tagCount());
         for (int iter = 0; iter < nbttaglist.tagCount(); iter++)
         {
-            NBTTagCompound tagList = (NBTTagCompound) nbttaglist.func_150305_b(iter);
+            NBTTagCompound tagList = (NBTTagCompound) nbttaglist.getCompoundTagAt(iter);
             byte slotID = tagList.getByte("Slot");
             if (slotID >= 0 && slotID < bufferStacks.length)
             {
@@ -599,18 +599,18 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     /* Packets */
     @Override
-    public Packet func_145844_m ()
+    public Packet getDescriptionPacket ()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        func_145841_b(tag);
-        return new S35PacketUpdateTileEntity(field_145851_c, field_145848_d, field_145849_e, 1, tag);
+        writeToNBT(tag);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
     }
 
     @Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
     {
-        func_145839_a(packet.func_148857_g());
-        field_145850_b.func_147479_m(field_145851_c, field_145848_d, field_145849_e);
+        readFromNBT(packet.func_148857_g());
+        worldObj.func_147479_m(xCoord, yCoord, zCoord);
     }
 
     public boolean hasExtended ()
@@ -630,7 +630,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                 getStackInBufferSlot(i).stackSize = 1;
             }
         }
-        this.field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
+        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     //	@Override
@@ -661,17 +661,17 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
         public void setInventorySlotContents (int slot, ItemStack content)
         {
             super.setInventorySlotContents(slot, content);
-            if (slot == 0 && field_145850_b != null)
-                field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
+            if (slot == 0 && worldObj != null)
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
 
         @Override
         public void onInventoryChanged ()
         {
             super.onInventoryChanged();
-            if (field_145850_b != null)
+            if (worldObj != null)
             {
-                field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
 
@@ -683,13 +683,13 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public String func_145825_b ()
+    public String getInventoryName ()
     {
         return getDefaultName();
     }
 
     @Override
-    public boolean func_145818_k_ ()
+    public boolean hasCustomInventoryName ()
     {
         return true;
     }

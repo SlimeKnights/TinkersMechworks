@@ -12,8 +12,8 @@ public class DynamoBlock extends BlockContainer
 {
     public DynamoBlock()
     {
-        super(Material.field_151573_f);
-        this.func_149647_a(TMechworksRegistry.Mechworks);
+        super(Material.iron);
+        this.setCreativeTab(TMechworksRegistry.Mechworks);
     }
     
     public int getRenderType ()
@@ -22,25 +22,25 @@ public class DynamoBlock extends BlockContainer
     }
     
     @Override
-    public boolean func_149646_a (IBlockAccess iblockaccess, int x, int y, int z, int side)
+    public boolean shouldSideBeRendered (IBlockAccess iblockaccess, int x, int y, int z, int side)
     {
         return true;
     }
 
     @Override
-    public boolean func_149686_d ()
+    public boolean renderAsNormalBlock ()
     {
         return false;
     }
 
     @Override
-    public boolean func_149662_c ()
+    public boolean isOpaqueCube ()
     {
         return false;
     }
 
     @Override
-    public TileEntity func_149915_a (World world, int meta)
+    public TileEntity createNewTileEntity (World world, int meta)
     {
         return new DynamoLogic();
     }

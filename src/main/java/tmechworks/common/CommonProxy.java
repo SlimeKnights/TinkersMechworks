@@ -22,7 +22,7 @@ public class CommonProxy implements IGuiHandler
 
         if (ID < 100)
         {
-            TileEntity tile = world.func_147438_o(x, y, z);
+            TileEntity tile = world.getTileEntity(x, y, z);
             if (tile != null && tile instanceof InventoryLogic)
             {
                 return ((InventoryLogic) tile).getGuiContainer(player.inventory, world, x, y, z);

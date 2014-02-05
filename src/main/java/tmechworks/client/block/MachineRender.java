@@ -29,7 +29,7 @@ public class MachineRender implements ISimpleBlockRenderingHandler
             int metadata = world.getBlockMetadata(x, y, z);
             if (metadata != 1)
             {
-                renderer.func_147784_q(block, x, y, z);
+                renderer.renderStandardBlock(block, x, y, z);
             }
             else
             {
@@ -41,50 +41,50 @@ public class MachineRender implements ISimpleBlockRenderingHandler
 
     public boolean renderRotatedBlock (Block block, int x, int y, int z, IBlockAccess world, RenderBlocks renderer)
     {
-        IFacingLogic logic = (IFacingLogic) world.func_147438_o(x, y, z);
+        IFacingLogic logic = (IFacingLogic) world.getTileEntity(x, y, z);
         byte direction = logic.getRenderDirection();
 
         if (direction == 0)
         {
-            renderer.field_147875_q = 3;
-            renderer.field_147873_r = 3;
-            renderer.field_147869_t = 3;
-            renderer.field_147871_s = 3;
+            renderer.uvRotateEast = 3;
+            renderer.uvRotateWest = 3;
+            renderer.uvRotateNorth = 3;
+            renderer.uvRotateSouth = 3;
         }
         if (direction == 2)
         {
-            renderer.field_147869_t = 2;
-            renderer.field_147871_s = 1;
+            renderer.uvRotateNorth = 2;
+            renderer.uvRotateSouth = 1;
         }
         if (direction == 3)
         {
-            renderer.field_147869_t = 1;
-            renderer.field_147871_s = 2;
-            renderer.field_147867_u = 3;
-            renderer.field_147865_v = 3;
+            renderer.uvRotateNorth = 1;
+            renderer.uvRotateSouth = 2;
+            renderer.uvRotateTop = 3;
+            renderer.uvRotateBottom = 3;
         }
         if (direction == 4)
         {
-            renderer.field_147875_q = 1;
-            renderer.field_147873_r = 2;
-            renderer.field_147867_u = 2;
-            renderer.field_147865_v = 1;
+            renderer.uvRotateEast = 1;
+            renderer.uvRotateWest = 2;
+            renderer.uvRotateTop = 2;
+            renderer.uvRotateBottom = 1;
         }
         if (direction == 5)
         {
-            renderer.field_147875_q = 2;
-            renderer.field_147873_r = 1;
-            renderer.field_147867_u = 1;
-            renderer.field_147865_v = 2;
+            renderer.uvRotateEast = 2;
+            renderer.uvRotateWest = 1;
+            renderer.uvRotateTop = 1;
+            renderer.uvRotateBottom = 2;
         }
 
-        boolean flag = renderer.func_147784_q(block, x, y, z);
-        renderer.field_147871_s = 0;
-        renderer.field_147875_q = 0;
-        renderer.field_147873_r = 0;
-        renderer.field_147869_t = 0;
-        renderer.field_147867_u = 0;
-        renderer.field_147865_v = 0;
+        boolean flag = renderer.renderStandardBlock(block, x, y, z);
+        renderer.uvRotateSouth = 0;
+        renderer.uvRotateEast = 0;
+        renderer.uvRotateWest = 0;
+        renderer.uvRotateNorth = 0;
+        renderer.uvRotateTop = 0;
+        renderer.uvRotateBottom = 0;
         return flag;
     }
 

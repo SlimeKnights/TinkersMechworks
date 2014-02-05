@@ -108,7 +108,7 @@ public class SignalBusItem extends ItemBlock
             return false;
         }
 
-        TileEntity te = world.func_147438_o(tmpX, tmpY, tmpZ);
+        TileEntity te = world.getTileEntity(tmpX, tmpY, tmpZ);
 
         ((SignalBusLogic) te).addPlacedSide(tside);
         
@@ -124,14 +124,14 @@ public class SignalBusItem extends ItemBlock
 
     private boolean _canPlaceItemBlockOnSide (World world, int x, int y, int z, int side)
     {
-        Block block = world.func_147439_a(x, y, z);
+        Block block = world.getBlock(x, y, z);
 
         if (block == Blocks.snow && (world.getBlockMetadata(x, y, z) & 7) < 1)
         {
             side = 1;
         }
         else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush
-                && (block == null || block.func_149742_c(world, x, y, z)))
+                && (block == null || block.canPlaceBlockAt(world, x, y, z)))
         {
             if (side == 0)
             {
@@ -164,14 +164,14 @@ public class SignalBusItem extends ItemBlock
             }
         }
 
-        if (!TMechworks.content.signalBus.func_149707_d(world, x, y, z, side))
+        if (!TMechworks.content.signalBus.canPlaceBlockOnSide(world, x, y, z, side))
         {
             return false;
         }
 
-        if (world.func_147439_a(x, y, z) == b)
+        if (world.getBlock(x, y, z) == b)
         {
-            TileEntity te = world.func_147438_o(x, y, z);
+            TileEntity te = world.getTileEntity(x, y, z);
             if (te == null || !(te instanceof SignalBusLogic))
             {
                 return false;

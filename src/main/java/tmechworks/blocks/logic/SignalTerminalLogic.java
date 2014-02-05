@@ -46,19 +46,19 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 
 	private void tryRegister() {
 		boolean wasRegistered = isRegistered;
-		if (!(field_145850_b instanceof World)) {
+		if (!(worldObj instanceof World)) {
 			return;
 		}
 		if (!(signalBus instanceof CoordTuple)) {
 			return;
 		}
 
-		TileEntity te = field_145850_b.func_147438_o(signalBus.x, signalBus.y, signalBus.z);
+		TileEntity te = worldObj.getTileEntity(signalBus.x, signalBus.y, signalBus.z);
 		if (!(te instanceof SignalBusLogic)) {
 			return;
 		}
 
-		isRegistered = ((SignalBusLogic) te).registerTerminal(field_145850_b, field_145851_c, field_145848_d, field_145849_e, false);
+		isRegistered = ((SignalBusLogic) te).registerTerminal(worldObj, xCoord, yCoord, zCoord, false);
 
 		if (isRegistered != wasRegistered) {
 			if (isRegistered) {
@@ -72,8 +72,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 	}
 
 	@Override
-	public void func_145839_a(NBTTagCompound data) {
-		super.func_145839_a(data);
+	public void readFromNBT(NBTTagCompound data) {
+		super.readFromNBT(data);
 
 		sideChannel = data.getByteArray("sideChannel");
 		receivingSides = data.getByteArray("receivingSides");
@@ -93,7 +93,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 		int tY = data.getInteger("BusY");
 		int tZ = data.getInteger("BusZ");
 
-		if (tX == field_145851_c && tY == field_145848_d && tZ == field_145849_e) {
+		if (tX == xCoord && tY == yCoord && tZ == zCoord) {
 			signalBus = null;
 		} else {
 			signalBus = new CoordTuple(tX, tY, tZ);
@@ -107,8 +107,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 	}
 
 	@Override
-	public void func_145841_b(NBTTagCompound data) {
-		super.func_145841_b(data);
+	public void writeToNBT(NBTTagCompound data) {
+		super.writeToNBT(data);
 
 		data.setByteArray("sideChannel", sideChannel);
 		data.setByteArray("receivingSides", receivingSides);
@@ -119,21 +119,21 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 			data.setInteger("BusY", signalBus.y);
 			data.setInteger("BusZ", signalBus.z);
 		} else {
-			data.setInteger("BusX", field_145851_c);
-			data.setInteger("BusY", field_145848_d);
-			data.setInteger("BusZ", field_145849_e);
+			data.setInteger("BusX", xCoord);
+			data.setInteger("BusY", yCoord);
+			data.setInteger("BusZ", zCoord);
 		}
 	}
 
 	@Override
-	public void func_145845_h() {
+	public void updateEntity() {
 		if (pendingSide >= 0 && pendingSide < 6 && connectedSides[pendingSide] == -1) {
 			connectedSides[pendingSide] = 0;
 			pendingSide = -1;
 			forceUpdateSide = true;
 		}
 
-		if (field_145850_b.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 
@@ -181,9 +181,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 				connectedSides[i] = signals[sideChannel[i]];
 
 				if (oldValue != connectedSides[i]) {
-					targetX = field_145851_c;
-					targetY = field_145848_d;
-					targetZ = field_145849_e;
+					targetX = xCoord;
+					targetY = yCoord;
+					targetZ = zCoord;
 					switch (i) {
 					case 0:
 						targetY += -1;
@@ -213,9 +213,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 						oSide = 0;
 					}
 
-					field_145850_b.func_147459_d(targetX, targetY, targetZ, TMechworks.content.signalTerminal);
-					field_145850_b.func_147441_b(targetX, targetY, targetZ, TMechworks.content.signalTerminal, oSide);
-					//field_145850_b.notifyBlocksOfNeighborChange(field_145851_c, field_145848_d, field_145849_e, TConstruct.instance.content.signalTerminal.blockID);
+					worldObj.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal);
+					worldObj.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal, oSide);
+					//worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, TConstruct.instance.content.signalTerminal.blockID);
 				}
 			}
 		}
@@ -223,9 +223,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 
 	// Callback from Un/Registration
 	public void setBusCoords(World world, int x, int y, int z) {
-		if (world.provider.dimensionId == field_145850_b.provider.dimensionId && !world.isRemote && !field_145850_b.isRemote) {
+		if (world.provider.dimensionId == worldObj.provider.dimensionId && !world.isRemote && !worldObj.isRemote) {
 			signalBus = new CoordTuple(x, y, z);
-			world.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
+			world.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 		doUpdate = true;
 	}
@@ -285,22 +285,22 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 
 	/* Packets */
 	@Override
-	public Packet func_145844_m() {
+	public Packet getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
-		func_145841_b(tag);
-		return new S35PacketUpdateTileEntity(field_145851_c, field_145848_d, field_145849_e, 1, tag);
+		writeToNBT(tag);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-		func_145839_a(packet.func_148857_g());
+		readFromNBT(packet.func_148857_g());
 		onInventoryChanged();
-		field_145850_b.func_147479_m(field_145851_c, field_145848_d, field_145849_e);
+		worldObj.func_147479_m(xCoord, yCoord, zCoord);
 		this.doUpdate = true;
 	}
 
 	public static IIcon getChannelIcon(IBlockAccess world, int x, int y, int z, int side) {
-		TileEntity te = world.func_147438_o(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null && te instanceof SignalTerminalLogic) {
 			int channel = ((SignalTerminalLogic) te).sideChannel[side];
 
@@ -323,7 +323,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 	}
 
 	public void nextChannel(int side) {
-		if (field_145850_b.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 
@@ -337,7 +337,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 	}
 
 	public void prevChannel(int side) {
-		if (field_145850_b.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 
@@ -351,23 +351,23 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 	}
 
 	public void notifyBreak() {
-		if (!(field_145850_b instanceof World) || field_145850_b.isRemote) {
+		if (!(worldObj instanceof World) || worldObj.isRemote) {
 			return;
 		}
 		if (!(signalBus instanceof CoordTuple)) {
 			return;
 		}
 
-		TileEntity te = field_145850_b.func_147438_o(signalBus.x, signalBus.y, signalBus.z);
+		TileEntity te = worldObj.getTileEntity(signalBus.x, signalBus.y, signalBus.z);
 		if (te == null || !(te instanceof SignalBusLogic)) {
 			return;
 		}
 
-		((SignalBusLogic) te).unregisterTerminal(field_145850_b, field_145851_c, field_145848_d, field_145849_e);
+		((SignalBusLogic) te).unregisterTerminal(worldObj, xCoord, yCoord, zCoord);
 	}
 
 	public void onNeighborBlockChange() {
-		if (field_145850_b.isRemote) {
+		if (worldObj.isRemote) {
 			return;
 		}
 
@@ -376,10 +376,10 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 
 	public void checkNeighbors() {
 		if (signalBus != null && signalBus instanceof CoordTuple) {
-			TileEntity te = field_145850_b.func_147438_o(signalBus.x, signalBus.y, signalBus.z);
+			TileEntity te = worldObj.getTileEntity(signalBus.x, signalBus.y, signalBus.z);
 
 			if (te instanceof SignalBusLogic) {
-				((SignalBusLogic) te).updateTransceiverSignals(new CoordTuple(field_145851_c, field_145848_d, field_145849_e), getReceivedSignals());
+				((SignalBusLogic) te).updateTransceiverSignals(new CoordTuple(xCoord, yCoord, zCoord), getReceivedSignals());
 			}
 		} else {
 			// We can redistribute signals locally at least
@@ -450,8 +450,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 					// We are currently powering this side, we need to identify if we are the only source or not
 					temporarySide = connectedSides[i];
 					connectedSides[i] = -1;
-					tempStrength = field_145850_b.getIndirectPowerLevelTo(field_145851_c + offset[0], field_145848_d + offset[1], field_145849_e + offset[2], oSide);
-					//tempStrength = field_145850_b.getStrongestIndirectPower(field_145851_c + offset[0], field_145848_d + offset[1], field_145849_e + offset[2]);
+					tempStrength = worldObj.getIndirectPowerLevelTo(xCoord + offset[0], yCoord + offset[1], zCoord + offset[2], oSide);
+					//tempStrength = worldObj.getStrongestIndirectPower(xCoord + offset[0], yCoord + offset[1], zCoord + offset[2]);
 					if (tempStrength > 0 && tempStrength == (temporarySide - 1)) {
 						// Let's make sure we're not dealing with vanilla redstone
 
@@ -463,11 +463,11 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 							if (offset[0] + Facing.offsetsXForSide[j] == 0 && offset[1] + Facing.offsetsYForSide[j] == 0 && offset[2] + Facing.offsetsZForSide[j] == 0) {
 								continue;
 							}
-							temp = field_145850_b.getIndirectPowerLevelTo(field_145851_c + offset[0] + Facing.offsetsXForSide[j], field_145848_d + offset[1] + Facing.offsetsYForSide[j], field_145849_e + offset[2] + Facing.offsetsZForSide[j], j);
+							temp = worldObj.getIndirectPowerLevelTo(xCoord + offset[0] + Facing.offsetsXForSide[j], yCoord + offset[1] + Facing.offsetsYForSide[j], zCoord + offset[2] + Facing.offsetsZForSide[j], j);
 
 							if (temp > power) {
 
-								bid = field_145850_b.func_147439_a(field_145851_c + offset[0] + Facing.offsetsXForSide[j], field_145848_d + offset[1] + Facing.offsetsYForSide[j], field_145849_e + offset[2] + Facing.offsetsZForSide[j]);
+								bid = worldObj.getBlock(xCoord + offset[0] + Facing.offsetsXForSide[j], yCoord + offset[1] + Facing.offsetsYForSide[j], zCoord + offset[2] + Facing.offsetsZForSide[j]);
 								if (bid != Blocks.redstone_wire) {
 									power = temp;
 								}
@@ -483,8 +483,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 					}
 					connectedSides[i] = temporarySide;
 				} else {
-					tempStrength = field_145850_b.getIndirectPowerLevelTo(field_145851_c + offset[0], field_145848_d + offset[1], field_145849_e + offset[2], oSide);
-					//                    tempStrength = field_145850_b.getStrongestIndirectPower(field_145851_c + offset[0], field_145848_d + offset[1], field_145849_e + offset[2]);
+					tempStrength = worldObj.getIndirectPowerLevelTo(xCoord + offset[0], yCoord + offset[1], zCoord + offset[2], oSide);
+					//                    tempStrength = worldObj.getStrongestIndirectPower(xCoord + offset[0], yCoord + offset[1], zCoord + offset[2]);
 				}
 
 				//                if (tempStrength > 0 && tempStrength < receivingSides[i]){
@@ -519,10 +519,10 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 		int dropWire = 0;
 
 		if (signalBus != null) {
-			TileEntity te = field_145850_b.func_147438_o(signalBus.x, signalBus.y, signalBus.z);
-			dropWire = Math.abs(field_145851_c - signalBus.x) + Math.abs(field_145848_d - signalBus.y) + Math.abs(field_145849_e - signalBus.z);
+			TileEntity te = worldObj.getTileEntity(signalBus.x, signalBus.y, signalBus.z);
+			dropWire = Math.abs(xCoord - signalBus.x) + Math.abs(yCoord - signalBus.y) + Math.abs(zCoord - signalBus.z);
 			if (te instanceof SignalBusLogic) {
-				((SignalBusLogic) te).unregisterTerminal(field_145850_b, field_145851_c, field_145848_d, field_145849_e);
+				((SignalBusLogic) te).unregisterTerminal(worldObj, xCoord, yCoord, zCoord);
 			}
 		}
 		// Remove signalBus coords
@@ -531,7 +531,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 		// Calculate new local received signals and provide them to local connections
 		receiveSignalUpdate(getReceivedSignals());
 
-		field_145850_b.func_147471_g(field_145851_c, field_145848_d, field_145849_e);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		return (reHoming) ? dropWire : 0;
 	}
 
@@ -554,9 +554,9 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
 	public int getDroppedWire() {
 		int calcWire = 0;
 		if (signalBus instanceof CoordTuple) {
-			calcWire += Math.abs(signalBus.x - field_145851_c);
-			calcWire += Math.abs(signalBus.y - field_145848_d);
-			calcWire += Math.abs(signalBus.z - field_145849_e);
+			calcWire += Math.abs(signalBus.x - xCoord);
+			calcWire += Math.abs(signalBus.y - yCoord);
+			calcWire += Math.abs(signalBus.z - zCoord);
 
 			return calcWire;
 		}

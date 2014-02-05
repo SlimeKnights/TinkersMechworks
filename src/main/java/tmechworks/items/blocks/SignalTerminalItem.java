@@ -112,7 +112,7 @@ public class SignalTerminalItem extends ItemBlock
             return false;
         }
 
-        TileEntity te = world.func_147438_o(tmpX, tmpY, tmpZ);
+        TileEntity te = world.getTileEntity(tmpX, tmpY, tmpZ);
 
         ((SignalTerminalLogic) te).addPendingSide(tside);
         ((SignalTerminalLogic) te).connectPending();
@@ -157,9 +157,9 @@ public class SignalTerminalItem extends ItemBlock
             break;
         }
 
-        if (world.func_147439_a(tmpX, tmpY, tmpZ) == this.field_150939_a)
+        if (world.getBlock(tmpX, tmpY, tmpZ) == this.field_150939_a)
         {
-            TileEntity te = world.func_147438_o(tmpX, tmpY, tmpZ);
+            TileEntity te = world.getTileEntity(tmpX, tmpY, tmpZ);
             if (te == null || !(te instanceof SignalTerminalLogic))
             {
                 return false;

@@ -60,7 +60,7 @@ public class SpoolOfWire extends Item
     @Override
     public boolean onItemUse (ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
-        TileEntity te = world.func_147438_o(x, y, z);
+        TileEntity te = world.getTileEntity(x, y, z);
         NBTTagCompound data = itemstack.stackTagCompound;
         NBTTagCompound spoolData = null;
 

@@ -61,7 +61,7 @@ public class SignalBusMasterLogic extends MultiblockMasterBaseLogic
             {
                 if (worldObj.getChunkProvider().chunkExists(coord.x >> 4, coord.z >> 4))
                 {
-                    te = worldObj.func_147438_o(coord.x, coord.y, coord.z);
+                    te = worldObj.getTileEntity(coord.x, coord.y, coord.z);
                     if (te instanceof SignalBusLogic)
                     {
                         ((SignalBusLogic) te).updateLocalSignals(masterSignals);

@@ -51,21 +51,21 @@ public class MechContent
 	private void registerBlocks()
 	{
         //Redstone machines
-        redstoneMachine = new RedstoneMachine().func_149663_c("tmechworks.redstoneMachine");
+        redstoneMachine = new RedstoneMachine().setBlockName("tmechworks.redstoneMachine");
         GameRegistry.registerBlock(redstoneMachine, RedstoneMachineItem.class, "RedstoneMachine");
         GameRegistry.registerTileEntity(DrawbridgeLogic.class, "Drawbridge");
         GameRegistry.registerTileEntity(FirestarterLogic.class, "Firestarter");
         GameRegistry.registerTileEntity(AdvancedDrawbridgeLogic.class, "AdvDrawbridge");
         
-        dynamo = new DynamoBlock().func_149715_a(1.0F).func_149663_c("tmechworks.dynamo").func_149658_d("tinker:compressed_alubrass");
+        dynamo = new DynamoBlock().setLightLevel(1.0F).setBlockName("tmechworks.dynamo").setBlockTextureName("tinker:compressed_alubrass");
         GameRegistry.registerBlock(dynamo, "TMechworks:Dynamo");
         GameRegistry.registerTileEntity(DynamoLogic.class, "TMechworks:Dynamo");
 
         //Signal blocks
-		signalBus = new SignalBus().func_149663_c("tmechworks.signalbus");
+		signalBus = new SignalBus().setBlockName("tmechworks.signalbus");
 		GameRegistry.registerBlock(signalBus, SignalBusItem.class, "SignalBus");
 		GameRegistry.registerTileEntity(SignalBusLogic.class, "SignalBus");
-		signalTerminal = new SignalTerminal().func_149663_c("tmechworks.signalterminal");
+		signalTerminal = new SignalTerminal().setBlockName("tmechworks.signalterminal");
 		GameRegistry.registerBlock(signalTerminal, SignalTerminalItem.class, "SignalTerminal");
 		GameRegistry.registerTileEntity(SignalTerminalLogic.class, "SignalTerminal");
 
