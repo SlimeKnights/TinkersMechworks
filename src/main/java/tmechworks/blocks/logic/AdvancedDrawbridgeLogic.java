@@ -57,7 +57,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     {
         this.worldObj = par1World;
         if (!par1World.isRemote)
-            fakePlayer = new FakePlayerLogic((WorldServer)worldObj, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic)this);
+            fakePlayer = new FakePlayerLogic((WorldServer) worldObj, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic) this);
     }
 
     @Override
@@ -481,7 +481,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
             if (blockToItem == getStackInBufferSlot(slot).getItem())
                 return true;
         }
-        return ComparisonHelper.areEquivalent(getStackInBufferSlot(slot).getItem(),block);
+        return ComparisonHelper.areEquivalent(getStackInBufferSlot(slot).getItem(), block);
     }
 
     boolean validMetadata (int slot, Block block, int metadata)
@@ -607,7 +607,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+    public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity packet)
     {
         readFromNBT(packet.func_148857_g());
         worldObj.func_147479_m(xCoord, yCoord, zCoord);

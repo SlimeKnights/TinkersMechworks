@@ -39,68 +39,74 @@ import tmechworks.lib.multiblock.IMultiblockMember;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SignalBus extends Block implements ITileEntityProvider {
-    public static class BusGeometry {
+public class SignalBus extends Block implements ITileEntityProvider
+{
+    public static class BusGeometry
+    {
         public static double cable_width_min = 0.375D;
         public static double cable_width_max = 1 - cable_width_min;
         public static double cable_low_height = 0.2D;
         public static double cable_low_offset = 0.0D;
-        
+
         public static double cable_high_height = 1.0D;
         public static double cable_high_offset = 1 - cable_low_height;
-        
+
         public static double cable_extend_min = 0.0D;
         public static double cable_extend_max = 1.0D;
-        
+
         public static double cable_corner_min = cable_high_offset - 1;
         public static double cable_corner_max = cable_low_height + 1;
-        
+
         public static double zfight = 0.00001D;
     }
-    
+
     public static int HITBOXES = 6;
-    
+
     public IIcon[] icons;
     public String[] textureNames = new String[] { "signalbus" };
 
-	public SignalBus() {
-		super(Material.circuits);
+    public SignalBus()
+    {
+        super(Material.circuits);
         this.setHardness(0.1F);
         this.setResistance(1);
         setStepSound(soundTypeMetal);
         setCreativeTab(TMechworksRegistry.Mechworks);
-	}
+    }
 
-	@Override
-	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-		TileEntity te = world.getTileEntity(tileX, tileY, tileZ);
-		if (te instanceof SignalBusLogic) {
-			if (((SignalBusLogic)te).getMultiblockMaster() != null) {
-				((SignalBusLogic)te).getMultiblockMaster().detachBlock((IMultiblockMember)te, false);
-			}
-		}
-	}
+    @Override
+    public void onNeighborChange (IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
+    {
+        TileEntity te = world.getTileEntity(tileX, tileY, tileZ);
+        if (te instanceof SignalBusLogic)
+        {
+            if (((SignalBusLogic) te).getMultiblockMaster() != null)
+            {
+                ((SignalBusLogic) te).getMultiblockMaster().detachBlock((IMultiblockMember) te, false);
+            }
+        }
+    }
 
-	@Override
+    @Override
     public void onNeighborBlockChange (World world, int x, int y, int z, Block block)
     {
-	    if (block == this)
-	    {
-	        return;
-	    }
-	    super.onNeighborBlockChange(world, x, y, z, block);
-	    
-	    TileEntity te = world.getTileEntity(x, y, z);
-	    if (te instanceof SignalBusLogic)
-	    {
-	        ItemStack tempStack;
-	        float jumpX, jumpY, jumpZ;
-	        Random rand = new Random();
-	        
-	        int dropBus = ((SignalBusLogic)te).checkUnsupportedSides();
+        if (block == this)
+        {
+            return;
+        }
+        super.onNeighborBlockChange(world, x, y, z, block);
+
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof SignalBusLogic)
+        {
+            ItemStack tempStack;
+            float jumpX, jumpY, jumpZ;
+            Random rand = new Random();
+
+            int dropBus = ((SignalBusLogic) te).checkUnsupportedSides();
             if (dropBus > 0)
             {
-                if (((SignalBusLogic)te).checkShouldDestroy())
+                if (((SignalBusLogic) te).checkShouldDestroy())
                 {
                     WorldHelper.setBlockToAir(world, x, y, z);
                 }
@@ -117,19 +123,21 @@ public class SignalBus extends Block implements ITileEntityProvider {
                 entityitem.motionY = (double) ((float) rand.nextGaussian() * offset + 0.2F);
                 entityitem.motionZ = (double) ((float) rand.nextGaussian() * offset);
                 world.spawnEntityInWorld(entityitem);
-                
+
                 world.markBlockForUpdate(x, y, z);
             }
-	    }
+        }
     }
 
     @Override
-	public void onBlockAdded(World world, int x, int y, int z) {
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te != null && te instanceof SignalBusLogic) {
-			((SignalBusLogic)te).onBlockAdded(world, x, y, z);
-		}
-	}
+    public void onBlockAdded (World world, int x, int y, int z)
+    {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof SignalBusLogic)
+        {
+            ((SignalBusLogic) te).onBlockAdded(world, x, y, z);
+        }
+    }
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -167,7 +175,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
     {
         return SignalBusRender.renderID;
     }
-    
+
     @Override
     public void addCollisionBoxesToList (World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
     {
@@ -200,7 +208,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
             super.addCollisionBoxesToList(world, x, y, z, collisionTest, collisionBoxList, entity);
         }
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered (IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
@@ -215,8 +223,8 @@ public class SignalBus extends Block implements ITileEntityProvider {
         if (te instanceof SignalBusLogic)
         {
             MovingObjectPosition closest = null;
-            AxisAlignedBB[] boxes = getBoxes((SignalBusLogic)te);
-            
+            AxisAlignedBB[] boxes = getBoxes((SignalBusLogic) te);
+
             double closestCalc = Double.MAX_VALUE;
             double hitDistance = 0D;
 
@@ -226,7 +234,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
                 {
                     continue;
                 }
-                this.setBlockBounds((float)boxes[i].minX, (float)boxes[i].minY, (float)boxes[i].minZ, (float)boxes[i].maxX, (float)boxes[i].maxY, (float)boxes[i].maxZ);
+                this.setBlockBounds((float) boxes[i].minX, (float) boxes[i].minY, (float) boxes[i].minZ, (float) boxes[i].maxX, (float) boxes[i].maxY, (float) boxes[i].maxZ);
                 MovingObjectPosition hit = super.collisionRayTrace(world, x, y, z, start, end);
                 if (hit != null)
                 {
@@ -240,10 +248,10 @@ public class SignalBus extends Block implements ITileEntityProvider {
             }
             return closest;
         }
-        
+
         return null;
     }
-    
+
     private static AxisAlignedBB[] getBoxes (SignalBusLogic logic)
     {
         boolean placed[] = logic.placedSides();
@@ -260,26 +268,20 @@ public class SignalBus extends Block implements ITileEntityProvider {
         double maxY;
         double maxZ;
         boolean didRender = false;
-        
+
         if (placed[ForgeDirection.DOWN.ordinal()])
         {
             connected = logic.connectedSides(ForgeDirection.DOWN);
             corners = logic.getRenderCorners(ForgeDirection.DOWN);
-            renderDir = new boolean[] {
-                    (connected[0] || placed[0] || corners[0]),
-                    (connected[1] || placed[1] || corners[1]),
-                    (connected[2] || placed[2] || corners[2]),
-                    (connected[3] || placed[3] || corners[3]),
-                    (connected[4] || placed[4] || corners[4]),
-                    (connected[5] || placed[5] || corners[5])
-            };
+            renderDir = new boolean[] { (connected[0] || placed[0] || corners[0]), (connected[1] || placed[1] || corners[1]), (connected[2] || placed[2] || corners[2]),
+                    (connected[3] || placed[3] || corners[3]), (connected[4] || placed[4] || corners[4]), (connected[5] || placed[5] || corners[5]) };
             minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             minY = BusGeometry.cable_low_offset;
             minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
             maxY = BusGeometry.cable_low_height;
             maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
-            
+
             parts[0] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
         }
@@ -287,21 +289,15 @@ public class SignalBus extends Block implements ITileEntityProvider {
         {
             connected = logic.connectedSides(ForgeDirection.UP);
             corners = logic.getRenderCorners(ForgeDirection.UP);
-            renderDir = new boolean[] {
-                    (connected[0] || placed[0] || corners[0]),
-                    (connected[1] || placed[1] || corners[1]),
-                    (connected[2] || placed[2] || corners[2]),
-                    (connected[3] || placed[3] || corners[3]),
-                    (connected[4] || placed[4] || corners[4]),
-                    (connected[5] || placed[5] || corners[5])
-            };
+            renderDir = new boolean[] { (connected[0] || placed[0] || corners[0]), (connected[1] || placed[1] || corners[1]), (connected[2] || placed[2] || corners[2]),
+                    (connected[3] || placed[3] || corners[3]), (connected[4] || placed[4] || corners[4]), (connected[5] || placed[5] || corners[5]) };
             minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             minY = BusGeometry.cable_high_offset;
             minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
             maxY = BusGeometry.cable_high_height;
             maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
-            
+
             parts[1] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
         }
@@ -309,22 +305,15 @@ public class SignalBus extends Block implements ITileEntityProvider {
         {
             connected = logic.connectedSides(ForgeDirection.NORTH);
             corners = logic.getRenderCorners(ForgeDirection.NORTH);
-            renderDir = new boolean[] {
-                    (connected[0] || placed[0] || corners[0]),
-                    (connected[1] || placed[1] || corners[1]),
-                    (connected[2] || placed[2] || corners[2]),
-                    (connected[3] || placed[3] || corners[3]),
-                    (connected[4] || placed[4] || corners[4]),
-                    (connected[5] || placed[5] || corners[5])
-            };
+            renderDir = new boolean[] { (connected[0] || placed[0] || corners[0]), (connected[1] || placed[1] || corners[1]), (connected[2] || placed[2] || corners[2]),
+                    (connected[3] || placed[3] || corners[3]), (connected[4] || placed[4] || corners[4]), (connected[5] || placed[5] || corners[5]) };
             minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             minZ = BusGeometry.cable_low_offset;
             maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
             maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
             maxZ = BusGeometry.cable_low_height;
-            
-            
+
             parts[2] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
         }
@@ -332,14 +321,8 @@ public class SignalBus extends Block implements ITileEntityProvider {
         {
             connected = logic.connectedSides(ForgeDirection.SOUTH);
             corners = logic.getRenderCorners(ForgeDirection.SOUTH);
-            renderDir = new boolean[] {
-                    (connected[0] || placed[0] || corners[0]),
-                    (connected[1] || placed[1] || corners[1]),
-                    (connected[2] || placed[2] || corners[2]),
-                    (connected[3] || placed[3] || corners[3]),
-                    (connected[4] || placed[4] || corners[4]),
-                    (connected[5] || placed[5] || corners[5])
-            };
+            renderDir = new boolean[] { (connected[0] || placed[0] || corners[0]), (connected[1] || placed[1] || corners[1]), (connected[2] || placed[2] || corners[2]),
+                    (connected[3] || placed[3] || corners[3]), (connected[4] || placed[4] || corners[4]), (connected[5] || placed[5] || corners[5]) };
             minX = (renderDir[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             minZ = BusGeometry.cable_high_offset;
@@ -354,14 +337,8 @@ public class SignalBus extends Block implements ITileEntityProvider {
         {
             connected = logic.connectedSides(ForgeDirection.WEST);
             corners = logic.getRenderCorners(ForgeDirection.WEST);
-            renderDir = new boolean[] {
-                    (connected[0] || placed[0] || corners[0]),
-                    (connected[1] || placed[1] || corners[1]),
-                    (connected[2] || placed[2] || corners[2]),
-                    (connected[3] || placed[3] || corners[3]),
-                    (connected[4] || placed[4] || corners[4]),
-                    (connected[5] || placed[5] || corners[5])
-            };
+            renderDir = new boolean[] { (connected[0] || placed[0] || corners[0]), (connected[1] || placed[1] || corners[1]), (connected[2] || placed[2] || corners[2]),
+                    (connected[3] || placed[3] || corners[3]), (connected[4] || placed[4] || corners[4]), (connected[5] || placed[5] || corners[5]) };
             minX = BusGeometry.cable_low_offset;
             minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
@@ -376,21 +353,15 @@ public class SignalBus extends Block implements ITileEntityProvider {
         {
             connected = logic.connectedSides(ForgeDirection.EAST);
             corners = logic.getRenderCorners(ForgeDirection.EAST);
-            renderDir = new boolean[] {
-                    (connected[0] || placed[0] || corners[0]),
-                    (connected[1] || placed[1] || corners[1]),
-                    (connected[2] || placed[2] || corners[2]),
-                    (connected[3] || placed[3] || corners[3]),
-                    (connected[4] || placed[4] || corners[4]),
-                    (connected[5] || placed[5] || corners[5])
-            };
+            renderDir = new boolean[] { (connected[0] || placed[0] || corners[0]), (connected[1] || placed[1] || corners[1]), (connected[2] || placed[2] || corners[2]),
+                    (connected[3] || placed[3] || corners[3]), (connected[4] || placed[4] || corners[4]), (connected[5] || placed[5] || corners[5]) };
             minX = BusGeometry.cable_high_offset;
             minY = (renderDir[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             minZ = (renderDir[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_extend_min : BusGeometry.cable_width_min;
             maxX = BusGeometry.cable_high_height;
             maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
             maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
-            
+
             parts[5] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
             didRender = true;
         }
@@ -402,7 +373,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
             maxX = BusGeometry.cable_width_max;
             maxY = BusGeometry.cable_low_height;
             maxZ = BusGeometry.cable_width_max;
-            
+
             parts[0] = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
         }
 
@@ -444,7 +415,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
     /**
      * Draws lines for the edges of the bounding box.
      */
-    private static void drawOutlinedBoundingBox(AxisAlignedBB par1AxisAlignedBB)
+    private static void drawOutlinedBoundingBox (AxisAlignedBB par1AxisAlignedBB)
     {
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(3);
@@ -472,16 +443,17 @@ public class SignalBus extends Block implements ITileEntityProvider {
         tessellator.addVertex(par1AxisAlignedBB.minX, par1AxisAlignedBB.maxY, par1AxisAlignedBB.maxZ);
         tessellator.draw();
     }
-    
-	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
-		return new SignalBusLogic();
-	}
 
-	@Override
+    @Override
+    public TileEntity createTileEntity (World world, int metadata)
+    {
+        return new SignalBusLogic();
+    }
+
+    @Override
     public ArrayList<ItemStack> getDrops (World world, int x, int y, int z, int metadata, int fortune)
     {
-	    return new ArrayList<ItemStack>();
+        return new ArrayList<ItemStack>();
     }
 
     @Override
@@ -506,7 +478,7 @@ public class SignalBus extends Block implements ITileEntityProvider {
         float jumpX, jumpY, jumpZ;
         ItemStack tempStack;
         Random rand = new Random();
-        
+
         TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalBusLogic)
         {
@@ -547,45 +519,34 @@ public class SignalBus extends Block implements ITileEntityProvider {
 
         super.breakBlock(world, x, y, z, block, meta);
     }
-    
+
     /**
      * checks to see if you can place this block can be placed on that side of a block: BlockLever overrides
      */
     @Override
-    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
+    public boolean canPlaceBlockOnSide (World par1World, int par2, int par3, int par4, int par5)
     {
         ForgeDirection dir = ForgeDirection.getOrientation(par5);
-        return (dir == DOWN  && par1World.isSideSolid(par2, par3 + 1, par4, DOWN )) ||
-               (dir == UP    && par1World.isSideSolid(par2, par3 - 1, par4, UP   )) ||
-               (dir == NORTH && par1World.isSideSolid(par2, par3, par4 + 1, NORTH)) ||
-               (dir == SOUTH && par1World.isSideSolid(par2, par3, par4 - 1, SOUTH)) ||
-               (dir == WEST  && par1World.isSideSolid(par2 + 1, par3, par4, WEST )) ||
-               (dir == EAST  && par1World.isSideSolid(par2 - 1, par3, par4, EAST ));
+        return (dir == DOWN && par1World.isSideSolid(par2, par3 + 1, par4, DOWN)) || (dir == UP && par1World.isSideSolid(par2, par3 - 1, par4, UP))
+                || (dir == NORTH && par1World.isSideSolid(par2, par3, par4 + 1, NORTH)) || (dir == SOUTH && par1World.isSideSolid(par2, par3, par4 - 1, SOUTH))
+                || (dir == WEST && par1World.isSideSolid(par2 + 1, par3, par4, WEST)) || (dir == EAST && par1World.isSideSolid(par2 - 1, par3, par4, EAST));
     }
 
     /**
      * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
      */
     @Override
-    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
+    public boolean canPlaceBlockAt (World par1World, int par2, int par3, int par4)
     {
-        return par1World.isSideSolid(par2 - 1, par3, par4, EAST ) ||
-               par1World.isSideSolid(par2 + 1, par3, par4, WEST ) ||
-               par1World.isSideSolid(par2, par3, par4 - 1, SOUTH) ||
-               par1World.isSideSolid(par2, par3, par4 + 1, NORTH) ||
-               par1World.isSideSolid(par2, par3 - 1, par4, UP   ) ||
-               par1World.isSideSolid(par2, par3 + 1, par4, DOWN );
+        return par1World.isSideSolid(par2 - 1, par3, par4, EAST) || par1World.isSideSolid(par2 + 1, par3, par4, WEST) || par1World.isSideSolid(par2, par3, par4 - 1, SOUTH)
+                || par1World.isSideSolid(par2, par3, par4 + 1, NORTH) || par1World.isSideSolid(par2, par3 - 1, par4, UP) || par1World.isSideSolid(par2, par3 + 1, par4, DOWN);
     }
 
     @Override
     public boolean canBlockStay (World par1World, int par2, int par3, int par4)
     {
-        return par1World.isSideSolid(par2 - 1, par3, par4, EAST ) ||
-                par1World.isSideSolid(par2 + 1, par3, par4, WEST ) ||
-                par1World.isSideSolid(par2, par3, par4 - 1, SOUTH) ||
-                par1World.isSideSolid(par2, par3, par4 + 1, NORTH) ||
-                par1World.isSideSolid(par2, par3 - 1, par4, UP   ) ||
-                par1World.isSideSolid(par2, par3 + 1, par4, DOWN );
+        return par1World.isSideSolid(par2 - 1, par3, par4, EAST) || par1World.isSideSolid(par2 + 1, par3, par4, WEST) || par1World.isSideSolid(par2, par3, par4 - 1, SOUTH)
+                || par1World.isSideSolid(par2, par3, par4 + 1, NORTH) || par1World.isSideSolid(par2, par3 - 1, par4, UP) || par1World.isSideSolid(par2, par3 + 1, par4, DOWN);
     }
 
     @Override

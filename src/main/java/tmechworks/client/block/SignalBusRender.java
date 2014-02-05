@@ -45,13 +45,14 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
 
             for (int i = 0; i < 6; ++i)
             {
-                if (!placedSides[i]){
+                if (!placedSides[i])
+                {
                     continue;
                 }
                 didRender = true;
                 connectedSides = tile.connectedSides(ForgeDirection.getOrientation(i));
                 corners = tile.getRenderCorners(ForgeDirection.getOrientation(i));
-                
+
                 renderFaceWithConnections(renderer, block, x, y, z, i, placedSides, connectedSides, corners);
             }
             if (!didRender)
@@ -62,7 +63,7 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 double maxX = BusGeometry.cable_width_max;
                 double maxY = BusGeometry.cable_low_height;
                 double maxZ = BusGeometry.cable_width_max;
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -79,16 +80,10 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
         double maxX = 1D;
         double maxY = 1D;
         double maxZ = 1D;
-        
-        boolean[] renderDir = {
-                (connectedSides[0] || placed[0] || corners[0]),
-                (connectedSides[1] || placed[1] || corners[1]),
-                (connectedSides[2] || placed[2] || corners[2]),
-                (connectedSides[3] || placed[3] || corners[3]),
-                (connectedSides[4] || placed[4] || corners[4]),
-                (connectedSides[5] || placed[5] || corners[5])
-        };
-        
+
+        boolean[] renderDir = { (connectedSides[0] || placed[0] || corners[0]), (connectedSides[1] || placed[1] || corners[1]), (connectedSides[2] || placed[2] || corners[2]),
+                (connectedSides[3] || placed[3] || corners[3]), (connectedSides[4] || placed[4] || corners[4]), (connectedSides[5] || placed[5] || corners[5]) };
+
         switch (side)
         {
         case 0: // DOWN
@@ -101,15 +96,15 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
                 maxY = BusGeometry.cable_low_height;
                 maxZ = BusGeometry.cable_width_max;
-                
+
                 maxY += BusGeometry.zfight;
-                
+
                 minX = (corners[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_corner_min : minX;
                 maxX = (corners[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_corner_max : maxX;
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, BusGeometry.cable_width_min, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(BusGeometry.cable_width_max, minY, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -122,13 +117,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = BusGeometry.cable_width_max;
                 maxY = BusGeometry.cable_low_height;
                 maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
-                
+
                 minZ = (corners[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_corner_min : minZ;
                 maxZ = (corners[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_corner_max : maxZ;
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, BusGeometry.cable_width_min);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(minX, minY, BusGeometry.cable_width_max, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -139,7 +134,7 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
             maxX = BusGeometry.cable_width_max;
             maxY = BusGeometry.cable_low_height;
             maxZ = BusGeometry.cable_width_max;
-            
+
             renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
             renderer.renderStandardBlock(block, x, y, z);
 
@@ -154,15 +149,15 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
                 maxY = BusGeometry.cable_high_height;
                 maxZ = BusGeometry.cable_width_max;
-                
+
                 minY -= BusGeometry.zfight;
-                
+
                 minX = (corners[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_corner_min : minX;
                 maxX = (corners[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_corner_max : maxX;
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, BusGeometry.cable_width_min, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(BusGeometry.cable_width_max, minY, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -175,13 +170,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = BusGeometry.cable_width_max;
                 maxY = BusGeometry.cable_high_height;
                 maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
-                
+
                 minZ = (corners[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_corner_min : minZ;
                 maxZ = (corners[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_corner_max : maxZ;
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, BusGeometry.cable_width_min);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(minX, minY, BusGeometry.cable_width_max, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -192,10 +187,10 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
             maxX = BusGeometry.cable_width_max;
             maxY = BusGeometry.cable_high_height;
             maxZ = BusGeometry.cable_width_max;
-            
+
             renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
             renderer.renderStandardBlock(block, x, y, z);
-            
+
             break;
         case 2: // NORTH
             // Render East/West
@@ -207,13 +202,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
                 maxY = BusGeometry.cable_width_max;
                 maxZ = BusGeometry.cable_low_height;
-                
+
                 minX = (corners[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_corner_min : minX;
                 maxX = (corners[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_corner_max : maxX;
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, BusGeometry.cable_width_min, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(BusGeometry.cable_width_max, minY, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -226,13 +221,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = BusGeometry.cable_width_max;
                 maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
                 maxZ = BusGeometry.cable_low_height;
-                
+
                 minY += (placed[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_low_height : 0;
-                maxY -= (placed[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_low_height : 0; 
-                
+                maxY -= (placed[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_low_height : 0;
+
                 renderer.setRenderBounds(minX, BusGeometry.cable_width_max, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, BusGeometry.cable_width_min, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -243,7 +238,7 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
             maxX = BusGeometry.cable_width_max;
             maxY = BusGeometry.cable_width_max;
             maxZ = BusGeometry.cable_low_height;
-            
+
             renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
             renderer.renderStandardBlock(block, x, y, z);
 
@@ -258,13 +253,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = (renderDir[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
                 maxY = BusGeometry.cable_width_max;
                 maxZ = BusGeometry.cable_high_height;
-                
+
                 minX = (corners[ForgeDirection.WEST.ordinal()]) ? BusGeometry.cable_corner_min : minX;
                 maxX = (corners[ForgeDirection.EAST.ordinal()]) ? BusGeometry.cable_corner_max : maxX;
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, BusGeometry.cable_width_min, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(BusGeometry.cable_width_max, minY, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -277,13 +272,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = BusGeometry.cable_width_max;
                 maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
                 maxZ = BusGeometry.cable_high_height;
-                
+
                 minY += (placed[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_low_height : 0;
-                maxY -= (placed[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_low_height : 0; 
-                
+                maxY -= (placed[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_low_height : 0;
+
                 renderer.setRenderBounds(minX, BusGeometry.cable_width_max, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, BusGeometry.cable_width_min, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -294,7 +289,7 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
             maxX = BusGeometry.cable_width_max;
             maxY = BusGeometry.cable_width_max;
             maxZ = BusGeometry.cable_high_height;
-            
+
             renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
             renderer.renderStandardBlock(block, x, y, z);
 
@@ -309,13 +304,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = BusGeometry.cable_low_height;
                 maxY = BusGeometry.cable_width_max;
                 maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
-                
+
                 minZ += (placed[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_low_height : 0;
-                maxZ -= (placed[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_low_height : 0; 
-                
+                maxZ -= (placed[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_low_height : 0;
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, BusGeometry.cable_width_min);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(minX, minY, BusGeometry.cable_width_max, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -328,13 +323,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = BusGeometry.cable_low_height;
                 maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
                 maxZ = BusGeometry.cable_width_max;
-                
+
                 minY += (placed[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_low_height : 0;
-                maxY -= (placed[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_low_height : 0; 
-                
+                maxY -= (placed[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_low_height : 0;
+
                 renderer.setRenderBounds(minX, BusGeometry.cable_width_max, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, BusGeometry.cable_width_min, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -345,7 +340,7 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
             maxX = BusGeometry.cable_low_height;
             maxY = BusGeometry.cable_width_max;
             maxZ = BusGeometry.cable_width_max;
-            
+
             renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
             renderer.renderStandardBlock(block, x, y, z);
 
@@ -360,13 +355,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = BusGeometry.cable_high_height;
                 maxY = BusGeometry.cable_width_max;
                 maxZ = (renderDir[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
-                
+
                 minZ += (placed[ForgeDirection.NORTH.ordinal()]) ? BusGeometry.cable_low_height : 0;
-                maxZ -= (placed[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_low_height : 0; 
-                
+                maxZ -= (placed[ForgeDirection.SOUTH.ordinal()]) ? BusGeometry.cable_low_height : 0;
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, BusGeometry.cable_width_min);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(minX, minY, BusGeometry.cable_width_max, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -379,13 +374,13 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
                 maxX = BusGeometry.cable_high_height;
                 maxY = (renderDir[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_extend_max : BusGeometry.cable_width_max;
                 maxZ = BusGeometry.cable_width_max;
-                
+
                 minY += (placed[ForgeDirection.DOWN.ordinal()]) ? BusGeometry.cable_low_height : 0;
-                maxY -= (placed[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_low_height : 0; 
-                
+                maxY -= (placed[ForgeDirection.UP.ordinal()]) ? BusGeometry.cable_low_height : 0;
+
                 renderer.setRenderBounds(minX, BusGeometry.cable_width_max, minZ, maxX, maxY, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
-                
+
                 renderer.setRenderBounds(minX, minY, minZ, maxX, BusGeometry.cable_width_min, maxZ);
                 renderer.renderStandardBlock(block, x, y, z);
             }
@@ -396,7 +391,7 @@ public class SignalBusRender implements ISimpleBlockRenderingHandler
             maxX = BusGeometry.cable_high_height;
             maxY = BusGeometry.cable_width_max;
             maxZ = BusGeometry.cable_width_max;
-            
+
             renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
             renderer.renderStandardBlock(block, x, y, z);
 

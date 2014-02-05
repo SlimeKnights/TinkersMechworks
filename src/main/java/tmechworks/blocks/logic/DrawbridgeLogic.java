@@ -395,8 +395,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             int meta = worldObj.getBlockMetadata(xPos, yPos, zPos);
                             if (bufferStack != null && validBlock(block) && validMetadata(block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
-                                worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F,
-                                        worldObj.rand.nextFloat() * 0.15F + 0.6F);
+                                worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
                                 if (WorldHelper.setBlockToAirBool(worldObj, xPos, yPos, zPos))
                                     if (inventory[0] == null)
                                     {
@@ -600,13 +599,13 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     public void closeInventory ()
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void openInventory ()
     {
         // TODO Auto-generated method stub
-        
+
     }
 }

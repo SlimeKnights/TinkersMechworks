@@ -9,13 +9,14 @@ public class SpoolRepairRecipe implements IRecipe
 {
     ItemStack spool;
     ItemStack wire;
-    
+
     public SpoolRepairRecipe(ItemStack spool, ItemStack wire)
     {
         this.spool = spool.copy();
         this.spool.setItemDamage(256);
         this.wire = wire.copy();
     }
+
     @Override
     public boolean matches (InventoryCrafting inventorycrafting, World world)
     {
@@ -35,7 +36,7 @@ public class SpoolRepairRecipe implements IRecipe
                         return false;
                     }
                     foundSpool = true;
-                } 
+                }
                 else if (tmpStack == wire && tmpStack.getItemDamage() == wire.getItemDamage())
                 {
                     ++countWire;
@@ -50,7 +51,7 @@ public class SpoolRepairRecipe implements IRecipe
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -69,7 +70,7 @@ public class SpoolRepairRecipe implements IRecipe
                 if (tmpStack == spool)
                 {
                     newSpool = tmpStack.copy();
-                } 
+                }
                 else if (tmpStack == wire && tmpStack.getItemDamage() == wire.getItemDamage())
                 {
                     ++countWire;
@@ -80,7 +81,7 @@ public class SpoolRepairRecipe implements IRecipe
         {
             newSpool.setItemDamage(newSpool.getItemDamage() - countWire);
         }
-        
+
         return newSpool;
     }
 

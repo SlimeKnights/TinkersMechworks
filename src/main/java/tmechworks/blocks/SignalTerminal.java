@@ -167,8 +167,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     public boolean canPlaceBlockAt (World world, int x, int y, int z)
     {
         return world.isSideSolid(x - 1, y, z, ForgeDirection.EAST) || world.isSideSolid(x + 1, y, z, ForgeDirection.WEST) || world.isSideSolid(x, y, z - 1, ForgeDirection.SOUTH)
-                || world.isSideSolid(x, y, z + 1, ForgeDirection.NORTH) || world.isSideSolid(x, y - 1, z, ForgeDirection.UP)
-                || world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN);
+                || world.isSideSolid(x, y, z + 1, ForgeDirection.NORTH) || world.isSideSolid(x, y - 1, z, ForgeDirection.UP) || world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN);
     }
 
     /**
@@ -214,8 +213,7 @@ public class SignalTerminal extends Block implements ITileEntityProvider
     public boolean canBlockStay (World world, int x, int y, int z)
     {
         return world.isSideSolid(x - 1, y, z, ForgeDirection.EAST) || world.isSideSolid(x + 1, y, z, ForgeDirection.WEST) || world.isSideSolid(x, y, z - 1, ForgeDirection.SOUTH)
-                || world.isSideSolid(x, y, z + 1, ForgeDirection.NORTH) || world.isSideSolid(x, y - 1, z, ForgeDirection.UP)
-                || world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN);
+                || world.isSideSolid(x, y, z + 1, ForgeDirection.NORTH) || world.isSideSolid(x, y - 1, z, ForgeDirection.UP) || world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN);
     }
 
     @Override
@@ -468,8 +466,6 @@ public class SignalTerminal extends Block implements ITileEntityProvider
             ((SignalTerminalLogic) te).connectPending();
         }
     }
-    
-    
 
     @Override
     public ArrayList<ItemStack> getDrops (World world, int x, int y, int z, int metadata, int fortune)
@@ -484,13 +480,13 @@ public class SignalTerminal extends Block implements ITileEntityProvider
         float jumpX, jumpY, jumpZ;
         ItemStack tempStack;
         Random rand = new Random();
-        
+
         TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof SignalTerminalLogic)
         {
             dropTerm = ((SignalTerminalLogic) te).getDroppedTerminals();
             dropWire = ((SignalTerminalLogic) te).getDroppedWire();
-            
+
             if (dropTerm > 0)
             {
                 tempStack = new ItemStack(TMechworks.content.signalTerminal, dropTerm, 0);

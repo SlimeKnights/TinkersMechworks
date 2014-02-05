@@ -23,7 +23,7 @@ public class SignalTetherWorldOverlayRenderer
     @SubscribeEvent
     public void onWorldRenderLast (RenderWorldLastEvent event)
     {
-    	Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getMinecraft();
         if (mc.thePlayer == null || mc.thePlayer.getHeldItem() == null)
         {
             return;

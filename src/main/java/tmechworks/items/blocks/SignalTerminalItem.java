@@ -45,7 +45,7 @@ public class SignalTerminalItem extends ItemBlock
     @SideOnly(Side.CLIENT)
     public boolean func_150936_a (World world, int x, int y, int z, int side, EntityPlayer entityPlayer, ItemStack itemStack)
     {
-        
+
         if (super.func_150936_a(world, x, y, z, side, entityPlayer, itemStack) || _canPlaceItemBlockOnSide(world, x, y, z, side))
         {
             return true;
@@ -116,13 +116,13 @@ public class SignalTerminalItem extends ItemBlock
 
         ((SignalTerminalLogic) te).addPendingSide(tside);
         ((SignalTerminalLogic) te).connectPending();
-        
+
         stack.stackTagCompound = null;
 
         --stack.stackSize;
-        
+
         world.func_147479_m(x, y, z);
-        
+
         return true;
 
     }

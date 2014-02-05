@@ -70,7 +70,7 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
         Block block = worldObj.getBlock(xPos, yPos, zPos);
         if (active)
         {
-//            TMechworks.logger.info("Setting fire");
+            //            TMechworks.logger.info("Setting fire");
             if (block == null || WorldHelper.isAirBlock(worldObj, xPos, yPos, zPos))
             {
                 worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "fire.ignite", 1.0F, AbilityHelper.random.nextFloat() * 0.4F + 0.8F);
@@ -188,7 +188,7 @@ public class FirestarterLogic extends TileEntity implements IFacingLogic, IActiv
     }
 
     @Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+    public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity packet)
     {
         readCustomNBT(packet.func_148857_g());
         worldObj.func_147479_m(xCoord, yCoord, zCoord);

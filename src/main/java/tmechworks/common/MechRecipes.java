@@ -34,8 +34,8 @@ public class MechRecipes
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.signalBus, 1, 0), "www", "sss", 'w', MechContent.lengthWire, 's', new ItemStack(Blocks.stone_slab, 1,
                 OreDictionary.WILDCARD_VALUE)));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.signalTerminal, 1, 0), "b", "g", "b", 'b', new ItemStack(MechContent.signalBus, 1, 0), 'g', new ItemStack(
-                Blocks.glass, 1, OreDictionary.WILDCARD_VALUE)));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.signalTerminal, 1, 0), "b", "g", "b", 'b', new ItemStack(MechContent.signalBus, 1, 0), 'g', new ItemStack(Blocks.glass, 1,
+                OreDictionary.WILDCARD_VALUE)));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.lengthWire, 8), "a", "a", "a", 'a', "ingotAluminumBrass"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.spoolWire, 1, 256 - 8), "www", "wrw", "www", 'w', MechContent.lengthWire, 'r', "stoneRod"));

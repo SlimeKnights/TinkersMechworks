@@ -15,12 +15,12 @@ public class DynamoBlock extends BlockContainer
         super(Material.iron);
         this.setCreativeTab(TMechworksRegistry.Mechworks);
     }
-    
+
     public int getRenderType ()
     {
         return -1;
     }
-    
+
     @Override
     public boolean shouldSideBeRendered (IBlockAccess iblockaccess, int x, int y, int z, int side)
     {

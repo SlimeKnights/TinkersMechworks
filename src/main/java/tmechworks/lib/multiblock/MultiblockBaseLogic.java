@@ -47,7 +47,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
     {
         return (master != null);
     }
-    
+
     @Override
     public boolean willConnect (CoordTuple coord)
     {
@@ -163,7 +163,7 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
         {
             return;
         }
-        
+
         IMultiblockMember[] neighbors = getNeighboringMembers();
 
         List<MultiblockMasterBaseLogic> masters = new LinkedList<MultiblockMasterBaseLogic>();
@@ -388,11 +388,11 @@ public abstract class MultiblockBaseLogic extends TileEntity implements IMultibl
             this.master = null;
         }
     }
-    
+
     protected void destroySelf ()
     {
         pendingDestroy = true;
-//        this.detachSelf(false);
+        //        this.detachSelf(false);
         this.getMultiblockMaster().scheduleRemoveAndRevisit(this);
     }
 

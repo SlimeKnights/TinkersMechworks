@@ -12,8 +12,8 @@ import com.google.common.collect.HashBiMap;
 import tmechworks.lib.blocks.PlacementType;
 import tmechworks.lib.util.TabTools;
 
-
-public class TMechworksRegistry {
+public class TMechworksRegistry
+{
     public static TMechworksRegistry instance = new TMechworksRegistry();
 
     public static Logger logger = Logger.getLogger("TMech-API");
@@ -32,8 +32,8 @@ public class TMechworksRegistry {
      */
     public static HashMap<ItemStack, PlacementType> drawbridgeState = new HashMap<ItemStack, PlacementType>();
     /** Blocks that are interchangable with each other. Ex: Still and flowing water */
-    public static HashMap<Block, Block>  interchangableBlockMapping = new HashMap<Block, Block> ();
+    public static HashMap<Block, Block> interchangableBlockMapping = new HashMap<Block, Block>();
     /** Blocks that place items, and vice versa */
-    public static HashBiMap<Block, Item>  blockToItemMapping = HashBiMap.create();;
+    public static HashBiMap<Block, Item> blockToItemMapping = HashBiMap.create();;
 
 }

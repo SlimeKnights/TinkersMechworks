@@ -19,6 +19,7 @@ public class SignalBusItem extends ItemBlock
 {
     public static final String blockType[] = { "signalbus" };
     private Block b;
+
     public SignalBusItem(Block b)
     {
         super(b);
@@ -37,7 +38,6 @@ public class SignalBusItem extends ItemBlock
         int pos = MathHelper.clamp_int(itemstack.getItemDamage(), 0, blockType.length - 1);
         return (new StringBuilder()).append("tile.").append(blockType[pos]).toString();
     }
-    
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -92,7 +92,7 @@ public class SignalBusItem extends ItemBlock
             tside = side;
             break;
         }
-        
+
         NBTTagCompound data = new NBTTagCompound();
         stack.stackTagCompound = data;
         data.setInteger("connectedSide", tside);
@@ -111,11 +111,11 @@ public class SignalBusItem extends ItemBlock
         TileEntity te = world.getTileEntity(tmpX, tmpY, tmpZ);
 
         ((SignalBusLogic) te).addPlacedSide(tside);
-        
+
         stack.stackTagCompound = null;
-        
+
         --stack.stackSize;
-        
+
         world.func_147479_m(x, y, z);
 
         return true;
@@ -130,8 +130,7 @@ public class SignalBusItem extends ItemBlock
         {
             side = 1;
         }
-        else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush
-                && (block == null || block.canPlaceBlockAt(world, x, y, z)))
+        else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && (block == null || block.canPlaceBlockAt(world, x, y, z)))
         {
             if (side == 0)
             {
@@ -177,7 +176,7 @@ public class SignalBusItem extends ItemBlock
                 return false;
             }
 
-            return ((SignalBusLogic)te).canPlaceOnSide(ForgeDirection.OPPOSITES[side]);
+            return ((SignalBusLogic) te).canPlaceOnSide(ForgeDirection.OPPOSITES[side]);
         }
 
         return false;

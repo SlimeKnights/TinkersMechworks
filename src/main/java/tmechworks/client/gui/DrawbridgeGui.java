@@ -106,7 +106,7 @@ public class DrawbridgeGui extends GuiContainer
         packet.length = bos.size();
 
         PacketDispatcher.sendPacketToServer(packet);*/
-        
+
         TMechworks.packetPipeline.sendToServer(new PacketDrawbridge(logic.xCoord, logic.yCoord, logic.zCoord, direction));
     }
 }

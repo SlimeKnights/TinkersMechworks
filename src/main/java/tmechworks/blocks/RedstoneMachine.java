@@ -430,7 +430,7 @@ public class RedstoneMachine extends InventoryBlock
     public ItemStack getPickBlock (MovingObjectPosition target, World world, int x, int y, int z)
     {
         Item id = getItem(world, x, y, z);
-        
+
         int meta = getDamageValue(world, x, y, z);
         if (meta != 1 && meta < 4)
         {

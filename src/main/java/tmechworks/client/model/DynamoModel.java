@@ -69,11 +69,11 @@ public class DynamoModel extends ModelBase
 
     private void setRotationAngles (float start, float deltaTime)
     {
-        Dynamo.rotateAngleY -= deltaTime/16;
-        CaseSide1.rotateAngleY += deltaTime/8;
-        CaseSide2.rotateAngleY += deltaTime/8;
-        CaseTop.rotateAngleY += deltaTime/16;
-        CaseBottom.rotateAngleY += deltaTime/16;
+        Dynamo.rotateAngleY -= deltaTime / 16;
+        CaseSide1.rotateAngleY += deltaTime / 8;
+        CaseSide2.rotateAngleY += deltaTime / 8;
+        CaseTop.rotateAngleY += deltaTime / 16;
+        CaseBottom.rotateAngleY += deltaTime / 16;
     }
 
     private void setRotation (ModelRenderer model, float x, float y, float z)

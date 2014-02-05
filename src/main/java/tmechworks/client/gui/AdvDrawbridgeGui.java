@@ -28,7 +28,7 @@ public class AdvDrawbridgeGui extends GuiContainer
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void drawGuiContainerForegroundLayer (int par1, int par2)
     {
         fontRendererObj.drawString("Advanced Drawbridge", 8, 6, 0x404040);
         fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
@@ -132,7 +132,7 @@ public class AdvDrawbridgeGui extends GuiContainer
         }
         button.enabled = false;
 
-       //logic.setPlacementDirection((byte) button.id);
+        //logic.setPlacementDirection((byte) button.id);
         updateServer((byte) button.id);
     }
 
@@ -160,7 +160,7 @@ public class AdvDrawbridgeGui extends GuiContainer
         packet.length = bos.size();
 
         PacketDispatcher.sendPacketToServer(packet);*/
-        
+
         TMechworks.packetPipeline.sendToServer(new PacketDrawbridge(logic.xCoord, logic.yCoord, logic.zCoord, direction));
     }
 
