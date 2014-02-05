@@ -2,9 +2,15 @@ package tmechworks.client;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import tmechworks.blocks.logic.*;
-import tmechworks.client.block.*;
-import tmechworks.client.gui.*;
+import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
+import tmechworks.blocks.logic.DrawbridgeLogic;
+import tmechworks.blocks.logic.DynamoLogic;
+import tmechworks.client.block.DynamoSpecialRender;
+import tmechworks.client.block.MachineRender;
+import tmechworks.client.block.SignalBusRender;
+import tmechworks.client.block.SignalTerminalRender;
+import tmechworks.client.gui.AdvDrawbridgeGui;
+import tmechworks.client.gui.DrawbridgeGui;
 import tmechworks.common.CommonProxy;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;

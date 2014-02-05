@@ -4,21 +4,25 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mojang.authlib.GameProfile;
-
 import mantle.blocks.BlockUtils;
 import mantle.blocks.abstracts.InventoryLogic;
-import mantle.blocks.iface.*;
+import mantle.blocks.iface.IActiveLogic;
+import mantle.blocks.iface.IFacingLogic;
 import mantle.common.ComparisonHelper;
 import mantle.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.*;
-import net.minecraft.inventory.*;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
-import net.minecraft.network.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -31,6 +35,8 @@ import tmechworks.inventory.AdvancedDrawbridgeContainer;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 import tmechworks.lib.player.FakePlayerLogic;
+
+import com.mojang.authlib.GameProfile;
 
 public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
@@ -619,9 +625,9 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     }
 
     @Override
-    public void onInventoryChanged ()
+    public void markDirty ()
     {
-        super.onInventoryChanged();
+        super.markDirty();
         for (int i = 0; i < getSizeInventory(); i++)
         {
             if (getStackInSlot(i) != null)
@@ -666,9 +672,9 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
         }
 
         @Override
-        public void onInventoryChanged ()
+        public void markDirty ()
         {
-            super.onInventoryChanged();
+            super.markDirty();
             if (worldObj != null)
             {
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -692,5 +698,15 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     public boolean hasCustomInventoryName ()
     {
         return true;
+    }
+
+    @Override
+    public void closeInventory ()
+    {
+    }
+
+    @Override
+    public void openInventory ()
+    {
     }
 }

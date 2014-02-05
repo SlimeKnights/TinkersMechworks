@@ -1,12 +1,11 @@
 package tmechworks;
 
-import tmechworks.network.packet.PacketPipeline;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.MinecraftForge;
 import tmechworks.client.SignalTetherWorldOverlayRenderer;
 import tmechworks.common.CommonProxy;
 import tmechworks.common.MechContent;
@@ -16,7 +15,7 @@ import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.multiblock.MultiblockEventHandler;
 import tmechworks.lib.multiblock.MultiblockServerTickHandler;
 import tmechworks.lib.util.TabTools;
-import cpw.mods.fml.common.FMLCommonHandler;
+import tmechworks.network.packet.PacketPipeline;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;

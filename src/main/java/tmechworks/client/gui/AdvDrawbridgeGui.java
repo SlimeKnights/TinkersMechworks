@@ -1,12 +1,16 @@
 package tmechworks.client.gui;
 
 import java.util.Iterator;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
 import org.lwjgl.opengl.GL11;
+
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.inventory.AdvancedDrawbridgeContainer;

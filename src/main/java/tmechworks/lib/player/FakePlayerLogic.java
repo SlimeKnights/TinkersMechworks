@@ -1,14 +1,11 @@
 package tmechworks.lib.player;
 
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import mantle.blocks.abstracts.InventoryLogic;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
-import mantle.blocks.abstracts.InventoryLogic;
+
+import com.mojang.authlib.GameProfile;
 
 public class FakePlayerLogic extends FakePlayer
 {

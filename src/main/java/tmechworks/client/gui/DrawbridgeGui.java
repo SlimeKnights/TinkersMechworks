@@ -3,9 +3,12 @@ package tmechworks.client.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
 import org.lwjgl.opengl.GL11;
+
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.DrawbridgeLogic;
 import tmechworks.network.packet.PacketDrawbridge;

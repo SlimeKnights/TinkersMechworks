@@ -6,11 +6,10 @@ import java.util.logging.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import com.google.common.collect.HashBiMap;
-
 import tmechworks.lib.blocks.PlacementType;
 import tmechworks.lib.util.TabTools;
+
+import com.google.common.collect.HashBiMap;
 
 public class TMechworksRegistry
 {

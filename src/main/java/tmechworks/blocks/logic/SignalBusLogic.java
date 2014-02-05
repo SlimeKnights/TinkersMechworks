@@ -1,19 +1,29 @@
 package tmechworks.blocks.logic;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import mantle.world.CoordTuple;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.*;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tmechworks.TMechworks;
 import tmechworks.blocks.component.SignalBusMasterLogic;
-import tmechworks.lib.multiblock.*;
-import tmechworks.lib.signal.*;
+import tmechworks.lib.multiblock.IMultiblockMember;
+import tmechworks.lib.multiblock.MultiblockBaseLogic;
+import tmechworks.lib.multiblock.MultiblockMasterBaseLogic;
+import tmechworks.lib.signal.ISignalBusConnectable;
+import tmechworks.lib.signal.ISignalTransceiver;
 
 public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusConnectable
 {

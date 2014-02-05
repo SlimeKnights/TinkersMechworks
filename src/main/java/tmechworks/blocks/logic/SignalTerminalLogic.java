@@ -6,11 +6,14 @@ import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.*;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.util.Facing;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import tmechworks.TMechworks;
 import tmechworks.blocks.SignalTerminal;
 import tmechworks.lib.signal.ISignalTransceiver;
@@ -343,7 +346,7 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
     public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity packet)
     {
         readFromNBT(packet.func_148857_g());
-        onInventoryChanged();
+        markDirty();
         worldObj.func_147479_m(xCoord, yCoord, zCoord);
         this.doUpdate = true;
     }

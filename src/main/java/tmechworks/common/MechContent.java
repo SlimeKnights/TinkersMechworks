@@ -7,12 +7,22 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.client.TConstructClientRegistry;
-import tmechworks.blocks.*;
-import tmechworks.blocks.logic.*;
-import tmechworks.items.*;
-import tmechworks.items.blocks.*;
-import tmechworks.lib.*;
+import tmechworks.blocks.DynamoBlock;
+import tmechworks.blocks.RedstoneMachine;
+import tmechworks.blocks.SignalBus;
+import tmechworks.blocks.SignalTerminal;
+import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
+import tmechworks.blocks.logic.DrawbridgeLogic;
+import tmechworks.blocks.logic.DynamoLogic;
+import tmechworks.blocks.logic.FirestarterLogic;
+import tmechworks.blocks.logic.SignalBusLogic;
+import tmechworks.blocks.logic.SignalTerminalLogic;
+import tmechworks.items.LengthWire;
+import tmechworks.items.SpoolOfWire;
+import tmechworks.items.blocks.RedstoneMachineItem;
+import tmechworks.items.blocks.SignalBusItem;
+import tmechworks.items.blocks.SignalTerminalItem;
+import tmechworks.lib.TMechworksRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MechContent

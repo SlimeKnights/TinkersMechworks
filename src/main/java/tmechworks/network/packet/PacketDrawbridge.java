@@ -5,7 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import tmechworks.blocks.logic.*;
+import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
+import tmechworks.blocks.logic.DrawbridgeLogic;
 
 public class PacketDrawbridge extends AbstractPacket
 {
@@ -59,7 +60,7 @@ public class PacketDrawbridge extends AbstractPacket
         if (te instanceof DrawbridgeLogic)
         {
             ((DrawbridgeLogic) te).setPlacementDirection(direction);
-            te.onInventoryChanged();
+            te.markDirty();
         }
         else if (te instanceof AdvancedDrawbridgeLogic)
         {

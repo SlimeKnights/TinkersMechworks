@@ -1,12 +1,11 @@
 package tmechworks.common;
 
+import mantle.blocks.abstracts.InventoryLogic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import mantle.blocks.abstracts.InventoryLogic;
 import tmechworks.lib.multiblock.MultiblockServerTickHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy implements IGuiHandler
 {
