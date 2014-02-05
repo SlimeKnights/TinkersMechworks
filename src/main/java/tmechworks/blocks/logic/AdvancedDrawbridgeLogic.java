@@ -1,5 +1,9 @@
 package tmechworks.blocks.logic;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.mojang.authlib.GameProfile;
 
 import mantle.blocks.BlockUtils;
@@ -8,6 +12,7 @@ import mantle.blocks.iface.*;
 import mantle.common.ComparisonHelper;
 import mantle.world.WorldHelper;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
@@ -16,6 +21,8 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.*;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -325,6 +332,26 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                                 placeBlockAt(getStackInSlot(extension - 1), fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
                             }
                             field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, field_145850_b.rand.nextFloat() * 0.25F + 0.6F);
+                            List pushedObjects = new ArrayList();
+
+                            AxisAlignedBB axisalignedbb = block.func_149668_a(field_145850_b, xPos, yPos, zPos);
+                            if (axisalignedbb != null)
+                            {
+                                List list = field_145850_b.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
+                                if (!list.isEmpty())
+                                {
+                                    pushedObjects.addAll(list);
+                                    Iterator iterator = pushedObjects.iterator();
+
+                                    while (iterator.hasNext())
+                                    {
+                                        Entity entity = (Entity) iterator.next();
+                                        entity.moveEntity(Facing.offsetsXForSide[this.direction], Facing.offsetsYForSide[this.direction], Facing.offsetsZForSide[this.direction]);
+                                    }
+
+                                    pushedObjects.clear();
+                                }
+                            }
                             decrStackSize(extension - 1, 1);
                         }
                         else

@@ -1,5 +1,9 @@
 package tmechworks.blocks.logic;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.mojang.authlib.GameProfile;
 
 import mantle.blocks.BlockUtils;
@@ -8,6 +12,7 @@ import mantle.blocks.iface.*;
 import mantle.common.ComparisonHelper;
 import mantle.world.WorldHelper;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
@@ -16,6 +21,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -25,14 +32,13 @@ import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 import tmechworks.lib.player.FakePlayerLogic;
 
-
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
     boolean active;
     boolean working;
     int ticks;
     byte extension;
-    byte maxExtension = 15;
+    byte maxExtension = 15; //Absolute maximum
     byte direction;
     byte placementDirection = 4;
     FakePlayerLogic fakePlayer;
@@ -49,7 +55,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         this.field_145850_b = par1World;
         if (!field_145850_b.isRemote)
-            fakePlayer = new FakePlayerLogic((WorldServer)field_145850_b, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic)this);
+            fakePlayer = new FakePlayerLogic((WorldServer) field_145850_b, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic) this);
     }
 
     @Override
@@ -316,6 +322,28 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                                 placeBlockAt(bufferStack, fakePlayer, field_145850_b, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
                             }
                             field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, field_145850_b.rand.nextFloat() * 0.25F + 0.6F);
+
+                            List pushedObjects = new ArrayList();
+                            AxisAlignedBB axisalignedbb = BlockUtils.getBlockFromItemStack(bufferStack).func_149668_a(field_145850_b, xPos, yPos, zPos);
+
+                            if (axisalignedbb != null)
+                            {
+                                List list = field_145850_b.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
+                                if (!list.isEmpty())
+                                {
+                                    pushedObjects.addAll(list);
+                                    Iterator iterator = pushedObjects.iterator();
+
+                                    while (iterator.hasNext())
+                                    {
+                                        Entity entity = (Entity) iterator.next();
+                                        entity.moveEntity(Facing.offsetsXForSide[this.direction], Facing.offsetsYForSide[this.direction], Facing.offsetsZForSide[this.direction]);
+                                    }
+
+                                    pushedObjects.clear();
+                                }
+                            }
+
                             decrStackSize(0, 1);
                         }
                         else
@@ -367,7 +395,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             int meta = field_145850_b.getBlockMetadata(xPos, yPos, zPos);
                             if (bufferStack != null && validBlock(block) && validMetadata(block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
-                                field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, field_145850_b.rand.nextFloat() * 0.15F + 0.6F);
+                                field_145850_b.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F,
+                                        field_145850_b.rand.nextFloat() * 0.15F + 0.6F);
                                 if (WorldHelper.setBlockToAirBool(field_145850_b, xPos, yPos, zPos))
                                     if (inventory[0] == null)
                                     {
@@ -532,7 +561,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     }
 
     @Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+    public void onDataPacket (NetworkManager net, S35PacketUpdateTileEntity packet)
     {
         func_145839_a(packet.func_148857_g());
         field_145850_b.func_147479_m(field_145851_c, field_145848_d, field_145849_e);

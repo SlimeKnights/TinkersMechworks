@@ -34,31 +34,57 @@ public class RedstoneMachineItem extends ItemBlock
     @Override
     public void addInformation (ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
-        if (stack.hasTagCompound() && stack.getItemDamage() == 0)
+        int meta = stack.getItemDamage();
+        if (stack.hasTagCompound())
         {
-            NBTTagCompound contentTags = stack.getTagCompound().getCompoundTag("Contents");
-            if (contentTags != null)
+            if (meta != 1)
             {
-                ItemStack contents = ItemStack.loadItemStackFromNBT(contentTags);
-                if (contents != null)
+                if (meta == 0 || meta == 3)
                 {
-                    list.add("Inventory: " + contents.getDisplayName());
-                    list.add("Amount: " + contents.stackSize);
+                    NBTTagCompound contentTags = stack.getTagCompound().getCompoundTag("Contents");
+                    if (contentTags != null)
+                    {
+                        ItemStack contents = ItemStack.loadItemStackFromNBT(contentTags);
+                        if (contents != null)
+                        {
+                            list.add("Inventory: \u00a7f" + contents.getDisplayName());
+                            list.add("Amount: \u00a7f" + contents.stackSize);
+                        }
+                    }
+                }
+                else if (meta == 2)
+                {
+                    for (int i = 1; i <= 16; i++)
+                    {
+                        NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Slot" + i);
+                        ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
+                        if (contents != null)
+                        {
+                            list.add("Slot " + i + ": \u00a7f" + contents.getDisplayName());
+                        }
+                    }
+                }
+
+                NBTTagCompound camoTag = stack.getTagCompound().getCompoundTag("Camoflauge");
+                if (camoTag != null)
+                {
+                    ItemStack camo = ItemStack.loadItemStackFromNBT(camoTag);
+                    if (camo != null)
+                    {
+                        list.add("\u00a72Camoflauge: \u00a7f" + camo.getDisplayName());
+                    }
+                }
+
+                if (stack.getTagCompound().hasKey("Placement"))
+                {
+                    String string = getDirectionString(stack.getTagCompound().getByte("Placement"));
+                    list.add("Placement Direction: " + string);
                 }
             }
-            NBTTagCompound camoTag = stack.getTagCompound().getCompoundTag("Camoflauge");
-            if (camoTag != null)
-            {
-                ItemStack camo = ItemStack.loadItemStackFromNBT(camoTag);
-                if (camo != null)
-                    list.add("Camoflauge: " + camo.getDisplayName());
-            }
-
-            if (stack.getTagCompound().hasKey("Placement"))
-            {
-                String string = getDirectionString(stack.getTagCompound().getByte("Placement"));
-                list.add("Placement Direction: " + string);
-            }
+        }
+        else if (meta != 1)
+        {
+            list.add("Stores its inventory when harvested");
         }
     }
 
