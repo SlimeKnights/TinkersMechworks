@@ -138,7 +138,7 @@ public class SpoolOfWire extends Item
         this.icon = iconRegister.registerIcon("tmechworks:" + folder + textureName);
     }
 
-    public void getSubItems (Block b, CreativeTabs tab, List list)
+    public void getSubItems (Item b, CreativeTabs tab, List list)
     {
         list.add(new ItemStack(b, 1, 0));
     }

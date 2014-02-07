@@ -48,7 +48,7 @@ public class LengthWire extends Item
         }
     }
 
-    public void getSubItems (Block b, CreativeTabs tab, List list)
+    public void getSubItems (Item b, CreativeTabs tab, List list)
     {
         for (int i = 0; i < unlocalizedNames.length; i++)
             if (!(textureNames[i].equals("")))
