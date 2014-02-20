@@ -1,13 +1,16 @@
 package tmechworks.lib;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import tconstruct.common.TRepo;
 import tmechworks.lib.blocks.PlacementType;
 import tmechworks.lib.util.TabTools;
 
@@ -17,7 +20,7 @@ public class TMechworksRegistry
 {
     public static TMechworksRegistry instance = new TMechworksRegistry();
 
-    public static Logger logger = Logger.getLogger("TMech-API");
+    public static Logger logger = LogManager.getLogger("TMech-API");
 
     /* Creative tabs */
     public static TabTools Mechworks;
@@ -218,6 +221,11 @@ public class TMechworksRegistry
         drawbridgeState.put(new ItemStack(Blocks.dropper), PlacementType.rotationalMeta);
         interchangableBlockMapping.put(Blocks.dirt, Blocks.grass);
         interchangableBlockMapping.put(Blocks.grass, Blocks.dirt);
+        
+        //TCON STUFFS
+        drawbridgeState.put(new ItemStack(TRepo.slimePad), PlacementType.metaIgnore);
+        drawbridgeState.put(new ItemStack(TRepo.bloodChannel), PlacementType.metaIgnore);
+
     }
 
     static
