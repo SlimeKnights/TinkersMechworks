@@ -1,6 +1,8 @@
 package tmechworks.lib;
 
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public final class Repo
 {
@@ -8,5 +10,5 @@ public final class Repo
     public static final String modName = "Tinkers Mechworks";
     public static final String modVer = "${version}";
 
-    public static final Logger logger = Logger.getLogger(modName);
+    public static final Logger logger = LogManager.getLogger(modName);
 }
