@@ -61,7 +61,7 @@ public class TMechworksRegistry
 
     static void initializeDrawbridgeState ()
     {
-        // TODO fix this mess and move to TMech
+
         /*0: Metadata has to match            PlacementType.metaMatch
         1: Metadata has no meaning          PlacementType.metaIgnore
         2: Should not be placed             PlacementType.GTFO
@@ -160,7 +160,7 @@ public class TMechworksRegistry
         interchangableBlockMapping.put(Blocks.unpowered_repeater, Blocks.powered_repeater);
         interchangableBlockMapping.put(Blocks.powered_repeater, Blocks.unpowered_repeater);
         blockToItemMapping.put(Blocks.unpowered_repeater, Items.repeater);
-        blockToItemMapping.put(Blocks.powered_repeater, Items.repeater);
+        //blockToItemMapping.put(Blocks.powered_repeater, Items.repeater);
         drawbridgeState.put(new ItemStack(Blocks.trapdoor), PlacementType.rotationalMeta);
         drawbridgeState.put(new ItemStack(Blocks.brown_mushroom), PlacementType.metaIgnore);
         drawbridgeState.put(new ItemStack(Blocks.red_mushroom), PlacementType.metaIgnore);
