@@ -210,7 +210,7 @@ public class TMechworksRegistry
         interchangableBlockMapping.put(Blocks.unpowered_comparator, Blocks.powered_comparator);
         interchangableBlockMapping.put(Blocks.powered_comparator, Blocks.unpowered_comparator);
         blockToItemMapping.put(Blocks.unpowered_comparator, Items.comparator);
-        blockToItemMapping.put(Blocks.powered_comparator, Items.comparator);
+        //blockToItemMapping.put(Blocks.powered_comparator, Items.comparator);
         drawbridgeState.put(new ItemStack(Blocks.daylight_detector), PlacementType.metaIgnore);
         drawbridgeState.put(new ItemStack(Blocks.redstone_block), PlacementType.metaIgnore);
         drawbridgeState.put(new ItemStack(Blocks.quartz_ore), PlacementType.metaIgnore);
