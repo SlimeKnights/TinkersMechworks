@@ -337,7 +337,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
                             List pushedObjects = new ArrayList();
 
-                            AxisAlignedBB axisalignedbb = Block.blocksList[worldObj.getBlockId(xPos, yPos, zPos)].getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
+                            Block axis = Block.blocksList[worldObj.getBlockId(xPos, yPos, zPos)];
+                            AxisAlignedBB axisalignedbb = axis != null ? axis.getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos) : null;
 
                             if (axisalignedbb != null)
                             {

@@ -491,6 +491,7 @@ public class RedstoneMachine extends InventoryBlock
                     {
                         ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
                         logic.setInventorySlotContents(i-1, contents);
+                        logic.setBufferSlotContents(i-1, contents);
                     }
                 }
 
