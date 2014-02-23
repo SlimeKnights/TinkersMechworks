@@ -322,8 +322,12 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             {
                                 if (getStackInSlot(extension - 1) == null || getStackInSlot(extension - 1).itemID >= 4096 || Block.blocksList[getStackInSlot(extension - 1).itemID] == null)
                                     return;
-                                Block placeBlock = Block.blocksList[getStackInBufferSlot(extension - 1).itemID];
-                                placeBlockAt(getStackInSlot(extension - 1), fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
+                                ItemStack placeStack = getStackInBufferSlot(extension - 1);
+                                if (placeStack != null)
+                                {
+                                    Block placeBlock = Block.blocksList[placeStack.itemID];
+                                    placeBlockAt(getStackInSlot(extension - 1), fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
+                                }
                             }
                             else
                             {
