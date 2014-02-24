@@ -338,6 +338,7 @@ public class RedstoneMachine extends InventoryBlock
     @Override
     public boolean removeBlockByPlayer (World world, EntityPlayer player, int x, int y, int z)
     {
+        System.out.println("Destroy block");
         player.addExhaustion(0.025F);
         int meta = world.getBlockMetadata(x, y, z);
         if (meta < 4 && meta != 1)
@@ -448,7 +449,7 @@ public class RedstoneMachine extends InventoryBlock
     @Override
     public void harvestBlock (World world, EntityPlayer player, int x, int y, int z, int meta)
     {
-        if (meta != 0)
+        if (meta == 1 || meta >= 4)
             super.harvestBlock(world, player, x, y, z, meta);
     }
 
