@@ -407,7 +407,11 @@ public abstract class MultiblockMasterBaseLogic
                 continue;
             }
             member = (IMultiblockMember) this.worldObj.getTileEntity(coord.x, coord.y, coord.z);
-            if (!member.isVisited())
+            if (member == null)
+            {
+                deadBlocks.add(coord);
+            }
+            else if (!member.isVisited())
             {
                 orphans.add(member);
             }
