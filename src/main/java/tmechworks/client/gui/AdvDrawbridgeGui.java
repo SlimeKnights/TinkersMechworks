@@ -34,7 +34,7 @@ public class AdvDrawbridgeGui extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer (int par1, int par2)
     {
-        fontRendererObj.drawString("Advanced Drawbridge", 8, 6, 0x404040);
+        fontRendererObj.drawString(StatCollector.translateToLocal("container.advdrawbridge"), 8, 6, 0x404040);
         fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
     }
 
@@ -98,7 +98,7 @@ public class AdvDrawbridgeGui extends GuiContainer
             button.enabled = false;
         this.buttonList.add(button);
 
-        this.buttonList.add(new AdvDrawbridgeButton(5, this.width / 2 - 13, this.height / 2 - 52, this.width / 2 + 58, this.height / 2 - 79, 26, 26, "Inv"));
+        this.buttonList.add(new AdvDrawbridgeButton(5, this.width / 2 - 13, this.height / 2 - 52, this.width / 2 + 58, this.height / 2 - 79, 26, 26, StatCollector.translateToLocal("container.inv")));
     }
 
     public void setExpanded (boolean flag)
