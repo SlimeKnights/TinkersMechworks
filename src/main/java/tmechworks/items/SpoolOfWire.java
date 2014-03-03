@@ -47,7 +47,7 @@ public class SpoolOfWire extends Item
         switch (stack.getItemDamage())
         {
         case 0:
-            list.add("Wirey!");
+            list.add(StatCollector.translateToLocal("tooltip.spoolofwire"));
             break;
         }
     }
