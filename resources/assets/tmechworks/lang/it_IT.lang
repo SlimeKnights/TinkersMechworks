@@ -11,7 +11,7 @@ block.firestarter.name=Accendino
 block.advdrawbridge.name=Ponte Mobile Avanzato
 block.extdrawbridge.name=Ponte Mobile Esteso
 
-tooltip.spoolofwire=Wirey!
+tooltip.spoolofwire=Cavi!
 tooltip.drawbridge.inventory=Inventario: 
 tooltip.drawbridge.amount=Quantità: 
 tooltip.drawbridge.slot=Posizione 
