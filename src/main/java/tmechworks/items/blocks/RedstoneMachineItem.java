@@ -47,8 +47,8 @@ public class RedstoneMachineItem extends ItemBlock
                         ItemStack contents = ItemStack.loadItemStackFromNBT(contentTags);
                         if (contents != null)
                         {
-                            list.add("Inventory: \u00a7f" + contents.getDisplayName());
-                            list.add("Amount: \u00a7f" + contents.stackSize);
+                            list.add(StatCollector.translateToLocal("tooltip.drawbridge.inventory") + "\u00a7f" + contents.getDisplayName());
+                            list.add(StatCollector.translateToLocal("tooltip.drawbridge.amount") + "\u00a7f" + contents.stackSize);
                         }
                     }
                 }
@@ -60,7 +60,7 @@ public class RedstoneMachineItem extends ItemBlock
                         ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
                         if (contents != null)
                         {
-                            list.add("Slot " + i + ": \u00a7f" + contents.getDisplayName());
+                            list.add(StatCollector.translateToLocal("tooltip.drawbridge.slot") + i + ": \u00a7f" + contents.getDisplayName());
                         }
                     }
                 }
@@ -71,32 +71,32 @@ public class RedstoneMachineItem extends ItemBlock
                     ItemStack camo = ItemStack.loadItemStackFromNBT(camoTag);
                     if (camo != null)
                     {
-                        list.add("\u00a72Camoflauge: \u00a7f" + camo.getDisplayName());
+                        list.add("\u00a72" + StatCollector.translateToLocal("tooltip.drawbridge.camoflauge") + "\u00a7f" + camo.getDisplayName());
                     }
                 }
 
                 if (stack.getTagCompound().hasKey("Placement"))
                 {
                     String string = getDirectionString(stack.getTagCompound().getByte("Placement"));
-                    list.add("Placement Direction: " + string);
+                    list.add(StatCollector.translateToLocal("tooltip.drawbridge.direction") + string);
                 }
             }
         }
         else if (meta != 1)
         {
-            list.add("Stores its inventory when harvested");
+            list.add(StatCollector.translateToLocal("tooltip.drawbridge.default"));
         }
     }
 
     String getDirectionString (byte key)
     {
         if (key == 0)
-            return ("Up");
+            return (StatCollector.translateToLocal("tooltip.drawbridge.direction.up"));
         if (key == 1)
-            return ("Right");
+            return (StatCollector.translateToLocal("tooltip.drawbridge.direction.right");
         if (key == 2)
-            return ("Down");
+            return (StatCollector.translateToLocal("tooltip.drawbridge.direction.down"));
 
-        return "Left";
+        return StatCollector.translateToLocal("tooltip.drawbridge.direction.left")
     }
 }
