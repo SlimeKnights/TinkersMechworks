@@ -10,3 +10,19 @@ block.drawbridge.name=Drawbridge
 block.firestarter.name=Igniter
 block.advdrawbridge.name=Advanced Drawbridge
 block.extdrawbridge.name=Extended Drawbridge
+
+tooltip.spoolofwire=Wirey!
+tooltip.drawbridge.inventory=Inventory: 
+tooltip.drawbridge.amount=Amount: 
+tooltip.drawbridge.slot=Slot 
+tooltip.drawbridge.camoflauge=Camoflauge: 
+tooltip.drawbridge.direction=Placement Direction: 
+tooltip.drawbridge.default=Stores its inventory when harvested
+tooltip.drawbridge.direction.up=Up
+tooltip.drawbridge.direction.down=Down
+tooltip.drawbridge.direction.left=Left
+tooltip.drawbridge.direction.right=Right
+
+container.advdrawbridge=Advanced Drawbridge
+container.inv=Inv
+container.drawbridge=Drawbridge

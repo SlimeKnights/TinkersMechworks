@@ -10,3 +10,19 @@ block.drawbridge.name=Ponte Mobile
 block.firestarter.name=Accendino
 block.advdrawbridge.name=Ponte Mobile Avanzato
 block.extdrawbridge.name=Ponte Mobile Esteso
+
+tooltip.spoolofwire=Cavi!
+tooltip.drawbridge.inventory=Inventario: 
+tooltip.drawbridge.amount=Quantità: 
+tooltip.drawbridge.slot=Posizione 
+tooltip.drawbridge.camoflauge=Camuffamento: 
+tooltip.drawbridge.direction=Direzione a piazzamento: 
+tooltip.drawbridge.default=Contiene l'inventario quando raccolto
+tooltip.drawbridge.direction.up=Su
+tooltip.drawbridge.direction.down=Giù
+tooltip.drawbridge.direction.left=Sinistra
+tooltip.drawbridge.direction.right=Destra
+
+container.advdrawbridge=Ponte Mobile Avanzato
+container.inv=Inv
+container.drawbridge=Ponte Mobile

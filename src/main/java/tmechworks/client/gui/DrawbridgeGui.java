@@ -27,7 +27,7 @@ public class DrawbridgeGui extends GuiContainer
     protected void drawGuiContainerForegroundLayer (int par1, int par2)
     {
         //fontRenderer.drawString(StatCollector.translateToLocal("aggregator.glowstone"), 60, 6, 0x404040);
-        fontRendererObj.drawString("Drawbridge", 8, 6, 0x404040);
+        fontRendererObj.drawString(StatCollector.translateToLocal("container.drawbridge"), 8, 6, 0x404040);
         fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
     }
 
