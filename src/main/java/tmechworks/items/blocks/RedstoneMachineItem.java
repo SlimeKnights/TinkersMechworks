@@ -97,6 +97,6 @@ public class RedstoneMachineItem extends ItemBlock
         if (key == 2)
             return (StatCollector.translateToLocal("tooltip.drawbridge.direction.down"));
 
-        return StatCollector.translateToLocal("tooltip.drawbridge.direction.left")
+        return StatCollector.translateToLocal("tooltip.drawbridge.direction.left");
     }
 }
