@@ -221,7 +221,7 @@ public class TMechworksRegistry
         drawbridgeState.put(new ItemStack(Blocks.dropper), PlacementType.rotationalMeta);
         interchangableBlockMapping.put(Blocks.dirt, Blocks.grass);
         interchangableBlockMapping.put(Blocks.grass, Blocks.dirt);
-        
+
         //TCON STUFFS
         drawbridgeState.put(new ItemStack(TRepo.slimePad), PlacementType.metaIgnore);
         drawbridgeState.put(new ItemStack(TRepo.bloodChannel), PlacementType.metaIgnore);

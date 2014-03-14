@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mantle.blocks.BlockUtils;
+import com.mojang.authlib.GameProfile;
+
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
-import mantle.common.ComparisonHelper;
-import mantle.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.Item;
@@ -31,12 +32,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
-import tmechworks.inventory.AdvancedDrawbridgeContainer;
+import tconstruct.library.TConstructRegistry;
+import tmechworks.TMechworks;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
+import tmechworks.inventory.AdvancedDrawbridgeContainer;
 import tmechworks.lib.player.FakePlayerLogic;
-
-import com.mojang.authlib.GameProfile;
 
 public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
@@ -321,26 +322,33 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                         }
 
                         Block block = worldObj.getBlock(xPos, yPos, zPos);
-                        if (block == null || WorldHelper.isAirBlock(worldObj, xPos, yPos, zPos) || block.canPlaceBlockAt(worldObj, xPos, yPos, zPos))
+                        if (block == null || block.isAir(worldObj, xPos, yPos, zPos) || block.canPlaceBlockAt(worldObj, xPos, yPos, zPos))
                         {
                             // tryExtend(worldObj, xPos, yPos, zPos, direction);
-                            Item blockToItem = (Item) (getStackInBufferSlot(extension - 1) != null ? TMechworksRegistry.blockToItemMapping.get(getStackInBufferSlot(extension - 1).getItem()) : 0);
-                            if (blockToItem == null)
+                            Item blockToItem = getStackInBufferSlot(extension - 1) != null && getStackInBufferSlot(extension - 1).getItem() != null ? TMechworksRegistry.blockToItemMapping.get(Block
+                                    .getBlockFromItem(getStackInBufferSlot(extension - 1).getItem())) : Items.stick;
+                            if (blockToItem == Item.getItemFromBlock(Blocks.air))
                             {
-                                if (getStackInSlot(extension - 1) == null || BlockUtils.getBlockFromItem(getStackInSlot(extension - 1).getItem()) == null)
+                                if (getStackInSlot(extension - 1) == null || Block.getBlockFromItem(getStackInSlot(extension - 1).getItem()) == null)
                                     return;
-                                Block placeBlock = BlockUtils.getBlockFromItem(getStackInBufferSlot(extension - 1).getItem());
-                                placeBlockAt(getStackInSlot(extension - 1), fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
+                                ItemStack placeStack = getStackInBufferSlot(extension - 1);
+                                if (placeStack != null)
+                                {
+                                    Block placeBlock = Block.getBlockFromItem(placeStack.getItem());
+                                    placeBlockAt(getStackInSlot(extension - 1), fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
+                                }
                             }
                             else
                             {
-                                Block placeBlock = BlockUtils.getBlockFromItem(blockToItem);
+                                Block placeBlock = Block.getBlockFromItem(blockToItem);
                                 placeBlockAt(getStackInSlot(extension - 1), fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, getStackInSlot(extension - 1).getItemDamage(), placeBlock);
                             }
                             worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
                             List pushedObjects = new ArrayList();
 
-                            AxisAlignedBB axisalignedbb = block.getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
+                            Block axis = worldObj.getBlock(xPos, yPos, zPos);
+                            AxisAlignedBB axisalignedbb = axis != null ? axis.getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos) : null;
+
                             if (axisalignedbb != null)
                             {
                                 List list = worldObj.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
@@ -409,7 +417,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             if (getStackInBufferSlot(extension - 1) != null && validBlock(extension - 1, block) && validMetadata(extension - 1, block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
                                 worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
-                                if (WorldHelper.setBlockToAirBool(worldObj, xPos, yPos, zPos))
+                                if (worldObj.setBlock(xPos, yPos, zPos, Blocks.air))
                                     if (getStackInSlot(extension - 1) == null)
                                     {
                                         setInventorySlotContents(extension - 1, getStackInBufferSlot(extension - 1).copy());
@@ -475,24 +483,24 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     boolean validBlock (int slot, Block block)
     {
-        ItemStack type = new ItemStack(TMechworksRegistry.interchangableBlockMapping.get(block));
-        if (type != null)
+        Block type = TMechworksRegistry.interchangableBlockMapping.get(new ItemStack(block).getItem());
+        if (type != Blocks.air)
         {
-            if (type == getStackInBufferSlot(slot))
+            if (type == Block.getBlockFromItem(getStackInBufferSlot(slot).getItem()))
                 return true;
         }
-        Item blockToItem = TMechworksRegistry.blockToItemMapping.get(block);
-        if (blockToItem != null)
+        Item blockToItem = TMechworksRegistry.blockToItemMapping.get(new ItemStack(block).getItem());
+        if (blockToItem != Item.getItemFromBlock(Blocks.air))
         {
             if (blockToItem == getStackInBufferSlot(slot).getItem())
                 return true;
         }
-        return ComparisonHelper.areEquivalent(getStackInBufferSlot(slot).getItem(), block);
+        return new ItemStack(block).getItem() == getStackInBufferSlot(slot).getItem();
     }
 
     boolean validMetadata (int slot, Block block, int metadata)
     {
-        int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
+        /**int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
         if (type == 0)
         {
             return metadata == getStackInBufferSlot(slot).getItemDamage();
@@ -517,8 +525,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
         if (type == 5)
         {
             return metadata == getStackInBufferSlot(slot).getItemDamage();
-        }
-        return false;
+        }*/
+        return true;
     }
 
     @Override
@@ -560,7 +568,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     public void readBufferFromNBT (NBTTagCompound tags)
     {
-        NBTTagList nbttaglist = tags.getTagList("Buffer", 9);
+        NBTTagList nbttaglist = tags.getTagList("Buffer", 10);
         bufferStacks = new ItemStack[getSizeInventory()];
         //		bufferStacks.ensureCapacity(nbttaglist.tagCount() > getSizeInventory() ? getSizeInventory() : nbttaglist.tagCount());
         for (int iter = 0; iter < nbttaglist.tagCount(); iter++)
