@@ -10,7 +10,6 @@ import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.common.ComparisonHelper;
 import mantle.world.CoordTuple;
-import mantle.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -28,11 +27,13 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+//import tconstruct.library.blocks.IDrawbridgeLogicBase;
 import tmechworks.TMechworks;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.blocks.logic.DrawbridgeLogic;
 import tmechworks.blocks.logic.FirestarterLogic;
 import tmechworks.client.block.MachineRender;
+import tmechworks.common.MechContent;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 import cpw.mods.fml.relauncher.Side;
@@ -60,8 +61,8 @@ public class RedstoneMachine extends InventoryBlock
                 if (((DrawbridgeLogic) logic).getStackInSlot(1) != null)
                 {
                     ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
-                    if (BlockUtils.getBlockFromItem(stack.getItem()) != null)
-                        return (BlockUtils.getBlockFromItem(((DrawbridgeLogic) logic).getStackInSlot(3).getItem())).getLightValue();
+                    if (Block.getBlockFromItem(stack.getItem()) != null)
+                        return Block.getBlockFromItem(((DrawbridgeLogic) logic).getStackInSlot(1).getItem()).getLightValue();
                 }
             }
 
@@ -70,8 +71,9 @@ public class RedstoneMachine extends InventoryBlock
                 if (((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack() != null)
                 {
                     ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
-                    if (BlockUtils.getBlockFromItem(stack.getItem()) != null)
-                        return (BlockUtils.getBlockFromItem(((AdvancedDrawbridgeLogic) logic).getStackInSlot(3).getItem())).getLightValue();
+                    if (Block.getBlockFromItem(stack.getItem()) != null)
+                        if (((AdvancedDrawbridgeLogic) logic).getStackInSlot(1) != null)
+                            return Block.getBlockFromItem(((AdvancedDrawbridgeLogic) logic).getStackInSlot(1).getItem()).getLightValue();//lightValue[stack.itemID];
                 }
             }
         }
@@ -82,29 +84,26 @@ public class RedstoneMachine extends InventoryBlock
     @SideOnly(Side.CLIENT)
     public int colorMultiplier (IBlockAccess world, int x, int y, int z)
     {
-        if (world.getBlockMetadata(x, y, z) == 0 && world.getBlockMetadata(x, y, z) == 2)
-        {
-            TileEntity logic = world.getTileEntity(x, y, z);
+        TileEntity logic = world.getTileEntity(x, y, z);
 
-            if (logic != null && logic instanceof DrawbridgeLogic)
-            {
-                ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
-                if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this))
-                    return BlockUtils.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
-            }
-            else if (logic != null && logic instanceof AdvancedDrawbridgeLogic)
-            {
-                ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
-                if (stack != null && BlockUtils.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this))
-                    return BlockUtils.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
-            }
+        if (logic != null && logic instanceof DrawbridgeLogic)
+        {
+            ItemStack stack = ((DrawbridgeLogic) logic).getStackInSlot(1);
+            if (stack != null && Block.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this))
+                return Block.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
+        }
+        else if (logic != null && logic instanceof AdvancedDrawbridgeLogic)
+        {
+            ItemStack stack = ((AdvancedDrawbridgeLogic) logic).camoInventory.getCamoStack();
+            if (stack != null && Block.getBlockFromItem(stack.getItem()) != null && !ComparisonHelper.areEquivalent(stack.getItem(), this))
+                return Block.getBlockFromItem(stack.getItem()).colorMultiplier(world, x, y, z);
         }
 
         return 0xffffff;
     }
 
     @Override
-    public TileEntity createTileEntity (World world, int metadata)
+    public TileEntity createNewTileEntity (World world, int metadata)
     {
         switch (metadata)
         {
@@ -202,7 +201,8 @@ public class RedstoneMachine extends InventoryBlock
         return icons[0];
     }
 
-    public IIcon getBlockTexture (IBlockAccess world, int x, int y, int z, int side)
+    @Override
+    public IIcon getIcon (IBlockAccess world, int x, int y, int z, int side)
     {
         TileEntity logic = world.getTileEntity(x, y, z);
         short direction = (logic instanceof IFacingLogic) ? ((IFacingLogic) logic).getRenderDirection() : 0;
@@ -214,7 +214,7 @@ public class RedstoneMachine extends InventoryBlock
             ItemStack stack = drawbridge.getStackInSlot(1);
             if (stack != null)
             {
-                Block block = BlockUtils.getBlockFromItem(stack.getItem());
+                Block block = Block.getBlockFromItem(stack.getItem());//Block.blocksList[stack.itemID];
                 if (block != null && block.renderAsNormalBlock())
                     return block.getIcon(side, stack.getItemDamage());
             }
@@ -232,9 +232,9 @@ public class RedstoneMachine extends InventoryBlock
         {
             AdvancedDrawbridgeLogic drawbridge = (AdvancedDrawbridgeLogic) logic;
             ItemStack stack = drawbridge.camoInventory.getCamoStack();
-            if (stack != null)
+            if (stack != null)// && stack.itemID < 4096)
             {
-                Block block = BlockUtils.getBlockFromItem(stack.getItem());
+                Block block = Block.getBlockFromItem(stack.getItem());
                 if (block != null && block.renderAsNormalBlock())
                     return block.getIcon(side, stack.getItemDamage());
             }
@@ -291,29 +291,29 @@ public class RedstoneMachine extends InventoryBlock
     }
 
     @Override
-    public void getSubBlocks (Item b, CreativeTabs tab, List list)
+    public void getSubBlocks (Item id, CreativeTabs tab, List list)
     {
         for (int iter = 0; iter < 4; iter++)
         {
-            list.add(new ItemStack(b, 1, iter));
+            list.add(new ItemStack(id, 1, iter));
         }
     }
 
     /* Redstone */
-    public void onNeighborBlockChange (World world, int x, int y, int z, int neighborBlockID)
+    @Override
+    public void onNeighborBlockChange (World world, int x, int y, int z, Block neighborBlockID)
     {
         IActiveLogic logic = (IActiveLogic) world.getTileEntity(x, y, z);
         IFacingLogic facing = (IFacingLogic) logic;
         int direction = facing.getRenderDirection();
         boolean active = false;
-        CoordTuple coord;
         for (int i = 0; i < 6; i++)
         {
             if (direction == i)
                 continue;
 
-            CoordTuple coord2 = directions.get(i);
-            if (this.getIndirectPowerLevelTo(world, x + coord2.x, y + coord2.y, z + coord2.z, i) > 0 || activeRedstone(world, coord2.x, y + coord2.y, z + coord2.z))
+            CoordTuple coord = directions.get(i);
+            if (this.getIndirectPowerLevelTo(world, x + coord.x, y + coord.y, z + coord.z, i) > 0 || activeRedstone(world, coord.x, y + coord.y, z + coord.z))
             {
                 active = true;
                 break;
@@ -356,7 +356,7 @@ public class RedstoneMachine extends InventoryBlock
             dropDrawbridgeLogic(world, x, y, z, stack);
         }
 
-        return WorldHelper.setBlockToAirBool(world, x, y, z);
+        return world.setBlockToAir(x, y, z);
     }
 
     private ItemStack getDrawbridgeBlock (World world, int x, int y, int z, int meta)
@@ -436,12 +436,24 @@ public class RedstoneMachine extends InventoryBlock
     {
         Item id = getItem(world, x, y, z);
 
+        if (id == null)
+        {
+            return null;
+        }
+
         int meta = getDamageValue(world, x, y, z);
         if (meta != 1 && meta < 4)
         {
             return getDrawbridgeBlock(world, x, y, z, meta);
         }
         return new ItemStack(id, 1, meta);
+    }
+
+    @Override
+    public void harvestBlock (World world, EntityPlayer player, int x, int y, int z, int meta)
+    {
+        if (meta == 1 || meta >= 4)
+            super.harvestBlock(world, player, x, y, z, meta);
     }
 
     @Override
@@ -483,6 +495,7 @@ public class RedstoneMachine extends InventoryBlock
                     {
                         ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
                         logic.setInventorySlotContents(i - 1, contents);
+                        logic.setBufferSlotContents(i - 1, contents);
                     }
                 }
 
@@ -499,13 +512,6 @@ public class RedstoneMachine extends InventoryBlock
                 }
             }
         }
-    }
-
-    @Override
-    public void harvestBlock (World world, EntityPlayer player, int x, int y, int z, int meta)
-    {
-        if (meta != 0)
-            super.harvestBlock(world, player, x, y, z, meta);
     }
 
     /* Redstone connections */
@@ -525,25 +531,5 @@ public class RedstoneMachine extends InventoryBlock
         directions.add(new CoordTuple(0, 0, 1));
         directions.add(new CoordTuple(-1, 0, 0));
         directions.add(new CoordTuple(1, 0, 0));
-    }
-
-    @Override
-    public TileEntity createNewTileEntity (World var1, int metadata)
-    {
-        switch (metadata)
-        {
-        case 0:
-            return new DrawbridgeLogic();
-        case 1:
-            return new FirestarterLogic();
-        case 2:
-            return new AdvancedDrawbridgeLogic();
-        case 3:
-            DrawbridgeLogic logic = new DrawbridgeLogic();
-            logic.setMaximumExtension((byte) 64);
-            return logic;
-        default:
-            return null;
-        }
     }
 }

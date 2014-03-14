@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mantle.blocks.BlockUtils;
+import com.mojang.authlib.GameProfile;
+
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
-import mantle.common.ComparisonHelper;
-import mantle.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,8 +33,6 @@ import tmechworks.inventory.DrawbridgeContainer;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 import tmechworks.lib.player.FakePlayerLogic;
-
-import com.mojang.authlib.GameProfile;
 
 public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
@@ -59,7 +57,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         this.worldObj = par1World;
         if (!worldObj.isRemote)
-            fakePlayer = new FakePlayerLogic((WorldServer) worldObj, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic) this);
+            fakePlayer = new FakePlayerLogic((WorldServer) worldObj, new GameProfile(null, "Player.Drawbridge"), this);
     }
 
     @Override
@@ -309,26 +307,26 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                         }
 
                         Block block = worldObj.getBlock(xPos, yPos, zPos);
-                        if (block == null || WorldHelper.isAirBlock(worldObj, xPos, yPos, zPos) || block.canPlaceBlockAt(worldObj, xPos, yPos, zPos))
+                        if (block == null || block.isAir(worldObj, xPos, yPos, zPos) || block.canPlaceBlockAt(worldObj, xPos, yPos, zPos))
                         {
                             //tryExtend(worldObj, xPos, yPos, zPos, direction);
-                            Item blockToItem = TMechworksRegistry.blockToItemMapping.get(BlockUtils.getBlockFromItemStack(bufferStack));
-                            if (blockToItem == null)
+                            Item blockToItem = TMechworksRegistry.blockToItemMapping.get(Item.getIdFromItem(bufferStack.getItem()));
+                            if (blockToItem == Item.getItemFromBlock(Blocks.air))
                             {
-                                if (BlockUtils.getBlockFromItem(inventory[0].getItem()) == null)
+                                if (Block.getBlockFromItem(inventory[0].getItem()) == null)
                                     return;
-                                Block placeBlock = BlockUtils.getBlockFromItem(bufferStack.getItem());
+                                Block placeBlock = Block.getBlockFromItem(bufferStack.getItem());
                                 placeBlockAt(bufferStack, fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
                             }
                             else
                             {
-                                Block placeBlock = BlockUtils.getBlockFromItem(blockToItem);
+                                Block placeBlock = Block.getBlockFromItem(blockToItem);
                                 placeBlockAt(bufferStack, fakePlayer, worldObj, xPos, yPos, zPos, direction, 0, 0, 0, bufferStack.getItemDamage(), placeBlock);
                             }
                             worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
 
                             List pushedObjects = new ArrayList();
-                            AxisAlignedBB axisalignedbb = BlockUtils.getBlockFromItemStack(bufferStack).getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
+                            AxisAlignedBB axisalignedbb = Block.getBlockFromItem(bufferStack.getItem()).getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
 
                             if (axisalignedbb != null)
                             {
@@ -347,7 +345,6 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                                     pushedObjects.clear();
                                 }
                             }
-
                             decrStackSize(0, 1);
                         }
                         else
@@ -400,7 +397,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             if (bufferStack != null && validBlock(block) && validMetadata(block, meta) && validDrawbridge(xPos, yPos, zPos))
                             {
                                 worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.in", 0.25F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
-                                if (WorldHelper.setBlockToAirBool(worldObj, xPos, yPos, zPos))
+                                if (worldObj.setBlock(xPos, yPos, zPos, Blocks.air))
                                     if (inventory[0] == null)
                                     {
                                         inventory[0] = bufferStack.copy();
@@ -462,18 +459,24 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     boolean validBlock (Block block)
     {
+        Block type = TMechworksRegistry.interchangableBlockMapping.get(new ItemStack(block).getItem());
+        if (type != Blocks.air)
+        {
+            if (type == Block.getBlockFromItem(bufferStack.getItem()))
+                return true;
+        }
         Item blockToItem = TMechworksRegistry.blockToItemMapping.get(new ItemStack(block).getItem());
-        if (blockToItem != null)
+        if (blockToItem != Item.getItemFromBlock(Blocks.air))
         {
             if (blockToItem == bufferStack.getItem())
                 return true;
         }
-        return ComparisonHelper.areEquivalent(bufferStack.getItem(), block);
+        return new ItemStack(block).getItem() == bufferStack.getItem();
     }
 
     boolean validMetadata (Block block, int metadata)
     {
-        int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
+        /**int type = TMechworksRegistry.drawbridgeState.get(block).getTypeID();
         if (type == 0)
         {
             return metadata == bufferStack.getItemDamage();
@@ -497,8 +500,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         if (type == 5)
         {
             return metadata == bufferStack.getItemDamage();
-        }
-        return false;
+        }*/
+        return true;
     }
 
     @Override
@@ -590,26 +593,16 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     @Override
     public String getInventoryName ()
     {
-        return getDefaultName();
-    }
-
-    @Override
-    public boolean hasCustomInventoryName ()
-    {
-        return true;
-    }
-
-    @Override
-    public void closeInventory ()
-    {
-        // TODO Auto-generated method stub
-
+        return null;
     }
 
     @Override
     public void openInventory ()
     {
-        // TODO Auto-generated method stub
+    }
 
+    @Override
+    public void closeInventory ()
+    {
     }
 }

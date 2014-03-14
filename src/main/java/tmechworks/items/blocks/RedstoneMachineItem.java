@@ -8,7 +8,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 
 public class RedstoneMachineItem extends ItemBlock
 {
@@ -48,8 +47,8 @@ public class RedstoneMachineItem extends ItemBlock
                         ItemStack contents = ItemStack.loadItemStackFromNBT(contentTags);
                         if (contents != null)
                         {
-                            list.add(StatCollector.translateToLocal("tooltip.drawbridge.inventory") + "\u00a7f" + contents.getDisplayName());
-                            list.add(StatCollector.translateToLocal("tooltip.drawbridge.amount") + "\u00a7f" + contents.stackSize);
+                            list.add("Inventory: \u00a7f" + contents.getDisplayName());
+                            list.add("Amount: \u00a7f" + contents.stackSize);
                         }
                     }
                 }
@@ -61,7 +60,7 @@ public class RedstoneMachineItem extends ItemBlock
                         ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
                         if (contents != null)
                         {
-                            list.add(StatCollector.translateToLocal("tooltip.drawbridge.slot") + i + ": \u00a7f" + contents.getDisplayName());
+                            list.add("Slot " + i + ": \u00a7f" + contents.getDisplayName());
                         }
                     }
                 }
@@ -72,32 +71,32 @@ public class RedstoneMachineItem extends ItemBlock
                     ItemStack camo = ItemStack.loadItemStackFromNBT(camoTag);
                     if (camo != null)
                     {
-                        list.add("\u00a72" + StatCollector.translateToLocal("tooltip.drawbridge.camoflauge") + "\u00a7f" + camo.getDisplayName());
+                        list.add("\u00a72Camoflauge: \u00a7f" + camo.getDisplayName());
                     }
                 }
 
                 if (stack.getTagCompound().hasKey("Placement"))
                 {
                     String string = getDirectionString(stack.getTagCompound().getByte("Placement"));
-                    list.add(StatCollector.translateToLocal("tooltip.drawbridge.direction") + string);
+                    list.add("Placement Direction: " + string);
                 }
             }
         }
         else if (meta != 1)
         {
-            list.add(StatCollector.translateToLocal("tooltip.drawbridge.default"));
+            list.add("Stores its inventory when harvested");
         }
     }
 
     String getDirectionString (byte key)
     {
         if (key == 0)
-            return (StatCollector.translateToLocal("tooltip.drawbridge.direction.up"));
+            return ("Up");
         if (key == 1)
-            return (StatCollector.translateToLocal("tooltip.drawbridge.direction.right"));
+            return ("Right");
         if (key == 2)
-            return (StatCollector.translateToLocal("tooltip.drawbridge.direction.down"));
+            return ("Down");
 
-        return StatCollector.translateToLocal("tooltip.drawbridge.direction.left");
+        return "Left";
     }
 }

@@ -89,7 +89,7 @@ public class MachineRender implements ISimpleBlockRenderingHandler
     }
 
     @Override
-    public boolean shouldRender3DInInventory (int modelID)
+    public boolean shouldRender3DInInventory (int modelId)
     {
         return true;
     }
