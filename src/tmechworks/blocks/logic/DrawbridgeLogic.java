@@ -325,7 +325,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             AxisAlignedBB axisalignedbb;
                             if(b1!= null)
                             axisalignedbb = b1.getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
-
+                            else
+                            axisalignedbb = Block.blocksList[1].getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
                             if (axisalignedbb != null)
                             {
                                 List list = worldObj.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
