@@ -17,6 +17,7 @@ import tmechworks.blocks.SignalTerminal;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.blocks.logic.DrawbridgeLogic;
 import tmechworks.blocks.logic.DynamoLogic;
+import tmechworks.blocks.logic.FilterLogic;
 import tmechworks.blocks.logic.FineFilter;
 import tmechworks.blocks.logic.FirestarterLogic;
 import tmechworks.blocks.logic.MeshFilter;
@@ -119,6 +120,7 @@ public class MechContent
         filter.setSubFilter(fineFilter, 4);
         
 		GameRegistry.registerBlock(filter, ItemBlockWithMetadata.class, "MeshFilter");
+		GameRegistry.registerTileEntity(FilterLogic.class, "MeshFilter");
         
 
 	}

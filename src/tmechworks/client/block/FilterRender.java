@@ -90,8 +90,8 @@ public class FilterRender implements ISimpleBlockRenderingHandler
             if(fb.getMeshIcon(metadata) != null)
             {
             	renderer.setOverrideBlockTexture(fb.getMeshIcon(metadata));
-	            renderer.setRenderBounds(sideWidth, bottom+(thickness/2.0D), sideWidth,
-	            		1.0D-sideWidth, bottom+((thickness/2.0D)+0.02F), 1.0D-sideWidth);
+	            renderer.setRenderBounds(sideWidth, bottom+(thickness/6.0D), sideWidth,
+	            		1.0D-sideWidth, top - (thickness/6.0D), 1.0D-sideWidth);
 	            renderer.renderStandardBlock(block, x, y, z);
             	renderer.clearOverrideBlockTexture();
             }

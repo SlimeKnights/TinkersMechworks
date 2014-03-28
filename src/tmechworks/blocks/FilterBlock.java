@@ -2,7 +2,7 @@ package tmechworks.blocks;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,18 +10,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.FakePlayer;
+import tmechworks.blocks.logic.FilterLogic;
 import tmechworks.blocks.logic.SubFilter;
 import tmechworks.client.block.FilterRender;
 import tmechworks.lib.TMechworksRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class FilterBlock extends Block
+public class FilterBlock extends BlockContainer
 {
 	//For rendering and collision
 	public static final double thickness = 0.1875D;
@@ -93,7 +95,12 @@ public class FilterBlock extends Block
 	public int getSubFilter(IBlockAccess world, int x, int y, int z)
 	{
 		//Extract out lowest 3 bits, ignoring 4th (the 8 bit).
-		return world.getBlockMetadata(x, y, z) & 7;
+		return getSubFilter(world.getBlockMetadata(x, y, z));
+	}
+	public int getSubFilter(int metadata)
+	{
+		//Extract out lowest 3 bits, ignoring 4th (the 8 bit).
+		return metadata & 7;
 	}
 	public boolean isTop(IBlockAccess world, int x, int y, int z)
 	{
@@ -377,7 +384,7 @@ public class FilterBlock extends Block
     	}
     	return false;
     }
-
+/*
 	@Override
 	public boolean canCollideCheck(int metadata, boolean boats)
 	{
@@ -430,5 +437,11 @@ public class FilterBlock extends Block
 				}
 			}
 		}
+	}*/
+
+	@Override
+	public TileEntity createNewTileEntity(World world) {
+		// TODO Optimize away the Tile Entity through a ticking standard block utility or through Forge events.
+		return new FilterLogic();
 	}
 }
