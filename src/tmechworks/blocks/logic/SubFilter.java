@@ -16,8 +16,10 @@ public abstract class SubFilter
 	public void setMeshIconName(String m) {
 		meshIcon = m;
 	}
-	
+
 	public abstract boolean canPass(Entity entity);
+	public abstract boolean canPass(ItemStack itemStack);
+	
 	public ItemStack getAssociatedItem() {
 		return associatedItem;
 	}

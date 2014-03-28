@@ -12,8 +12,9 @@ public class FineFilter extends MeshFilter {
 	public ArrayList<Item> whitelist = new ArrayList<Item>();
 	
 	public ArrayList<String> searchTerms = new ArrayList<String>(8);
+	
 	@Override
-	protected boolean checkItem(ItemStack itemStack)
+	public boolean canPass(ItemStack itemStack)
 	{
 		Item item = itemStack.getItem();
 		if(blacklist.contains(item))

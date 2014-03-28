@@ -90,10 +90,31 @@ public class MechContent
 		
 		//Inventory management
 		filter = (FilterBlock)new FilterBlock(ConfigCore.blockID_filter).setUnlocalizedName("tmechworks.meshFilter").setTextureName("minecraft:planks_oak");
+		//A technical filter.
+		SubFilter nilFilter = new SubFilter() {
+			public boolean canPass(Entity entity)
+			{
+				return ((entity instanceof EntityItem) || (entity instanceof EntityXPOrb));
+			}
+
+			@Override
+			public boolean canPass(ItemStack itemStack)
+			{
+				return true;
+			}
+		};
+		filter.subFilters[0] = nilFilter;
 		//Lets through any item or XP orb, but not other entities.
 		SubFilter wideFilter = new SubFilter() {
-			public boolean canPass(Entity entity) {
+			public boolean canPass(Entity entity)
+			{
 				return ((entity instanceof EntityItem) || (entity instanceof EntityXPOrb));
+			}
+
+			@Override
+			public boolean canPass(ItemStack itemStack)
+			{
+				return true;
 			}
 		};
 		wideFilter.setMeshIconName("tmechworks:filters/widefilter");

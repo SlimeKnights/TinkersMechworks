@@ -11,7 +11,7 @@ import net.minecraft.item.ItemTool;
 public class MeshFilter extends SlatFilter {
 	
 	@Override
-	protected boolean checkItem(ItemStack itemStack)
+	public boolean canPass(ItemStack itemStack)
 	{
 		Item item = itemStack.getItem();
 		if((((item instanceof ItemTool)
@@ -21,6 +21,6 @@ public class MeshFilter extends SlatFilter {
 		{
 				return false;
 		}
-		return super.checkItem(itemStack);
+		return super.canPass(itemStack);
 	}
 }

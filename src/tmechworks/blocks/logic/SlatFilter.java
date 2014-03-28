@@ -20,12 +20,13 @@ public class SlatFilter extends SubFilter
 		else if(entity instanceof EntityItem)
 		{
 			EntityItem check = (EntityItem)entity;
-			return checkItem(check.getEntityItem());
+			return canPass(check.getEntityItem());
 		}
 		return false;
 	}
-	
-	protected boolean checkItem(ItemStack itemStack) {
+
+	@Override
+	public boolean canPass(ItemStack itemStack) {
 		if(itemStack.getItem() instanceof ItemBlock)
 		{
 			return false;

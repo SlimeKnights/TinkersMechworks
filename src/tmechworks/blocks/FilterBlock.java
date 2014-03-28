@@ -20,6 +20,7 @@ import tmechworks.blocks.logic.FilterLogic;
 import tmechworks.blocks.logic.SubFilter;
 import tmechworks.client.block.FilterRender;
 import tmechworks.lib.TMechworksRegistry;
+import tmechworks.lib.util.CoordTuple;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -28,7 +29,7 @@ public class FilterBlock extends BlockContainer
 	//For rendering and collision
 	public static final double thickness = 0.1875D;
     //Width of the frame pieces.
-    public static final double sideWidth = 0.1D;
+    public static final double sideWidth = 0.2D;
 	//Mapping of metadata to filter logic
 	public SubFilter[] subFilters = new SubFilter[8];
 	protected Icon[] subMeshIcons = new Icon[8];
@@ -39,30 +40,34 @@ public class FilterBlock extends BlockContainer
         this.setCreativeTab(TMechworksRegistry.Mechworks);
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, (float)thickness, 1.0F);
     }
-	
+
+	@Override
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+	@Override
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
     //Seems to be used in pathfinding.
-    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
+	@Override
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int x, int y, int z) {
         return true;
     }
 
     /**
      * The type of render function that is called for this block
      */
+	@Override
     public int getRenderType()
     {
         return FilterRender.renderID;
     }
-    
+
     public Icon getMeshIcon(int metadata)
     {
     	if(subMeshIcons[metadata&7] != null) {
@@ -80,7 +85,10 @@ public class FilterBlock extends BlockContainer
 		{
 			if(subFilters[i] != null)
 			{
-				subMeshIcons[i] = iconRegister.registerIcon(subFilters[i].getMeshIconName());
+				if(subFilters[i].getMeshIconName() != null)
+				{
+					subMeshIcons[i] = iconRegister.registerIcon(subFilters[i].getMeshIconName());
+				}
 			}
 		}
 	}
@@ -92,27 +100,29 @@ public class FilterBlock extends BlockContainer
 			subFilters[i] = setTo;
 		}
 	}
-	public int getSubFilter(IBlockAccess world, int x, int y, int z)
+	
+	public int getSubFilter(IBlockAccess world, CoordTuple position)
 	{
 		//Extract out lowest 3 bits, ignoring 4th (the 8 bit).
-		return getSubFilter(world.getBlockMetadata(x, y, z));
+		return getSubFilter(world.getBlockMetadata(position.x, position.y, position.z));
 	}
 	public int getSubFilter(int metadata)
 	{
 		//Extract out lowest 3 bits, ignoring 4th (the 8 bit).
 		return metadata & 7;
 	}
-	public boolean isTop(IBlockAccess world, int x, int y, int z)
+	public boolean isTop(IBlockAccess world, CoordTuple position)
 	{
 		//Check highest-order metadata bit.
-		return (world.getBlockMetadata(x, y, z) & 8) != 0;
+		return (world.getBlockMetadata(position.x, position.y, position.z) & 8) != 0;
 	}
 	/**
 	 * Updates the blocks bounds based on its current state. Args: world, x, y, z
 	 */
+	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		if (isTop(world, x, y, z))
+		if (isTop(world, new CoordTuple(x, y, z)))
 		{
 			this.setBlockBounds(0.0F, 1.0F-(float)thickness, 0.0F, 1.0F, 1.0F, 1.0F);
 		}
@@ -125,6 +135,7 @@ public class FilterBlock extends BlockContainer
 	/**
 	 * Sets the block's bounds for rendering it as an item
 	 */
+	@Override
 	public void setBlockBoundsForItemRender()
 	{
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, (float)thickness, 1.0F);
@@ -139,79 +150,46 @@ public class FilterBlock extends BlockContainer
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB region, List result, Entity entity)
 	{
-		/*
-		AxisAlignedBB broadphase = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 1, z + 1);
-		if (broadphase != null && broadphase.intersectsWith(region)) {
-			//Check to make sure that we're not above a solid cube.
-			boolean passable = false;
-			if(Block.blocksList[world.getBlockId(x, y-1, z)] == null)
-			{
-				passable = true;
-			}
-			else if(!Block.isNormalCube(world.getBlockId(x, y-1, z)))
-			{
-				passable = true;
-			}
-			
-			if(passable){
-				//Does this filter allow the entity in question to pass? If so, return without adding anything to the list.
-				if(subFilters[getSubFilter(world, x, y, z)] != null)
-				{
-					if(subFilters[getSubFilter(world, x, y, z)].canPass(entity))
-					{
-						//Prevent strange bugs. Vertical movement is the only movement through a filter.
-						entity.motionX = 0.0F;
-						entity.motionZ = 0.0F;
-						return;
-					}
-				}
-				//Does this metadata correspond to a filter? If no, it's empty and entities can pass through the middle.
-				if(subFilters[getSubFilter(world, x, y, z)] == null)
-				{
-					this.addCollisionEmpty(world, x, y, z, region, result, entity);
-					return;
-				}
-			}
-		}*/
+		/*CoordTuple position = new CoordTuple(x, y, z);
 		//Does this metadata correspond to a filter? If no, it's empty and entities can pass through the middle.
-		if(subFilters[getSubFilter(world, x, y, z)] == null)
+		if((subFilters[getSubFilter(world, position)] == null) || (getSubFilter(world, position) == 0))
 		{
-			this.addCollisionEmpty(world, x, y, z, region, result, entity);
+			this.addCollisionEmpty(world, position, region, result, entity);
 			return;
-		}
+		}*/
 		this.setBlockBoundsBasedOnState(world, x, y, z);
 		super.addCollisionBoxesToList(world, x, y, z, region, result, entity);
 	}
 
-	//To save my poor copy+paste fingers.
+	//To save my poor copy+paste fingers. Cannot be refactored to use Coord Tuples because this really does need to use doubles
 	private final AxisAlignedBB getOffsetAABB(double x, double y, double z, double x1, double y1, double z1, double x2, double y2, double z2)
 	{
 		return AxisAlignedBB.getAABBPool().getAABB(x+x1, y+y1, z+z1, x+x2, y+y2, z+z2);
 	}
 	//Do the empty frame collision thing.
-	private final void addCollisionEmpty(World world, int x, int y, int z, AxisAlignedBB region, List result, Entity entity)
+	private final void addCollisionEmpty(World world, CoordTuple position, AxisAlignedBB region, List result, Entity entity)
 	{
     	double bottom = 0.0D;
         double top = thickness;
-        if(isTop(world, x, y, z)) {
+        if(isTop(world, position)) {
         	bottom = 1.0D-thickness;
         	top = 1.0D;
         }
     	//Long sides.
 		AxisAlignedBB[] sides = new AxisAlignedBB[4];
-		sides[0] = getOffsetAABB(x, y, z,
+		sides[0] = getOffsetAABB(position.x, position.y, position.z,
         		0.0, bottom, 0.0, 
         		sideWidth, top, 1.0D);
         
-		sides[1] = getOffsetAABB(x, y, z,
+		sides[1] = getOffsetAABB(position.x, position.y, position.z,
         		1.0D-sideWidth, bottom, 0.0, 
         		1.0D, top, 1.0D);
     	//Short sides.
-		sides[2] = getOffsetAABB(x, y, z,
+		sides[2] = getOffsetAABB(position.x, position.y, position.z,
         		sideWidth, bottom, 0.0, 
         		1.0D-sideWidth, top, sideWidth);
         
-		sides[3] = getOffsetAABB(x, y, z,
+		sides[3] = getOffsetAABB(position.x, position.y, position.z,
         		sideWidth, bottom, 1.0D-sideWidth, 
         		1.0D-sideWidth, top, 1.0D);
 		//Check and add our sides.
@@ -223,14 +201,14 @@ public class FilterBlock extends BlockContainer
 			}
 		}
 	}
-	/**
-	 * Called when a block is placed using its ItemBlock. Args: World, X, Y, Z, side, hitX, hitY, hitZ, block metadata
-	 */
+
+	@Override
 	public int onBlockPlaced(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8, int par9)
 	{
 		return (par5 != 0 && (par5 == 1 || (double)par7 <= 0.5D) ? par9 : par9 | 8);
 	}
 
+	@Override
 	public int damageDropped(int meta)
 	{
 		//Filter out the 4th bit.
@@ -238,12 +216,7 @@ public class FilterBlock extends BlockContainer
 	}
 
 
-	/**
-	 * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
-	 * coordinates.  Args: blockAccess, x, y, z, side
-	 * 
-	 * At some point I've gotta use this with the custom renderer to do optimization things.
-	 */
+	
 	@SideOnly(Side.CLIENT)
 	public boolean filter_shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
@@ -253,14 +226,15 @@ public class FilterBlock extends BlockContainer
 		}
 		else
 		{
-			boolean flag = isTop(world, x, y, z);
+			CoordTuple position = new CoordTuple(x, y, z);
+			boolean flag = isTop(world, position);
 			if(flag && (side == 1))
 			{
-				return super.shouldSideBeRendered(world, x, y, z, side);
+				return super.shouldSideBeRendered(world, position.x, position.y, position.z, side);
 			}
 			else if(!flag && (side == 0))
 			{
-				return super.shouldSideBeRendered(world, x, y, z, side);
+				return super.shouldSideBeRendered(world, position.x, position.y, position.z, side);
 			}
 			else
 			{
@@ -280,6 +254,7 @@ public class FilterBlock extends BlockContainer
 	/**
 	 * Get the block's damage value (for use with pick block).
 	 */
+	@Override
 	public int getDamageValue(World par1World, int par2, int par3, int par4)
 	{
 		return super.getDamageValue(par1World, par2, par3, par4) & 7;
@@ -302,12 +277,14 @@ public class FilterBlock extends BlockContainer
 	}
 	
     //Right-click
+	@Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
     	if(world.isRemote)
     		return !player.isSneaking();
     	if(!player.isSneaking())
     	{
+    		CoordTuple position = new CoordTuple(x, y, z);
     		int metadata = world.getBlockMetadata(x, y, z);
     		boolean setEmpty = false;
 	    	ItemStack playerItem = player.inventory.getCurrentItem();
@@ -336,47 +313,51 @@ public class FilterBlock extends BlockContainer
 	            	//Add our different mesh types to the creative tab.
 	            	if(subFilters[i] != null)
 	            	{
-	            		//Is it the same item?
-	            		if(subFilters[i].getAssociatedItem().getItem().getUnlocalizedName().contentEquals(playerItem.getItem().getUnlocalizedName()))
+	            		if(subFilters[i].getAssociatedItem() != null)
 	            		{
-	            			//If we care about damage, check it.
-	            			if(!subFilters[i].isItemMetaSensitive() || (subFilters[i].getAssociatedItem().getItemDamage() == playerItem.getItemDamage()))
-	            			{
-	            				//A match has been found.
-	            				if(isTop(world, x, y, z))
-	            				{
-	            					world.setBlockMetadataWithNotify(x, y, z, i|8, 1|2);
-	            				}
-	            				else
-	            				{
-	            					world.setBlockMetadataWithNotify(x, y, z, i, 1|2);
-	            				}
-	            				//Remove the item from the player's inventory if the player is not in creative mode.
-	            				if(!player.capabilities.isCreativeMode)
-	            				{
-	            					--playerItem.stackSize;
-	            					if(playerItem.stackSize == 0)
-	            					{
-	            						playerItem = null;
-	            					}
-	            				}
-	            				//Make sure our new metadata is maintained. 
-	            				setEmpty = false;
-	            				//Stop looping.
-	            				break;
-	            			}
+		            		//Is it the same item?
+		            		if(subFilters[i].getAssociatedItem().getItem().getUnlocalizedName().contentEquals(playerItem.getItem().getUnlocalizedName()))
+		            		{
+		            			//If we care about damage, check it.
+		            			if(!subFilters[i].isItemMetaSensitive() || (subFilters[i].getAssociatedItem().getItemDamage() == playerItem.getItemDamage()))
+		            			{
+		            				//A match has been found.
+		            				if(isTop(world, position))
+		            				{
+		            					world.setBlockMetadataWithNotify(position.x, position.y, position.z, i|8, 1|2);
+		            				}
+		            				else
+		            				{
+		            					world.setBlockMetadataWithNotify(position.x, position.y, position.z, i, 1|2);
+		            				}
+		            				//Remove the item from the player's inventory if the player is not in creative mode.
+		            				if(!player.capabilities.isCreativeMode)
+		            				{
+		            					--playerItem.stackSize;
+		            					if(playerItem.stackSize == 0)
+		            					{
+		            						playerItem = null;
+		            					}
+		            				}
+		            				//Make sure our new metadata is maintained. 
+		            				setEmpty = false;
+		            				//Stop looping.
+		            				break;
+		            			}
+		            		}
 	            		}
 	            	}
 	            }
 	    	}
-	    	if(setEmpty == true) {
-				if(isTop(world, x, y, z))
+	    	if(setEmpty == true)
+	    	{
+				if(isTop(world, position))
 				{
-					world.setBlockMetadataWithNotify(x, y, z, 8, 1|2);
+					world.setBlockMetadataWithNotify(position.x, position.y, position.z, 8, 1|2);
 				}
 				else
 				{
-					world.setBlockMetadataWithNotify(x, y, z, 0, 1|2);
+					world.setBlockMetadataWithNotify(position.x, position.y, position.z, 0, 1|2);
 				}
 	    	}
 	    	//If we're not sneaking, the right-click is intercepted, always.
@@ -384,61 +365,7 @@ public class FilterBlock extends BlockContainer
     	}
     	return false;
     }
-/*
-	@Override
-	public boolean canCollideCheck(int metadata, boolean boats)
-	{
-		// TODO Auto-generated method stub
-		return (metadata != 0) && (metadata != 8);
-	}
-
-	@Override
-	public boolean isCollidable()
-	{
-		// TODO Auto-generated method stub
-		return true;
-	}
 	
-	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z,
-			Entity entity)
-	{
-		// TODO Auto-generated method stub
-		super.onEntityCollidedWithBlock(world, x, y, z, entity);
-		onFallenUpon(world, x, y, z, entity, 0.0F);
-	}
-
-	@Override
-	public void onFallenUpon(World world, int x, int y, int z,
-			Entity entity, float par6)
-	{
-		super.onFallenUpon(world, x, y, z, entity, par6);
-		boolean passable = false;
-		if(Block.blocksList[world.getBlockId(x, y-1, z)] == null)
-		{
-			passable = true;
-		}
-		else if(!Block.isNormalCube(world.getBlockId(x, y-1, z)))
-		{
-			passable = true;
-		}
-		
-		if(passable)
-		{
-			//Does this filter allow the entity in question to pass? If so, return without adding anything to the list.
-			if(subFilters[getSubFilter(world, x, y, z)] != null)
-			{
-				if(subFilters[getSubFilter(world, x, y, z)].canPass(entity))
-				{
-					entity.motionX = 0.0F;
-					entity.motionY = 0.0F;
-					//Move our item past the filter.
-					entity.setPosition(entity.posX, entity.posY-(entity.height + thickness*2), entity.posZ);
-				}
-			}
-		}
-	}*/
-
 	@Override
 	public TileEntity createNewTileEntity(World world) {
 		// TODO Optimize away the Tile Entity through a ticking standard block utility or through Forge events.

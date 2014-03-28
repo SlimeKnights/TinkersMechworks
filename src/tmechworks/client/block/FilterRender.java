@@ -8,6 +8,7 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import tmechworks.blocks.FilterBlock;
+import tmechworks.lib.util.CoordTuple;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -61,30 +62,31 @@ public class FilterRender implements ISimpleBlockRenderingHandler
 	{
         if (modelID == renderID)
         {
-        	int metadata = world.getBlockMetadata(x, y, z);
+        	CoordTuple position = new CoordTuple(x, y, z);
+        	int metadata = world.getBlockMetadata(position.x, position.y, position.z);
             FilterBlock fb = (FilterBlock)block;
         	double bottom = 0.0D;
             double top = thickness;
-            if(fb.isTop(world, x, y, z)) {
+            if(fb.isTop(world, position)) {
             	bottom = 1.0D-thickness;
             	top = 1.0D;
             }
         	//Long sides.
             renderer.setRenderBounds(0.0D, bottom, 0.0, 
             		sideWidth, top, 1.0D);
-            renderer.renderStandardBlock(block, x, y, z);
+            renderer.renderStandardBlock(block, position.x, position.y, position.z);
             
             renderer.setRenderBounds(1.0D-sideWidth,bottom, 0.0, 
             		1.0D, top, 1.0D);
-            renderer.renderStandardBlock(block, x, y, z);
+            renderer.renderStandardBlock(block, position.x, position.y, position.z);
         	//Short sides.
             renderer.setRenderBounds(sideWidth, bottom, 0.0, 
             		1.0D-sideWidth, top, sideWidth);
-            renderer.renderStandardBlock(block, x, y, z);
+            renderer.renderStandardBlock(block, position.x, position.y, position.z);
             
             renderer.setRenderBounds(sideWidth, bottom, 1.0D-sideWidth, 
             		1.0D-sideWidth, top, 1.0D);
-            renderer.renderStandardBlock(block, x, y, z);
+            renderer.renderStandardBlock(block, position.x, position.y, position.z);
             
             //Filter mesh
             if(fb.getMeshIcon(metadata) != null)
@@ -92,7 +94,7 @@ public class FilterRender implements ISimpleBlockRenderingHandler
             	renderer.setOverrideBlockTexture(fb.getMeshIcon(metadata));
 	            renderer.setRenderBounds(sideWidth, bottom+(thickness/6.0D), sideWidth,
 	            		1.0D-sideWidth, top - (thickness/6.0D), 1.0D-sideWidth);
-	            renderer.renderStandardBlock(block, x, y, z);
+	            renderer.renderStandardBlock(block, position.x, position.y, position.z);
             	renderer.clearOverrideBlockTexture();
             }
             return true;
