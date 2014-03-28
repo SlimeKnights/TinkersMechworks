@@ -1,15 +1,36 @@
 package tmechworks.common;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.client.TConstructClientRegistry;
-import tmechworks.blocks.*;
-import tmechworks.blocks.logic.*;
-import tmechworks.items.*;
-import tmechworks.items.blocks.*;
-import tmechworks.lib.*;
+import tmechworks.blocks.DynamoBlock;
+import tmechworks.blocks.FilterBlock;
+import tmechworks.blocks.RedstoneMachine;
+import tmechworks.blocks.SignalBus;
+import tmechworks.blocks.SignalTerminal;
+import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
+import tmechworks.blocks.logic.DrawbridgeLogic;
+import tmechworks.blocks.logic.DynamoLogic;
+import tmechworks.blocks.logic.FineFilter;
+import tmechworks.blocks.logic.FirestarterLogic;
+import tmechworks.blocks.logic.MeshFilter;
+import tmechworks.blocks.logic.SignalBusLogic;
+import tmechworks.blocks.logic.SignalTerminalLogic;
+import tmechworks.blocks.logic.SlatFilter;
+import tmechworks.blocks.logic.SubFilter;
+import tmechworks.items.LengthWire;
+import tmechworks.items.SpoolOfWire;
+import tmechworks.items.blocks.RedstoneMachineItem;
+import tmechworks.items.blocks.SignalBusItem;
+import tmechworks.items.blocks.SignalTerminalItem;
+import tmechworks.lib.ConfigCore;
+import tmechworks.lib.TMechworksRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MechContent
@@ -65,6 +86,40 @@ public class MechContent
 		signalTerminal = new SignalTerminal(ConfigCore.blockID_signalTerminal).setUnlocalizedName("tmechworks.signalterminal");
 		GameRegistry.registerBlock(signalTerminal, SignalTerminalItem.class, "SignalTerminal");
 		GameRegistry.registerTileEntity(SignalTerminalLogic.class, "SignalTerminal");
+		
+		//Inventory management
+		filter = (FilterBlock)new FilterBlock(ConfigCore.blockID_filter).setUnlocalizedName("tmechworks.meshFilter").setTextureName("minecraft:planks_oak");
+		//Lets through any item or XP orb, but not other entities.
+		SubFilter wideFilter = new SubFilter() {
+			public boolean canPass(Entity entity) {
+				return ((entity instanceof EntityItem) || (entity instanceof EntityXPOrb));
+			}
+		};
+		wideFilter.setMeshIconName("tmechworks:filters/widefilter");
+		wideFilter.setAssociatedItem(new ItemStack(Item.stick, 1, 0));
+		wideFilter.setItemMetaSensitive(false);
+        filter.setSubFilter(wideFilter, 1);
+        
+        SubFilter slatFilter = new SlatFilter();
+        slatFilter.setMeshIconName("tmechworks:filters/slatfilter");
+        slatFilter.setAssociatedItem(new ItemStack(Block.trapdoor, 1, 0));
+        slatFilter.setItemMetaSensitive(true);
+        filter.setSubFilter(slatFilter, 2);
+
+        SubFilter meshFilter = new MeshFilter();
+        meshFilter.setMeshIconName("tmechworks:filters/meshfilter");
+        meshFilter.setAssociatedItem(new ItemStack(Item.silk, 1, 0));
+        meshFilter.setItemMetaSensitive(false);
+        filter.setSubFilter(meshFilter, 3);
+        
+        SubFilter fineFilter = new FineFilter();
+        fineFilter.setMeshIconName("tmechworks:filters/finefilter");
+        fineFilter.setAssociatedItem(new ItemStack(Block.cloth, 1, 0));
+        fineFilter.setItemMetaSensitive(true);
+        filter.setSubFilter(fineFilter, 4);
+        
+		GameRegistry.registerBlock(filter, ItemBlockWithMetadata.class, "MeshFilter");
+        
 
 	}
 	
@@ -97,6 +152,7 @@ public class MechContent
 	public static Block signalBus;
 	public static Block signalTerminal;
 	public static Block dynamo;
+	public static FilterBlock filter;
 	
 	// ---- PROXY ITEMS
     // --------------------------------------------------------------------------

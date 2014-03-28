@@ -40,6 +40,20 @@ public class MechRecipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.lengthWire, 8), "a", "a", "a", 'a', "ingotAluminumBrass"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.spoolWire, 1, 256 - 8), "www", "wrw", "www", 'w', MechContent.lengthWire, 'r', "stoneRod"));
         GameRegistry.addRecipe(new SpoolRepairRecipe(new ItemStack(MechContent.spoolWire, 1, 256), new ItemStack(MechContent.lengthWire, 1)));
+        
+        //Filter frame recipes 
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.filter, 1, 0), "xxx", "x x", "xxx", 'x', "stickWood"));
+        //Auto-populate crafting recipes for mesh filters.
+        for(int i = 0; i < 8; i ++)
+        {
+        	if(MechContent.filter.subFilters[i] != null) {
+            	if(MechContent.filter.subFilters[i].getAssociatedItem() != null) {
+            		//Crafting
+                    GameRegistry.addShapelessRecipe(new ItemStack(MechContent.filter, 1, i),
+                    		new ItemStack(MechContent.filter, 1, 0), MechContent.filter.subFilters[i].getAssociatedItem().copy());
+            	}
+        	}
+        }
 
     }
 }
