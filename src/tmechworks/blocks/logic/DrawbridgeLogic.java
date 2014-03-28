@@ -321,8 +321,12 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                             worldObj.playSoundEffect((double) xPos + 0.5D, (double) yPos + 0.5D, (double) zPos + 0.5D, "tile.piston.out", 0.25F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
 
                             List pushedObjects = new ArrayList();
-                            AxisAlignedBB axisalignedbb = Block.blocksList[bufferStack.itemID].getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
-
+                            Block b1 = Block.blocksList[bufferStack.itemID];
+                            AxisAlignedBB axisalignedbb;
+                            if(b1!= null)
+                            axisalignedbb = b1.getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
+                            else
+                            axisalignedbb = Block.blocksList[1].getCollisionBoundingBoxFromPool(worldObj, xPos, yPos, zPos);
                             if (axisalignedbb != null)
                             {
                                 List list = worldObj.getEntitiesWithinAABBExcludingEntity((Entity) null, axisalignedbb);
