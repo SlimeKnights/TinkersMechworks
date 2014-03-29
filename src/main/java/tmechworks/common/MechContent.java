@@ -2,23 +2,33 @@ package tmechworks.common;
 
 import mantle.lib.client.MantleClientRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
 import tmechworks.blocks.DynamoBlock;
+import tmechworks.blocks.FilterBlock;
 import tmechworks.blocks.RedstoneMachine;
 import tmechworks.blocks.SignalBus;
 import tmechworks.blocks.SignalTerminal;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.blocks.logic.DrawbridgeLogic;
 import tmechworks.blocks.logic.DynamoLogic;
+import tmechworks.blocks.logic.FilterLogic;
+import tmechworks.blocks.logic.FineFilter;
 import tmechworks.blocks.logic.FirestarterLogic;
+import tmechworks.blocks.logic.MeshFilter;
 import tmechworks.blocks.logic.SignalBusLogic;
 import tmechworks.blocks.logic.SignalTerminalLogic;
+import tmechworks.blocks.logic.SlatFilter;
+import tmechworks.blocks.logic.SubFilter;
 import tmechworks.items.LengthWire;
 import tmechworks.items.SpoolOfWire;
+import tmechworks.items.blocks.ItemBlockWithMetadata;
 import tmechworks.items.blocks.RedstoneMachineItem;
 import tmechworks.items.blocks.SignalBusItem;
 import tmechworks.items.blocks.SignalTerminalItem;
@@ -79,6 +89,68 @@ public class MechContent
         GameRegistry.registerBlock(signalTerminal, SignalTerminalItem.class, "SignalTerminal");
         GameRegistry.registerTileEntity(SignalTerminalLogic.class, "SignalTerminal");
 
+        //Inventory management
+        filter = (FilterBlock) new FilterBlock().setBlockName("tmechworks.meshFilter").setBlockTextureName("tmechworks:machines/drawbridge_bottom");
+        //A technical filter.
+        SubFilter nilFilter = new SubFilter()
+        {
+            @Override
+            public boolean canPass (Entity entity)
+            {
+                return ((entity instanceof EntityItem) || (entity instanceof EntityXPOrb));
+            }
+
+            @Override
+            public boolean canPass (ItemStack itemStack)
+            {
+                return true;
+            }
+        };
+        nilFilter.setSuffix("empty");
+        filter.subFilters[0] = nilFilter;
+        //Lets through any item or XP orb, but not other entities.
+        SubFilter wideFilter = new SubFilter()
+        {
+            public boolean canPass (Entity entity)
+            {
+                return ((entity instanceof EntityItem) || (entity instanceof EntityXPOrb));
+            }
+
+            @Override
+            public boolean canPass (ItemStack itemStack)
+            {
+                return true;
+            }
+        };
+        wideFilter.setSuffix("wide");
+        wideFilter.setMeshIconName("tmechworks:filters/widefilter");
+        wideFilter.setAssociatedItem(TConstructRegistry.getItemStack("ingotBronze"));
+        wideFilter.setItemMetaSensitive(false);
+        filter.setSubFilter(wideFilter, 1);
+
+        SubFilter slatFilter = new SlatFilter();
+        slatFilter.setMeshIconName("tmechworks:filters/slatfilter");
+        slatFilter.setAssociatedItem(TConstructRegistry.getItemStack("ingotCopper"));
+        slatFilter.setItemMetaSensitive(true);
+        slatFilter.setSuffix("slat");
+        filter.setSubFilter(slatFilter, 2);
+
+        SubFilter meshFilter = new MeshFilter();
+        meshFilter.setMeshIconName("tmechworks:filters/meshfilter");
+        meshFilter.setAssociatedItem(TConstructRegistry.getItemStack("ingotAluminum"));
+        meshFilter.setItemMetaSensitive(false);
+        meshFilter.setSuffix("mesh");
+        filter.setSubFilter(meshFilter, 3);
+
+        SubFilter fineFilter = new FineFilter();
+        fineFilter.setMeshIconName("tmechworks:filters/finefilter");
+        fineFilter.setAssociatedItem(TConstructRegistry.getItemStack("ingotAlumite"));
+        fineFilter.setItemMetaSensitive(true);
+        fineFilter.setSuffix("fine");
+        filter.setSubFilter(fineFilter, 4);
+
+        GameRegistry.registerBlock(filter, ItemBlockWithMetadata.class, "MeshFilter");
+        GameRegistry.registerTileEntity(FilterLogic.class, "MeshFilter");
     }
 
     private void setupToolTabs ()
@@ -110,6 +182,7 @@ public class MechContent
     public static Block signalBus;
     public static Block signalTerminal;
     public static Block dynamo;
+    public static FilterBlock filter;
 
     // ---- PROXY ITEMS
     // --------------------------------------------------------------------------
