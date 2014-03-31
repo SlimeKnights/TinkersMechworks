@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mojang.authlib.GameProfile;
-
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
@@ -32,12 +30,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
-import tconstruct.library.TConstructRegistry;
-import tmechworks.TMechworks;
+import tmechworks.inventory.AdvancedDrawbridgeContainer;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
-import tmechworks.inventory.AdvancedDrawbridgeContainer;
 import tmechworks.lib.player.FakePlayerLogic;
+
+import com.mojang.authlib.GameProfile;
 
 public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {

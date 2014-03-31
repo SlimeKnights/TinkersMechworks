@@ -2,8 +2,7 @@ package tmechworks.blocks.logic;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
+import mantle.world.CoordTuple;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -12,12 +11,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import tmechworks.blocks.FilterBlock;
-import tmechworks.lib.util.CoordTuple;
 
 //Only implements ISidedInventory as a dummy so that the hopper logic can work properly.
 public class FilterLogic extends TileEntity implements ISidedInventory
@@ -258,28 +254,24 @@ public class FilterLogic extends TileEntity implements ISidedInventory
     @Override
     public int getSizeInventory ()
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public ItemStack getStackInSlot (int i)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public ItemStack decrStackSize (int i, int j)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public ItemStack getStackInSlotOnClosing (int i)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -327,27 +319,23 @@ public class FilterLogic extends TileEntity implements ISidedInventory
     @Override
     public void closeInventory ()
     {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public String getInventoryName ()
     {
-        // TODO Auto-generated method stub
         return "TMechworks:Filter";
     }
 
     @Override
     public boolean hasCustomInventoryName ()
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public void openInventory ()
     {
-        // TODO Auto-generated method stub
     }
 }

@@ -2,14 +2,15 @@ package tmechworks.lib;
 
 import java.util.HashMap;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import tconstruct.common.TRepo;
 import tmechworks.lib.blocks.PlacementType;
 import tmechworks.lib.util.TabTools;

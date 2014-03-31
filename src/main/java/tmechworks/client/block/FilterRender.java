@@ -30,7 +30,7 @@ public class FilterRender implements ISimpleBlockRenderingHandler
 
         renderer.setRenderBounds(1.0D - sideWidth, 0.0D, 0.0, 1.0D, thickness, 1.0D);
         this.renderStandardBlockInv(block, metadata, renderer);
-        
+
         //Short sides.
         renderer.setRenderBounds(sideWidth, 0.0D, 0.0, 1.0D - sideWidth, thickness, sideWidth);
         this.renderStandardBlockInv(block, metadata, renderer);

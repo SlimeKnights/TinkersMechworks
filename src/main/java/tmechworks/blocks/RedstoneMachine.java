@@ -3,7 +3,6 @@ package tmechworks.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import mantle.blocks.BlockUtils;
 import mantle.blocks.abstracts.InventoryBlock;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.IActiveLogic;
@@ -33,7 +32,6 @@ import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.blocks.logic.DrawbridgeLogic;
 import tmechworks.blocks.logic.FirestarterLogic;
 import tmechworks.client.block.MachineRender;
-import tmechworks.common.MechContent;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
 import cpw.mods.fml.relauncher.Side;

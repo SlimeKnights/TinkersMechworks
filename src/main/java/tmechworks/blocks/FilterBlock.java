@@ -2,10 +2,10 @@ package tmechworks.blocks;
 
 import java.util.List;
 
+import mantle.world.CoordTuple;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-//import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -15,17 +15,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
-//import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-//import net.minecraftforge.common.FakePlayer;
 import tmechworks.blocks.logic.FilterLogic;
 import tmechworks.blocks.logic.SubFilter;
 import tmechworks.client.block.FilterRender;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IBlockWithMetadata;
-import tmechworks.lib.util.CoordTuple;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -319,7 +316,7 @@ public class FilterBlock extends BlockContainer implements IBlockWithMetadata
                         if (subFilters[i].getAssociatedItem() != null)
                         {
                             //Is it the same item?
-                            if (subFilters[i].getAssociatedItem().isItemEqual(playerItem))
+                            if (subFilters[i].getAssociatedItem().getItem() != null && playerItem.getItem() != null && subFilters[i].getAssociatedItem().getItem() == playerItem.getItem())
                             {
                                 //If we care about damage, check it.
                                 //if (!subFilters[i].isItemMetaSensitive() || (subFilters[i].getAssociatedItem().getItemDamage() == playerItem.getItemDamage()))
