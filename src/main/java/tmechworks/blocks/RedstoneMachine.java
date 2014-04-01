@@ -322,7 +322,8 @@ public class RedstoneMachine extends InventoryBlock
 
     public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
     {
-        if (world.getBlock(x, y, z).isBlockNormalCube())
+        
+        if (!world.isRemote && world.getBlock(x, y, z).isBlockNormalCube())
         {
             return world.getBlockPowerInput(x, y, z);
         }
