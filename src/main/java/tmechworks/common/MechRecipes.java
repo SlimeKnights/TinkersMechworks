@@ -29,7 +29,7 @@ public class MechRecipes
                 MechContent.proxyItem_blankPattern, 1, 1), 'r', new ItemStack(Items.redstone), 'd', new ItemStack(MechContent.redstoneMachine, 1, 0)));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 2), " c ", "rdr", " a ", 'a', "ingotAluminumBrass", 'c', new ItemStack(
                 MechContent.proxyItem_blankPattern, 1, 2), 'r', new ItemStack(Items.redstone), 'd', new ItemStack(MechContent.redstoneMachine, 1, 0)));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 3), "blockCobalt", "blockArdite", new ItemStack(Blocks.redstone_block), new ItemStack(
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MechContent.redstoneMachine, 1, 3), "ingotCobalt", "ingotArdite", new ItemStack(Blocks.redstone_block), new ItemStack(
                 MechContent.redstoneMachine, 1, 0)));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.signalBus, 1, 0), "www", "sss", 'w', MechContent.lengthWire, 's', new ItemStack(Blocks.stone_slab, 1,
