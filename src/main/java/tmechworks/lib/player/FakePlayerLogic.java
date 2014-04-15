@@ -1,6 +1,6 @@
 package tmechworks.lib.player;
 
-import mantle.blocks.abstracts.InventoryLogic;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
@@ -9,16 +9,18 @@ import com.mojang.authlib.GameProfile;
 
 public class FakePlayerLogic extends FakePlayer
 {
-    InventoryLogic logic;
+    ChunkCoordinates logicPos;
 
-    public FakePlayerLogic(WorldServer world, GameProfile gm, InventoryLogic logic)
+    public FakePlayerLogic(GameProfile gm, TileEntity te)
     {
-        super(world, gm);
-        this.logic = logic;
+        super((WorldServer) te.getWorldObj(), gm);
+        logicPos = new ChunkCoordinates(te.xCoord, te.yCoord, te.zCoord);
+
     }
 
     public ChunkCoordinates getPlayerCoordinates ()
     {
-        return new ChunkCoordinates(logic.xCoord, logic.yCoord, logic.zCoord);
+        return logicPos;
     }
+
 }

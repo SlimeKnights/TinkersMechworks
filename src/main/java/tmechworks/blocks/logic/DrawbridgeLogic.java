@@ -53,12 +53,27 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     }
 
     @Override
-    public void setWorldObj (World par1World)
+    public void invalidate ()
     {
-        this.worldObj = par1World;
-        if (!worldObj.isRemote)
-            fakePlayer = new FakePlayerLogic((WorldServer) worldObj, new GameProfile(null, "Player.Drawbridge"), this);
+        this.tileEntityInvalid = true;
+        fakePlayer = null;
     }
+
+    // Super awesome hack of post initialization hashmap-adding nonsense! 
+    // Completely necessary due to the way players load chunks, including fake ones.
+    private void initFakePlayer ()
+    {
+        if (fakePlayer == null && !isInvalid())
+            fakePlayer = new FakePlayerLogic(new GameProfile(null, "Player.Drawbridge"), this);
+    }
+
+    //This gets called too early. Adding the fake player here creates multiple copies of the TileEntity and causes havoc!
+    /*@Override
+    public void validate ()
+    {
+     this.tileEntityInvalid = false;
+     fakePlayer = new FakePlayerLogic(new GameProfile(null, "Player.Drawbridge"), this);
+    }*/
 
     @Override
     public boolean getActive ()
@@ -145,6 +160,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     {
         if (!worldObj.isRemote)
         {
+            initFakePlayer();
             if (keycode == 4)
             {
                 fakePlayer.rotationYaw = 0;
@@ -266,7 +282,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     public void updateEntity ()
     {
-        if (working)
+        if (working && !isInvalid())
         {
             ticks++;
             if (ticks == 5)
@@ -310,6 +326,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                         if (block == null || block.isAir(worldObj, xPos, yPos, zPos) || block.canPlaceBlockAt(worldObj, xPos, yPos, zPos))
                         {
                             //tryExtend(worldObj, xPos, yPos, zPos, direction);
+                            initFakePlayer();
                             Item blockToItem = TMechworksRegistry.blockToItemMapping.get(Item.getIdFromItem(bufferStack.getItem()));
                             if (blockToItem == Item.getItemFromBlock(Blocks.air))
                             {
