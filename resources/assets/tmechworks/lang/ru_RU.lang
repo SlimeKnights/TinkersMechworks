@@ -4,9 +4,25 @@ tile.signalbus.name=Сигнальная шина
 tile.signalterminal.name=Сигнальный терминал
 
 item.spoolwire.name=Проводная катушка
-item.lengthwire.name=Length of Wire
+item.lengthwire.name=Длина провода
 
 block.drawbridge.name=Разводной мост
 block.firestarter.name=Воспламенитель
 block.advdrawbridge.name=Продвинутый разводной мост
 block.extdrawbridge.name=Расширенный разводной мост
+
+tooltip.spoolofwire=Wirey!
+tooltip.drawbridge.inventory=Инвентарь: 
+tooltip.drawbridge.amount=Количество: 
+tooltip.drawbridge.slot=Слот
+tooltip.drawbridge.camoflauge=Камуфляж: 
+tooltip.drawbridge.direction=Направление размещения: 
+tooltip.drawbridge.default=Сохраняет свой инвентарь, когда собирает
+tooltip.drawbridge.direction.up=Вверх
+tooltip.drawbridge.direction.down=Вниз
+tooltip.drawbridge.direction.left=Влево
+tooltip.drawbridge.direction.right=Вправо
+
+container.advdrawbridge=Продвинутый разводной мост
+container.inv=Инв.
+container.drawbridge=Разводной мост
