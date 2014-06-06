@@ -247,7 +247,7 @@ public class FilterLogic extends TileEntity implements ISidedInventory
 
     protected static List getEntitiesIn (World world, int x, int y, int z)
     {
-        return world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D), IEntitySelector.selectAnything);
+        return world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D), IEntitySelector.selectAnything);
     }
 
     //Functions to make this a dummy inventory.
