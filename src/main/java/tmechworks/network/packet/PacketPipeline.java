@@ -24,6 +24,8 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mantle.common.network.AbstractPacket;
+
 
 /**
  * Packet pipeline class. Directs all registered packet data to be handled by the packets themselves.

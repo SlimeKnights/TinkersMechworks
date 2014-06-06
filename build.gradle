@@ -21,22 +21,26 @@ buildscript {
 
 	}
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
 repositories {
+  maven {
+        name 'CB Maven FS'
+        url "http://chickenbones.net/maven/"
+    }
 	maven {
-       name 'DVS1 Maven FS'
-          url 'http://dvs1.progwml6.com/files/maven'
-	}
+         name "ProfMobius Maven FS"
+         url "http://mobiusstrip.eu/maven"
+     }
+    maven {
+        name 'DVS1 Maven FS'
+        url 'http://dvs1.progwml6.com/files/maven'
+    }
 	maven {
           name 'ForgeFS'
           url 'http://files.minecraftforge.net/maven'
-     }
-     maven {
-          name 'MinecraftS3'
-          url 'http://s3.amazonaws.com/Minecraft.Download/libraries'
      }
 }
 
@@ -68,7 +72,7 @@ if (configFile2.exists()){
 }
 dependencies {
     compile "mantle:Mantle:${config.minecraft_version}-${config.mantle_version}:deobf"
-	 compile "tconstruct:TConstruct:${config.minecraft_version}-${config.tconstruct_version}:deobf"
+	compile "tconstruct:TConstruct:${config.minecraft_version}-${config.tconstruct_version}:deobf"
 }
 
 // sets version to the slimeKnights default version format

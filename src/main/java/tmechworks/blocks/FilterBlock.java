@@ -172,7 +172,8 @@ public class FilterBlock extends BlockContainer implements IBlockWithMetadata
     //To save my poor copy+paste fingers. Cannot be refactored to use Coord Tuples because this really does need to use doubles
     private final AxisAlignedBB getOffsetAABB (double x, double y, double z, double x1, double y1, double z1, double x2, double y2, double z2)
     {
-        return AxisAlignedBB.getAABBPool().getAABB(x + x1, y + y1, z + z1, x + x2, y + y2, z + z2);
+
+        return AxisAlignedBB.getBoundingBox(x + x1, y + y1, z + z1, x + x2, y + y2, z + z2);
     }
 
     //Do the empty frame collision thing.
