@@ -10,27 +10,28 @@ import net.minecraft.item.ItemStack;
 public class SlatFilter extends SubFilter
 {
 
-	@Override
-	public boolean canPass(Entity entity)
-	{
-		if(entity instanceof EntityXPOrb)
-		{
-			return true;
-		}
-		else if(entity instanceof EntityItem)
-		{
-			EntityItem check = (EntityItem)entity;
-			return canPass(check.getEntityItem());
-		}
-		return false;
-	}
+    @Override
+    public boolean canPass (Entity entity)
+    {
+        if (entity instanceof EntityXPOrb)
+        {
+            return true;
+        }
+        else if (entity instanceof EntityItem)
+        {
+            EntityItem check = (EntityItem) entity;
+            return canPass(check.getEntityItem());
+        }
+        return false;
+    }
 
-	@Override
-	public boolean canPass(ItemStack itemStack) {
-		if(itemStack.getItem() instanceof ItemBlock)
-		{
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean canPass (ItemStack itemStack)
+    {
+        if (itemStack.getItem() instanceof ItemBlock)
+        {
+            return false;
+        }
+        return true;
+    }
 }

@@ -132,7 +132,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         {
             return;
         }
-        
+
         if (forceCheck)
         {
             int connectableCount = this.getNeighboringMembers().length;
@@ -141,7 +141,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
             {
                 cachedConnectableCount = connectableCount;
                 super.onBlockAdded(worldObj, xCoord, yCoord, zCoord);
-//                this.getMultiblockMaster().revisitBlocks();
+                //                this.getMultiblockMaster().revisitBlocks();
             }
         }
 
@@ -273,10 +273,10 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
                 transceivers.put(coords, signals);
                 northboundSignalsChanged = true;
-                
+
                 if (getMultiblockMaster() instanceof MultiblockMasterBaseLogic)
                 {
-                    updateLocalSignals(((SignalBusMasterLogic)getMultiblockMaster()).getSignals());
+                    updateLocalSignals(((SignalBusMasterLogic) getMultiblockMaster()).getSignals());
                 }
                 ((ISignalTransceiver) te).receiveSignalUpdate(cachedReceivedSignals);
                 return true;
@@ -301,8 +301,8 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         if (transceivers != null || !transceivers.isEmpty())
         {
             northboundSignalsChanged = true;
-            
-            updateLocalSignals(((SignalBusMasterLogic)getMultiblockMaster()).getSignals());
+
+            updateLocalSignals(((SignalBusMasterLogic) getMultiblockMaster()).getSignals());
         }
     }
 
@@ -540,14 +540,14 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         int i, j;
         ForgeDirection iDir, jDir;
         TileEntity te;
-        
+
         for (i = 0; i < 6; ++i)
         {
             iDir = ForgeDirection.VALID_DIRECTIONS[i];
             if (!placedSides[i])
             {
                 continue;
-            } 
+            }
 
             for (j = 0; j < 6; ++j)
             {
@@ -559,7 +559,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 if (xCoord + jDir.offsetX == coord.x && yCoord + jDir.offsetY == coord.y && zCoord + jDir.offsetZ == coord.z)
                 {
                     te = worldObj.getBlockTileEntity(xCoord + jDir.offsetX, yCoord + jDir.offsetY, zCoord + jDir.offsetZ);
-                    if (te instanceof ISignalBusConnectable && ((ISignalBusConnectable)te).connectableOnFace(iDir))
+                    if (te instanceof ISignalBusConnectable && ((ISignalBusConnectable) te).connectableOnFace(iDir))
                     {
                         return true;
                     }
@@ -571,7 +571,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 if (xCoord + iDir.offsetX + jDir.offsetX == coord.x && yCoord + iDir.offsetY + jDir.offsetY == coord.y && zCoord + iDir.offsetZ + jDir.offsetZ == coord.z)
                 {
                     te = worldObj.getBlockTileEntity(xCoord + iDir.offsetX + jDir.offsetX, yCoord + iDir.offsetY + jDir.offsetY, zCoord + iDir.offsetZ + jDir.offsetZ);
-                    if (te instanceof ISignalBusConnectable && ((ISignalBusConnectable)te).connectableOnCorner(iDir.getOpposite(), jDir.getOpposite()))
+                    if (te instanceof ISignalBusConnectable && ((ISignalBusConnectable) te).connectableOnCorner(iDir.getOpposite(), jDir.getOpposite()))
                     {
                         return true;
                     }
@@ -630,7 +630,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 ++calc;
             }
         }
-        
+
         return calc;
     }
 
@@ -646,10 +646,10 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 calc += ((ISignalTransceiver) te).getDroppedWire();
             }
         }
-        
+
         return calc;
     }
-    
+
     public void notifyBreak ()
     {
         CoordTuple[] scan = new CoordTuple[transceivers.keySet().size()];
@@ -704,7 +704,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
                 ++dropCount;
             }
         }
-        
+
         return dropCount;
     }
 

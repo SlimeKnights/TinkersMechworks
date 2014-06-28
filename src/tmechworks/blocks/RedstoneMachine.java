@@ -349,8 +349,8 @@ public class RedstoneMachine extends InventoryBlock
 
         return world.setBlockToAir(x, y, z);
     }
-    
-    private ItemStack getDrawbridgeBlock(World world, int x, int y, int z, int meta)
+
+    private ItemStack getDrawbridgeBlock (World world, int x, int y, int z, int meta)
     {
         ItemStack stack = new ItemStack(this.blockID, 1, meta);
         InventoryLogic logic = (InventoryLogic) world.getBlockTileEntity(x, y, z);
@@ -377,7 +377,7 @@ public class RedstoneMachine extends InventoryBlock
             camo = advDrawbridge.camoInventory.getCamoStack();
             for (int i = 1; i <= 16; i++)
             {
-                ItemStack slot = logic.getStackInSlot(i-1);
+                ItemStack slot = logic.getStackInSlot(i - 1);
                 if (slot != null)
                 {
                     NBTTagCompound contentTag = new NBTTagCompound();
@@ -404,7 +404,7 @@ public class RedstoneMachine extends InventoryBlock
         }
         if (hasTag == true)
             stack.setTagCompound(tag);
-        
+
         return stack;
     }
 
@@ -421,7 +421,7 @@ public class RedstoneMachine extends InventoryBlock
             world.spawnEntityInWorld(entityitem);
         }
     }
-    
+
     @Override
     public ItemStack getPickBlock (MovingObjectPosition target, World world, int x, int y, int z)
     {
@@ -487,12 +487,12 @@ public class RedstoneMachine extends InventoryBlock
                 AdvancedDrawbridgeLogic logic = (AdvancedDrawbridgeLogic) world.getBlockTileEntity(x, y, z);
                 for (int i = 1; i <= 16; i++)
                 {
-                    NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Slot"+i);
+                    NBTTagCompound contentTag = stack.getTagCompound().getCompoundTag("Slot" + i);
                     if (contentTag != null)
                     {
                         ItemStack contents = ItemStack.loadItemStackFromNBT(contentTag);
-                        logic.setInventorySlotContents(i-1, contents);
-                        logic.setBufferSlotContents(i-1, contents);
+                        logic.setInventorySlotContents(i - 1, contents);
+                        logic.setBufferSlotContents(i - 1, contents);
                     }
                 }
 

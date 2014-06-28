@@ -10,3 +10,5 @@ block.drawbridge.name=Drawbridge
 block.firestarter.name=Igniter
 block.advdrawbridge.name=Advanced Drawbridge
 block.extdrawbridge.name=Extended Drawbridge
+
+tile.tmechworks.meshFilter.name=Filter
