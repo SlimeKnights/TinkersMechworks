@@ -77,7 +77,6 @@ dependencies {
 
 // sets version to the slimeKnights default version format
 task buildInfo {
-	/*
     def cmd = "git rev-parse --short HEAD"
     def proc = cmd.execute()
     proc.waitFor()
@@ -92,9 +91,6 @@ task buildInfo {
     } else {
         ext.buildNum = "DEV"
     }
-	*/
-	ext.revision = "GITBORK"
-	ext.buildNum = "DEV"
 }
 ext.artifact_version = 'NFG'
 if (System.getenv().ARTIFACT_VERSION == null && artifact_version_override == 'NotUsed') {
