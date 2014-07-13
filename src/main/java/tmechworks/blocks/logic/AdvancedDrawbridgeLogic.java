@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mojang.authlib.GameProfile;
-
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
@@ -30,14 +28,13 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
-import tconstruct.library.TConstructRegistry;
-import tmechworks.TMechworks;
+import tmechworks.inventory.AdvancedDrawbridgeContainer;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
-import tmechworks.inventory.AdvancedDrawbridgeContainer;
 import tmechworks.lib.player.FakePlayerLogic;
+
+import com.mojang.authlib.GameProfile;
 
 public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLogic, IActiveLogic, IDrawbridgeLogicBase
 {
@@ -63,9 +60,23 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     public void setWorldObj (World par1World)
     {
         this.worldObj = par1World;
-        if (!par1World.isRemote)
-            fakePlayer = new FakePlayerLogic((WorldServer) worldObj, new GameProfile(null, "Player.Drawbridge"), (InventoryLogic) this);
     }
+
+    // Super awesome hack of post initialization hashmap-adding nonsense! 
+    // Completely necessary due to the way players load chunks, including fake ones.
+    private void initFakePlayer ()
+    {
+        if (fakePlayer == null && !isInvalid())
+            fakePlayer = new FakePlayerLogic(new GameProfile(null, "Player.Drawbridge"), this);
+    }
+
+    //This gets called too early. Adding the fake player here creates multiple copies of the TileEntity and causes havoc!
+    /*@Override
+    public void validate ()
+    {
+        this.tileEntityInvalid = false;
+        fakePlayer = new FakePlayerLogic("Player.Drawbridge", this);
+    }*/
 
     @Override
     public boolean getActive ()
@@ -144,6 +155,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     {
         if (!worldObj.isRemote)
         {
+            initFakePlayer();
             if (keycode == 4)
             {
                 fakePlayer.rotationYaw = 0;
@@ -284,7 +296,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     public void updateEntity ()
     {
-        if (working)
+        if (working && !isInvalid())
         {
             ticks++;
             if (ticks == 5)
@@ -325,6 +337,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                         if (block == null || block.isAir(worldObj, xPos, yPos, zPos) || block.canPlaceBlockAt(worldObj, xPos, yPos, zPos))
                         {
                             // tryExtend(worldObj, xPos, yPos, zPos, direction);
+                            initFakePlayer();
                             Item blockToItem = getStackInBufferSlot(extension - 1) != null && getStackInBufferSlot(extension - 1).getItem() != null ? TMechworksRegistry.blockToItemMapping.get(Block
                                     .getBlockFromItem(getStackInBufferSlot(extension - 1).getItem())) : Items.stick;
                             if (blockToItem == Item.getItemFromBlock(Blocks.air))

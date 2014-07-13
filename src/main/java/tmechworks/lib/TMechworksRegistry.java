@@ -2,15 +2,16 @@ package tmechworks.lib;
 
 import java.util.HashMap;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import tconstruct.common.TRepo;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import tconstruct.world.TinkerWorld;
 import tmechworks.lib.blocks.PlacementType;
 import tmechworks.lib.util.TabTools;
 
@@ -223,8 +224,8 @@ public class TMechworksRegistry
         interchangableBlockMapping.put(Blocks.grass, Blocks.dirt);
 
         //TCON STUFFS
-        drawbridgeState.put(new ItemStack(TRepo.slimePad), PlacementType.metaIgnore);
-        drawbridgeState.put(new ItemStack(TRepo.bloodChannel), PlacementType.metaIgnore);
+        drawbridgeState.put(new ItemStack(TinkerWorld.slimePad), PlacementType.metaIgnore);
+        drawbridgeState.put(new ItemStack(TinkerWorld.bloodChannel), PlacementType.metaIgnore);
 
     }
 

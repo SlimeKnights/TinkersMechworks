@@ -2,6 +2,12 @@ itemGroup.TMechworks=TMechworks
 
 tile.signalbus.name=Signal Bus
 tile.signalterminal.name=Signal Terminal
+tile.tmechworks.dynamo.name=Dynamo
+tile.tmechworks.meshFilter.empty.name=Empty Mesh Filter
+tile.tmechworks.meshFilter.wide.name=Wide Mesh Filter
+tile.tmechworks.meshFilter.slat.name=Slat Mesh Filter
+tile.tmechworks.meshFilter.mesh.name=Mesh Filter
+tile.tmechworks.meshFilter.fine.name=Fine Mesh Filter
 
 item.spoolwire.name=Spool of Wire
 item.lengthwire.name=Length of Wire
