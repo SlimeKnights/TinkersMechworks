@@ -1,15 +1,21 @@
 itemGroup.TMechworks=TMechworks
 
-tile.signalbus.name=Bus per Segnale
-tile.signalterminal.name=Terminale per Segnale
+tile.signalbus.name=Bus per segnale
+tile.signalterminal.name=Terminale per segnale
+tile.tmechworks.dynamo.name=Dinamo
+tile.tmechworks.meshFilter.empty.name=Filtro a rete vuoto
+tile.tmechworks.meshFilter.wide.name=Filtro a rete vuoto grande
+tile.tmechworks.meshFilter.slat.name=Filtro a rete vuoto steccato
+tile.tmechworks.meshFilter.mesh.name=Filtro a rete vuoto
+tile.tmechworks.meshFilter.fine.name=Filtro a rete vuoto fine
 
-item.spoolwire.name=Rotolo di Cavi
+item.spoolwire.name=Rotolo di cavi
 item.lengthwire.name=Cavo
 
-block.drawbridge.name=Ponte Mobile
+block.drawbridge.name=Ponte mobile
 block.firestarter.name=Accendino
-block.advdrawbridge.name=Ponte Mobile Avanzato
-block.extdrawbridge.name=Ponte Mobile Esteso
+block.advdrawbridge.name=Ponte mobile avanzato
+block.extdrawbridge.name=Ponte mobile esteso
 
 tooltip.spoolofwire=Cavi!
 tooltip.drawbridge.inventory=Inventario: 
@@ -23,6 +29,6 @@ tooltip.drawbridge.direction.down=Giù
 tooltip.drawbridge.direction.left=Sinistra
 tooltip.drawbridge.direction.right=Destra
 
-container.advdrawbridge=Ponte Mobile Avanzato
+container.advdrawbridge=Ponte mobile avanzato
 container.inv=Inv
-container.drawbridge=Ponte Mobile
+container.drawbridge=Ponte mobile
