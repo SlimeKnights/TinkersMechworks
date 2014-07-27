@@ -2,6 +2,7 @@ package tmechworks.blocks.logic;
 
 import java.util.ArrayList;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -40,9 +41,9 @@ public class FineFilter extends MeshFilter
         super();
         searchTerms.add("dust");
         searchTerms.add("powder");
-        //whitelist.add(Item.glowstone);
-        //whitelist.add(Item.redstone);
-        //whitelist.add(Item.gunpowder);
-        //whitelist.add(Item.itemsList[Block.sand.blockID]);
+        whitelist.add(Items.glowstone_dust);
+        whitelist.add(Items.redstone);
+        whitelist.add(Items.gunpowder);
+        //whitelist.add(Items.sand);
     }
 }
