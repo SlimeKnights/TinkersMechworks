@@ -3,13 +3,15 @@ package tmechworks.blocks;
 import java.util.List;
 
 import mantle.world.CoordTuple;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -18,7 +20,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-import tmechworks.blocks.logic.FilterLogic;
+//import tmechworks.blocks.logic.FilterLogic;
 import tmechworks.blocks.logic.SubFilter;
 import tmechworks.client.block.FilterRender;
 import tmechworks.lib.TMechworksRegistry;
@@ -26,7 +28,7 @@ import tmechworks.lib.blocks.IBlockWithMetadata;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class FilterBlock extends BlockContainer implements IBlockWithMetadata
+public class FilterBlock extends Block implements IBlockWithMetadata
 {
     //For rendering and collision
     public static final double thickness = 0.1875D;
@@ -35,6 +37,12 @@ public class FilterBlock extends BlockContainer implements IBlockWithMetadata
     //Mapping of metadata to filter logic
     public SubFilter[] subFilters = new SubFilter[8];
     protected IIcon[] subMeshIcons = new IIcon[8];
+
+    protected static int ticksPerUpdate = 10;
+
+
+    //How far below the top of the block is our collision box?
+    public static final double hackHeight = 0.05D;
 
     public FilterBlock()
     {
@@ -126,13 +134,13 @@ public class FilterBlock extends BlockContainer implements IBlockWithMetadata
 
     /**
      * Updates the blocks bounds based on its current state. Args: world, x, y, z
-     */
-    @Override
+     */    @Override
     public void setBlockBoundsBasedOnState (IBlockAccess world, int x, int y, int z)
     {
         if (isTop(world, new CoordTuple(x, y, z)))
         {
-            this.setBlockBounds(0.0F, 1.0F - (float) thickness, 0.0F, 1.0F, 1.0F, 1.0F);
+            //Here is where hackHeight comes into play.
+            this.setBlockBounds(0.0F, 1.0F - (float) thickness, 0.0F, 1.0F, 1.0F - (float) hackHeight, 1.0F);
         }
         else
         {
@@ -152,19 +160,10 @@ public class FilterBlock extends BlockContainer implements IBlockWithMetadata
     /**
      * Adds all intersecting collision boxes to a list. (Be sure to only add boxes to the list if they intersect the
      * mask.) Parameters: World, X, Y, Z, mask, list, colliding entity
-     * 
-     * Filter logic goes here.
      */
     @Override
     public void addCollisionBoxesToList (World world, int x, int y, int z, AxisAlignedBB region, List result, Entity entity)
     {
-        /*CoordTuple position = new CoordTuple(x, y, z);
-        //Does this metadata correspond to a filter? If no, it's empty and entities can pass through the middle.
-        if((subFilters[getSubFilter(world, position)] == null) || (getSubFilter(world, position) == 0))
-        {
-        	this.addCollisionEmpty(world, position, region, result, entity);
-        	return;
-        }*/
         this.setBlockBoundsBasedOnState(world, x, y, z);
         super.addCollisionBoxesToList(world, x, y, z, region, result, entity);
     }
@@ -172,38 +171,7 @@ public class FilterBlock extends BlockContainer implements IBlockWithMetadata
     //To save my poor copy+paste fingers. Cannot be refactored to use Coord Tuples because this really does need to use doubles
     private final AxisAlignedBB getOffsetAABB (double x, double y, double z, double x1, double y1, double z1, double x2, double y2, double z2)
     {
-
         return AxisAlignedBB.getBoundingBox(x + x1, y + y1, z + z1, x + x2, y + y2, z + z2);
-    }
-
-    //Do the empty frame collision thing.
-    private final void addCollisionEmpty (World world, CoordTuple position, AxisAlignedBB region, List result, Entity entity)
-    {
-        double bottom = 0.0D;
-        double top = thickness;
-        if (isTop(world, position))
-        {
-            bottom = 1.0D - thickness;
-            top = 1.0D;
-        }
-        //Long sides.
-        AxisAlignedBB[] sides = new AxisAlignedBB[4];
-        sides[0] = getOffsetAABB(position.x, position.y, position.z, 0.0, bottom, 0.0, sideWidth, top, 1.0D);
-
-        sides[1] = getOffsetAABB(position.x, position.y, position.z, 1.0D - sideWidth, bottom, 0.0, 1.0D, top, 1.0D);
-
-        //Short sides.
-        sides[2] = getOffsetAABB(position.x, position.y, position.z, sideWidth, bottom, 0.0, 1.0D - sideWidth, top, sideWidth);
-
-        sides[3] = getOffsetAABB(position.x, position.y, position.z, sideWidth, bottom, 1.0D - sideWidth, 1.0D - sideWidth, top, 1.0D);
-        //Check and add our sides.
-        for (int i = 0; i < 4; i++)
-        {
-            if (sides[i] != null && sides[i].intersectsWith(region))
-            {
-                result.add(sides[i]);
-            }
-        }
     }
 
     @Override
@@ -367,12 +335,13 @@ public class FilterBlock extends BlockContainer implements IBlockWithMetadata
         return false;
     }
 
-    @Override
-    public TileEntity createNewTileEntity (World world, int metadata)
-    {
-        // TODO Optimize away the Tile Entity through a ticking standard block utility or through Forge events.
-        return new FilterLogic();
-    }
+    //@Override
+    //public TileEntity createNewTileEntity (World world, int metadata)
+    //{
+        // DONE Optimize away the Tile Entity through a ticking standard block utility or through Forge events.
+        // Although I used neither of those things - just a surprisingly effective hack on onEntityCollidedWithBlock().
+    //    return new FilterLogic();
+    //}
 
     @Override
     public String getUnlocalizedNameByMetadata (int damageValue)
@@ -388,5 +357,235 @@ public class FilterBlock extends BlockContainer implements IBlockWithMetadata
     public int getItemCount ()
     {
         return 8;
+    }
+
+
+
+    //We have an entity. Try to do the logic.
+    @Override
+    public void onEntityCollidedWithBlock (World world, int x, int y, int z, Entity par5Entity)
+    {
+        super.onEntityCollidedWithBlock(world, x, y, z, par5Entity);
+        doFilterLogic(world, new CoordTuple(x, y, z));
+    }
+
+    //What to do when an item is detected.
+    public void doFilterLogic (World worldObj, CoordTuple position)
+    {
+        if ((worldObj.getTotalWorldTime() % ticksPerUpdate) == 0)
+        {
+            int metadata = worldObj.getBlockMetadata(position.x, position.y, position.z);
+            boolean passable = false;
+            if ((worldObj.getBlock(position.x, position.y, position.z)) == null)
+            {
+                passable = true;
+            }
+            else if (!worldObj.getBlock(position.x, position.y - 1, position.z).isNormalCube())
+            {
+                passable = true;
+            }
+
+            IInventory inv = getInventoryAtLocation(worldObj, position);
+            if (inv != null)
+            {
+                //Logic for if an inventory is below us.
+                if (!this.isTop(worldObj, position))
+                {
+                    List list = getEntitiesIn(worldObj, position);
+                    for (Object item : list)
+                    {
+                        if (item instanceof EntityItem)
+                        {
+                            EntityItem entity = (EntityItem) item;
+                            //Does this filter allow the entity in question to pass? If so, return without adding anything to the list.
+                            if (this.subFilters[this.getSubFilter(metadata)] != null)
+                            {
+                                if (this.subFilters[this.getSubFilter(metadata)].canPass(entity))
+                                {
+                                    if (!worldObj.isRemote)
+                                    {
+                                        //Move our item past the filter.
+                                        insertStackFromEntity(inv, entity);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            inv = getInventoryAtLocation(worldObj, position);
+            if (inv != null)
+            {
+                //Logic for if an inventory is above us.
+                if (this.isTop(worldObj, position))
+                {
+
+                    for (int i = 0; i < inv.getSizeInventory(); ++i)
+                    {
+                        //Make sure it's a valid item and a valid filter.
+                        ItemStack itemStack = inv.getStackInSlot(i);
+                        if ((itemStack != null) && (this.subFilters[this.getSubFilter(metadata)] != null))
+                        {
+                            //Check to see if the item can pass the filter.
+                            if (this.subFilters[this.getSubFilter(metadata)].canPass(itemStack))
+                            {
+                                if (!worldObj.isRemote)
+                                {
+                                    //Remove the item and drop it as an EntityItem.
+                                    ItemStack resultStack = inv.decrStackSize(i, itemStack.stackSize);
+                                    EntityItem entityItem = new EntityItem(worldObj, position.x + 0.5D, position.y + (0.5D - this.thickness), position.z + 0.5D);
+                                    entityItem.setEntityItemStack(resultStack);
+                                    worldObj.spawnEntityInWorld(entityItem);
+                                    entityItem.motionX = 0.0D;
+                                    entityItem.motionY = -entityItem.motionY;
+                                    entityItem.motionZ = 0.0D;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (passable)
+            {
+                List list = null;
+                if (this.isTop(worldObj, position))
+                {
+                    list = getEntitiesIn(worldObj, position.x, position.y + 1, position.z);
+                }
+                else
+                {
+                    list = getEntitiesIn(worldObj, position);
+                }
+                if (list != null)
+                {
+                    for (Object item : list)
+                    {
+                        if (item instanceof Entity)
+                        {
+                            Entity entity = (Entity) item;
+                            //Does this filter allow the entity in question to pass? If so, return without adding anything to the list.
+                            if (this.subFilters[this.getSubFilter(metadata)] != null)
+                            {
+                                if (this.subFilters[this.getSubFilter(metadata)].canPass(entity))
+                                {
+                                    entity.motionX = 0.0F;
+                                    entity.motionZ = 0.0F;
+                                    //Move our item past the filter.
+                                    //
+                                    if (this.isTop(worldObj, position))
+                                    {
+                                        entity.setPosition(entity.posX, position.y + (0.5D - this.thickness), entity.posZ);
+                                    }
+                                    else
+                                    {
+                                        entity.setPosition(entity.posX, position.y - (entity.height + 0.1D), entity.posZ);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static List getEntitiesIn (World world, CoordTuple pos)
+    {
+        return getEntitiesIn(world, pos.x, pos.y, pos.z);
+    }
+
+    protected static List getEntitiesIn (World world, int x, int y, int z)
+    {
+        return world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D), IEntitySelector.selectAnything);
+    }
+    public static IInventory getInventoryAtLocation (World world, CoordTuple position)
+    {
+        TileEntity tileentity = world.getTileEntity(position.x, position.y, position.z);
+
+        if (tileentity != null && tileentity instanceof IInventory)
+        {
+            return (IInventory) tileentity;
+        }
+
+        return null;
+    }
+
+    public static boolean insertStackFromEntity (IInventory inv, EntityItem entity)
+    {
+        boolean flag = false;
+
+        if (entity != null)
+        {
+            ItemStack itemstack = entity.getEntityItem().copy();
+            ItemStack itemstack1 = insertStack(inv, itemstack);
+
+            if (itemstack1 != null && itemstack1.stackSize != 0)
+            {
+                entity.setEntityItemStack(itemstack1);
+            }
+            else
+            {
+                flag = true;
+                entity.setDead();
+            }
+        }
+        return flag;
+    }
+
+    public static ItemStack insertStack (IInventory inv, ItemStack itemStack)
+    {
+        for (int i = 0; i < inv.getSizeInventory(); ++i)
+        {
+            ItemStack slotStack = inv.getStackInSlot(i);
+            int remainingSpace = inv.getInventoryStackLimit();
+            if (slotStack != null)
+            {
+                remainingSpace -= slotStack.stackSize;
+            }
+            if (remainingSpace >= itemStack.stackSize)
+            {
+                if (slotStack != null)
+                {
+                    //Inserting our whole stack of the same type of item
+                    if (slotStack.isItemEqual(itemStack))
+                    {
+                        slotStack.stackSize += itemStack.stackSize;
+                        inv.setInventorySlotContents(i, slotStack);
+                        return null;
+                    }
+                }
+                else
+                {
+                    //whole stack into empty slot
+                    if (inv.isItemValidForSlot(i, itemStack))
+                    {
+                        inv.setInventorySlotContents(i, itemStack);
+                        return null;
+                    }
+                }
+            }
+            else
+            {
+                if (slotStack != null)
+                {
+                    //Part of stack into slot with same item.
+                    if (slotStack.isItemEqual(itemStack))
+                    {
+                        slotStack.stackSize += remainingSpace;
+                        itemStack.stackSize -= remainingSpace;
+                        inv.setInventorySlotContents(i, slotStack);
+                    }
+                }
+                else
+                {
+                    //Part of stack into empty slot.
+                    if (inv.isItemValidForSlot(i, itemStack))
+                    {
+                        inv.setInventorySlotContents(i, itemStack.splitStack(remainingSpace));
+                    }
+                }
+            }
+        }
+        return itemStack;
     }
 }

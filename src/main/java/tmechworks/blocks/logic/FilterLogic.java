@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import tmechworks.blocks.FilterBlock;
-
+/*---------------- DEPRECATED, KEPT FOR REFERENCE ----------------*/
 //Only implements ISidedInventory as a dummy so that the hopper logic can work properly.
 public class FilterLogic extends TileEntity implements ISidedInventory
 {

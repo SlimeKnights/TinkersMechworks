@@ -150,7 +150,7 @@ public class MechContent
         filter.setSubFilter(fineFilter, 4);
 
         GameRegistry.registerBlock(filter, ItemBlockWithMetadata.class, "MeshFilter");
-        GameRegistry.registerTileEntity(FilterLogic.class, "MeshFilter");
+        //GameRegistry.registerTileEntity(FilterLogic.class, "MeshFilter"); //No longer necessary.
     }
 
     private void setupToolTabs ()
