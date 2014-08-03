@@ -2,9 +2,15 @@ itemGroup.TMechworks=TMechworks
 
 tile.signalbus.name=Сигнальная шина
 tile.signalterminal.name=Сигнальный терминал
+tile.tmechworks.dynamo.name=Двигатель
+tile.tmechworks.meshFilter.empty.name=Пустая фильтровальная сетка
+tile.tmechworks.meshFilter.wide.name=Широкая фильтровальная сетка
+tile.tmechworks.meshFilter.slat.name=Slat Mesh Filter
+tile.tmechworks.meshFilter.mesh.name=фильтровальная сетка
+tile.tmechworks.meshFilter.fine.name=Тонкая фильтровальная сетка
 
 item.spoolwire.name=Проводная катушка
-item.lengthwire.name=Длина провода
+item.lengthwire.name=Провод
 
 block.drawbridge.name=Разводной мост
 block.firestarter.name=Воспламенитель
@@ -24,5 +30,5 @@ tooltip.drawbridge.direction.left=Влево
 tooltip.drawbridge.direction.right=Вправо
 
 container.advdrawbridge=Продвинутый разводной мост
-container.inv=Инв.
+container.inv=Inv
 container.drawbridge=Разводной мост
