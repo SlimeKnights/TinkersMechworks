@@ -282,7 +282,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
 
     public void updateEntity ()
     {
-        if (working && !isInvalid())
+        if (working && !isInvalid() && !worldObj.isRemote)
         {
             ticks++;
             if (ticks == 5)
