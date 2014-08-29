@@ -527,9 +527,18 @@ public class SignalBus extends Block implements ITileEntityProvider
     public boolean canPlaceBlockOnSide (World par1World, int par2, int par3, int par4, int par5)
     {
         ForgeDirection dir = ForgeDirection.getOrientation(par5);
-        return (dir == DOWN && par1World.isSideSolid(par2, par3 + 1, par4, DOWN)) || (dir == UP && par1World.isSideSolid(par2, par3 - 1, par4, UP))
-                || (dir == NORTH && par1World.isSideSolid(par2, par3, par4 + 1, NORTH)) || (dir == SOUTH && par1World.isSideSolid(par2, par3, par4 - 1, SOUTH))
-                || (dir == WEST && par1World.isSideSolid(par2 + 1, par3, par4, WEST)) || (dir == EAST && par1World.isSideSolid(par2 - 1, par3, par4, EAST));
+        
+        boolean solid = (dir == DOWN  && par1World.isSideSolid(par2, par3 + 1, par4, DOWN))  || 
+        				(dir == UP    && par1World.isSideSolid(par2, par3 - 1, par4, UP))    ||
+        				(dir == NORTH && par1World.isSideSolid(par2, par3, par4 + 1, NORTH)) ||
+        				(dir == SOUTH && par1World.isSideSolid(par2, par3, par4 - 1, SOUTH)) ||
+        				(dir == WEST  && par1World.isSideSolid(par2 + 1, par3, par4, WEST))  ||
+        				(dir == EAST  && par1World.isSideSolid(par2 - 1, par3, par4, EAST));
+        
+        return solid;
+        //return (dir == DOWN && par1World.isSideSolid(par2, par3 + 1, par4, DOWN)) || (dir == UP && par1World.isSideSolid(par2, par3 - 1, par4, UP))
+        //        || (dir == NORTH && par1World.isSideSolid(par2, par3, par4 + 1, NORTH)) || (dir == SOUTH && par1World.isSideSolid(par2, par3, par4 - 1, SOUTH))
+        //        || (dir == WEST && par1World.isSideSolid(par2 + 1, par3, par4, WEST)) || (dir == EAST && par1World.isSideSolid(par2 - 1, par3, par4, EAST));
     }
 
     /**

@@ -11,6 +11,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tmechworks.TMechworks;
+import tmechworks.blocks.SignalBus;
 import tmechworks.blocks.logic.SignalBusLogic;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -43,7 +44,14 @@ public class SignalBusItem extends ItemBlock
     @SideOnly(Side.CLIENT)
     public boolean func_150936_a (World world, int x, int y, int z, int side, EntityPlayer entityPlayer, ItemStack itemStack)
     {
-        return super.func_150936_a(world, x, y, z, side, entityPlayer, itemStack) || _canPlaceItemBlockOnSide(world, x, y, z, side);
+
+        if (super.func_150936_a(world, x, y, z, side, entityPlayer, itemStack) || _canPlaceItemBlockOnSide(world, x, y, z, side))
+        {
+            return true;
+        }
+
+        return false;
+        //return super.func_150936_a(world, x, y, z, side, entityPlayer, itemStack) || _canPlaceItemBlockOnSide(world, x, y, z, side);
     }
 
     @Override
@@ -130,7 +138,7 @@ public class SignalBusItem extends ItemBlock
         {
             side = 1;
         }
-        else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && (block == null || block.canPlaceBlockAt(world, x, y, z)))
+        else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, z))
         {
             if (side == 0)
             {

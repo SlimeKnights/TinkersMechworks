@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import tmechworks.lib.multiblock.MultiblockServerTickHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler
@@ -38,7 +39,7 @@ public class CommonProxy implements IGuiHandler
 
     public void registerTickHandler ()
     {
-        new MultiblockServerTickHandler();
+        FMLCommonHandler.instance().bus().register(new MultiblockServerTickHandler());
     }
 
     public void registerRenderer ()
