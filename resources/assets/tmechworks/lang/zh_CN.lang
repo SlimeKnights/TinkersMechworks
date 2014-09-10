@@ -2,6 +2,12 @@ itemGroup.TMechworks=匠魂|机关
 
 tile.signalbus.name=信号总线
 tile.signalterminal.name=信号终端
+tile.tmechworks.dynamo.name=发电机
+tile.tmechworks.meshFilter.empty.name=无网滤清器
+tile.tmechworks.meshFilter.wide.name=宽松滤清器
+tile.tmechworks.meshFilter.slat.name=条形滤清器
+tile.tmechworks.meshFilter.mesh.name=网式滤清器
+tile.tmechworks.meshFilter.fine.name=精细网式滤清器
 
 item.spoolwire.name=线轴
 item.lengthwire.name=长线
@@ -9,7 +15,7 @@ item.lengthwire.name=长线
 block.drawbridge.name=造桥器
 block.firestarter.name=点火器
 block.advdrawbridge.name=高级造桥器
-block.extdrawbridge.name=拓展造桥器
+block.extdrawbridge.name=增强造桥器
 
 tooltip.spoolofwire=有线!
 tooltip.drawbridge.inventory=物品栏: 
@@ -17,7 +23,7 @@ tooltip.drawbridge.amount=总数:
 tooltip.drawbridge.slot=槽 
 tooltip.drawbridge.camoflauge=伪装: 
 tooltip.drawbridge.direction=放置方向: 
-tooltip.drawbridge.default=收回时保存物品
+tooltip.drawbridge.default=回收时保存物品
 tooltip.drawbridge.direction.up=上
 tooltip.drawbridge.direction.down=下
 tooltip.drawbridge.direction.left=左
