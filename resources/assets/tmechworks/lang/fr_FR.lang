@@ -1,6 +1,6 @@
 itemGroup.TMechworks=TMechworks
 
-tile.signalbus.name=Bus de Signa
+tile.signalbus.name=Bus de Signal
 tile.signalterminal.name=Terminal de Signal
 tile.tmechworks.dynamo.name=Dynamo
 tile.tmechworks.meshFilter.empty.name=Empty Mesh Filter
