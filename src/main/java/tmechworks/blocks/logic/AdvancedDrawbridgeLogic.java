@@ -296,7 +296,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
 
     public void updateEntity ()
     {
-        if (working && !isInvalid())
+        if (working && !isInvalid() && !worldObj.isRemote)
         {
             ticks++;
             if (ticks == 5)
