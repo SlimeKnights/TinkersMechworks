@@ -1,20 +1,21 @@
 package tmechworks.lib;
 
 import net.minecraftforge.common.config.Configuration;
+import tmechworks.TMechworks;
 
 public class ConfigCore
 {
 
     public static void loadConfig (Configuration conf)
     {
-        Repo.logger.info("Loading configuration...");
+        TMechworks.logger.info("Loading configuration...");
         conf.load();
 
         loadItems(conf);
         loadBlocks(conf);
 
         conf.save();
-        Repo.logger.info("Done.");
+        TMechworks.logger.info("Done.");
     }
 
     private static void loadItems (Configuration conf)

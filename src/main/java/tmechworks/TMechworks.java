@@ -31,7 +31,7 @@ public class TMechworks
 {
 
     // Shared mod logger
-    public static final Logger logger = LogManager.getLogger("TMechworks");
+    public static Logger logger;
 
     /* Instance of this mod, used for grabbing prototype fields */
     @Instance("TMechworks")
@@ -50,6 +50,8 @@ public class TMechworks
     @EventHandler
     public void preInit (FMLPreInitializationEvent event)
     {
+        logger = event.getModLog();
+
         ConfigCore.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
 
         TMechworksRegistry.Mechworks = new TabTools("TMechworks");
