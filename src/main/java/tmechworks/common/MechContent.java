@@ -78,7 +78,7 @@ public class MechContent
         GameRegistry.registerTileEntity(AdvancedDrawbridgeLogic.class, "AdvDrawbridge");
 
         dynamo = new DynamoBlock().setLightLevel(1.0F).setBlockName("tmechworks.dynamo").setBlockTextureName("tinker:compressed_alubrass");
-        GameRegistry.registerBlock(dynamo, "TMechworks:Dynamo");
+        GameRegistry.registerBlock(dynamo, "Dynamo");
         GameRegistry.registerTileEntity(DynamoLogic.class, "TMechworks:Dynamo");
 
         //Signal blocks
