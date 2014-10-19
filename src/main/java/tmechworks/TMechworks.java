@@ -25,7 +25,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = "required-after:TConstruct;required-after:Mantle")
+@Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = Repo.modDeps)
 public class TMechworks
 {
 
