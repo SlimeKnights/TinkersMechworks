@@ -3,7 +3,6 @@ package tmechworks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import tmechworks.client.SignalTetherWorldOverlayRenderer;
@@ -30,22 +29,20 @@ import cpw.mods.fml.relauncher.Side;
 public class TMechworks
 {
 
-    // Shared mod logger
+    /* Shared mod logger */
     public static Logger logger;
 
+    /* Mod content holder */
+    public static MechContent content;
+
     /* Instance of this mod, used for grabbing prototype fields */
-    @Instance("TMechworks")
+    @Instance(Repo.modId)
     public static TMechworks instance;
     /* Proxies for sides, used for graphics processing */
     @SidedProxy(clientSide = "tmechworks.client.ClientProxy", serverSide = "tmechworks.common.CommonProxy")
     public static CommonProxy proxy;
 
     public static final PacketPipeline packetPipeline = new PacketPipeline();
-
-    public TMechworks()
-    {
-        //logger.setParent(FMLCommonHandler.instance().getFMLLogger());
-    }
 
     @EventHandler
     public void preInit (FMLPreInitializationEvent event)
@@ -89,5 +86,4 @@ public class TMechworks
 
     }
 
-    public static MechContent content;
 }
