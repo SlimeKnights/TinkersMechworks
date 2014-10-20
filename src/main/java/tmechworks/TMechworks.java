@@ -75,6 +75,7 @@ public class TMechworks
         {
             MinecraftForge.EVENT_BUS.register(new SignalTetherWorldOverlayRenderer());
         }
+        proxy.init();
     }
 
     @EventHandler

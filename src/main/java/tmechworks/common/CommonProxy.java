@@ -4,6 +4,8 @@ import mantle.blocks.abstracts.InventoryLogic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import tmechworks.lib.ConfigCore;
+import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.multiblock.MultiblockServerTickHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -44,6 +46,11 @@ public class CommonProxy implements IGuiHandler
 
     public void registerRenderer ()
     {
+    }
+
+    public void init ()
+    {
+        TMechworksRegistry.initDrawbridgeBlackList(ConfigCore.drawbridgeBlackList);
     }
 
     public void postInit ()

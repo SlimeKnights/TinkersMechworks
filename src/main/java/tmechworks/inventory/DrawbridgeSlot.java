@@ -4,6 +4,7 @@ import mantle.blocks.BlockUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.blocks.IDrawbridgeLogicBase;
@@ -21,6 +22,16 @@ public class DrawbridgeSlot extends SlotBlocksOnly
     @Override
     public boolean isItemValid (ItemStack par1ItemStack)
     {
+        if (par1ItemStack == null || !(par1ItemStack.getItem() instanceof ItemBlock))
+        {
+            return false;
+        }
+
+        if (TMechworksRegistry.isItemDBBlacklisted((ItemBlock) par1ItemStack.getItem()))
+        {
+            return false;
+        }
+
         if (!super.isItemValid(par1ItemStack))
         {
             if (BlockUtils.getBlockFromItem((TMechworksRegistry.blockToItemMapping.get(BlockUtils.getBlockFromItem(par1ItemStack.getItem())))) == Blocks.air)

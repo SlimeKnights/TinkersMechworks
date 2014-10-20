@@ -1,21 +1,27 @@
 package tmechworks.lib;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import tconstruct.world.TinkerWorld;
+import tmechworks.TMechworks;
 import tmechworks.lib.blocks.PlacementType;
 import tmechworks.lib.util.TabTools;
 
 import com.google.common.collect.HashBiMap;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class TMechworksRegistry
 {
@@ -39,7 +45,9 @@ public class TMechworksRegistry
     /** Blocks that are interchangable with each other. Ex: Still and flowing water */
     public static HashMap<Block, Block> interchangableBlockMapping = new HashMap<Block, Block>();
     /** Blocks that place items, and vice versa */
-    public static HashBiMap<Block, Item> blockToItemMapping = HashBiMap.create();;
+    public static HashBiMap<Block, Item> blockToItemMapping = HashBiMap.create();
+    /** Drawbridge black list */
+    private static List<ItemBlock> drawbridgeBlacklist;
 
     /*
      * Used to determine how blocks are laid out in the drawbridge 0: Metadata
@@ -227,6 +235,59 @@ public class TMechworksRegistry
         drawbridgeState.put(new ItemStack(TinkerWorld.slimePad), PlacementType.metaIgnore);
         drawbridgeState.put(new ItemStack(TinkerWorld.bloodChannel), PlacementType.metaIgnore);
 
+    }
+
+    public static void initDrawbridgeBlackList (String[] blockNameList)
+    {
+        drawbridgeBlacklist = new ArrayList<ItemBlock>();
+
+        for (String blockNameCompond : blockNameList)
+        {
+            int index = blockNameCompond.indexOf(":");
+
+            String modId;
+            String blockName;
+
+            if (index > 0)
+            {
+                modId = blockNameCompond.substring(0, index);
+            }
+            else
+            {
+                modId = "minecraft";
+            }
+
+            blockName = blockNameCompond.substring(index + 1);
+
+            Block block = GameRegistry.findBlock(modId, blockName);
+
+            Item itemBlock = Item.getItemFromBlock(block);
+
+            if (itemBlock != null && itemBlock instanceof ItemBlock)
+            {
+                drawbridgeBlacklist.add((ItemBlock) itemBlock);
+
+            }
+            else
+            {
+                TMechworks.logger.warn("Invaild block: " + blockNameCompond + ", and it will be skiped");
+            }
+        }
+    }
+
+    /**
+     * Checks if the item is blacklisted for the drawbridge.
+     * @param item ItemBlock to be checked.
+     * @return true if is black listed.
+     */
+    public static boolean isItemDBBlacklisted (ItemBlock item)
+    {
+        for (ItemBlock itemCheckAgainst : drawbridgeBlacklist)
+        {
+            if (itemCheckAgainst == item)
+                return true;
+        }
+        return false;
     }
 
     static
