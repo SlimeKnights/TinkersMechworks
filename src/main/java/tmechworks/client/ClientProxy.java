@@ -1,7 +1,9 @@
 package tmechworks.client;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.blocks.logic.DrawbridgeLogic;
 import tmechworks.blocks.logic.DynamoLogic;
@@ -12,7 +14,9 @@ import tmechworks.client.block.SignalBusRender;
 import tmechworks.client.block.SignalTerminalRender;
 import tmechworks.client.gui.AdvDrawbridgeGui;
 import tmechworks.client.gui.DrawbridgeGui;
+import tmechworks.client.item.DynamoItemRender;
 import tmechworks.common.CommonProxy;
+import tmechworks.common.MechContent;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -43,6 +47,7 @@ public class ClientProxy extends CommonProxy
         RenderingRegistry.registerBlockHandler(new FilterRender());
 
         ClientRegistry.bindTileEntitySpecialRenderer(DynamoLogic.class, new DynamoSpecialRender());
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MechContent.dynamo), new DynamoItemRender());
 
     }
 
