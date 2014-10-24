@@ -16,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tmechworks.TMechworks;
 import tmechworks.blocks.SignalTerminal;
+import tmechworks.common.MechContent;
 import tmechworks.lib.signal.ISignalTransceiver;
 
 public class SignalTerminalLogic extends TileEntity implements ISignalTransceiver
@@ -253,9 +254,8 @@ public class SignalTerminalLogic extends TileEntity implements ISignalTransceive
                         oSide = 0;
                     }
 
-                    worldObj.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal);
-                    worldObj.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, TMechworks.content.signalTerminal, oSide);
-                    //worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, TConstruct.instance.content.signalTerminal.blockID);
+                    worldObj.notifyBlockOfNeighborChange(targetX, targetY, targetZ, MechContent.signalTerminal);
+                    worldObj.notifyBlocksOfNeighborChange(targetX, targetY, targetZ, MechContent.signalTerminal, oSide);
                 }
             }
         }
