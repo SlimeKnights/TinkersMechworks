@@ -49,6 +49,7 @@ public class FilterBlock extends Block implements IBlockWithMetadata
         super(Material.iron);
         this.setCreativeTab(TMechworksRegistry.Mechworks);
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, (float) thickness, 1.0F);
+        this.setHardness(3.0F);
     }
 
     @Override
