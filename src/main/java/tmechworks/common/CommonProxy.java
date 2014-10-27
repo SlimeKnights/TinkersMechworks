@@ -4,6 +4,7 @@ import mantle.blocks.abstracts.InventoryLogic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import tconstruct.smeltery.TinkerSmeltery;
 import tmechworks.lib.ConfigCore;
 import tmechworks.lib.TMechworksRegistry;
 import tmechworks.lib.multiblock.MultiblockServerTickHandler;
@@ -51,6 +52,11 @@ public class CommonProxy implements IGuiHandler
     public void init ()
     {
         TMechworksRegistry.initDrawbridgeBlackList(ConfigCore.drawbridgeBlackList);
+        // Adds the default black list
+        TMechworksRegistry.addItemToDBBlackList(MechContent.redstoneMachine);
+
+        TMechworksRegistry.addItemToDBBlackList(TinkerSmeltery.lavaTank);
+        TMechworksRegistry.addItemToDBBlackList(TinkerSmeltery.lavaTankNether);
     }
 
     public void postInit ()
