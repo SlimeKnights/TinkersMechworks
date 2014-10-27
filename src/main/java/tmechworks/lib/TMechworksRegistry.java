@@ -290,6 +290,33 @@ public class TMechworksRegistry
         return false;
     }
 
+    /**
+     * Adds a itemBlock to the drawbridge black list.
+     * @param item ItemBlock to be blacklisted.
+     */
+    public static void addItemToDBBlackList (ItemBlock item)
+    {
+        if (item == null)
+            throw new NullPointerException("item can't be null");
+        drawbridgeBlacklist.add(item);
+    }
+    
+    /**
+     * Adds a block to the drawbridge black list.
+     * @param block Block to be blacklisted.
+     */
+    public static void addItemToDBBlackList (Block block)
+    {
+        if (block == null)
+            throw new NullPointerException("block can't be null");
+        
+        Item item = Item.getItemFromBlock(block);
+        if (!(item instanceof ItemBlock))
+            throw new RuntimeException("Block's Item isn't of type ItemBlock");
+        
+        drawbridgeBlacklist.add((ItemBlock)item);
+    }
+
     static
     {
         initializeDrawbridgeState();
