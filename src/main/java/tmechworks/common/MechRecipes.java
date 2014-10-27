@@ -4,6 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -39,6 +40,7 @@ public class MechRecipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.lengthWire, 8), "a", "a", "a", 'a', "ingotAluminumBrass"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MechContent.spoolWire, 1, 256 - 8), "www", "wrw", "www", 'w', MechContent.lengthWire, 'r', "stoneRod"));
         GameRegistry.addRecipe(new SpoolRepairRecipe(new ItemStack(MechContent.spoolWire, 1, 256), new ItemStack(MechContent.lengthWire, 1)));
+        RecipeSorter.register("TMechworks:spoolrepair", SpoolRepairRecipe.class, RecipeSorter.Category.SHAPELESS, "after:forge:shapelessore");
 
     }
 }
