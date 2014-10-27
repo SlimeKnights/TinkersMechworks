@@ -153,80 +153,86 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
      */
     public void setPlacementDirection (byte keycode)
     {
+        placementDirection = keycode;
         if (!worldObj.isRemote)
         {
             initFakePlayer();
-            if (keycode == 4)
-            {
-                fakePlayer.rotationYaw = 0;
-                fakePlayer.rotationPitch = 0;
-            }
-            else if (this.direction == 0 || this.direction == 1)
-            {
-                switch (keycode)
-                {
-                case 0:
-                    fakePlayer.rotationYaw = 0;
-                    break;
-                case 1:
-                    fakePlayer.rotationYaw = 90;
-                    break;
-                case 2:
-                    fakePlayer.rotationYaw = 180;
-                    break;
-                case 3:
-                    fakePlayer.rotationYaw = 270;
-                    break;
-                }
+            setFakePlayerRotation();
+        }
 
-                if (this.direction == 0)
-                    fakePlayer.rotationPitch = -90;
-                else
+    }
+
+    private void setFakePlayerRotation ()
+    {
+        if (placementDirection == 4)
+        {
+            fakePlayer.rotationYaw = 0;
+            fakePlayer.rotationPitch = 0;
+        }
+        else if (this.direction == 0 || this.direction == 1)
+        {
+            switch (placementDirection)
+            {
+            case 0:
+                fakePlayer.rotationYaw = 0;
+                break;
+            case 1:
+                fakePlayer.rotationYaw = 90;
+                break;
+            case 2:
+                fakePlayer.rotationYaw = 180;
+                break;
+            case 3:
+                fakePlayer.rotationYaw = 270;
+                break;
+            }
+
+            if (this.direction == 0)
+                fakePlayer.rotationPitch = -90;
+            else
+                fakePlayer.rotationPitch = 90;
+        }
+        else
+        {
+            if (placementDirection == 0) // Forward
+            {
+                fakePlayer.rotationYaw = mapDirection() * 90;
+
+                if (placementDirection == 0)
                     fakePlayer.rotationPitch = 90;
+                else
+                    fakePlayer.rotationPitch = -90;
+            }
+            else if (placementDirection == 2) // Backward
+            {
+                int face = mapDirection() + 2;
+                if (face > 3)
+                    face -= 4;
+                fakePlayer.rotationYaw = face * 90;
+
+                if (placementDirection == 0)
+                    fakePlayer.rotationPitch = 90;
+                else
+                    fakePlayer.rotationPitch = -90;
             }
             else
             {
-                if (keycode == 0) // Forward
-                {
-                    fakePlayer.rotationYaw = mapDirection() * 90;
+                fakePlayer.rotationPitch = 0;
 
-                    if (keycode == 0)
-                        fakePlayer.rotationPitch = 90;
-                    else
-                        fakePlayer.rotationPitch = -90;
-                }
-                else if (keycode == 2) // Backward
-                {
-                    int face = mapDirection() + 2;
-                    if (face > 3)
-                        face -= 4;
-                    fakePlayer.rotationYaw = face * 90;
-
-                    if (keycode == 0)
-                        fakePlayer.rotationPitch = 90;
-                    else
-                        fakePlayer.rotationPitch = -90;
-                }
+                int facing = mapDirection();
+                if (placementDirection == 1)
+                    facing += 1;
                 else
-                {
-                    fakePlayer.rotationPitch = 0;
+                    facing -= 1;
 
-                    int facing = mapDirection();
-                    if (keycode == 1)
-                        facing += 1;
-                    else
-                        facing -= 1;
+                if (facing >= 4)
+                    facing = 0;
+                if (facing < 0)
+                    facing = 3;
 
-                    if (facing >= 4)
-                        facing = 0;
-                    if (facing < 0)
-                        facing = 3;
-
-                    fakePlayer.rotationYaw = facing * 90;
-                }
+                fakePlayer.rotationYaw = facing * 90;
             }
         }
-        placementDirection = keycode;
     }
 
     int mapDirection ()
@@ -338,6 +344,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                         {
                             // tryExtend(worldObj, xPos, yPos, zPos, direction);
                             initFakePlayer();
+                            setFakePlayerRotation();
                             Item blockToItem = getStackInBufferSlot(extension - 1) != null && getStackInBufferSlot(extension - 1).getItem() != null ? TMechworksRegistry.blockToItemMapping.get(Block
                                     .getBlockFromItem(getStackInBufferSlot(extension - 1).getItem())) : Items.stick;
                             if (blockToItem == Item.getItemFromBlock(Blocks.air))
