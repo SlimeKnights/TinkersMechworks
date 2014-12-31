@@ -323,14 +323,16 @@ public class RedstoneMachine extends InventoryBlock
     public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
     {
         // implementation of isBlockNormalCube which is client only for some reason these are both sides
-        if (world.getBlock(x, y, z).getMaterial().blocksMovement() && this.renderAsNormalBlock())
+        Block i1 = world.getBlock(x, y, z);
+        if (i1 == null) return 0;
+        if (i1.getMaterial().blocksMovement() && i1.renderAsNormalBlock())
         {
             return world.getBlockPowerInput(x, y, z);
         }
         else
         {
-            Block i1 = world.getBlock(x, y, z);
-            return i1 == null ? null : i1.isProvidingWeakPower(world, x, y, z, side);
+
+            return i1.isProvidingWeakPower(world, x, y, z, side);
         }
     }
 
