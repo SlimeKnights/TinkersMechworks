@@ -339,6 +339,13 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                             break;
                         }
 
+                        if (xPos < -30000000 || zPos < -30000000 || xPos >= 30000000 || zPos >= 30000000 || yPos < 0 || yPos >= 256)
+                        {
+                            extension--;
+                            working = false;
+                            return;
+                        }
+
                         Block block = worldObj.getBlock(xPos, yPos, zPos);
                         if (block == null || block.isAir(worldObj, xPos, yPos, zPos) || block.canPlaceBlockAt(worldObj, xPos, yPos, zPos))
                         {
