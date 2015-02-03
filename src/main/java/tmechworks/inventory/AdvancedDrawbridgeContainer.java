@@ -6,9 +6,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import tmechworks.blocks.logic.AdvancedDrawbridgeLogic;
 import tmechworks.client.gui.AdvDrawbridgeGui;
+import tmechworks.lib.TMechworksRegistry;
 
 public class AdvancedDrawbridgeContainer extends Container
 {
@@ -167,5 +169,21 @@ public class AdvancedDrawbridgeContainer extends Container
         {
             return super.slotClick(par1, par2, par3, par4EntityPlayer);
         }
+    }
+
+    @Override
+    protected boolean mergeItemStack (ItemStack stack, int startSlotId, int endSlotId, boolean reverseMerge)
+    {
+        if (stack == null || !(stack.getItem() instanceof ItemBlock))
+        {
+            return false;
+        }
+
+        if (TMechworksRegistry.isItemDBBlacklisted((ItemBlock) stack.getItem()))
+        {
+            return false;
+        }
+
+        return super.mergeItemStack(stack, startSlotId, endSlotId, reverseMerge);
     }
 }

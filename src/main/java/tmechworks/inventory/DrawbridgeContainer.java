@@ -1,11 +1,15 @@
 package tmechworks.inventory;
 
+import mantle.blocks.BlockUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import tmechworks.blocks.logic.DrawbridgeLogic;
+import tmechworks.lib.TMechworksRegistry;
 
 public class DrawbridgeContainer extends Container
 {
@@ -76,5 +80,21 @@ public class DrawbridgeContainer extends Container
         }
 
         return stack;
+    }
+
+    @Override
+    protected boolean mergeItemStack (ItemStack stack, int startSlotId, int endSlotId, boolean reverseMerge)
+    {
+        if (stack == null || !(stack.getItem() instanceof ItemBlock))
+        {
+            return false;
+        }
+
+        if (TMechworksRegistry.isItemDBBlacklisted((ItemBlock) stack.getItem()))
+        {
+            return false;
+        }
+
+        return super.mergeItemStack(stack, startSlotId, endSlotId, reverseMerge);
     }
 }
