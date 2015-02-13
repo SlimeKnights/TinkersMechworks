@@ -92,7 +92,12 @@ public class AdvancedDrawbridgeContainer extends Container
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(slotStack, 0, logic.getSizeInventory(), false))
+            // TODO: Fix Shift click into the advance drawbridge Logic
+            /*else if (!this.mergeItemStack(slotStack, 0, logic.getSizeInventory(), false))
+            {
+                return null;
+            }*/
+            else
             {
                 return null;
             }
