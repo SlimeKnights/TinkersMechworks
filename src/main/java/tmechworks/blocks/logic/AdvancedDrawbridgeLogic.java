@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import mantle.blocks.BlockUtils;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
@@ -17,6 +18,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -744,5 +746,21 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
     @Override
     public void openInventory ()
     {
+    }
+
+    @Override
+    public boolean isItemValidForSlot (int slot, ItemStack itemstack)
+    {
+        if (itemstack == null || !(itemstack.getItem() instanceof ItemBlock))
+        {
+            return false;
+        }
+
+        if (TMechworksRegistry.isItemDBBlacklisted((ItemBlock) itemstack.getItem()))
+        {
+            return false;
+        }
+
+        return super.isItemValidForSlot(slot, itemstack);
     }
 }
