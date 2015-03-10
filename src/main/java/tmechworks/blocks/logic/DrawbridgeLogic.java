@@ -469,7 +469,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
         metadata = blockItem.getMetadata(metadata);
         metadata = block.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, metadata);
 
-        if (stack.getItem() instanceof ItemBlock)
+        if (blockItem instanceof ItemBlock)
         {
             return ((ItemBlock) blockItem).placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata);
         }
