@@ -465,7 +465,15 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
      */
     public boolean placeBlockAt (ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata, Block block)
     {
-    	metadata = block.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, metadata);
+        Item blockItem = stack.getItem();
+        metadata = blockItem.getMetadata(metadata);
+        metadata = block.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, metadata);
+
+        if (stack.getItem() instanceof ItemBlock)
+        {
+            return ((ItemBlock) blockItem).placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata);
+        }
+
         if (!world.setBlock(x, y, z, block, metadata, 3))
         {
             return false;
