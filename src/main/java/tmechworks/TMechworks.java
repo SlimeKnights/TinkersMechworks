@@ -6,6 +6,7 @@ import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
 import tmechworks.client.SignalTetherWorldOverlayRenderer;
+import tmechworks.command.BlockInfoCommand;
 import tmechworks.common.CommonProxy;
 import tmechworks.common.MechContent;
 import tmechworks.lib.ConfigCore;
@@ -22,6 +23,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -85,6 +87,12 @@ public class TMechworks
         content.postInit();
         proxy.postInit();
 
+    }
+
+    @EventHandler
+    public void serverStarting (FMLServerStartingEvent evt)
+    {
+        evt.registerServerCommand(new BlockInfoCommand());
     }
 
 }
