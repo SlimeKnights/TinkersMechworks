@@ -15,10 +15,11 @@ Thumbs.db
 /build/
 /run/
 #IDEA files from Gradle
-.idea/
+/.idea/
 /*.iml
 /*.ipr
 /*.iws
+/out/
 #Vim backups
 *~
 #manual version override
