@@ -125,69 +125,12 @@ public class SignalBusMasterLogic extends MultiblockMasterBaseLogic
 
     protected void calcSignals (byte[] signals)
     {
-        if (signals[0] > masterSignals[0])
+        for (int idx = 0; idx < 16; idx++)
         {
-            masterSignals[0] = signals[0];
-        }
-        if (signals[1] > masterSignals[1])
-        {
-            masterSignals[1] = signals[1];
-        }
-        if (signals[2] > masterSignals[2])
-        {
-            masterSignals[2] = signals[2];
-        }
-        if (signals[3] > masterSignals[3])
-        {
-            masterSignals[3] = signals[3];
-        }
-        if (signals[4] > masterSignals[4])
-        {
-            masterSignals[4] = signals[4];
-        }
-        if (signals[5] > masterSignals[5])
-        {
-            masterSignals[5] = signals[5];
-        }
-        if (signals[6] > masterSignals[6])
-        {
-            masterSignals[6] = signals[6];
-        }
-        if (signals[7] > masterSignals[7])
-        {
-            masterSignals[7] = signals[7];
-        }
-        if (signals[8] > masterSignals[8])
-        {
-            masterSignals[8] = signals[8];
-        }
-        if (signals[9] > masterSignals[9])
-        {
-            masterSignals[9] = signals[9];
-        }
-        if (signals[10] > masterSignals[10])
-        {
-            masterSignals[10] = signals[10];
-        }
-        if (signals[11] > masterSignals[11])
-        {
-            masterSignals[11] = signals[11];
-        }
-        if (signals[12] > masterSignals[12])
-        {
-            masterSignals[12] = signals[12];
-        }
-        if (signals[13] > masterSignals[13])
-        {
-            masterSignals[13] = signals[13];
-        }
-        if (signals[14] > masterSignals[14])
-        {
-            masterSignals[14] = signals[14];
-        }
-        if (signals[15] > masterSignals[15])
-        {
-            masterSignals[15] = signals[15];
+            if (signals[idx] > masterSignals[idx])
+            {
+                masterSignals[idx] = signals[idx];
+            }
         }
     }
 
