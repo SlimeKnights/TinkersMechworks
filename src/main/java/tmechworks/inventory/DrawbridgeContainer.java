@@ -85,7 +85,7 @@ public class DrawbridgeContainer extends Container
     @Override
     protected boolean mergeItemStack (ItemStack stack, int startSlotId, int endSlotId, boolean reverseMerge)
     {
-        if (stack == null || !(stack.getItem() instanceof ItemBlock))
+        if (stack == null || !(stack.getItem() instanceof ItemBlock) || logic.hasExtended())
         {
             return false;
         }

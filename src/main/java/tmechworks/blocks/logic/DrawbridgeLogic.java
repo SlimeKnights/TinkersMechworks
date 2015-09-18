@@ -649,7 +649,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemstack)
     {
-        if (itemstack == null || !(itemstack.getItem() instanceof ItemBlock))
+        if (itemstack == null || !(itemstack.getItem() instanceof ItemBlock) || hasExtended())
         {
             return false;
         }
