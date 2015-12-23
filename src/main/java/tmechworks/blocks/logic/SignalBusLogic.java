@@ -36,7 +36,6 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
     private boolean southboundSignalsChanged = false;
     private boolean northboundSignalsChanged = false;
     private boolean forceCheck = false;
-    private World world;
     private boolean[] placedSides = new boolean[] { false, false, false, false, false, false };
 
     public SignalBusLogic()
@@ -238,7 +237,7 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
         {
             return false;
         }
-        this.world = world;
+
         if (world == worldObj && world.isRemote == worldObj.isRemote)
         {
             if (worldObj.getTileEntity(x, y, z) instanceof ISignalTransceiver)
@@ -719,11 +718,5 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
             }
         }
         return true;
-    }
-
-    @Override
-    public World getWorldObj ()
-    {
-        return world;
     }
 }
