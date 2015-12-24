@@ -106,10 +106,13 @@ public class SpoolOfWire extends Item
                 }
                 if (targetDim == world.provider.dimensionId && calc < 16)
                 {
-                    ((SignalBusLogic) te).registerTerminal(world, targetX, targetY, targetZ, true);
+                    boolean registered = ((SignalBusLogic) te).registerTerminal(world, targetX, targetY, targetZ, true);
                     data.removeTag("spoolWireData");
 
-                    itemstack.damageItem(calc, player);
+                    if (registered)
+                    {
+                        itemstack.damageItem(calc, player);
+                    }
                     return true;
                 }
             }

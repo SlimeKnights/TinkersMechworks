@@ -248,7 +248,8 @@ public class SignalBusLogic extends MultiblockBaseLogic implements ISignalBusCon
 
                 if (transceivers.containsKey(coords))
                 {
-                    return true;
+                    // Failure to rehome as it's the same home.
+                    return !rehome;
                 }
                 int dropWire = ((ISignalTransceiver) te).doUnregister(rehome);
                 if (dropWire > 0)
