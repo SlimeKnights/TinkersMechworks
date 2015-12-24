@@ -50,6 +50,20 @@ public class SpoolOfWire extends Item
             list.add(StatCollector.translateToLocal("tooltip.spoolofwire"));
             break;
         }
+
+        NBTTagCompound nbtCompound = stack.getTagCompound();
+
+        if (nbtCompound != null && nbtCompound.hasKey("spoolWireData"))
+        {
+            NBTTagCompound spoolData = nbtCompound.getCompoundTag("spoolWireData");
+
+            int targetDim = spoolData.getInteger("targetDim");
+            int targetX = spoolData.getInteger("targetX");
+            int targetY = spoolData.getInteger("targetY");
+            int targetZ = spoolData.getInteger("targetZ");
+
+            list.add(StatCollector.translateToLocalFormatted("tooltip.spoolofwire.connecting", targetX, targetY, targetZ, targetDim));
+        }
     }
 
     public String getUnlocalizedName (ItemStack stack)
@@ -136,6 +150,20 @@ public class SpoolOfWire extends Item
     public void registerIcons (IIconRegister iconRegister)
     {
         this.icon = iconRegister.registerIcon("tmechworks:" + folder + textureName);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean hasEffect (ItemStack itemStack, int pass)
+    {
+        NBTTagCompound nbtCompound = itemStack.getTagCompound();
+
+        if (nbtCompound != null && nbtCompound.hasKey("spoolWireData"))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public void getSubItems (Item b, CreativeTabs tab, List list)
