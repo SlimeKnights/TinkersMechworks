@@ -1,8 +1,8 @@
 /*
- * TMechworks
+ * Tinkers Mechworks
  * Master build file
- * based on TConstruct's master build file
- * Authors: Sunstrike, ProgWML6
+ * 
+ * Authors: boni, Sunstrike, ProgWML6, fuj1n
  * Help from AbrarSyed
  */
 
@@ -10,58 +10,61 @@ buildscript {
     repositories {
         mavenCentral()
 		mavenLocal()
+        jcenter()
         maven {
-            name = 'ForgeFS'
-            url = 'http://files.minecraftforge.net/maven'
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
         }
-		maven {
+        maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
-
-	}
+    }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+/*
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.1"
+}*/
 
 repositories {
-  maven {
-        name 'CB Maven FS'
-        url "http://chickenbones.net/maven/"
-    }
-	maven {
-         name "ProfMobius Maven FS"
-         url "http://mobiusstrip.eu/maven"
-     }
     maven {
         name 'DVS1 Maven FS'
         url 'http://dvs1.progwml6.com/files/maven'
     }
-	maven {
-          name 'ForgeFS'
-          url 'http://files.minecraftforge.net/maven'
-     }
+    maven {
+        name "ProfMobius Maven FS"
+        url "http://mobiusstrip.eu/maven"
+    }
+    maven {
+        name 'forge'
+        url 'http://files.minecraftforge.net/maven'
+    }
 }
 
-apply plugin: 'forge'
-group = 'tmech'
-// define the properties file
-ext.configFile = file "build.properties"
+apply plugin: 'net.minecraftforge.gradle.forge'
+//apply plugin: 'forge'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
+group= "slimeknights"
+archivesBaseName = "TMechworks"
+
+// External properties
+ext.configFile = file "build.properties"
 configFile.withReader {
-    // read config.  it shall from now on be referenced as simply config or as project.config
+    // Load config.  It shall from now be referenced as simply config or project.config
     def prop = new Properties()
     prop.load(it)
     project.ext.config = new ConfigSlurper().parse prop
 }
-
-dependencies {
-    compile "mantle:Mantle:${config.minecraft_version}-${config.mantle_version}:deobf"
-    compile "tconstruct:TConstruct:${config.minecraft_version}-${config.tconstruct_version}:deobf"
+configurations {
+    deployerJars
 }
 
-// sets version to the slimeKnights default version format
+// sets version to the slimeKnights version format
 task buildInfo {
     def cmd = "git rev-parse --short HEAD"
     def proc = cmd.execute()
@@ -73,7 +76,7 @@ task buildInfo {
     }
 
     if (System.getenv().BUILD_NUMBER != null) {
-        ext.buildNum = System.getenv().BUILD_NUMBER
+        ext.buildNum = "jenkins${System.getenv().BUILD_NUMBER}"
     } else {
         ext.buildNum = "DEV.${project.buildInfo.revision}"
     }
@@ -90,62 +93,127 @@ version = "${config.minecraft_version}-${artifact_version}"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
-    runDir = 'run'
-    replace '${version}', artifact_version
+    mappings = config.mappings
+    runDir = "run"
+    replace '${version}', project.version
+    useDepAts = true
+}
+
+dependencies {
+    // you may put jars on which you depend on in ./libs
+    // or you may define them like so..
+    deobfCompile "slimeknights.mantle:Mantle:${config.minecraft_version}-${config.mantle_version}"
+    deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
+    deobfCompile "mcp.mobius.waila:Waila:${config.waila_version}_1.9.4"
+    deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 }
 
 sourceSets {
-	main {
-		resources {
-			srcDir 'resources'
-		}
-	}
+    main {
+        resources {
+            srcDir 'resources'
+        }
+    }
 }
+
 processResources
 {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.artifact_version
-    inputs.property "mcversion", project.minecraft.version
-	
-        // replace stuff in text files, not binary ones.
+    inputs.property "version", project.version
+    inputs.property "MCversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include '**/*.info'
-                // replace version and MCVersion
-        expand 'version':artifact_version,'MCversion':config.minecraft_version
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'MCversion':project.minecraft.version
     }
         
-        // copy everything else, thats not text
+    // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.info'
+        exclude 'mcmod.info'
     }
 }
+
+// Add Access Transformers Manifest
+jar {
+    manifest {
+        //attributes 'FMLAT': 'tconstruct_at.cfg'
+    }
+}
+
+// Create deobf dev jars
 task deobfJar(type: Jar) {
-        from sourceSets.main.output
-        classifier = 'deobf'
+    from sourceSets.main.output
+    classifier = 'deobf'
+	manifest {
+        //attributes 'FMLAT': 'tconstruct_at.cfg'
+    }
 }
-task libJar(type: Jar) {
-    from(sourceSets.main.java) {
-      include "tmechworks/lib/*"
-	}
-	classifier = 'lib'
-}
+
 artifacts {
-        archives deobfJar
-		archives libJar
+    archives deobfJar
 }
+
+// verify the properties exist.. or initialize.
+if (!project.hasProperty("keystore_location")) // keystore location
+    ext.keystore_location = ".";
+    
+if (!project.hasProperty("keystore_user_alias")) // keystore user alias
+    ext.keystore_user_alias = "";
+if (!project.hasProperty("sftp_username"))
+    ext.sftp_username = "";
+if (!project.hasProperty("sftp_key"))
+    ext.sftp_key = "";
+if (!project.hasProperty("keystore_user_password")) // keystore user pass
+    ext.keystore_user_password = "";
+if (System.getenv().KSK_PW != null)
+	ext.keystore_user_password =System.getenv().KSK_PW;
+
 
 task("uploadJars", dependsOn:"build") {
     
     description = "uploads JARs"
 
-    if (project.hasProperty("local_maven")) {
+    if (project.hasProperty("local_maven") || project.hasProperty("sftp_maven")) {
 	    apply plugin: 'maven'
-            uploadArchives {
-                repositories {
+        uploadArchives {
+            repositories {
+		    	if(project.hasProperty("local_maven"))
+			    {
                     mavenDeployer {
                         repository(url: "file://${local_maven}")
+				    }
+                }
+				if(project.hasProperty("sftp_maven")) {
+                    repositories.mavenDeployer {
+					    configuration = configurations.deployerJars
+                        repository(url: "sftp://${sftp_maven}"){
+						authentication(userName: "${sftp_username}",privateKey: "${sftp_key}")}
+				    }
                 }
             }
-        }
+        }    
     }
 }
+
+task signUniversal(type: SignJar, dependsOn: 'jar') {
+    onlyIf {
+        project.hasProperty('jarsigner')
+    }
+
+    def jarsigner = [:];
+
+    if (project.hasProperty('jarsigner'))
+        jarsigner = project.jarsigner;
+
+    alias = 'tcon'
+    storePass = jarsigner.storepass
+    keyPass = jarsigner.keypass
+    keyStore = jarsigner.keystore
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+uploadArchives.dependsOn signUniversal
+build.dependsOn signUniversal

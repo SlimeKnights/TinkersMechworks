@@ -14,7 +14,7 @@ Please include the following:
 
 * Minecraft version
 * Tinkers Mechworks version
-* Tinkers Construct version
+* Mantle version
 * Forge version/build
 * Versions of any mods potentially related to the issue 
 * Any relevant screenshots are greatly appreciated.

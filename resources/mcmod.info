@@ -1,19 +1,17 @@
-[
-  {
-    "modid": "TMechworks",
+[{
+    "modid": "tmechworks",
     "name": "Tinkers' Mechworks",
     "description": "",
     "version": "${version}",
     "mcversion": "${MCversion}",
-    "url": "",
+    "url": "https://github.com/SlimeKnights/TinkersMechworks",
     "updateUrl": "",
-    "authors": [
-      "mDiyo", "fuj1n", "ProgWML6", "Sunstrike", "Pillbox"
+    "authorList": [
+      "fuj1n"
     ],
-    "credits": "Slime Knights",
+    "credits": "Slime Knights, mDiyo, ProgWML6, Sunstrike, Pillbox",
     "logoFile": "",
     "screenshots": [],
     "parent":"",
     "dependencies": []
-  }
-]
+}]
