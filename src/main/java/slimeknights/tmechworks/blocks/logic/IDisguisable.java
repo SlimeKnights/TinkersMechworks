@@ -2,9 +2,10 @@ package slimeknights.tmechworks.blocks.logic;
 
 import net.minecraft.item.ItemStack;
 
-public interface IDisguisable {
+public interface IDisguisable
+{
 
-  ItemStack getDisguiseBlock();
+    ItemStack getDisguiseBlock ();
 
-  void setDisguiseBlock(ItemStack disguise);
+    void setDisguiseBlock (ItemStack disguise);
 }

@@ -25,97 +25,104 @@ import slimeknights.mantle.block.BlockInventory;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
 
-public class Drawbridge extends BlockInventory {
+public class Drawbridge extends BlockInventory
+{
 
   public static final PropertyDirection FACING = PropertyDirection.create("facing");
-  public static final PropertyEnum<DrawbridgeType> TYPE = PropertyEnum
-      .create("type", DrawbridgeType.class, DrawbridgeType.values());
+  public static final PropertyEnum<DrawbridgeType> TYPE = PropertyEnum.create("type", DrawbridgeType.class, DrawbridgeType.values());
 
-  public Drawbridge() {
+  public Drawbridge ()
+  {
     super(Material.IRON);
-    this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH)
-                                        .withProperty(TYPE, DrawbridgeType.NORMAL));
+    this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TYPE, DrawbridgeType.NORMAL));
   }
 
-  @Override
-  public int getMetaFromState(IBlockState state) {
+  @Override public int getMetaFromState (IBlockState state)
+  {
     return ((DrawbridgeType) state.getValue(TYPE)).ordinal();
   }
 
-  @Override
-  public IBlockState getStateFromMeta(int meta) {
+  @Override public IBlockState getStateFromMeta (int meta)
+  {
     return getDefaultState().withProperty(TYPE, DrawbridgeType.values()[meta]);
   }
 
-  @Nonnull
-  @Override
-  public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
-    try {
+  @Nonnull @Override public TileEntity createNewTileEntity (@Nonnull World worldIn, int meta)
+  {
+    try
+    {
       return DrawbridgeType.values()[meta].tileEntityClass.newInstance();
-    } catch(InstantiationException | IllegalAccessException e) {
+    }
+    catch (InstantiationException | IllegalAccessException e)
+    {
       e.printStackTrace();
     }
 
     return null;
-  }
+    }
 
-  @Override
-  protected boolean openGui(EntityPlayer player, World world, BlockPos pos) {
+  @Override protected boolean openGui (EntityPlayer player, World world, BlockPos pos)
+  {
     return false;
   }
 
-  @Override
-  protected BlockStateContainer createBlockState() {
+  @Override protected BlockStateContainer createBlockState ()
+  {
     return new BlockStateContainer(this, FACING, TYPE);
   }
 
-  @Override
-  public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+  @Override public IBlockState getActualState (IBlockState state, IBlockAccess worldIn, BlockPos pos)
+  {
     DrawbridgeLogicBase baseLogic = (DrawbridgeLogicBase) worldIn.getTileEntity(pos);
 
     EnumFacing face = EnumFacing.NORTH;
 
-    if(baseLogic != null) {
+    if (baseLogic != null)
+    {
       face = baseLogic.getFacingDirection();
     }
 
     return state.withProperty(FACING, face);
-  }
+    }
 
-  @Override
-  public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+  @Override public void onBlockPlacedBy (World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+  {
     DrawbridgeLogicBase baseLogic = (DrawbridgeLogicBase) worldIn.getTileEntity(pos);
 
-    if(baseLogic == null) {
+    if (baseLogic == null)
+    {
       return;
     }
 
     baseLogic.setFacingDirection(BlockPistonBase.getFacingFromEntity(pos, placer));
-  }
+    }
 
-  @Override
-  public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+  @Override public void neighborChanged (IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+  {
     DrawbridgeLogicBase logicBase = (DrawbridgeLogicBase) worldIn.getTileEntity(pos);
 
-    if(logicBase != null) {
+    if (logicBase != null)
+    {
       logicBase.updateRedstone();
     }
-  }
+    }
 
-  public enum DrawbridgeType implements IStringSerializable {
+  public enum DrawbridgeType implements IStringSerializable
+  {
     NORMAL(DrawbridgeLogic.class),
     ADVANCED(DrawbridgeLogicBase.class),
     EXTENDED(DrawbridgeLogicBase.class);
 
     public final Class<? extends DrawbridgeLogicBase> tileEntityClass;
 
-    DrawbridgeType(Class<? extends DrawbridgeLogicBase> te) {
+    DrawbridgeType (Class<? extends DrawbridgeLogicBase> te)
+    {
       tileEntityClass = te;
     }
 
-    @Override
-    public String getName() {
+    @Override public String getName ()
+    {
       return this.toString().toLowerCase(Locale.US);
     }
-  }
+    }
 }

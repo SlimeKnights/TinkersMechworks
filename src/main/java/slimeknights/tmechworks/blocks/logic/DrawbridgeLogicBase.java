@@ -22,245 +22,280 @@ import javax.annotation.Nullable;
 import slimeknights.mantle.tileentity.TileInventory;
 import slimeknights.tmechworks.library.Util;
 
-public abstract class DrawbridgeLogicBase extends TileInventory implements IDisguisable, ITickable {
+public abstract class DrawbridgeLogicBase extends TileInventory implements IDisguisable, ITickable
+{
 
-  private static final float TICK_TIME = 0.05F;
+    private static final float TICK_TIME = 0.05F;
 
-  private FakePlayer fakePlayer;
-  private DrawbridgeStats statistics = new DrawbridgeStats();
+    private FakePlayer fakePlayer;
+    private DrawbridgeStats statistics = new DrawbridgeStats();
 
-  private int redstoneState;
-  private int extendState;
-  private boolean isExtended;
-  private boolean isExtending;
-  private float cooldown;
+    private int redstoneState;
+    private int extendState;
+    private boolean isExtended;
+    private boolean isExtending;
+    private float cooldown;
 
-  private boolean isFirstTick = true;
+    private boolean isFirstTick = true;
 
-  private EnumFacing facingDirection = EnumFacing.NORTH;
+    private EnumFacing facingDirection = EnumFacing.NORTH;
 
-  private long lastWorldTime;
+    private long lastWorldTime;
 
-  public DrawbridgeLogicBase(String name, int inventorySize) {
-    super(name, inventorySize + 1);
-  }
-
-  public void updateRedstone() {
-    int oldPow = redstoneState;
-
-    int idPow = worldObj.isBlockIndirectlyGettingPowered(pos);
-    int sidePow = 0;
-
-    for(EnumFacing face : EnumFacing.HORIZONTALS) {
-      BlockPos miscPos = new BlockPos(pos.getX() + face.getFrontOffsetX(), pos.getY() + face
-          .getFrontOffsetY(), pos.getZ() + face.getFrontOffsetZ());
-      IBlockState miscState = worldObj.getBlockState(miscPos);
-
-      if(!miscState.canProvidePower()) {
-        continue;
-      }
-
-      int pow = miscState.getStrongPower(worldObj, miscPos, face.getOpposite());
-
-      if(pow > sidePow) {
-        sidePow = pow;
-      }
+    public DrawbridgeLogicBase (String name, int inventorySize)
+    {
+        super(name, inventorySize + 1);
     }
 
-    redstoneState = idPow > sidePow ? idPow : sidePow;
+    public void updateRedstone ()
+    {
+        int oldPow = redstoneState;
 
-    updateExtension();
+        int idPow = worldObj.isBlockIndirectlyGettingPowered(pos);
+        int sidePow = 0;
 
-    if(oldPow != redstoneState) {
-      markDirty();
+        for (EnumFacing face : EnumFacing.HORIZONTALS)
+        {
+            BlockPos miscPos = new BlockPos(pos.getX() + face.getFrontOffsetX(), pos.getY() + face.getFrontOffsetY(), pos.getZ() + face.getFrontOffsetZ());
+            IBlockState miscState = worldObj.getBlockState(miscPos);
 
-      for(EntityPlayerMP player : worldObj.getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue())) {
-        player.connection.sendPacket(getUpdatePacket());
-      }
+            if (!miscState.canProvidePower())
+            {
+                continue;
+            }
 
-    }
-  }
+            int pow = miscState.getStrongPower(worldObj, miscPos, face.getOpposite());
 
-  public void updateExtension() {
-    if(isExtended && redstoneState <= 0) {
-      isExtended = false;
-      isExtending = true;
-    } else if(!isExtended && redstoneState > 0) {
-      isExtended = true;
-      isExtending = true;
-    }
-  }
-
-  public void playExtendSound() {
-    worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos
-        .getZ() + 0.5D, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.25F, worldObj.rand
-                                                                                          .nextFloat() * 0.25F + 0.6F);
-  }
-
-  public void playRetractSound() {
-    worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos
-        .getZ() + 0.5D, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.25F, worldObj.rand
-                                                                                            .nextFloat() * 0.15F + 0.6F);
-  }
-
-  public int getRedstoneState() {
-    return redstoneState;
-  }
-  public int getExtendState() {
-    return extendState;
-  }
-  public boolean getExtended() {
-    return isExtended;
-  }
-  public boolean getExtending() {
-    return isExtending;
-  }
-  public EnumFacing getFacingDirection() {
-    return facingDirection;
-  }
-  public void setFacingDirection(EnumFacing direction) {
-    facingDirection = direction;
-  }
-
-  public DrawbridgeStats getStats() {
-    return statistics;
-  }
-
-  @Override
-  public void onLoad() {
-    super.onLoad();
-
-    fakePlayer = Util.createFakePlayer(worldObj);
-
-    setupStatistics(statistics);
-
-    lastWorldTime = worldObj.getWorldTime();
-  }
-
-  @Override
-  public void update() {
-    if(isFirstTick) {
-      updateRedstone();
-      isFirstTick = false;
-    }
-
-    if(isExtending) {
-      if(cooldown > 0) {
-        cooldown -= (worldObj.getTotalWorldTime() - lastWorldTime) * TICK_TIME;
-      } else if(isExtended) {
-        if(extendState == statistics.extendLength) {
-          isExtending = false;
-        } else if(extendNext()) {
-          extendState++;
-          cooldown = statistics.extendDelay;
-          playExtendSound();
+            if (pow > sidePow)
+            {
+                sidePow = pow;
+            }
         }
-      } else {
-        if(extendState <= 0) {
-          isExtending = false;
-        } else if(retractNext()) {
-          extendState--;
-          cooldown = statistics.extendDelay;
-          playRetractSound();
+
+        redstoneState = idPow > sidePow ? idPow : sidePow;
+
+        updateExtension();
+
+        if (oldPow != redstoneState)
+        {
+            markDirty();
+
+            for (EntityPlayerMP player : worldObj.getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue()))
+            {
+                player.connection.sendPacket(getUpdatePacket());
+            }
+
         }
-      }
     }
 
-    lastWorldTime = worldObj.getTotalWorldTime();
-  }
-
-  @Override
-  public void invalidate() {
-    super.invalidate();
-
-    if(fakePlayer != null) {
-      worldObj.removeEntity(fakePlayer);
-      fakePlayer = null;
+    public void updateExtension ()
+    {
+        if (isExtended && redstoneState <= 0)
+        {
+            isExtended = false;
+            isExtending = true;
+        }
+        else if (!isExtended && redstoneState > 0)
+        {
+            isExtended = true;
+            isExtending = true;
+        }
     }
-  }
 
-  @Override
-  public void validate() {
-    super.validate();
-
-    if(fakePlayer == null) {
-      fakePlayer = Util.createFakePlayer(worldObj);
+    public void playExtendSound ()
+    {
+        worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.25F,
+                worldObj.rand.nextFloat() * 0.25F + 0.6F);
     }
-  }
 
-  @Override
-  public ItemStack getDisguiseBlock() {
-    return getStackInSlot(getSizeInventory() - 1);
-  }
+    public void playRetractSound ()
+    {
+        worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.25F,
+                worldObj.rand.nextFloat() * 0.15F + 0.6F);
+    }
 
-  @Override
-  public void setDisguiseBlock(ItemStack disguise) {
-    setInventorySlotContents(getSizeInventory() - 1, disguise);
-  }
+    public int getRedstoneState ()
+    {
+        return redstoneState;
+    }
 
-  /* NBT */
-  @Override
-  public void readFromNBT(NBTTagCompound tags) {
-    super.readFromNBT(tags);
+    public int getExtendState ()
+    {
+        return extendState;
+    }
 
-    extendState = tags.getInteger("ExtendState");
-    isExtended = tags.getBoolean("IsExtended");
-    isExtending = tags.getBoolean("IsExtending");
-    cooldown = tags.getFloat("Cooldown");
-    facingDirection = EnumFacing.values()[tags.getInteger("Facing")];
-  }
+    public boolean getExtended ()
+    {
+        return isExtended;
+    }
 
-  @Nonnull
-  @Override
-  public NBTTagCompound writeToNBT(NBTTagCompound tags) {
-    NBTTagCompound data = super.writeToNBT(tags);
+    public boolean getExtending ()
+    {
+        return isExtending;
+    }
 
-    data.setInteger("ExtendState", extendState);
-    data.setBoolean("IsExtended", isExtended);
-    data.setBoolean("IsExtending", isExtending);
-    data.setFloat("Cooldown", cooldown);
-    data.setInteger("Facing", facingDirection.ordinal());
+    public EnumFacing getFacingDirection ()
+    {
+        return facingDirection;
+    }
 
-    return data;
-  }
+    public void setFacingDirection (EnumFacing direction)
+    {
+        facingDirection = direction;
+    }
 
-  @Override
-  public boolean shouldRefresh(World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newSate) {
-    return oldState.getBlock() != newSate.getBlock();
-  }
+    public DrawbridgeStats getStats ()
+    {
+        return statistics;
+    }
 
-  @Override
-  @Nullable
-  public SPacketUpdateTileEntity getUpdatePacket() {
-    NBTTagCompound tags = new NBTTagCompound();
+    @Override public void onLoad ()
+    {
+        super.onLoad();
 
-    tags = writeToNBT(tags);
+        fakePlayer = Util.createFakePlayer(worldObj);
 
-    SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, worldObj.getBlockState(pos).getBlock()
-                                                                              .getMetaFromState(worldObj
-                                                                                                    .getBlockState(pos)), tags);
+        setupStatistics(statistics);
 
-    return packet;
-  }
+        lastWorldTime = worldObj.getWorldTime();
+    }
 
-  @Override
-  public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-    NBTTagCompound tags = pkt.getNbtCompound();
+    @Override public void update ()
+    {
+        if (isFirstTick)
+        {
+            updateRedstone();
+            isFirstTick = false;
+        }
 
-    readFromNBT(tags);
+        if (isExtending)
+        {
+            if (cooldown > 0)
+            {
+                cooldown -= (worldObj.getTotalWorldTime() - lastWorldTime) * TICK_TIME;
+            }
+            else if (isExtended)
+            {
+                if (extendState == statistics.extendLength)
+                {
+                    isExtending = false;
+                }
+                else if (extendNext())
+                {
+                    extendState++;
+                    cooldown = statistics.extendDelay;
+                    playExtendSound();
+                }
+            }
+            else
+            {
+                if (extendState <= 0)
+                {
+                    isExtending = false;
+                }
+                else if (retractNext())
+                {
+                    extendState--;
+                    cooldown = statistics.extendDelay;
+                    playRetractSound();
+                }
+            }
+        }
 
-    updateRedstone();
-  }
+        lastWorldTime = worldObj.getTotalWorldTime();
+    }
 
-  public abstract void setupStatistics(DrawbridgeStats ds);
+    @Override public void invalidate ()
+    {
+        super.invalidate();
 
-  public abstract boolean extendNext();
+        if (fakePlayer != null)
+        {
+            worldObj.removeEntity(fakePlayer);
+            fakePlayer = null;
+        }
+    }
 
-  public abstract boolean retractNext();
+    @Override public void validate ()
+    {
+        super.validate();
 
-  final class DrawbridgeStats {
+        if (fakePlayer == null)
+        {
+            fakePlayer = Util.createFakePlayer(worldObj);
+        }
+    }
 
-    public int extendLength = 16;
-    public float extendDelay = 0.5F;
-  }
+    @Override public ItemStack getDisguiseBlock ()
+    {
+        return getStackInSlot(getSizeInventory() - 1);
+    }
+
+    @Override public void setDisguiseBlock (ItemStack disguise)
+    {
+        setInventorySlotContents(getSizeInventory() - 1, disguise);
+    }
+
+    /* NBT */
+    @Override public void readFromNBT (NBTTagCompound tags)
+    {
+        super.readFromNBT(tags);
+
+        extendState = tags.getInteger("ExtendState");
+        isExtended = tags.getBoolean("IsExtended");
+        isExtending = tags.getBoolean("IsExtending");
+        cooldown = tags.getFloat("Cooldown");
+        facingDirection = EnumFacing.values()[tags.getInteger("Facing")];
+    }
+
+    @Nonnull @Override public NBTTagCompound writeToNBT (NBTTagCompound tags)
+    {
+        NBTTagCompound data = super.writeToNBT(tags);
+
+        data.setInteger("ExtendState", extendState);
+        data.setBoolean("IsExtended", isExtended);
+        data.setBoolean("IsExtending", isExtending);
+        data.setFloat("Cooldown", cooldown);
+        data.setInteger("Facing", facingDirection.ordinal());
+
+        return data;
+    }
+
+    @Override public boolean shouldRefresh (World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newSate)
+    {
+        return oldState.getBlock() != newSate.getBlock();
+    }
+
+    @Override @Nullable public SPacketUpdateTileEntity getUpdatePacket ()
+    {
+        NBTTagCompound tags = new NBTTagCompound();
+
+        tags = writeToNBT(tags);
+
+        SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, worldObj.getBlockState(pos).getBlock().getMetaFromState(worldObj.getBlockState(pos)), tags);
+
+        return packet;
+    }
+
+    @Override public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt)
+    {
+        NBTTagCompound tags = pkt.getNbtCompound();
+
+        readFromNBT(tags);
+
+        updateRedstone();
+    }
+
+    public abstract void setupStatistics (DrawbridgeStats ds);
+
+    public abstract boolean extendNext ();
+
+    public abstract boolean retractNext ();
+
+    final class DrawbridgeStats
+    {
+
+        public int extendLength = 16;
+        public float extendDelay = 0.5F;
+    }
 }

@@ -18,97 +18,113 @@ import slimeknights.tmechworks.blocks.Drawbridge;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
 import slimeknights.tmechworks.library.Util;
 
-public class MechworksContent {
+public class MechworksContent
+{
 
-  // Items
+    // Items
 
-  // Blocks
-  public static Block drawbridge;
+    // Blocks
+    public static Block drawbridge;
 
-  // Tabs
-  public static CreativeTab tabMechworks = new CreativeTab("TabMechworks", new ItemStack(Items.POISONOUS_POTATO));
+    // Tabs
+    public static CreativeTab tabMechworks = new CreativeTab("TabMechworks", new ItemStack(Items.POISONOUS_POTATO));
 
-  public MechworksContent() {
-    registerItems();
-    registerBlocks();
-    setupCreativeTabs();
-  }
-
-  private void registerItems() {
-
-  }
-
-  private void registerBlocks() {
-    drawbridge = new Drawbridge().setCreativeTab(tabMechworks);
-    registerBlock(drawbridge, "drawbridge");
-    registerTE(DrawbridgeLogic.class, "drawbridge");
-  }
-
-  private void setupCreativeTabs() {
-    tabMechworks.setDisplayIcon(new ItemStack(drawbridge));
-  }
-
-  protected static <T extends Block> T registerBlock(T block, String name) {
-    ItemBlock itemBlock = new ItemBlockMeta(block);
-    registerBlock(block, itemBlock, name);
-    return block;
-  }
-
-  protected static <T extends EnumBlock<?>> T registerEnumBlock(T block, String name) {
-    registerBlock(block, new ItemBlockMeta(block), name);
-    ItemBlockMeta.setMappingProperty(block, block.prop);
-    return block;
-  }
-
-  protected static <T extends Block> T registerBlock(ItemBlock itemBlock, String name) {
-    Block block = itemBlock.getBlock();
-    return (T) registerBlock(block, itemBlock, name);
-  }
-
-  protected static <T extends Block> T registerBlock(T block, String name, IProperty<?> property) {
-    ItemBlockMeta itemBlock = new ItemBlockMeta(block);
-    registerBlock(block, itemBlock, name);
-    ItemBlockMeta.setMappingProperty(block, property);
-    return block;
-  }
-
-  protected static <T extends Block> T registerBlock(T block, ItemBlock itemBlock, String name) {
-    if(!name.equals(name.toLowerCase(Locale.US))) {
-      throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
+    public MechworksContent ()
+    {
+        registerItems();
+        registerBlocks();
+        setupCreativeTabs();
     }
 
-    String prefixedName = Util.prefix(name);
-    block.setUnlocalizedName(prefixedName);
-    itemBlock.setUnlocalizedName(prefixedName);
+    private void registerItems ()
+    {
 
-    register(block, name);
-    register(itemBlock, name);
-    return block;
-  }
-
-  protected static <T extends Block> T registerBlockNoItem(T block, String name) {
-    if(!name.equals(name.toLowerCase(Locale.US))) {
-      throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
     }
 
-    String prefixedName = Util.prefix(name);
-    block.setUnlocalizedName(prefixedName);
-
-    register(block, name);
-    return block;
-  }
-
-  protected static <T extends IForgeRegistryEntry<?>> T register(T thing, String name) {
-    thing.setRegistryName(Util.getResource(name));
-    GameRegistry.register(thing);
-    return thing;
-  }
-
-  protected static void registerTE(Class<? extends TileEntity> teClazz, String name) {
-    if(!name.equals(name.toLowerCase(Locale.US))) {
-      throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! TE: %s", name));
+    private void registerBlocks ()
+    {
+        drawbridge = new Drawbridge().setCreativeTab(tabMechworks);
+        registerBlock(drawbridge, "drawbridge");
+        registerTE(DrawbridgeLogic.class, "drawbridge");
     }
 
-    GameRegistry.registerTileEntity(teClazz, Util.prefix(name));
-  }
+    private void setupCreativeTabs ()
+    {
+        tabMechworks.setDisplayIcon(new ItemStack(drawbridge));
+    }
+
+    protected static <T extends Block> T registerBlock (T block, String name)
+    {
+        ItemBlock itemBlock = new ItemBlockMeta(block);
+        registerBlock(block, itemBlock, name);
+        return block;
+    }
+
+    protected static <T extends EnumBlock<?>> T registerEnumBlock (T block, String name)
+    {
+        registerBlock(block, new ItemBlockMeta(block), name);
+        ItemBlockMeta.setMappingProperty(block, block.prop);
+        return block;
+    }
+
+    protected static <T extends Block> T registerBlock (ItemBlock itemBlock, String name)
+    {
+        Block block = itemBlock.getBlock();
+        return (T) registerBlock(block, itemBlock, name);
+    }
+
+    protected static <T extends Block> T registerBlock (T block, String name, IProperty<?> property)
+    {
+        ItemBlockMeta itemBlock = new ItemBlockMeta(block);
+        registerBlock(block, itemBlock, name);
+        ItemBlockMeta.setMappingProperty(block, property);
+        return block;
+    }
+
+    protected static <T extends Block> T registerBlock (T block, ItemBlock itemBlock, String name)
+    {
+        if (!name.equals(name.toLowerCase(Locale.US)))
+        {
+            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
+        }
+
+        String prefixedName = Util.prefix(name);
+        block.setUnlocalizedName(prefixedName);
+        itemBlock.setUnlocalizedName(prefixedName);
+
+        register(block, name);
+        register(itemBlock, name);
+        return block;
+    }
+
+    protected static <T extends Block> T registerBlockNoItem (T block, String name)
+    {
+        if (!name.equals(name.toLowerCase(Locale.US)))
+        {
+            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
+        }
+
+        String prefixedName = Util.prefix(name);
+        block.setUnlocalizedName(prefixedName);
+
+        register(block, name);
+        return block;
+    }
+
+    protected static <T extends IForgeRegistryEntry<?>> T register (T thing, String name)
+    {
+        thing.setRegistryName(Util.getResource(name));
+        GameRegistry.register(thing);
+        return thing;
+    }
+
+    protected static void registerTE (Class<? extends TileEntity> teClazz, String name)
+    {
+        if (!name.equals(name.toLowerCase(Locale.US)))
+        {
+            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! TE: %s", name));
+        }
+
+        GameRegistry.registerTileEntity(teClazz, Util.prefix(name));
+    }
 }

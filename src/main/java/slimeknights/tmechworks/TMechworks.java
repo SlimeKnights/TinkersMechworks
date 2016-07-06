@@ -13,40 +13,40 @@ import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.integration.WailaIntegration;
 
 @Mod(modid = TMechworks.modID, name = TMechworks.modName, version = TMechworks.modVersion, dependencies = "required-after:Forge@[12.18.0.1993,); required-after:mantle@[1.10-0.10.3,)", acceptedMinecraftVersions = "[1.10, 1.11)")
-public class TMechworks {
+public class TMechworks
+{
 
-  public static final String modID = "tmechworks";
-  public static final String modVersion = "${version}";
-  public static final String modName = "Tinkers' Mechworks";
+    public static final String modID = "tmechworks";
+    public static final String modVersion = "${version}";
+    public static final String modName = "Tinkers' Mechworks";
 
-  public static MechworksContent content;
+    public static MechworksContent content;
 
-  @Mod.Instance(modID)
-  public static TMechworks instance;
+    @Mod.Instance(modID) public static TMechworks instance;
 
-  @SidedProxy(modId = modID, clientSide = "slimeknights.tmechworks.client.ClientProxy", serverSide = "slimeknights.tmechworks.common.CommonProxy")
-  public static CommonProxy proxy;
+    @SidedProxy(modId = modID, clientSide = "slimeknights.tmechworks.client.ClientProxy", serverSide = "slimeknights.tmechworks.common.CommonProxy") public static CommonProxy proxy;
 
-  @Mod.EventHandler
-  public void preInit(FMLPreInitializationEvent event) {
-    proxy.preInit();
+    @Mod.EventHandler public void preInit (FMLPreInitializationEvent event)
+    {
+        proxy.preInit();
 
-    NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
-    if(Loader.isModLoaded("Waila")) {
-      new WailaIntegration();
+        if (Loader.isModLoaded("Waila"))
+        {
+            new WailaIntegration();
+        }
     }
-  }
 
-  @Mod.EventHandler
-  public void init(FMLInitializationEvent event) {
-    proxy.init();
+    @Mod.EventHandler public void init (FMLInitializationEvent event)
+    {
+        proxy.init();
 
-    content = new MechworksContent();
-  }
+        content = new MechworksContent();
+    }
 
-  @Mod.EventHandler
-  public void postInit(FMLInitializationEvent event) {
-    proxy.postInit();
-  }
+    @Mod.EventHandler public void postInit (FMLInitializationEvent event)
+    {
+        proxy.postInit();
+    }
 }

@@ -19,36 +19,40 @@ import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
 import slimeknights.tmechworks.library.Util;
 
-public class WailaIntegration {
+public class WailaIntegration
+{
 
   static final String CONFIG_COMMONS = Util.prefix("commons");
 
-  public WailaIntegration() {
-    FMLInterModComms
-        .sendMessage("Waila", "register", "slimeknights.tmechworks.integration.WailaIntegration.integrationCallback");
+  public WailaIntegration ()
+  {
+    FMLInterModComms.sendMessage("Waila", "register", "slimeknights.tmechworks.integration.WailaIntegration.integrationCallback");
   }
 
-  public static void integrationCallback(IWailaRegistrar registrar) {
+  public static void integrationCallback (IWailaRegistrar registrar)
+  {
     registrar.addConfig(TMechworks.modName, CONFIG_COMMONS, true);
 
     registrar.registerBodyProvider(new RedstoneMachineDataProvider(), DrawbridgeLogicBase.class);
   }
 
-  private static class RedstoneMachineDataProvider implements IWailaDataProvider {
+  private static class RedstoneMachineDataProvider implements IWailaDataProvider
+  {
 
-    @Override
-    public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    @Override public ItemStack getWailaStack (IWailaDataAccessor accessor, IWailaConfigHandler config)
+    {
       return null;
     }
 
-    @Override
-    public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    @Override public List<String> getWailaHead (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
+    {
       return currenttip;
     }
 
-    @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-      if(config.getConfig(CONFIG_COMMONS) && accessor.getTileEntity() instanceof DrawbridgeLogicBase) {
+    @Override public List<String> getWailaBody (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
+    {
+      if (config.getConfig(CONFIG_COMMONS) && accessor.getTileEntity() instanceof DrawbridgeLogicBase)
+      {
         DrawbridgeLogicBase logicBase = (DrawbridgeLogicBase) accessor.getTileEntity();
 
         currenttip.add(I18n.format("hud.msg.power") + ": " + logicBase.getRedstoneState());
@@ -57,15 +61,15 @@ public class WailaIntegration {
       return currenttip;
     }
 
-    @Override
-    public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    @Override public List<String> getWailaTail (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
+    {
       return currenttip;
     }
 
-    @Override
-    public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
+    @Override public NBTTagCompound getNBTData (EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos)
+    {
       return tag;
     }
-  }
+    }
 
 }

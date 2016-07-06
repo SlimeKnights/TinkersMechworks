@@ -9,7 +9,7 @@
 buildscript {
     repositories {
         mavenCentral()
-		mavenLocal()
+        mavenLocal()
         jcenter()
         maven {
             name = "forge"
@@ -49,7 +49,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-group= "slimeknights"
+group = "slimeknights"
 archivesBaseName = "TMechworks"
 
 // External properties
@@ -117,24 +117,24 @@ sourceSets {
 }
 
 processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "MCversion", project.minecraft.version
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "MCversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'MCversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
+
+                // replace version and mcversion
+                expand 'version': project.version, 'MCversion': project.minecraft.version
+            }
+
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
 
 // Add Access Transformers Manifest
 jar {
@@ -147,7 +147,7 @@ jar {
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
-	manifest {
+    manifest {
         //attributes 'FMLAT': 'tconstruct_at.cfg'
     }
 }
@@ -158,43 +158,52 @@ artifacts {
 
 // verify the properties exist.. or initialize.
 if (!project.hasProperty("keystore_location")) // keystore location
-    ext.keystore_location = ".";
-    
+{
+    ext.keystore_location = "."
+};
+
 if (!project.hasProperty("keystore_user_alias")) // keystore user alias
-    ext.keystore_user_alias = "";
-if (!project.hasProperty("sftp_username"))
-    ext.sftp_username = "";
-if (!project.hasProperty("sftp_key"))
-    ext.sftp_key = "";
+{
+    ext.keystore_user_alias = ""
+};
+if (!project.hasProperty("sftp_username")) {
+    ext.sftp_username = ""
+};
+if (!project.hasProperty("sftp_key")) {
+    ext.sftp_key = ""
+};
 if (!project.hasProperty("keystore_user_password")) // keystore user pass
-    ext.keystore_user_password = "";
-if (System.getenv().KSK_PW != null)
-	ext.keystore_user_password =System.getenv().KSK_PW;
+{
+    ext.keystore_user_password = ""
+};
+if (System.getenv().KSK_PW != null) {
+    ext.keystore_user_password = System.getenv().KSK_PW
+};
 
 
-task("uploadJars", dependsOn:"build") {
-    
+task("uploadJars", dependsOn: "build") {
+
     description = "uploads JARs"
 
     if (project.hasProperty("local_maven") || project.hasProperty("sftp_maven")) {
-	    apply plugin: 'maven'
+        apply plugin: 'maven'
         uploadArchives {
             repositories {
-		    	if(project.hasProperty("local_maven"))
-			    {
+                if (project.hasProperty("local_maven")) {
                     mavenDeployer {
                         repository(url: "file://${local_maven}")
-				    }
+                    }
                 }
-				if(project.hasProperty("sftp_maven")) {
+                if (project.hasProperty("sftp_maven")) {
                     repositories.mavenDeployer {
-					    configuration = configurations.deployerJars
-                        repository(url: "sftp://${sftp_maven}"){
-						authentication(userName: "${sftp_username}",privateKey: "${sftp_key}")}
-				    }
+                        configuration = configurations.deployerJars
+                        repository(url: "sftp://${sftp_maven}") {
+                            authentication(userName: "${sftp_username}", privateKey: "${sftp_key}")
+                        }
+                    }
                 }
             }
-        }    
+        }
     }
 }
 
@@ -205,8 +214,9 @@ task signUniversal(type: SignJar, dependsOn: 'jar') {
 
     def jarsigner = [:];
 
-    if (project.hasProperty('jarsigner'))
-        jarsigner = project.jarsigner;
+    if (project.hasProperty('jarsigner')) {
+        jarsigner = project.jarsigner
+    };
 
     alias = 'tcon'
     storePass = jarsigner.storepass
