@@ -1,0 +1,81 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "cube-all",
+    "textures": {
+      "all": "tmechworks:blocks/machines/drawbridge_side"
+    }
+  },
+  "variants": {
+    "facing=north,type=normal": {
+      "model": "tmechworks:drawbridge"
+    },
+    "facing=south,type=normal": {
+      "model": "tmechworks:drawbridge",
+      "y": 180
+    },
+    "facing=west,type=normal": {
+      "model": "tmechworks:drawbridge",
+      "y": 270
+    },
+    "facing=east,type=normal": {
+      "model": "tmechworks:drawbridge",
+      "y": 90
+    },
+    "facing=up,type=normal": {
+      "model": "tmechworks:drawbridge",
+      "x": 270
+    },
+    "facing=down,type=normal": {
+      "model": "tmechworks:drawbridge",
+      "x": 90
+    },
+    "facing=north,type=advanced": {
+      "model": "tmechworks:drawbridge_advanced"
+    },
+    "facing=south,type=advanced": {
+      "model": "tmechworks:drawbridge_advanced",
+      "y": 180
+    },
+    "facing=west,type=advanced": {
+      "model": "tmechworks:drawbridge_advanced",
+      "y": 270
+    },
+    "facing=east,type=advanced": {
+      "model": "tmechworks:drawbridge_advanced",
+      "y": 90
+    },
+    "facing=up,type=advanced": {
+      "model": "tmechworks:drawbridge_advanced",
+      "x": 270
+    },
+    "facing=down,type=advanced": {
+      "model": "tmechworks:drawbridge_advanced",
+      "x": 90
+    },
+    "facing=north,type=extended": {
+      "model": "tmechworks:drawbridge_extended"
+    },
+    "facing=south,type=extended": {
+      "model": "tmechworks:drawbridge_extended",
+      "y": 180
+    },
+    "facing=west,type=extended": {
+      "model": "tmechworks:drawbridge_extended",
+      "y": 270
+    },
+    "facing=east,type=extended": {
+      "model": "tmechworks:drawbridge_extended",
+      "y": 90
+    },
+    "facing=up,type=extended": {
+      "model": "tmechworks:drawbridge_extended",
+      "x": 270
+    },
+    "facing=down,type=extended": {
+      "model": "tmechworks:drawbridge_extended",
+      "x": 90
+    }
+  }
+}

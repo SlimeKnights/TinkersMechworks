@@ -1,0 +1,9 @@
+{
+  "parent": "tmechworks:block/machine_base",
+  "textures": {
+    "top": "tmechworks:blocks/machines/drawbridge_top",
+    "bottom": "tmechworks:blocks/machines/drawbridge_bottom",
+    "front": "tmechworks:blocks/machines/drawbridge_face",
+    "side": "tmechworks:/blocks/machines/drawbridge_side_advanced"
+  }
+}

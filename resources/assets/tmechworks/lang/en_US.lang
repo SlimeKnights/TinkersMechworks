@@ -1,0 +1,8 @@
+# Blocks
+tile.tmechworks.drawbridge.name=Drawbridge
+
+# Creative Tabs
+itemGroup.TabMechworks=Tinkers' Mechworks
+
+# Integration
+option.tmechworks.commons=Common Integration
