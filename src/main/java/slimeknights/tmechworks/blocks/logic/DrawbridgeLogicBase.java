@@ -106,25 +106,24 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
   public int getRedstoneState() {
     return redstoneState;
   }
-
   public int getExtendState() {
     return extendState;
   }
-
   public boolean getExtended() {
     return isExtended;
   }
-
   public boolean getExtending() {
     return isExtending;
   }
-
   public EnumFacing getFacingDirection() {
     return facingDirection;
   }
-
   public void setFacingDirection(EnumFacing direction) {
     facingDirection = direction;
+  }
+
+  public DrawbridgeStats getStats() {
+    return statistics;
   }
 
   @Override
