@@ -11,17 +11,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
+import slimeknights.tmechworks.library.Util;
 
 public class DrawbridgeLogic extends DrawbridgeLogicBase
 {
 
     public DrawbridgeLogic ()
     {
-        super(TMechworks.modID + ".inventory.drawbridge", 2);
+        super(Util.prefix("inventory.drawbridge"), 2);
     }
 
     @Override public void setupStatistics (DrawbridgeStats ds)

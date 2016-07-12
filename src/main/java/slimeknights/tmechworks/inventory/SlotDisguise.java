@@ -5,11 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import slimeknights.tmechworks.blocks.logic.IDisguisable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import slimeknights.tmechworks.blocks.logic.IDisguisable;
 
 public class SlotDisguise extends Slot
 {
@@ -58,7 +57,7 @@ public class SlotDisguise extends Slot
      */
     public void onSlotChanged ()
     {
-        this.inventory.markDirty();
+        disguise.markDirty();
     }
 
     /**

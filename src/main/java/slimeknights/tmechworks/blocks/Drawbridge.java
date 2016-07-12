@@ -1,130 +1,74 @@
 package slimeknights.tmechworks.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import java.util.Locale;
-
-import javax.annotation.Nonnull;
-
-import slimeknights.mantle.block.BlockInventory;
-import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
 
-public class Drawbridge extends BlockInventory
+import javax.annotation.Nonnull;
+import java.util.Locale;
+
+public class Drawbridge extends RedstoneMachine
 {
+    public static final PropertyEnum<DrawbridgeType> TYPE = PropertyEnum.create("type", DrawbridgeType.class, DrawbridgeType.values());
 
-  public static final PropertyDirection FACING = PropertyDirection.create("facing");
-  public static final PropertyEnum<DrawbridgeType> TYPE = PropertyEnum.create("type", DrawbridgeType.class, DrawbridgeType.values());
-
-  public Drawbridge ()
-  {
-    super(Material.IRON);
-    this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TYPE, DrawbridgeType.NORMAL));
-  }
-
-  @Override public int getMetaFromState (IBlockState state)
-  {
-    return ((DrawbridgeType) state.getValue(TYPE)).ordinal();
-  }
-
-  @Override public IBlockState getStateFromMeta (int meta)
-  {
-    return getDefaultState().withProperty(TYPE, DrawbridgeType.values()[meta]);
-  }
-
-  @Nonnull @Override public TileEntity createNewTileEntity (@Nonnull World worldIn, int meta)
-  {
-    try
+    public Drawbridge ()
     {
-      return DrawbridgeType.values()[meta].tileEntityClass.newInstance();
+        super(Material.IRON);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TYPE, DrawbridgeType.NORMAL));
     }
-    catch (InstantiationException | IllegalAccessException e)
+
+    @Override public int getMetaFromState (IBlockState state)
     {
-      e.printStackTrace();
+        return ((DrawbridgeType) state.getValue(TYPE)).ordinal();
     }
 
-    return null;
-    }
-
-  @Override protected boolean openGui (EntityPlayer player, World world, BlockPos pos)
-  {
-    player.openGui(TMechworks.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
-    return true;
-  }
-
-  @Override protected BlockStateContainer createBlockState ()
-  {
-    return new BlockStateContainer(this, FACING, TYPE);
-  }
-
-  @Override public IBlockState getActualState (IBlockState state, IBlockAccess worldIn, BlockPos pos)
-  {
-    DrawbridgeLogicBase baseLogic = (DrawbridgeLogicBase) worldIn.getTileEntity(pos);
-
-    EnumFacing face = EnumFacing.NORTH;
-
-    if (baseLogic != null)
+    @Override public IBlockState getStateFromMeta (int meta)
     {
-      face = baseLogic.getFacingDirection();
+        return getDefaultState().withProperty(TYPE, DrawbridgeType.values()[meta]);
     }
 
-    return state.withProperty(FACING, face);
-    }
-
-  @Override public void onBlockPlacedBy (World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-  {
-    DrawbridgeLogicBase baseLogic = (DrawbridgeLogicBase) worldIn.getTileEntity(pos);
-
-    if (baseLogic == null)
+    @Override public TileEntity createNewTileEntity (@Nonnull World worldIn, int meta)
     {
-      return;
+        try
+        {
+            return DrawbridgeType.values()[meta].tileEntityClass.newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
-    baseLogic.setFacingDirection(BlockPistonBase.getFacingFromEntity(pos, placer));
-    }
-
-  @Override public void neighborChanged (IBlockState state, World worldIn, BlockPos pos, Block blockIn)
-  {
-    DrawbridgeLogicBase logicBase = (DrawbridgeLogicBase) worldIn.getTileEntity(pos);
-
-    if (logicBase != null)
+    @Nonnull @Override protected BlockStateContainer createBlockState ()
     {
-      logicBase.updateRedstone();
+        return new BlockStateContainer(this, FACING, TYPE);
     }
-    }
 
-  public enum DrawbridgeType implements IStringSerializable
-  {
-    NORMAL(DrawbridgeLogic.class),
-    ADVANCED(DrawbridgeLogicBase.class),
-    EXTENDED(DrawbridgeLogicBase.class);
-
-    public final Class<? extends DrawbridgeLogicBase> tileEntityClass;
-
-    DrawbridgeType (Class<? extends DrawbridgeLogicBase> te)
+    public enum DrawbridgeType implements IStringSerializable
     {
-      tileEntityClass = te;
-    }
+        NORMAL(DrawbridgeLogic.class),
+        ADVANCED(DrawbridgeLogicBase.class),
+        EXTENDED(DrawbridgeLogicBase.class);
 
-    @Override public String getName ()
-    {
-      return this.toString().toLowerCase(Locale.US);
-    }
+        public final Class<? extends DrawbridgeLogicBase> tileEntityClass;
+
+        DrawbridgeType (Class<? extends DrawbridgeLogicBase> te)
+        {
+            tileEntityClass = te;
+        }
+
+        @Override public String getName ()
+        {
+            return this.toString().toLowerCase(Locale.US);
+        }
     }
 }

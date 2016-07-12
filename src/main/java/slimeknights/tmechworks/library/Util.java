@@ -1,7 +1,6 @@
 package slimeknights.tmechworks.library;
 
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -10,12 +9,14 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
 
 public class Util
 {
 
     public static final String RESOURCE = "tmechworks";
+    public static final Random rand = new Random();
 
     public static FakePlayer createFakePlayer (World world)
     {

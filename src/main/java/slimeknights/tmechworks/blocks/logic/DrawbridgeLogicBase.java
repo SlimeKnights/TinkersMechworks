@@ -6,11 +6,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.util.FakePlayer;
-
-import javax.annotation.Nonnull;
-
 import slimeknights.mantle.common.IInventoryGui;
 import slimeknights.tmechworks.library.Util;
+
+import javax.annotation.Nonnull;
 
 public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase implements ITickable, IInventoryGui
 {
@@ -33,7 +32,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         super(name, inventorySize);
     }
 
-    @Override public void onRedstoneUpdate ()
+    @Override public void onBlockUpdate ()
     {
         if (isExtended && getRedstoneState() <= 0)
         {
@@ -50,13 +49,13 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     public void playExtendSound ()
     {
         worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.25F,
-                worldObj.rand.nextFloat() * 0.25F + 0.6F);
+                Util.rand.nextFloat() * 0.25F + 0.6F);
     }
 
     public void playRetractSound ()
     {
         worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.25F,
-                worldObj.rand.nextFloat() * 0.15F + 0.6F);
+                Util.rand.nextFloat() * 0.15F + 0.6F);
     }
 
     public int getExtendState ()

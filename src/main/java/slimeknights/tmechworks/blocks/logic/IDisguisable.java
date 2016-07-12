@@ -6,6 +6,7 @@ public interface IDisguisable
 {
 
     ItemStack getDisguiseBlock ();
+
     void setDisguiseBlock (ItemStack disguise);
 
     void markDirty ();

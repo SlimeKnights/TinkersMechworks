@@ -8,15 +8,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-
-import java.util.Locale;
-
 import slimeknights.mantle.block.EnumBlock;
 import slimeknights.mantle.client.CreativeTab;
 import slimeknights.mantle.item.ItemBlockMeta;
 import slimeknights.tmechworks.blocks.Drawbridge;
+import slimeknights.tmechworks.blocks.Firestarter;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
 import slimeknights.tmechworks.library.Util;
+
+import java.util.Locale;
 
 public class MechworksContent
 {
@@ -25,6 +26,7 @@ public class MechworksContent
 
     // Blocks
     public static Block drawbridge;
+    public static Block firestarter;
 
     // Tabs
     public static CreativeTab tabMechworks = new CreativeTab("TabMechworks", new ItemStack(Items.POISONOUS_POTATO));
@@ -46,6 +48,10 @@ public class MechworksContent
         drawbridge = new Drawbridge().setCreativeTab(tabMechworks);
         registerBlock(drawbridge, "drawbridge");
         registerTE(DrawbridgeLogic.class, "drawbridge");
+
+        firestarter = new Firestarter().setCreativeTab(tabMechworks);
+        registerBlock(firestarter, "firestarter");
+        registerTE(FirestarterLogic.class, "firestarter");
     }
 
     private void setupCreativeTabs ()

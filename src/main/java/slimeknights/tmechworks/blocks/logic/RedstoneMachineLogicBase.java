@@ -1,7 +1,6 @@
 package slimeknights.tmechworks.blocks.logic;
 
 import com.google.common.base.Predicates;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryBasic;
@@ -14,14 +13,12 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import slimeknights.mantle.tileentity.TileInventory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import slimeknights.mantle.common.IInventoryGui;
-import slimeknights.mantle.tileentity.TileInventory;
-
-public abstract class RedstoneMachineLogicBase extends TileInventory implements IDisguisable, ITickable, IInventoryGui
+public abstract class RedstoneMachineLogicBase extends TileInventory implements IDisguisable, ITickable
 {
     private InventoryBasic disguiseInventory;
 
@@ -72,7 +69,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
 
         redstoneState = idPow > sidePow ? idPow : sidePow;
 
-        onRedstoneUpdate();
+        onBlockUpdate();
 
         if (oldPow != redstoneState)
         {
@@ -80,7 +77,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         }
     }
 
-    public void onRedstoneUpdate ()
+    public void onBlockUpdate ()
     {
     }
 
@@ -145,6 +142,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
             data.setTag("Disguise", itemNBT);
         }
 
+        data.setInteger("Redstone", redstoneState);
         data.setInteger("Facing", facingDirection.ordinal());
 
         return data;
@@ -163,6 +161,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
             setDisguiseBlock(disguise);
         }
 
+        redstoneState = tags.getInteger("Redstone");
         facingDirection = EnumFacing.values()[tags.getInteger("Facing")];
     }
 
@@ -180,8 +179,6 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         NBTTagCompound tags = pkt.getNbtCompound();
 
         readFromNBT(tags);
-
-        updateRedstone();
     }
 
     @Override public NBTTagCompound getUpdateTag ()
@@ -192,14 +189,13 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
     @Override public void handleUpdateTag (@Nonnull NBTTagCompound tag)
     {
         readFromNBT(tag);
-        updateRedstone();
     }
 
     public void sync ()
     {
         markDirty();
 
-        if (FMLCommonHandler.instance().getSide() == Side.SERVER)
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
             SPacketUpdateTileEntity packetUpdateTileEntity = getUpdatePacket();
 

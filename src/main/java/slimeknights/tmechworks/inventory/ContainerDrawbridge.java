@@ -2,7 +2,6 @@ package slimeknights.tmechworks.inventory;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
-
 import slimeknights.mantle.inventory.BaseContainer;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
 
