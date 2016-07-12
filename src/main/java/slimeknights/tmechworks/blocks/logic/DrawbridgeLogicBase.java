@@ -1,101 +1,46 @@
 package slimeknights.tmechworks.blocks.logic;
 
-import com.google.common.base.Predicates;
-
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import slimeknights.mantle.tileentity.TileInventory;
+import slimeknights.mantle.common.IInventoryGui;
 import slimeknights.tmechworks.library.Util;
 
-public abstract class DrawbridgeLogicBase extends TileInventory implements IDisguisable, ITickable
+public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase implements ITickable, IInventoryGui
 {
-
     private static final float TICK_TIME = 0.05F;
 
     private FakePlayer fakePlayer;
     private DrawbridgeStats statistics = new DrawbridgeStats();
 
-    private int redstoneState;
     private int extendState;
     private boolean isExtended;
     private boolean isExtending;
     private float cooldown;
 
-    private boolean isFirstTick = true;
-
-    private EnumFacing facingDirection = EnumFacing.NORTH;
+    private EnumFacing placeDirection = null;
 
     private long lastWorldTime;
 
     public DrawbridgeLogicBase (String name, int inventorySize)
     {
-        super(name, inventorySize + 1);
+        super(name, inventorySize);
     }
 
-    public void updateRedstone ()
+    @Override public void onRedstoneUpdate ()
     {
-        int oldPow = redstoneState;
-
-        int idPow = worldObj.isBlockIndirectlyGettingPowered(pos);
-        int sidePow = 0;
-
-        for (EnumFacing face : EnumFacing.HORIZONTALS)
-        {
-            BlockPos miscPos = new BlockPos(pos.getX() + face.getFrontOffsetX(), pos.getY() + face.getFrontOffsetY(), pos.getZ() + face.getFrontOffsetZ());
-            IBlockState miscState = worldObj.getBlockState(miscPos);
-
-            if (!miscState.canProvidePower())
-            {
-                continue;
-            }
-
-            int pow = miscState.getStrongPower(worldObj, miscPos, face.getOpposite());
-
-            if (pow > sidePow)
-            {
-                sidePow = pow;
-            }
-        }
-
-        redstoneState = idPow > sidePow ? idPow : sidePow;
-
-        updateExtension();
-
-        if (oldPow != redstoneState)
-        {
-            markDirty();
-
-            for (EntityPlayerMP player : worldObj.getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue()))
-            {
-                player.connection.sendPacket(getUpdatePacket());
-            }
-
-        }
-    }
-
-    public void updateExtension ()
-    {
-        if (isExtended && redstoneState <= 0)
+        if (isExtended && getRedstoneState() <= 0)
         {
             isExtended = false;
             isExtending = true;
         }
-        else if (!isExtended && redstoneState > 0)
+        else if (!isExtended && getRedstoneState() > 0)
         {
             isExtended = true;
             isExtending = true;
@@ -114,11 +59,6 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
                 worldObj.rand.nextFloat() * 0.15F + 0.6F);
     }
 
-    public int getRedstoneState ()
-    {
-        return redstoneState;
-    }
-
     public int getExtendState ()
     {
         return extendState;
@@ -134,14 +74,37 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
         return isExtending;
     }
 
-    public EnumFacing getFacingDirection ()
+    public EnumFacing getPlaceDirection ()
     {
-        return facingDirection;
+        return placeDirection;
     }
 
-    public void setFacingDirection (EnumFacing direction)
+    public void setPlaceDirection (EnumFacing direction)
     {
-        facingDirection = direction;
+        placeDirection = direction;
+    }
+
+    public void setPlaceDirectionRelativeToBlock (EnumFacing direction)
+    {
+        switch (direction)
+        {
+        case UP:
+        case DOWN:
+            setPlaceDirection(direction);
+            break;
+        case NORTH:
+            setPlaceDirection(getFacingDirection());
+            break;
+        case SOUTH:
+            setPlaceDirection(getFacingDirection().getOpposite());
+            break;
+        case EAST:
+            setPlaceDirection(getFacingDirection().rotateY());
+            break;
+        case WEST:
+            setPlaceDirection(getFacingDirection().rotateY().getOpposite());
+            break;
+        }
     }
 
     public DrawbridgeStats getStats ()
@@ -149,23 +112,77 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
         return statistics;
     }
 
-    @Override public void onLoad ()
+    @Override public void loadData ()
     {
-        super.onLoad();
+        super.loadData();
 
-        fakePlayer = Util.createFakePlayer(worldObj);
+        if (placeDirection == null)
+        {
+            setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);
+        }
 
         setupStatistics(statistics);
 
         lastWorldTime = worldObj.getWorldTime();
     }
 
+    public void updateFakePlayer ()
+    {
+        if (fakePlayer == null)
+        {
+            fakePlayer = Util.createFakePlayer(worldObj);
+        }
+        if (fakePlayer == null)
+        {
+            return;
+        }
+
+        fakePlayer.rotationYaw = 0;
+        fakePlayer.rotationPitch = 0;
+        fakePlayer.posX = getPos().getX();
+        fakePlayer.posY = getPos().getY();
+        fakePlayer.posZ = getPos().getZ();
+
+        switch (placeDirection)
+        {
+        case NORTH:
+            fakePlayer.rotationYaw = 0;
+            fakePlayer.posZ += 2;
+            break;
+        case SOUTH:
+            fakePlayer.rotationYaw = 180;
+            fakePlayer.posZ -= 2;
+        case UP:
+            fakePlayer.rotationPitch = 90;
+            fakePlayer.posY += 2;
+            break;
+        case DOWN:
+            fakePlayer.rotationPitch = -90;
+            fakePlayer.posY -= 2;
+            break;
+        case EAST:
+            fakePlayer.rotationYaw = 90;
+            fakePlayer.posX -= 2;
+            break;
+        case WEST:
+            fakePlayer.rotationYaw = -90;
+            fakePlayer.posX += 2;
+            break;
+        }
+    }
+
+    public FakePlayer getFakePlayer ()
+    {
+        return fakePlayer;
+    }
+
     @Override public void update ()
     {
-        if (isFirstTick)
+        super.update();
+
+        if (placeDirection == null)
         {
-            updateRedstone();
-            isFirstTick = false;
+            setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);
         }
 
         if (isExtending)
@@ -176,6 +193,7 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
             }
             else if (isExtended)
             {
+                updateFakePlayer();
                 if (extendState == statistics.extendLength)
                 {
                     isExtending = false;
@@ -186,9 +204,14 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
                     cooldown = statistics.extendDelay;
                     playExtendSound();
                 }
+                else
+                {
+                    isExtending = false;
+                }
             }
             else
             {
+                updateFakePlayer();
                 if (extendState <= 0)
                 {
                     isExtending = false;
@@ -198,6 +221,11 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
                     extendState--;
                     cooldown = statistics.extendDelay;
                     playRetractSound();
+                }
+                else
+                {
+                    isExtending = false;
+                    extendState = 0;
                 }
             }
         }
@@ -219,21 +247,6 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
     @Override public void validate ()
     {
         super.validate();
-
-        if (fakePlayer == null)
-        {
-            fakePlayer = Util.createFakePlayer(worldObj);
-        }
-    }
-
-    @Override public ItemStack getDisguiseBlock ()
-    {
-        return getStackInSlot(getSizeInventory() - 1);
-    }
-
-    @Override public void setDisguiseBlock (ItemStack disguise)
-    {
-        setInventorySlotContents(getSizeInventory() - 1, disguise);
     }
 
     /* NBT */
@@ -245,7 +258,7 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
         isExtended = tags.getBoolean("IsExtended");
         isExtending = tags.getBoolean("IsExtending");
         cooldown = tags.getFloat("Cooldown");
-        facingDirection = EnumFacing.values()[tags.getInteger("Facing")];
+        placeDirection = EnumFacing.values()[tags.getInteger("PlaceDirection")];
     }
 
     @Nonnull @Override public NBTTagCompound writeToNBT (NBTTagCompound tags)
@@ -256,34 +269,15 @@ public abstract class DrawbridgeLogicBase extends TileInventory implements IDisg
         data.setBoolean("IsExtended", isExtended);
         data.setBoolean("IsExtending", isExtending);
         data.setFloat("Cooldown", cooldown);
-        data.setInteger("Facing", facingDirection.ordinal());
+
+        if (placeDirection == null)
+        {
+            setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);
+        }
+
+        data.setInteger("PlaceDirection", placeDirection.ordinal());
 
         return data;
-    }
-
-    @Override public boolean shouldRefresh (World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newSate)
-    {
-        return oldState.getBlock() != newSate.getBlock();
-    }
-
-    @Override @Nullable public SPacketUpdateTileEntity getUpdatePacket ()
-    {
-        NBTTagCompound tags = new NBTTagCompound();
-
-        tags = writeToNBT(tags);
-
-        SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, worldObj.getBlockState(pos).getBlock().getMetaFromState(worldObj.getBlockState(pos)), tags);
-
-        return packet;
-    }
-
-    @Override public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt)
-    {
-        NBTTagCompound tags = pkt.getNbtCompound();
-
-        readFromNBT(tags);
-
-        updateRedstone();
     }
 
     public abstract void setupStatistics (DrawbridgeStats ds);

@@ -22,6 +22,7 @@ import java.util.Locale;
 import javax.annotation.Nonnull;
 
 import slimeknights.mantle.block.BlockInventory;
+import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
 
@@ -63,7 +64,8 @@ public class Drawbridge extends BlockInventory
 
   @Override protected boolean openGui (EntityPlayer player, World world, BlockPos pos)
   {
-    return false;
+    player.openGui(TMechworks.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
+    return true;
   }
 
   @Override protected BlockStateContainer createBlockState ()
