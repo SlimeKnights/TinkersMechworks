@@ -21,9 +21,9 @@
   },
   "textures": {
     "particle": "#side",
-    "down": "#bottom",
-    "up": "#top",
-    "north": "#front",
+    "down": "#back",
+    "up": "#face",
+    "north": "#side",
     "east": "#side",
     "south": "#side",
     "west": "#side"

@@ -1,0 +1,62 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "cube-all",
+    "textures": {
+      "all": "tmechworks:blocks/machines/firestarter_side"
+    }
+  },
+  "variants": {
+    "extinguish=false,facing=north": {
+      "model": "tmechworks:firestarter",
+      "x": 90
+    },
+    "extinguish=false,facing=south": {
+      "model": "tmechworks:firestarter",
+      "x": -90
+    },
+    "extinguish=false,facing=west": {
+      "model": "tmechworks:firestarter",
+      "x": 90,
+      "y": -90
+    },
+    "extinguish=false,facing=east": {
+      "model": "tmechworks:firestarter",
+      "x": 90,
+      "y": 90
+    },
+    "extinguish=false,facing=up": {
+      "model": "tmechworks:firestarter"
+    },
+    "extinguish=false,facing=down": {
+      "model": "tmechworks:firestarter",
+      "x": 180
+    },
+    "extinguish=true,facing=north": {
+      "model": "tmechworks:firestarter_extinguish",
+      "x": 90
+    },
+    "extinguish=true,facing=south": {
+      "model": "tmechworks:firestarter_extinguish",
+      "x": -90
+    },
+    "extinguish=true,facing=west": {
+      "model": "tmechworks:firestarter_extinguish",
+      "x": 90,
+      "y": -90
+    },
+    "extinguish=true,facing=east": {
+      "model": "tmechworks:firestarter_extinguish",
+      "x": 90,
+      "y": 90
+    },
+    "extinguish=true,facing=up": {
+      "model": "tmechworks:firestarter_extinguish"
+    },
+    "extinguish=true,facing=down": {
+      "model": "tmechworks:firestarter_extinguish",
+      "x": 180
+    }
+  }
+}

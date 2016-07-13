@@ -1,0 +1,8 @@
+{
+  "parent": "tmechworks:block/machine_base",
+  "textures": {
+    "face": "tmechworks:blocks/machines/firestarter_face",
+    "back": "tmechworks:blocks/machines/firestarter_back",
+    "side": "tmechworks:/blocks/machines/firestarter_side_extinguish"
+  }
+}

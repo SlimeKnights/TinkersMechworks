@@ -5,10 +5,12 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -19,7 +21,7 @@ import javax.annotation.Nullable;
 
 public class Firestarter extends RedstoneMachine
 {
-    public static final PropertyBool SHOULD_EXTENGUISH = PropertyBool.create("extenguish_fire");
+    public static final PropertyBool SHOULD_EXTENGUISH = PropertyBool.create("extinguish");
 
     public Firestarter ()
     {
@@ -59,6 +61,7 @@ public class Firestarter extends RedstoneMachine
         if (logic != null)
         {
             logic.shouldExtenguish = !logic.shouldExtenguish;
+            worldIn.playSound(playerIn, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
             logic.sync();
         }
 

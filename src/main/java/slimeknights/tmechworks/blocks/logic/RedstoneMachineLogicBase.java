@@ -178,7 +178,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
     {
         NBTTagCompound tags = pkt.getNbtCompound();
 
-        readFromNBT(tags);
+        handleUpdateTag(tags);
     }
 
     @Override public NBTTagCompound getUpdateTag ()
@@ -189,11 +189,14 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
     @Override public void handleUpdateTag (@Nonnull NBTTagCompound tag)
     {
         readFromNBT(tag);
+
+        worldObj.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     public void sync ()
     {
         markDirty();
+        worldObj.markBlockRangeForRenderUpdate(pos, pos);
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {

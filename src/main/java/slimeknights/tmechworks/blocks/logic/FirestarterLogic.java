@@ -36,7 +36,7 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
         IBlockState state = worldObj.getBlockState(position);
         if (getRedstoneState() > 0)
         {
-            if (state.getBlock() == Blocks.AIR)
+            if (state.getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(worldObj, position))
             {
                 worldObj.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
                 worldObj.setBlockState(position, Blocks.FIRE.getDefaultState(), 11);
