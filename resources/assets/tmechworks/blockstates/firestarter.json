@@ -2,9 +2,10 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "model": "cube-all",
+    "model": "cube_all",
     "textures": {
-      "all": "tmechworks:blocks/machines/firestarter_side"
+      "all": "tmechworks:blocks/machines/firestarter_side",
+      "particle": "#all"
     }
   },
   "variants": {

@@ -1,5 +1,7 @@
 # Blocks
-tile.tmechworks.drawbridge.name=Drawbridge
+tile.tmechworks.drawbridge.normal.name=Drawbridge
+tile.tmechworks.drawbridge.advanced.name=Advanced Drawbridge
+tile.tmechworks.drawbridge.extended.name=Extended Drawbridge
 
 # Creative Tabs
 itemGroup.TabMechworks=Tinkers' Mechworks

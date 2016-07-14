@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import slimeknights.mantle.block.EnumBlock;
 import slimeknights.mantle.client.CreativeTab;
 import slimeknights.mantle.item.ItemBlockMeta;
 import slimeknights.tmechworks.blocks.Drawbridge;
 import slimeknights.tmechworks.blocks.Firestarter;
+import slimeknights.tmechworks.blocks.IEnumBlock;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
 import slimeknights.tmechworks.library.Util;
@@ -25,8 +25,8 @@ public class MechworksContent
     // Items
 
     // Blocks
-    public static Block drawbridge;
-    public static Block firestarter;
+    public static Drawbridge drawbridge;
+    public static Firestarter firestarter;
 
     // Tabs
     public static CreativeTab tabMechworks = new CreativeTab("TabMechworks", new ItemStack(Items.POISONOUS_POTATO));
@@ -45,18 +45,19 @@ public class MechworksContent
 
     private void registerBlocks ()
     {
-        drawbridge = new Drawbridge().setCreativeTab(tabMechworks);
-        registerBlock(drawbridge, "drawbridge");
+        drawbridge = registerEnumBlock(new Drawbridge(), "drawbridge");
+        drawbridge.setCreativeTab(tabMechworks);
         registerTE(DrawbridgeLogic.class, "drawbridge");
 
-        firestarter = new Firestarter().setCreativeTab(tabMechworks);
-        registerBlock(firestarter, "firestarter");
+        firestarter = registerBlock(new Firestarter(), "firestarter");
+        ;
+        firestarter.setCreativeTab(tabMechworks);
         registerTE(FirestarterLogic.class, "firestarter");
     }
 
     private void setupCreativeTabs ()
     {
-        tabMechworks.setDisplayIcon(new ItemStack(drawbridge));
+        tabMechworks.setDisplayIcon(new ItemStack(drawbridge, 1, 0));
     }
 
     protected static <T extends Block> T registerBlock (T block, String name)
@@ -66,10 +67,10 @@ public class MechworksContent
         return block;
     }
 
-    protected static <T extends EnumBlock<?>> T registerEnumBlock (T block, String name)
+    protected static <T extends IEnumBlock<?>> T registerEnumBlock (T block, String name)
     {
-        registerBlock(block, new ItemBlockMeta(block), name);
-        ItemBlockMeta.setMappingProperty(block, block.prop);
+        registerBlock(block.getSelf(), new ItemBlockMeta(block.getSelf()), name);
+        ItemBlockMeta.setMappingProperty(block.getSelf(), block.getProperty());
         return block;
     }
 

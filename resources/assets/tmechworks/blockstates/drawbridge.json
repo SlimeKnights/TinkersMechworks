@@ -2,12 +2,19 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "model": "cube-all",
+    "model": "cube_all",
     "textures": {
-      "all": "tmechworks:blocks/machines/drawbridge_side"
+      "all": "tmechworks:blocks/machines/drawbridge_side",
+      "particle": "#all"
     }
   },
   "variants": {
+    "inventory": {
+      "model": "tmechworks:drawbridge"
+    },
+    "type=normal": {
+      "model": "tmechworks:drawbridge"
+    },
     "facing=north,type=normal": {
       "model": "tmechworks:drawbridge",
       "x": 90
