@@ -2,18 +2,11 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "model": "cube_all",
-    "textures": {
-      "all": "tmechworks:blocks/machines/drawbridge_side",
-      "particle": "#all"
-    }
+    "model": "tmechworks:drawbridge"
   },
   "variants": {
-    "inventory": {
-      "model": "tmechworks:drawbridge"
-    },
     "type=normal": {
-      "model": "tmechworks:drawbridge"
+      "model": "tmechworks:testcube"
     },
     "facing=north,type=normal": {
       "model": "tmechworks:drawbridge",
@@ -40,6 +33,9 @@
       "model": "tmechworks:drawbridge",
       "x": 180
     },
+    "type=advanced": {
+      "model": "tmechworks:drawbridge_advanced"
+    },
     "facing=north,type=advanced": {
       "model": "tmechworks:drawbridge_advanced",
       "x": -90
@@ -64,6 +60,9 @@
     "facing=down,type=advanced": {
       "model": "tmechworks:drawbridge_advanced",
       "x": 180
+    },
+    "type=extended": {
+      "model": "tmechworks:drawbridge_extended"
     },
     "facing=north,type=extended": {
       "model": "tmechworks:drawbridge_extended",

@@ -35,13 +35,13 @@ public class TMechworks
         {
             new WailaIntegration();
         }
+
+        content = new MechworksContent();
     }
 
     @Mod.EventHandler public void init (FMLInitializationEvent event)
     {
         proxy.init();
-
-        content = new MechworksContent();
     }
 
     @Mod.EventHandler public void postInit (FMLInitializationEvent event)

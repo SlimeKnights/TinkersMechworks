@@ -9,6 +9,9 @@
     }
   },
   "variants": {
+    "inventory": {
+      "model": "tmechworks:firestarter"
+    },
     "extinguish=false,facing=north": {
       "model": "tmechworks:firestarter",
       "x": 90

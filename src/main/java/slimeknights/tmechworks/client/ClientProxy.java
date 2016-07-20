@@ -17,18 +17,22 @@ public class ClientProxy extends CommonProxy
     public void init ()
     {
         super.init();
-        registerModels();
     }
 
     public void postInit ()
     {
         super.postInit();
+        registerModels();
     }
 
     protected void registerModels ()
     {
+        MechworksContent.ingots.registerItemModels();
+        ;
+        MechworksContent.nuggets.registerItemModels();
+
         registerItemBlockMeta(MechworksContent.drawbridge);
-        registerItemBlockMeta(MechworksContent.firestarter);
+        registerItemBlockMeta(MechworksContent.metals);
     }
 
     protected void registerItemBlockMeta (Block block)

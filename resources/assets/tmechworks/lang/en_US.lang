@@ -1,7 +1,23 @@
 # Blocks
+## Machines
 tile.tmechworks.drawbridge.normal.name=Drawbridge
 tile.tmechworks.drawbridge.advanced.name=Advanced Drawbridge
 tile.tmechworks.drawbridge.extended.name=Extended Drawbridge
+tile.tmechworks.firestarter.name=Firestarter
+
+## Compressed Blocks
+tile.tmechworks.metal.aluminum.name=Aluminum Block
+tile.tmechworks.metal.copper.name=Copper Block
+
+# Items
+## Ingots
+item.tmechworks.ingots.aluminum.name=Aluminum Ingot
+item.tmechworks.ingots.copper.name=Copper Ingot
+
+## Nuggets
+item.tmechworks.nuggets.aluminum.name=Aluminum Nugget
+item.tmechworks.nuggets.copper.name=Copper Nugget
+
 
 # Creative Tabs
 itemGroup.TabMechworks=Tinkers' Mechworks
