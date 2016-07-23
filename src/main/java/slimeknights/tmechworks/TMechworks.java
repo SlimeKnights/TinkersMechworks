@@ -27,8 +27,6 @@ public class TMechworks
 
     @Mod.EventHandler public void preInit (FMLPreInitializationEvent event)
     {
-        proxy.preInit();
-
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
         if (Loader.isModLoaded("Waila"))
@@ -37,6 +35,7 @@ public class TMechworks
         }
 
         content = new MechworksContent();
+        proxy.preInit();
     }
 
     @Mod.EventHandler public void init (FMLInitializationEvent event)

@@ -9,11 +9,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import slimeknights.mantle.block.EnumBlock;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
 
@@ -28,7 +28,7 @@ public class Drawbridge extends RedstoneMachine implements IEnumBlock<Drawbridge
     public Drawbridge ()
     {
         super(Material.IRON);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TYPE, DrawbridgeType.NORMAL));
+        this.setDefaultState(this.getDefaultState().withProperty(TYPE, DrawbridgeType.NORMAL));
     }
 
     @Override public int getMetaFromState (IBlockState state)
@@ -78,7 +78,7 @@ public class Drawbridge extends RedstoneMachine implements IEnumBlock<Drawbridge
     }
 
 
-    public enum DrawbridgeType implements IStringSerializable
+    public enum DrawbridgeType implements IStringSerializable, EnumBlock.IEnumMeta
     {
         NORMAL(DrawbridgeLogic.class),
         ADVANCED(DrawbridgeLogicBase.class),
@@ -94,6 +94,11 @@ public class Drawbridge extends RedstoneMachine implements IEnumBlock<Drawbridge
         @Override public String getName ()
         {
             return this.toString().toLowerCase(Locale.US);
+        }
+
+        @Override
+        public int getMeta() {
+            return ordinal();
         }
     }
 }
