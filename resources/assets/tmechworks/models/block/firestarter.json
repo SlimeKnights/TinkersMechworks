@@ -4,5 +4,6 @@
     "face": "tmechworks:blocks/machines/firestarter_face",
     "back": "tmechworks:blocks/machines/firestarter_back",
     "side": "tmechworks:/blocks/machines/firestarter_side"
-  }
+  },
+  "comment": "This model is temporary to provide a model for the item, will be deleted after I figure out why it doesn't read the blockstate for the item model."
 }

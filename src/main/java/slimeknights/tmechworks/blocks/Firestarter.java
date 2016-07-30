@@ -19,13 +19,13 @@ import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class Firestarter extends RedstoneMachine
+public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
 {
     public static final PropertyBool SHOULD_EXTENGUISH = PropertyBool.create("extinguish");
 
     public Firestarter ()
     {
-        super(Material.IRON);
+        super(Material.IRON, DEF_TYPE, DefaultTypes.class);
     }
 
     @Override public IBlockState getActualState (@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos)
@@ -44,7 +44,7 @@ public class Firestarter extends RedstoneMachine
 
     @Nonnull @Override protected BlockStateContainer createBlockState ()
     {
-        return new BlockStateContainer(this, FACING, SHOULD_EXTENGUISH);
+        return new BlockStateContainer(this, FACING, SHOULD_EXTENGUISH, DEF_TYPE);
     }
 
     @Nonnull @Override public TileEntity createNewTileEntity (@Nonnull World worldIn, int meta)

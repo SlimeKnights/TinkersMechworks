@@ -1,6 +1,5 @@
 package slimeknights.tmechworks.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -21,13 +20,13 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class Drawbridge extends RedstoneMachine implements IEnumBlock<Drawbridge.DrawbridgeType>
+public class Drawbridge extends RedstoneMachine<Drawbridge.DrawbridgeType>
 {
     public static final PropertyEnum<DrawbridgeType> TYPE = PropertyEnum.create("type", DrawbridgeType.class, DrawbridgeType.values());
 
     public Drawbridge ()
     {
-        super(Material.IRON);
+        super(Material.IRON, TYPE, DrawbridgeType.class);
         this.setDefaultState(this.getDefaultState().withProperty(TYPE, DrawbridgeType.NORMAL));
     }
 
@@ -58,16 +57,6 @@ public class Drawbridge extends RedstoneMachine implements IEnumBlock<Drawbridge
     @Nonnull @Override protected BlockStateContainer createBlockState ()
     {
         return new BlockStateContainer(this, FACING, TYPE);
-    }
-
-    @Override public PropertyEnum<DrawbridgeType> getProperty ()
-    {
-        return TYPE;
-    }
-
-    @Override public Block getSelf ()
-    {
-        return this;
     }
 
     @SideOnly(Side.CLIENT) public void getSubBlocks (Item itemIn, CreativeTabs tab, List<ItemStack> list)

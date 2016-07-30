@@ -83,7 +83,7 @@ public class MechworksContent
         drawbridge.setCreativeTab(tabMechworks);
         registerTE(DrawbridgeLogic.class, "drawbridge");
 
-        firestarter = registerBlock(new Firestarter(), "firestarter");
+        firestarter = registerEnumBlock(new Firestarter(), "firestarter");
         firestarter.setCreativeTab(tabMechworks);
         registerTE(FirestarterLogic.class, "firestarter");
     }
