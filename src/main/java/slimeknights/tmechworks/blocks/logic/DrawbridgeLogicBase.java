@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.FakePlayer;
 import slimeknights.mantle.common.IInventoryGui;
 import slimeknights.tmechworks.library.Util;
@@ -125,7 +126,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         lastWorldTime = worldObj.getWorldTime();
     }
 
-    public void updateFakePlayer ()
+    public void updateFakePlayer(int x, int y, int z)
     {
         if (fakePlayer == null)
         {
@@ -138,9 +139,9 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
 
         fakePlayer.rotationYaw = 0;
         fakePlayer.rotationPitch = 0;
-        fakePlayer.posX = getPos().getX();
-        fakePlayer.posY = getPos().getY();
-        fakePlayer.posZ = getPos().getZ();
+        fakePlayer.posX = x;
+        fakePlayer.posY = y;
+        fakePlayer.posZ = z;
 
         switch (placeDirection)
         {
@@ -172,6 +173,13 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
 
     public FakePlayer getFakePlayer ()
     {
+        BlockPos pos = getPos();
+        return getFakePlayer(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public FakePlayer getFakePlayer(int x, int y, int z) {
+        updateFakePlayer(x, y, z);
+
         return fakePlayer;
     }
 
@@ -192,7 +200,6 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
             }
             else if (isExtended)
             {
-                updateFakePlayer();
                 if (extendState == statistics.extendLength)
                 {
                     isExtending = false;
@@ -210,7 +217,6 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
             }
             else
             {
-                updateFakePlayer();
                 if (extendState <= 0)
                 {
                     isExtending = false;
@@ -279,11 +285,21 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         return data;
     }
 
+    @Override
+    public String getName() {
+        if (hasCustomName())
+            return super.getName();
+
+        return super.getName() + "." + getVariantName();
+    }
+
     public abstract void setupStatistics (DrawbridgeStats ds);
 
     public abstract boolean extendNext ();
 
     public abstract boolean retractNext ();
+
+    public abstract String getVariantName();
 
     final class DrawbridgeStats
     {

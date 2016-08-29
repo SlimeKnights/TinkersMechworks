@@ -18,7 +18,9 @@ import slimeknights.tmechworks.blocks.Firestarter;
 import slimeknights.tmechworks.blocks.IEnumBlock;
 import slimeknights.tmechworks.blocks.Metal;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.ExtendedDrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
+import slimeknights.tmechworks.items.ItemBlockMetaExtra;
 import slimeknights.tmechworks.library.Util;
 
 import java.util.Locale;
@@ -79,11 +81,12 @@ public class MechworksContent
         blockAluminum = new ItemStack(metals, 1, Metal.MetalTypes.ALUMINUM.getMeta());
         blockCopper = new ItemStack(metals, 1, Metal.MetalTypes.COPPER.getMeta());
 
-        drawbridge = registerEnumBlock(new Drawbridge(), "drawbridge");
+        drawbridge = registerEnumBlockExtra(new Drawbridge(), "drawbridge");
         drawbridge.setCreativeTab(tabMechworks);
         registerTE(DrawbridgeLogic.class, "drawbridge");
+        registerTE(ExtendedDrawbridgeLogic.class, "drawbridge.extended");
 
-        firestarter = registerEnumBlock(new Firestarter(), "firestarter");
+        firestarter = registerEnumBlockExtra(new Firestarter(), "firestarter", "extinguish=true", "facing=inv");
         firestarter.setCreativeTab(tabMechworks);
         registerTE(FirestarterLogic.class, "firestarter");
     }
@@ -123,6 +126,18 @@ public class MechworksContent
     protected static <T extends IEnumBlock<?>> T registerEnumBlock (T block, String name)
     {
         registerBlock(block.getSelf(), new ItemBlockMeta(block.getSelf()), name);
+        ItemBlockMeta.setMappingProperty(block.getSelf(), block.getProperty());
+        return block;
+    }
+
+    protected static <T extends EnumBlock<?>> T registerEnumBlockExtra(T block, String name, String... data) {
+        registerBlock(block, new ItemBlockMetaExtra(block, data), name);
+        ItemBlockMeta.setMappingProperty(block, block.prop);
+        return block;
+    }
+
+    protected static <T extends IEnumBlock<?>> T registerEnumBlockExtra(T block, String name, String... data) {
+        registerBlock(block.getSelf(), new ItemBlockMetaExtra(block.getSelf(), data), name);
         ItemBlockMeta.setMappingProperty(block.getSelf(), block.getProperty());
         return block;
     }

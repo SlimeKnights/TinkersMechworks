@@ -32,10 +32,10 @@ public class ClientProxy extends CommonProxy
         MechworksContent.ingots.registerItemModels();
         MechworksContent.nuggets.registerItemModels();
 
-        registerItemBlockMeta(MechworksContent.drawbridge);
         registerItemBlockMeta(MechworksContent.metals);
+        registerItemBlockMeta(MechworksContent.drawbridge);
 
-        registerItemBlock(MechworksContent.firestarter);
+        registerItemBlockMeta(MechworksContent.firestarter);
     }
 
     protected void registerItemBlockMeta (Block block)

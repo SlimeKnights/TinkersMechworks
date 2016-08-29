@@ -26,4 +26,7 @@ itemGroup.TabMechworks=Tinkers' Mechworks
 option.tmechworks.commons=Common Integration
 
 # Inventory
-tmechworks.inventory.drawbridge=Drawbridge
+## Drawbridge
+tmechworks.inventory.drawbridge.normal=Drawbridge
+tmechworks.inventory.drawbridge.advanced=Advanced Drawbridge
+tmechworks.inventory.drawbridge.extended=Extended Drawbridge

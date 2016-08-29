@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
 import slimeknights.tmechworks.library.Util;
@@ -116,8 +117,18 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         return false;
     }
 
+    @Override
+    public String getVariantName() {
+        return "normal";
+    }
+
     public boolean placeBlock (BlockPos position)
     {
+        FakePlayer fakePlayer = getFakePlayer(position.getX(), position.getY(), position.getZ());
+
+        if (fakePlayer == null)
+            return false;
+
         ItemStack stack = getNextBlock();
 
         if (stack == null)
@@ -133,7 +144,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
             if (worldObj.getBlockState(position).getBlock().isReplaceable(worldObj, position))
             {
-                return ib.placeBlockAt(stack, getFakePlayer(), worldObj, position, getPlaceDirection(), 0, 0, 0, ib.getBlock().getStateFromMeta(ib.getMetadata(stack)));
+                return ib.placeBlockAt(stack, fakePlayer, worldObj, position, getPlaceDirection(), 0, 0, 0, ib.getBlock().getStateFromMeta(ib.getMetadata(stack)));
             }
             else
             {
@@ -149,7 +160,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
             {
                 if (worldObj.setBlockState(position, block.getStateFromMeta(stack.getMetadata())))
                 {
-                    block.onBlockPlacedBy(worldObj, position, worldObj.getBlockState(position), getFakePlayer(), stack);
+                    block.onBlockPlacedBy(worldObj, position, worldObj.getBlockState(position), fakePlayer, stack);
                     return true;
                 }
             }

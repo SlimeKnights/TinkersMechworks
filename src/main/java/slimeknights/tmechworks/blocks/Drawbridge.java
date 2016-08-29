@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.mantle.block.EnumBlock;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
+import slimeknights.tmechworks.blocks.logic.ExtendedDrawbridgeLogic;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -71,7 +72,7 @@ public class Drawbridge extends RedstoneMachine<Drawbridge.DrawbridgeType>
     {
         NORMAL(DrawbridgeLogic.class),
         ADVANCED(DrawbridgeLogicBase.class),
-        EXTENDED(DrawbridgeLogicBase.class);
+        EXTENDED(ExtendedDrawbridgeLogic.class);
 
         public final Class<? extends DrawbridgeLogicBase> tileEntityClass;
 
