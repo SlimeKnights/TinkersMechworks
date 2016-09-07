@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -26,61 +27,68 @@ import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.blocks.logic.RedstoneMachineLogicBase;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Random;
 
-public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & IStringSerializable> extends EnumBlock<E> implements ITileEntityProvider
-{
+public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & IStringSerializable> extends EnumBlock<E> implements ITileEntityProvider {
     public static final PropertyEnum<DefaultTypes> DEF_TYPE = PropertyEnum.create("type", DefaultTypes.class);
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
-    protected RedstoneMachine(Material material, PropertyEnum<E> prop, Class<E> clazz)
-    {
+    public boolean dropState = true;
+
+    private TileEntity cachedTE;
+
+    protected RedstoneMachine(Material material, PropertyEnum<E> prop, Class<E> clazz) {
         super(material, prop, clazz);
         this.isBlockContainer = true;
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
-    protected boolean openGui(EntityPlayer player, World world, BlockPos pos)
-    {
+    protected boolean openGui(EntityPlayer player, World world, BlockPos pos) {
         player.openGui(TMechworks.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
-    @Override @Nonnull protected BlockStateContainer createBlockState ()
-    {
+    @Override
+    @Nonnull
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, prop, FACING);
     }
 
-    @Override public IBlockState getActualState (@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos)
-    {
+    @Override
+    public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         RedstoneMachineLogicBase baseLogic = (RedstoneMachineLogicBase) worldIn.getTileEntity(pos);
 
         EnumFacing face = EnumFacing.NORTH;
 
-        if (baseLogic != null)
-        {
+        if (baseLogic != null) {
             face = baseLogic.getFacingDirection();
         }
 
         return state.withProperty(FACING, face);
     }
 
-    @Override public void neighborChanged (IBlockState state, World worldIn, BlockPos pos, Block blockIn)
-    {
+    @Override
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
         RedstoneMachineLogicBase logicBase = (RedstoneMachineLogicBase) worldIn.getTileEntity(pos);
 
-        if (logicBase != null)
-        {
+        if (logicBase != null) {
             logicBase.updateRedstone();
         }
     }
 
-    public boolean hasFacingDirection ()
+    @Override
+    public boolean shouldCheckWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
     {
         return true;
     }
 
-    @Override public void onBlockPlacedBy (World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
+    public boolean hasFacingDirection() {
+        return true;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 
         // set custom name from named stack
@@ -97,22 +105,43 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
 
         RedstoneMachineLogicBase baseLogic = (RedstoneMachineLogicBase) worldIn.getTileEntity(pos);
 
-        if (baseLogic == null)
-        {
+        if (baseLogic == null) {
             return;
         }
 
         baseLogic.setFacingDirection(BlockPistonBase.getFacingFromEntity(pos, placer));
     }
 
-    @Override public int getMetaFromState (IBlockState state)
-    {
+    @Override
+    public int getMetaFromState(IBlockState state) {
         return 0;
     }
 
-    @Override public IBlockState getStateFromMeta (int meta)
-    {
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
         return getDefaultState();
+    }
+
+    @Override
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        if (!dropState)
+            return super.getDrops(world, pos, state, fortune);
+
+        RedstoneMachineLogicBase tile = (RedstoneMachineLogicBase) cachedTE;
+
+        if (tile == null)
+            return super.getDrops(world, pos, state, fortune);
+
+        List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
+
+        Random rand = world instanceof World ? ((World) world).rand : RANDOM;
+
+        Item item = this.getItemDropped(state, rand, fortune);
+        if (item != null) {
+            ret.add(tile.storeTileData(new ItemStack(item, 1, this.damageDropped(state))));
+        }
+
+        return ret;
     }
 
     /////////////////////////
@@ -170,8 +199,11 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
     public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
+        cachedTE = tileentity;
+
         if (tileentity instanceof TileInventory) {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
+            if (!dropState)
+                InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
             worldIn.updateComparatorOutputLevel(pos, this);
         }
 

@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
 {
-    public static final PropertyBool SHOULD_EXTENGUISH = PropertyBool.create("extinguish");
+    public static final PropertyBool SHOULD_EXTINGUISH = PropertyBool.create("extinguish");
 
     public Firestarter ()
     {
@@ -36,15 +36,15 @@ public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
 
         if (firestarter != null)
         {
-            extenguishFire = firestarter.shouldExtenguish;
+            extenguishFire = firestarter.getShouldExtinguish();
         }
 
-        return super.getActualState(state, worldIn, pos).withProperty(SHOULD_EXTENGUISH, extenguishFire);
+        return super.getActualState(state, worldIn, pos).withProperty(SHOULD_EXTINGUISH, extenguishFire);
     }
 
     @Nonnull @Override protected BlockStateContainer createBlockState ()
     {
-        return new BlockStateContainer(this, FACING, SHOULD_EXTENGUISH, DEF_TYPE);
+        return new BlockStateContainer(this, FACING, SHOULD_EXTINGUISH, DEF_TYPE);
     }
 
     @Nonnull @Override public TileEntity createNewTileEntity (@Nonnull World worldIn, int meta)
@@ -60,7 +60,7 @@ public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
 
         if (logic != null)
         {
-            logic.shouldExtenguish = !logic.shouldExtenguish;
+            logic.setShouldExtinguish(!logic.getShouldExtinguish());
             worldIn.playSound(playerIn, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
             logic.sync();
         }

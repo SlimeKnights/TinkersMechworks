@@ -12,8 +12,7 @@ import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
 
-public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase implements ITickable, IInventoryGui
-{
+public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase implements ITickable, IInventoryGui, IPlaceDirection {
     private static final float TICK_TIME = 0.05F;
 
     private FakePlayer fakePlayer;
@@ -24,116 +23,169 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     private boolean isExtending;
     private float cooldown;
 
+    private EnumFacing rawPlaceDirection = null;
     private EnumFacing placeDirection = null;
+    private Angle placeAngle = Angle.NEUTRAL;
 
     private long lastWorldTime;
 
-    public DrawbridgeLogicBase (String name, int inventorySize)
-    {
+    public DrawbridgeLogicBase(String name, int inventorySize) {
         super(name, inventorySize);
     }
 
-    @Override public void onBlockUpdate ()
-    {
-        if (isExtended && getRedstoneState() <= 0)
-        {
+    @Override
+    public void onBlockUpdate() {
+        if (isExtended && getRedstoneState() <= 0) {
             isExtended = false;
             isExtending = true;
-        }
-        else if (!isExtended && getRedstoneState() > 0)
-        {
+        } else if (!isExtended && getRedstoneState() > 0) {
             isExtended = true;
             isExtending = true;
         }
+
+        markDirty();
     }
 
-    public void playExtendSound ()
-    {
+    public void playExtendSound() {
         worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.25F,
                 Util.rand.nextFloat() * 0.25F + 0.6F);
     }
 
-    public void playRetractSound ()
-    {
+    public void playRetractSound() {
         worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.25F,
                 Util.rand.nextFloat() * 0.15F + 0.6F);
     }
 
-    public int getExtendState ()
-    {
+    public int getExtendState() {
         return extendState;
     }
 
-    public boolean getExtended ()
-    {
+    public boolean getExtended() {
         return isExtended;
     }
 
-    public boolean getExtending ()
-    {
+    public boolean getExtending() {
         return isExtending;
     }
 
-    public EnumFacing getPlaceDirection ()
-    {
+    public Angle getPlaceAngle() {
+        return placeAngle;
+    }
+
+    public void setPlaceAngle(Angle angle) {
+        placeAngle = angle;
+        markDirty();
+    }
+
+    public EnumFacing getRawPlaceDirection() {
+        return rawPlaceDirection;
+    }
+
+    public EnumFacing getPlaceDirection() {
         return placeDirection;
     }
 
-    public void setPlaceDirection (EnumFacing direction)
-    {
+    public void setPlaceDirection(EnumFacing direction) {
         placeDirection = direction;
+        markDirty();
     }
 
-    public void setPlaceDirectionRelativeToBlock (EnumFacing direction)
-    {
-        switch (direction)
-        {
-        case UP:
-        case DOWN:
-            setPlaceDirection(direction);
-            break;
-        case NORTH:
-            setPlaceDirection(getFacingDirection());
-            break;
-        case SOUTH:
-            setPlaceDirection(getFacingDirection().getOpposite());
-            break;
-        case EAST:
-            setPlaceDirection(getFacingDirection().rotateY());
-            break;
-        case WEST:
-            setPlaceDirection(getFacingDirection().rotateY().getOpposite());
-            break;
+    public void setPlaceDirectionRelativeToBlock(EnumFacing direction) {
+        rawPlaceDirection = direction;
+
+        switch (direction) {
+            case UP:
+                switch (getFacingDirection()) {
+                    case UP:
+                        setPlaceDirection(EnumFacing.SOUTH);
+                        break;
+                    case DOWN:
+                        setPlaceDirection(EnumFacing.NORTH);
+                        break;
+                    default:
+                        setPlaceDirection(EnumFacing.UP);
+                        break;
+                }
+                break;
+            case DOWN:
+                switch (getFacingDirection()) {
+                    case UP:
+                        setPlaceDirection(EnumFacing.NORTH);
+                        break;
+                    case DOWN:
+                        setPlaceDirection(EnumFacing.SOUTH);
+                        break;
+                    default:
+                        setPlaceDirection(EnumFacing.DOWN);
+                        break;
+                }
+                break;
+            case NORTH:
+                setPlaceDirection(getFacingDirection());
+                break;
+            case SOUTH:
+                setPlaceDirection(getFacingDirection().getOpposite());
+                break;
+            case EAST:
+                switch (getFacingDirection()) {
+                    case UP:
+                    case DOWN:
+                        setPlaceDirection(direction);
+                        break;
+                    default:
+                        setPlaceDirection(getFacingDirection().rotateY());
+                        break;
+                }
+                break;
+            case WEST:
+                switch (getFacingDirection()) {
+                    case UP:
+                    case DOWN:
+                        setPlaceDirection(direction);
+                        break;
+                    default:
+                        setPlaceDirection(getFacingDirection().rotateYCCW());
+                        break;
+                }
+                break;
         }
     }
 
-    public DrawbridgeStats getStats ()
-    {
+    @Override
+    public void setPlaceDirectioni(int direction) {
+        if (direction < EnumFacing.values().length)
+            setPlaceDirectionRelativeToBlock(EnumFacing.values()[direction]);
+        else if (direction - EnumFacing.values().length < Angle.values().length)
+            setPlaceAngle(Angle.values()[direction - EnumFacing.values().length]);
+        else
+            throw new IllegalArgumentException("Direction " + direction + " cannot be mapped to any direction or angle.");
+    }
+
+    public DrawbridgeStats getStats() {
         return statistics;
     }
 
-    @Override public void loadData ()
-    {
+    @Override
+    public void loadData() {
         super.loadData();
 
+        if (rawPlaceDirection == null)
+            rawPlaceDirection = EnumFacing.NORTH;
         if (placeDirection == null)
-        {
-            setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);
-        }
+            setPlaceDirectionRelativeToBlock(rawPlaceDirection);
+        if (placeAngle == null)
+            setPlaceAngle(Angle.NEUTRAL);
 
         setupStatistics(statistics);
 
         lastWorldTime = worldObj.getWorldTime();
     }
 
-    public void updateFakePlayer(int x, int y, int z)
-    {
-        if (fakePlayer == null)
-        {
+    public void updateFakePlayer(int x, int y, int z) {
+        if (fakePlayer == null) {
             fakePlayer = Util.createFakePlayer(worldObj);
         }
-        if (fakePlayer == null)
-        {
+        if (fakePlayer == null) {
             return;
         }
 
@@ -143,36 +195,43 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         fakePlayer.posY = y;
         fakePlayer.posZ = z;
 
-        switch (placeDirection)
-        {
-        case NORTH:
-            fakePlayer.rotationYaw = 0;
-            fakePlayer.posZ += 2;
-            break;
-        case SOUTH:
-            fakePlayer.rotationYaw = 180;
-            fakePlayer.posZ -= 2;
-        case UP:
-            fakePlayer.rotationPitch = 90;
-            fakePlayer.posY += 2;
-            break;
-        case DOWN:
-            fakePlayer.rotationPitch = -90;
-            fakePlayer.posY -= 2;
-            break;
-        case EAST:
-            fakePlayer.rotationYaw = 90;
-            fakePlayer.posX -= 2;
-            break;
-        case WEST:
-            fakePlayer.rotationYaw = -90;
-            fakePlayer.posX += 2;
-            break;
+        switch (placeDirection) {
+            case NORTH:
+                fakePlayer.rotationYaw = 0;
+                fakePlayer.posZ += 2;
+                break;
+            case SOUTH:
+                fakePlayer.rotationYaw = 180;
+                fakePlayer.posZ -= 2;
+            case UP:
+                fakePlayer.rotationPitch = 90;
+                fakePlayer.posY += 2;
+                break;
+            case DOWN:
+                fakePlayer.rotationPitch = -90;
+                fakePlayer.posY -= 2;
+                break;
+            case EAST:
+                fakePlayer.rotationYaw = 90;
+                fakePlayer.posX -= 2;
+                break;
+            case WEST:
+                fakePlayer.rotationYaw = -90;
+                fakePlayer.posX += 2;
+                break;
+        }
+
+        switch (placeAngle) {
+            case HIGH:
+                fakePlayer.rotationPitch -= 45;
+                break;
+            case LOW:
+                fakePlayer.rotationPitch += 45;
+                break;
         }
     }
 
-    public FakePlayer getFakePlayer ()
-    {
+    public FakePlayer getFakePlayer() {
         BlockPos pos = getPos();
         return getFakePlayer(pos.getX(), pos.getY(), pos.getZ());
     }
@@ -183,80 +242,85 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         return fakePlayer;
     }
 
-    @Override public void update ()
-    {
+    @Override
+    public void update() {
         super.update();
 
-        if (placeDirection == null)
-        {
+        if (placeDirection == null) {
             setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);
         }
 
-        if (isExtending)
-        {
-            if (cooldown > 0)
-            {
+        if (isExtending) {
+            if (cooldown > 0) {
                 cooldown -= (worldObj.getTotalWorldTime() - lastWorldTime) * TICK_TIME;
-            }
-            else if (isExtended)
-            {
-                if (extendState == statistics.extendLength)
-                {
+            } else if (isExtended) {
+                if (extendState == statistics.extendLength) {
                     isExtending = false;
-                }
-                else if (extendNext())
-                {
+                } else if (extendNext()) {
                     extendState++;
                     cooldown = statistics.extendDelay;
                     playExtendSound();
-                }
-                else
-                {
+                } else {
                     isExtending = false;
                 }
-            }
-            else
-            {
-                if (extendState <= 0)
-                {
+            } else {
+                if (extendState <= 0) {
                     isExtending = false;
-                }
-                else if (retractNext())
-                {
+                } else if (retractNext()) {
                     extendState--;
                     cooldown = statistics.extendDelay;
                     playRetractSound();
-                }
-                else
-                {
+                } else {
                     isExtending = false;
                     extendState = 0;
                 }
             }
+
+            markDirty();
         }
 
         lastWorldTime = worldObj.getTotalWorldTime();
     }
 
-    @Override public void invalidate ()
-    {
+    @Override
+    public void invalidate() {
         super.invalidate();
 
-        if (fakePlayer != null)
-        {
+        if (fakePlayer != null) {
             worldObj.removeEntity(fakePlayer);
             fakePlayer = null;
         }
     }
 
-    @Override public void validate ()
-    {
+    @Override
+    public void validate() {
         super.validate();
     }
 
     /* NBT */
-    @Override public void readFromNBT (NBTTagCompound tags)
-    {
+    @Override
+    public void readItemData(NBTTagCompound tags) {
+        super.readItemData(tags);
+
+        rawPlaceDirection = EnumFacing.values()[tags.getInteger("PlaceDirectionRaw")];
+        placeAngle = Angle.values()[tags.getInteger("PlaceAngle")];
+    }
+
+    @Override
+    public NBTTagCompound writeItemData(NBTTagCompound tags) {
+        tags = super.writeItemData(tags);
+
+        if (rawPlaceDirection == null)
+            rawPlaceDirection = EnumFacing.NORTH;
+
+        tags.setInteger("PlaceDirectionRaw", rawPlaceDirection.ordinal());
+        tags.setInteger("PlaceAngle", placeAngle.ordinal());
+
+        return tags;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tags) {
         super.readFromNBT(tags);
 
         extendState = tags.getInteger("ExtendState");
@@ -266,23 +330,22 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         placeDirection = EnumFacing.values()[tags.getInteger("PlaceDirection")];
     }
 
-    @Nonnull @Override public NBTTagCompound writeToNBT (NBTTagCompound tags)
-    {
-        NBTTagCompound data = super.writeToNBT(tags);
+    @Nonnull
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound tags) {
+        tags = super.writeToNBT(tags);
 
-        data.setInteger("ExtendState", extendState);
-        data.setBoolean("IsExtended", isExtended);
-        data.setBoolean("IsExtending", isExtending);
-        data.setFloat("Cooldown", cooldown);
+        tags.setInteger("ExtendState", extendState);
+        tags.setBoolean("IsExtended", isExtended);
+        tags.setBoolean("IsExtending", isExtending);
+        tags.setFloat("Cooldown", cooldown);
 
         if (placeDirection == null)
-        {
-            setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);
-        }
+            setPlaceDirectionRelativeToBlock(rawPlaceDirection);
 
-        data.setInteger("PlaceDirection", placeDirection.ordinal());
+        tags.setInteger("PlaceDirection", placeDirection.ordinal());
 
-        return data;
+        return tags;
     }
 
     @Override
@@ -293,18 +356,23 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         return super.getName() + "." + getVariantName();
     }
 
-    public abstract void setupStatistics (DrawbridgeStats ds);
+    public abstract void setupStatistics(DrawbridgeStats ds);
 
-    public abstract boolean extendNext ();
+    public abstract boolean extendNext();
 
-    public abstract boolean retractNext ();
+    public abstract boolean retractNext();
 
     public abstract String getVariantName();
 
-    final class DrawbridgeStats
-    {
+    final class DrawbridgeStats {
 
         public int extendLength = 16;
         public float extendDelay = 0.5F;
+    }
+
+    public enum Angle {
+        NEUTRAL,
+        HIGH,
+        LOW
     }
 }

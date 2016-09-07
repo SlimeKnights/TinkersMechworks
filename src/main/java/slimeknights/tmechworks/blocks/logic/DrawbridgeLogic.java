@@ -8,9 +8,12 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
@@ -48,6 +51,8 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
                 setInventorySlotContents(1, new ItemStack(item.getItem(), 1, item.getItemDamage()));
             }
         }
+
+        markDirty();
     }
 
     public ItemStack getNextBlock ()
@@ -62,12 +67,13 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
     public void subtractNextBlock ()
     {
-        decrStackSize(-1, 1);
+        // Handled by onPlaceItemIntoWorld
+        /*decrStackSize(-1, 1);
         ItemStack stack = getStackInSlot(0);
         if (stack != null && stack.stackSize <= 0)
         {
             super.setInventorySlotContents(0, null);
-        }
+        }*/
     }
 
     public void addLastBlock ()
@@ -144,25 +150,11 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
             if (worldObj.getBlockState(position).getBlock().isReplaceable(worldObj, position))
             {
-                return ib.placeBlockAt(stack, fakePlayer, worldObj, position, getPlaceDirection(), 0, 0, 0, ib.getBlock().getStateFromMeta(ib.getMetadata(stack)));
+                return ForgeHooks.onPlaceItemIntoWorld(stack, fakePlayer, worldObj, position, getPlaceDirection(), 0, 0, 0, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS;
             }
             else
             {
                 return false;
-            }
-        }
-
-        Block block = Block.getBlockFromItem(item);
-
-        if (block != null)
-        {
-            if (worldObj.getBlockState(position).getBlock().isReplaceable(worldObj, position) && block.canPlaceBlockAt(worldObj, position))
-            {
-                if (worldObj.setBlockState(position, block.getStateFromMeta(stack.getMetadata())))
-                {
-                    block.onBlockPlacedBy(worldObj, position, worldObj.getBlockState(position), fakePlayer, stack);
-                    return true;
-                }
             }
         }
 

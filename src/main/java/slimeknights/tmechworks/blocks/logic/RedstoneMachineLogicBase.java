@@ -1,7 +1,6 @@
 package slimeknights.tmechworks.blocks.logic;
 
 import com.google.common.base.Predicates;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
@@ -10,7 +9,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import slimeknights.mantle.tileentity.TileInventory;
@@ -18,8 +16,7 @@ import slimeknights.mantle.tileentity.TileInventory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class RedstoneMachineLogicBase extends TileInventory implements IDisguisable, ITickable
-{
+public abstract class RedstoneMachineLogicBase extends TileInventory implements IDisguisable, ITickable {
     private InventoryBasic disguiseInventory;
 
     private int redstoneState;
@@ -30,143 +27,150 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
      */
     private EnumFacing facingDirection = EnumFacing.NORTH;
 
-    public RedstoneMachineLogicBase (String name, int inventorySize)
-    {
+    public RedstoneMachineLogicBase(String name, int inventorySize) {
         this(name, inventorySize, 64);
     }
 
-    public RedstoneMachineLogicBase (String name, int inventorySize, int maxStackSize)
-    {
+    public RedstoneMachineLogicBase(String name, int inventorySize, int maxStackSize) {
         super(name, inventorySize, maxStackSize);
 
         disguiseInventory = new InventoryBasic(name + ".disguise", false, 1);
     }
 
-    public void updateRedstone ()
-    {
+    public void updateRedstone() {
+        if (isFirstTick)
+            return;
+
         int oldPow = redstoneState;
 
-        int idPow = worldObj.isBlockIndirectlyGettingPowered(pos);
         int sidePow = 0;
 
-        for (EnumFacing face : EnumFacing.HORIZONTALS)
-        {
-            BlockPos miscPos = new BlockPos(pos.getX() + face.getFrontOffsetX(), pos.getY() + face.getFrontOffsetY(), pos.getZ() + face.getFrontOffsetZ());
-            IBlockState miscState = worldObj.getBlockState(miscPos);
+        for (EnumFacing face : EnumFacing.values()) {
+            int pow = worldObj.getRedstonePower(pos.offset(face), face);
 
-            if (!miscState.canProvidePower())
-            {
-                continue;
-            }
-
-            int pow = miscState.getStrongPower(worldObj, miscPos, face.getOpposite());
-
-            if (pow > sidePow)
-            {
-                sidePow = pow;
+            if (face != getFacingDirection() && pow > 0) {
+                if (pow > sidePow) {
+                    sidePow = pow;
+                }
             }
         }
 
-        redstoneState = idPow > sidePow ? idPow : sidePow;
+        int pow = worldObj.getRedstonePower(pos, EnumFacing.DOWN);
+
+        if (pow > sidePow) {
+            sidePow = pow;
+        }
+
+        redstoneState = sidePow;
 
         onBlockUpdate();
 
-        if (oldPow != redstoneState)
-        {
+        if (oldPow != redstoneState) {
             sync();
         }
     }
 
-    public void onBlockUpdate ()
-    {
+    public void onBlockUpdate() {
     }
 
-    public int getRedstoneState ()
-    {
+    public int getRedstoneState() {
         return redstoneState;
     }
 
-    public EnumFacing getFacingDirection ()
-    {
+    public EnumFacing getFacingDirection() {
         return facingDirection;
     }
 
-    public void setFacingDirection (EnumFacing direction)
-    {
+    public void setFacingDirection(EnumFacing direction) {
         facingDirection = direction;
+        markDirty();
     }
 
-    @Override public void update ()
-    {
-        if (isFirstTick)
-        {
+    @Override
+    public void update() {
+        if (isFirstTick) {
+            isFirstTick = false;
             updateRedstone();
             loadData();
             sync();
-            isFirstTick = false;
         }
     }
 
-    public void loadData ()
-    {
+    public void loadData() {
 
     }
 
-    @Override public ItemStack getDisguiseBlock ()
-    {
+    @Override
+    public ItemStack getDisguiseBlock() {
         return disguiseInventory.getStackInSlot(0);
     }
 
-    @Override public void setDisguiseBlock (ItemStack disguise)
-    {
+    @Override
+    public void setDisguiseBlock(ItemStack disguise) {
         disguiseInventory.setInventorySlotContents(0, disguise);
     }
 
-    @Override public boolean canEditDisguise ()
-    {
+    @Override
+    public boolean canEditDisguise() {
         return true;
     }
 
-    @Override @Nonnull public NBTTagCompound writeToNBT (NBTTagCompound tags)
-    {
-        NBTTagCompound data = super.writeToNBT(tags);
+    public NBTTagCompound writeItemData(NBTTagCompound tags) {
+        tags.setInteger("InventorySize", getSizeInventory());
+
+        writeInventoryToNBT(tags);
+
+        if (this.hasCustomName()) {
+            tags.setString("CustomName", this.inventoryTitle);
+        }
 
         ItemStack disguise = getDisguiseBlock();
 
-        if (disguise != null)
-        {
+        if (disguise != null) {
             NBTTagCompound itemNBT = new NBTTagCompound();
 
             itemNBT = disguise.writeToNBT(itemNBT);
 
-            data.setTag("Disguise", itemNBT);
+            tags.setTag("Disguise", itemNBT);
         }
 
-        data.setInteger("Redstone", redstoneState);
-        data.setInteger("Facing", facingDirection.ordinal());
-
-        return data;
+        return tags;
     }
 
-    @Override public void readFromNBT (NBTTagCompound tags)
-    {
-        super.readFromNBT(tags);
-
-        if (tags.hasKey("Disguise"))
-        {
+    public void readItemData(NBTTagCompound tags) {
+        if (tags.hasKey("Disguise")) {
             NBTTagCompound itemNBT = tags.getCompoundTag("Disguise");
 
             ItemStack disguise = ItemStack.loadItemStackFromNBT(itemNBT);
 
             setDisguiseBlock(disguise);
         }
+    }
+
+    @Override
+    @Nonnull
+    public NBTTagCompound writeToNBT(NBTTagCompound tags) {
+        tags = super.writeToNBT(tags);
+        tags = writeItemData(tags);
+
+        tags.setInteger("Redstone", redstoneState);
+        tags.setInteger("Facing", facingDirection.ordinal());
+
+        return tags;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tags) {
+        super.readFromNBT(tags);
+        readItemData(tags);
 
         redstoneState = tags.getInteger("Redstone");
         facingDirection = EnumFacing.values()[tags.getInteger("Facing")];
     }
 
-    @Override @Nullable public SPacketUpdateTileEntity getUpdatePacket ()
-    {
+    @Override
+    @Nullable
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound tags = new NBTTagCompound();
 
         writeToNBT(tags);
@@ -174,43 +178,46 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         return new SPacketUpdateTileEntity(pos, worldObj.getBlockState(pos).getBlock().getMetaFromState(worldObj.getBlockState(pos)), tags);
     }
 
-    @Override public void onDataPacket (NetworkManager net, SPacketUpdateTileEntity pkt)
-    {
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         NBTTagCompound tags = pkt.getNbtCompound();
 
         handleUpdateTag(tags);
     }
 
-    @Override public NBTTagCompound getUpdateTag ()
-    {
+    @Override
+    public NBTTagCompound getUpdateTag() {
         return writeToNBT(new NBTTagCompound());
     }
 
-    @Override public void handleUpdateTag (@Nonnull NBTTagCompound tag)
-    {
+    @Override
+    public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
         readFromNBT(tag);
 
         worldObj.markBlockRangeForRenderUpdate(pos, pos);
     }
 
-    public void sync ()
-    {
+    public void sync() {
         markDirty();
         worldObj.markBlockRangeForRenderUpdate(pos, pos);
 
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-        {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             SPacketUpdateTileEntity packetUpdateTileEntity = getUpdatePacket();
 
-            if (packetUpdateTileEntity == null)
-            {
+            if (packetUpdateTileEntity == null) {
                 return;
             }
 
-            for (EntityPlayerMP player : worldObj.getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue()))
-            {
+            for (EntityPlayerMP player : worldObj.getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue())) {
                 player.connection.sendPacket(packetUpdateTileEntity);
             }
         }
+    }
+
+    public ItemStack storeTileData(ItemStack stack) {
+        NBTTagCompound nbttagcompound = writeItemData(new NBTTagCompound());
+
+        stack.setTagInfo("BlockEntityTag", nbttagcompound);
+        return stack;
     }
 }

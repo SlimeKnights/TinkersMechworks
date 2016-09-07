@@ -12,7 +12,7 @@ import slimeknights.tmechworks.library.Util;
 public class FirestarterLogic extends RedstoneMachineLogicBase
 {
 
-    public boolean shouldExtenguish = true;
+    private boolean shouldExtinguish = true;
 
     public FirestarterLogic ()
     {
@@ -41,19 +41,27 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
                 worldObj.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
                 worldObj.setBlockState(position, Blocks.FIRE.getDefaultState(), 11);
             }
-        }
-        else if (shouldExtenguish && state.getBlock() == Blocks.FIRE)
+        } else if (shouldExtinguish && state.getBlock() == Blocks.FIRE)
         {
             worldObj.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
             worldObj.setBlockToAir(position);
         }
     }
 
+    public void setShouldExtinguish(boolean shouldExtinguish) {
+        this.shouldExtinguish = shouldExtinguish;
+        markDirty();
+    }
+
+    public boolean getShouldExtinguish() {
+        return shouldExtinguish;
+    }
+
     @Override public NBTTagCompound writeToNBT (NBTTagCompound tags)
     {
         tags = super.writeToNBT(tags);
 
-        tags.setBoolean("ShouldExtenguish", shouldExtenguish);
+        tags.setBoolean("ShouldExtinguish", shouldExtinguish);
 
         return tags;
     }
@@ -62,6 +70,6 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
     {
         super.readFromNBT(tags);
 
-        shouldExtenguish = tags.getBoolean("ShouldExtenguish");
+        shouldExtinguish = tags.getBoolean("ShouldExtinguish");
     }
 }
