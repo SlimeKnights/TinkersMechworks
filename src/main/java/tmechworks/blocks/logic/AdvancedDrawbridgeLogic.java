@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mantle.blocks.BlockUtils;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
@@ -312,7 +311,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                 ticks = 0;
                 if (active) // Placement
                 {
-                    if (getStackInSlot(extension) != null && getStackInSlot(extension).stackSize > 0 && extension < 15)
+                	//TODO: Remove && !inventory[0].hasTagCompound() and modify the retraction section. See todo below.
+                    if (getStackInSlot(extension) != null && getStackInSlot(extension).stackSize > 0 && extension < 15 && !inventory[0].hasTagCompound())
                     {
                         extension++;
                         int xPos = xCoord;
@@ -411,7 +411,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                 else
                 // Retraction
                 {
-                    if ((getStackInSlot(extension) == null || getStackInSlot(extension).stackSize < getStackInSlot(extension).getMaxStackSize()) && extension > 0)
+                	//TODO: Remove && !inventory[0].hasTagCompound() and add some code that recreates the inventory[0] ItemStack from the block being retracted instead of loading from bufferStack. See todo below.
+                    if ((getStackInSlot(extension) == null || getStackInSlot(extension).stackSize < getStackInSlot(extension).getMaxStackSize()) && extension > 0 && !inventory[0].hasTagCompound())
                     {
                         int xPos = xCoord;
                         int yPos = yCoord;
@@ -449,6 +450,7 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                                 if (worldObj.setBlock(xPos, yPos, zPos, Blocks.air))
                                     if (getStackInSlot(extension - 1) == null)
                                     {
+                                    	//TODO: This is creating a dupe issue. See todo above.
                                         setInventorySlotContents(extension - 1, getStackInBufferSlot(extension - 1).copy());
                                     }
                                     else
