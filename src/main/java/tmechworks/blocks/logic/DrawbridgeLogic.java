@@ -65,7 +65,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
     // Completely necessary due to the way players load chunks, including fake ones.
     private void initFakePlayer ()
     {
-        if (fakePlayer == null && !isInvalid())
+        if (fakePlayer == null && !isInvalid() && !worldObj.isRemote)
             fakePlayer = new FakePlayerLogic(new GameProfile(null, "Player.Drawbridge"), this);
     }
 
