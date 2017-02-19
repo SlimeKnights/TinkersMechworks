@@ -311,8 +311,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                 ticks = 0;
                 if (active) // Placement
                 {
-                	//TODO: Remove && !inventory[0].hasTagCompound() and modify the retraction section. See todo below.
-                    if (getStackInSlot(extension) != null && getStackInSlot(extension).stackSize > 0 && extension < 15 && !inventory[0].hasTagCompound())
+                	//TODO: Remove && !getStackInSlot(extension).hasTagCompound() and modify the retraction section. See todo below.
+                    if (getStackInSlot(extension) != null && getStackInSlot(extension).stackSize > 0 && extension < 15 && !getStackInSlot(extension).hasTagCompound())
                     {
                         extension++;
                         int xPos = xCoord;
@@ -411,8 +411,8 @@ public class AdvancedDrawbridgeLogic extends InventoryLogic implements IFacingLo
                 else
                 // Retraction
                 {
-                	//TODO: Remove && !inventory[0].hasTagCompound() and add some code that recreates the inventory[0] ItemStack from the block being retracted instead of loading from bufferStack. See todo below.
-                    if ((getStackInSlot(extension) == null || getStackInSlot(extension).stackSize < getStackInSlot(extension).getMaxStackSize()) && extension > 0 && !inventory[0].hasTagCompound())
+                	//TODO: Remove && getStackInSlot(extension).hasTagCompound() and add some code that recreates the getStackInSlot(extension) ItemStack from the block being retracted instead of loading from bufferStack. See todo below.
+                    if ((getStackInSlot(extension) == null || getStackInSlot(extension).stackSize < getStackInSlot(extension).getMaxStackSize()) && extension > 0 && getStackInSlot(extension).hasTagCompound())
                     {
                         int xPos = xCoord;
                         int yPos = yCoord;
