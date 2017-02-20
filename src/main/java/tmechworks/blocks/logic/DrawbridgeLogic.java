@@ -27,7 +27,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import tmechworks.inventory.DrawbridgeContainer;
 import tmechworks.lib.TMechworksRegistry;
@@ -297,7 +296,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                 ticks = 0;
                 if (active) //Placement
                 {
-                    if (inventory[0] != null && inventory[0].stackSize > 0 && extension < maxExtension)
+                	//TODO: Remove && !inventory[0].hasTagCompound() and modify the retraction section. See todo below.
+                    if (inventory[0] != null && inventory[0].stackSize > 0 && extension < maxExtension && !inventory[0].hasTagCompound())
                     {
                         extension++;
                         int xPos = xCoord;
@@ -393,7 +393,8 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                 else
                 //Retraction
                 {
-                    if ((inventory[0] == null || inventory[0].stackSize < inventory[0].getMaxStackSize()) && extension > 0)
+                	//TODO: Remove && !inventory[0].hasTagCompound() and add some code that recreates the inventory[0] ItemStack from the block being retracted instead of loading from bufferStack. See todo below.
+                    if ((inventory[0] == null || inventory[0].stackSize < inventory[0].getMaxStackSize()) && extension > 0 && !inventory[0].hasTagCompound())
                     {
                         int xPos = xCoord;
                         int yPos = yCoord;
@@ -431,6 +432,7 @@ public class DrawbridgeLogic extends InventoryLogic implements IFacingLogic, IAc
                                 if (worldObj.setBlock(xPos, yPos, zPos, Blocks.air))
                                     if (inventory[0] == null)
                                     {
+                                    	//TODO: This is creating a dupe issue. See todo above.
                                         inventory[0] = bufferStack.copy();
                                     }
                                     else
