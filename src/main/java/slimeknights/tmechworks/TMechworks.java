@@ -1,22 +1,18 @@
 package slimeknights.tmechworks;
 
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import slimeknights.mantle.common.GuiHandler;
 import slimeknights.mantle.network.NetworkWrapper;
-import slimeknights.tmechworks.common.CommonProxy;
-import slimeknights.tmechworks.common.MechworksContent;
+import slimeknights.tmechworks.common.*;
 import slimeknights.tmechworks.integration.WailaIntegration;
 import slimeknights.tmechworks.networking.PacketUpdatePlaceDirection;
 
-@Mod(modid = TMechworks.modID, name = TMechworks.modName, version = TMechworks.modVersion, dependencies = "required-after:Forge@[12.18.0.1993,); required-after:mantle@[1.10-0.10.3,)", acceptedMinecraftVersions = "[1.10, 1.11)")
+@Mod(modid = TMechworks.modID, name = TMechworks.modName, version = TMechworks.modVersion, dependencies = "required-after:forge@[14.21.1.2387,); required-after:mantle@[1.12-1.3.1,); after:jei@[4.2,); after:waila@[1.8,)", acceptedMinecraftVersions = "[1.12, 1.12.1)")
 public class TMechworks
 {
-
     public static final String modID = "tmechworks";
     public static final String modVersion = "${version}";
     public static final String modName = "Tinkers' Mechworks";
@@ -39,6 +35,8 @@ public class TMechworks
         }
 
         content = new MechworksContent();
+        MinecraftForge.EVENT_BUS.register(content);
+
         proxy.preInit();
 
         packetPipeline = new NetworkWrapper(modID);

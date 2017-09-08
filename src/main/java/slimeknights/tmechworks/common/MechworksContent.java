@@ -7,12 +7,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import slimeknights.mantle.block.EnumBlock;
+import net.minecraftforge.registries.*;
+import slimeknights.mantle.block.*;
 import slimeknights.mantle.client.CreativeTab;
-import slimeknights.mantle.item.ItemBlockMeta;
-import slimeknights.mantle.item.ItemMetaDynamic;
+import slimeknights.mantle.item.*;
 import slimeknights.tmechworks.blocks.Drawbridge;
 import slimeknights.tmechworks.blocks.Firestarter;
 import slimeknights.tmechworks.blocks.IEnumBlock;
@@ -52,20 +54,39 @@ public class MechworksContent
     public static ItemStack blockAluminum;
     public static ItemStack blockCopper;
 
-    public MechworksContent ()
+    @SubscribeEvent
+    private void registerBlocks (RegistryEvent.Register<Block> event)
     {
-        registerItems();
-        registerBlocks();
-        setupCreativeTabs();
+        IForgeRegistry<Block> registry = event.getRegistry();
 
-        MechRecipes.register();
+        metals = registerBlock(registry, new Metal(), "metal");
+
+        drawbridge = registerBlock(registry, new Drawbridge(), "drawbridge");
+        drawbridge.setCreativeTab(tabMechworks);
+        registerTE(DrawbridgeLogic.class, "drawbridge");
+        registerTE(ExtendedDrawbridgeLogic.class, "drawbridge.extended");
+
+        firestarter = registerBlock(registry, new Firestarter(), "firestarter");
+        firestarter.setCreativeTab(tabMechworks);
+        registerTE(FirestarterLogic.class, "firestarter");
     }
 
-    private void registerItems ()
+    @SubscribeEvent
+    private void registerItems (RegistryEvent.Register<Item> event)
     {
-        ingots = registerItem(new ItemMetaDynamic(), "ingots");
+        IForgeRegistry<Item> registry = event.getRegistry();
+
+        // Item Blocks
+        metals = registerEnumItemBlock(registry, metals);
+        blockAluminum = new ItemStack(metals, 1, Metal.MetalTypes.ALUMINUM.getMeta());
+        blockCopper = new ItemStack(metals, 1, Metal.MetalTypes.COPPER.getMeta());
+
+        drawbridge = registerEnumItemBlockExtra(registry, drawbridge);
+        firestarter = registerEnumItemBlockExtra(registry, firestarter, "extinguish=true", "facing=inv");
+
+        ingots = registerItem(registry, new ItemMetaDynamic(), "ingots");
         ingots.setCreativeTab(tabMechworks);
-        nuggets = registerItem(new ItemMetaDynamic(), "nuggets");
+        nuggets = registerItem(registry, new ItemMetaDynamic(), "nuggets");
         nuggets.setCreativeTab(tabMechworks);
 
         ingotAluminum = ingots.addMeta(0, "aluminum");
@@ -73,22 +94,7 @@ public class MechworksContent
         ingotCopper = ingots.addMeta(1, "copper");
         nuggetCopper = nuggets.addMeta(1, "copper");
 
-    }
-
-    private void registerBlocks ()
-    {
-        metals = registerEnumBlock(new Metal(), "metal");
-        blockAluminum = new ItemStack(metals, 1, Metal.MetalTypes.ALUMINUM.getMeta());
-        blockCopper = new ItemStack(metals, 1, Metal.MetalTypes.COPPER.getMeta());
-
-        drawbridge = registerEnumBlockExtra(new Drawbridge(), "drawbridge");
-        drawbridge.setCreativeTab(tabMechworks);
-        registerTE(DrawbridgeLogic.class, "drawbridge");
-        registerTE(ExtendedDrawbridgeLogic.class, "drawbridge.extended");
-
-        firestarter = registerEnumBlockExtra(new Firestarter(), "firestarter", "extinguish=true", "facing=inv");
-        firestarter.setCreativeTab(tabMechworks);
-        registerTE(FirestarterLogic.class, "firestarter");
+        setupCreativeTabs();
     }
 
     private void setupCreativeTabs ()
@@ -96,107 +102,110 @@ public class MechworksContent
         tabMechworks.setDisplayIcon(new ItemStack(drawbridge, 1, 0));
     }
 
-    protected static <T extends Item> T registerItem (T item, String name)
-    {
-        if (!name.equals(name.toLowerCase(Locale.US)))
-        {
+    protected static <T extends Block> T registerBlock(IForgeRegistry<Block> registry, T block, String name) {
+        if(!name.equals(name.toLowerCase(Locale.US))) {
+            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
+        }
+
+        String prefixedName = Util.prefix(name);
+        block.setUnlocalizedName(prefixedName);
+
+        register(registry, block, name);
+        return block;
+    }
+
+    protected static <E extends Enum<E> & EnumBlock.IEnumMeta & IStringSerializable> BlockStairsBase registerBlockStairsFrom(IForgeRegistry<Block> registry, EnumBlock<E> block, E value, String name) {
+        return registerBlock(registry, new BlockStairsBase(block.getDefaultState().withProperty(block.prop, value)), name);
+    }
+
+    protected static <T extends Block> T registerItemBlock(IForgeRegistry<Item> registry, T block) {
+
+        ItemBlock itemBlock = new ItemBlockMeta(block);
+
+        itemBlock.setUnlocalizedName(block.getUnlocalizedName());
+
+        register(registry, itemBlock, block.getRegistryName());
+        return block;
+    }
+
+    protected static <T extends EnumBlock<?>> T registerEnumItemBlock(IForgeRegistry<Item> registry, T block) {
+        ItemBlock itemBlock = new ItemBlockMeta(block);
+
+        itemBlock.setUnlocalizedName(block.getUnlocalizedName());
+
+        register(registry, itemBlock, block.getRegistryName());
+        ItemBlockMeta.setMappingProperty(block, block.prop);
+        return block;
+    }
+
+    protected static <T extends EnumBlock<?>> T registerEnumItemBlockExtra(IForgeRegistry<Item> registry, T block, String... extra) {
+        registerItemBlock(registry, new ItemBlockMetaExtra(block, extra));
+        ItemBlockMeta.setMappingProperty(block, block.prop);
+        return block;
+    }
+
+    protected static <T extends IEnumBlock<?>> T registerEnumItemBlockExtra(IForgeRegistry<Item> registry, T block, String... extra) {
+        registerItemBlock(registry, new ItemBlockMetaExtra(block.getSelf(), extra));
+        ItemBlockMeta.setMappingProperty(block.getSelf(), block.getProperty());
+        return block;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <T extends Block> T registerItemBlock(IForgeRegistry<Item> registry, ItemBlock itemBlock) {
+        itemBlock.setUnlocalizedName(itemBlock.getBlock().getUnlocalizedName());
+
+        register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
+        return (T) itemBlock.getBlock();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <T extends Block> T registerItemBlockProp(IForgeRegistry<Item> registry, ItemBlock itemBlock, IProperty<?> property) {
+        itemBlock.setUnlocalizedName(itemBlock.getBlock().getUnlocalizedName());
+
+        register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
+        ItemBlockMeta.setMappingProperty(itemBlock.getBlock(), property);
+        return (T) itemBlock.getBlock();
+    }
+
+    protected static <T extends EnumBlockSlab<?>> T registerEnumItemBlockSlab(IForgeRegistry<Item> registry, T block) {
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        ItemBlock itemBlock = new ItemBlockSlab(block);
+
+        itemBlock.setUnlocalizedName(block.getUnlocalizedName());
+
+        register(registry, itemBlock, block.getRegistryName());
+        ItemBlockMeta.setMappingProperty(block, block.prop);
+        return block;
+    }
+
+    /**
+     * Sets the correct unlocalized name and registers the item.
+     */
+    protected static <T extends Item> T registerItem(IForgeRegistry<Item> registry, T item, String name) {
+        if(!name.equals(name.toLowerCase(Locale.US))) {
             throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Item: %s", name));
         }
 
         item.setUnlocalizedName(Util.prefix(name));
         item.setRegistryName(Util.getResource(name));
-        GameRegistry.register(item);
+        registry.register(item);
         return item;
     }
 
-    protected static <T extends Block> T registerBlock (T block, String name)
-    {
-        ItemBlock itemBlock = new ItemBlockMeta(block);
-        registerBlock(block, itemBlock, name);
-        return block;
-    }
-
-    protected static <T extends EnumBlock<?>> T registerEnumBlock (T block, String name)
-    {
-        registerBlock(block, new ItemBlockMeta(block), name);
-        ItemBlockMeta.setMappingProperty(block, block.prop);
-        return block;
-    }
-
-    protected static <T extends IEnumBlock<?>> T registerEnumBlock (T block, String name)
-    {
-        registerBlock(block.getSelf(), new ItemBlockMeta(block.getSelf()), name);
-        ItemBlockMeta.setMappingProperty(block.getSelf(), block.getProperty());
-        return block;
-    }
-
-    protected static <T extends EnumBlock<?>> T registerEnumBlockExtra(T block, String name, String... data) {
-        registerBlock(block, new ItemBlockMetaExtra(block, data), name);
-        ItemBlockMeta.setMappingProperty(block, block.prop);
-        return block;
-    }
-
-    protected static <T extends IEnumBlock<?>> T registerEnumBlockExtra(T block, String name, String... data) {
-        registerBlock(block.getSelf(), new ItemBlockMetaExtra(block.getSelf(), data), name);
-        ItemBlockMeta.setMappingProperty(block.getSelf(), block.getProperty());
-        return block;
-    }
-
-    protected static <T extends Block> T registerBlock (ItemBlock itemBlock, String name)
-    {
-        Block block = itemBlock.getBlock();
-        return (T) registerBlock(block, itemBlock, name);
-    }
-
-    protected static <T extends Block> T registerBlock (T block, String name, IProperty<?> property)
-    {
-        ItemBlockMeta itemBlock = new ItemBlockMeta(block);
-        registerBlock(block, itemBlock, name);
-        ItemBlockMeta.setMappingProperty(block, property);
-        return block;
-    }
-
-    protected static <T extends Block> T registerBlock (T block, ItemBlock itemBlock, String name)
-    {
-        if (!name.equals(name.toLowerCase(Locale.US)))
-        {
-            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
-        }
-
-        String prefixedName = Util.prefix(name);
-        block.setUnlocalizedName(prefixedName);
-        itemBlock.setUnlocalizedName(prefixedName);
-
-        register(block, name);
-        register(itemBlock, name);
-        return block;
-    }
-
-    protected static <T extends Block> T registerBlockNoItem (T block, String name)
-    {
-        if (!name.equals(name.toLowerCase(Locale.US)))
-        {
-            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
-        }
-
-        String prefixedName = Util.prefix(name);
-        block.setUnlocalizedName(prefixedName);
-
-        register(block, name);
-        return block;
-    }
-
-    protected static <T extends IForgeRegistryEntry<?>> T register (T thing, String name)
-    {
+    protected static <T extends IForgeRegistryEntry<T>> T register(IForgeRegistry<T> registry, T thing, String name) {
         thing.setRegistryName(Util.getResource(name));
-        GameRegistry.register(thing);
+        registry.register(thing);
         return thing;
     }
 
-    protected static void registerTE (Class<? extends TileEntity> teClazz, String name)
-    {
-        if (!name.equals(name.toLowerCase(Locale.US)))
-        {
+    protected static <T extends IForgeRegistryEntry<T>> T register(IForgeRegistry<T> registry, T thing, ResourceLocation name) {
+        thing.setRegistryName(name);
+        registry.register(thing);
+        return thing;
+    }
+
+    protected static void registerTE(Class<? extends TileEntity> teClazz, String name) {
+        if(!name.equals(name.toLowerCase(Locale.US))) {
             throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! TE: %s", name));
         }
 

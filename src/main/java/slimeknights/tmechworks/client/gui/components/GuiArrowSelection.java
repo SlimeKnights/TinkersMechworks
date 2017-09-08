@@ -78,14 +78,14 @@ public class GuiArrowSelection extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         if (!visible)
             return;
 
         Arrow.SMALL_DOWN.position.y = ARROW_SIZE + 8;
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(xPosition, yPosition, 0F);
+        GlStateManager.translate(x, y, 0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         mc.getTextureManager().bindTexture(textures);
@@ -100,14 +100,14 @@ public class GuiArrowSelection extends GuiButton {
                 continue;
 
             if (state != ArrowState.DISABLED && state != ArrowState.SELECTED) {
-                if (canHover && hoveredArrow == null && arrow.isHovered(xPosition, yPosition, mouseX, mouseY)) {
+                if (canHover && hoveredArrow == null && arrow.isHovered(x, y, mouseX, mouseY)) {
                     states[i] = ArrowState.HOVER;
                     hoveredArrow = arrow;
                     canHover = false;
                 } else {
                     states[i] = ArrowState.ENABLED;
                 }
-            } else if (arrow.isHovered(xPosition, yPosition, mouseX, mouseY)) {
+            } else if (arrow.isHovered(x, y, mouseX, mouseY)) {
                 canHover = false;
             }
         }
@@ -134,7 +134,7 @@ public class GuiArrowSelection extends GuiButton {
             return;
 
         if (labelset != null && states[hoveredArrow.ordinal()] == ArrowState.HOVER && !labelset[hoveredArrow.ordinal()].trim().isEmpty()) {
-            GuiUtils.drawHoveringText(ImmutableList.of(labelset[hoveredArrow.ordinal()]), mouseX, mouseY, screenW, screenH, 100, Minecraft.getMinecraft().fontRendererObj);
+            GuiUtils.drawHoveringText(ImmutableList.of(labelset[hoveredArrow.ordinal()]), mouseX, mouseY, screenW, screenH, 100, Minecraft.getMinecraft().fontRenderer);
         }
     }
 

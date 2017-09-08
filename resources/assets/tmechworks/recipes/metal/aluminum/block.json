@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "tmechworks:block_compression",
+    "pattern": [
+        "AAA",
+        "AAA",
+		"AAA"
+    ],
+    "key": {
+        "A": {
+            "item": "tmechworks:ingots",
+            "data": 0
+        }
+    },
+    "result": {
+        "item": "tmechworks:metal",
+        "data": 0
+    }
+}

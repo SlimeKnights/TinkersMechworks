@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "tmechworks:ingot_compression",
+    "pattern": [
+        "AAA",
+        "AAA",
+		"AAA"
+    ],
+    "key": {
+        "A": {
+            "item": "tmechworks:nuggets",
+            "data": 0
+        }
+    },
+    "result": {
+        "item": "tmechworks:ingots",
+        "data": 0
+    }
+}

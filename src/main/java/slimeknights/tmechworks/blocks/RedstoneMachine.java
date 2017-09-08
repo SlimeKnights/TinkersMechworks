@@ -69,7 +69,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos from) {
         RedstoneMachineLogicBase logicBase = (RedstoneMachineLogicBase) worldIn.getTileEntity(pos);
 
         if (logicBase != null) {
@@ -109,7 +109,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
             return;
         }
 
-        baseLogic.setFacingDirection(BlockPistonBase.getFacingFromEntity(pos, placer));
+        baseLogic.setFacingDirection(EnumFacing.getDirectionFromEntityLiving(pos, placer));
     }
 
     @Override
@@ -183,7 +183,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
     public abstract TileEntity createNewTileEntity(@Nonnull World worldIn, int meta);
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float clickX, float clickY, float clickZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float clickX, float clickY, float clickZ) {
         if (player.isSneaking()) {
             return false;
         }

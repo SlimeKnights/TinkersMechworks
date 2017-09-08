@@ -47,12 +47,12 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     }
 
     public void playExtendSound() {
-        worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.25F,
+        world.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.25F,
                 Util.rand.nextFloat() * 0.25F + 0.6F);
     }
 
     public void playRetractSound() {
-        worldObj.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.25F,
+        world.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.25F,
                 Util.rand.nextFloat() * 0.15F + 0.6F);
     }
 
@@ -178,12 +178,12 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
 
         setupStatistics(statistics);
 
-        lastWorldTime = worldObj.getWorldTime();
+        lastWorldTime = world.getWorldTime();
     }
 
     public void updateFakePlayer(int x, int y, int z) {
         if (fakePlayer == null) {
-            fakePlayer = Util.createFakePlayer(worldObj);
+            fakePlayer = Util.createFakePlayer(world);
         }
         if (fakePlayer == null) {
             return;
@@ -252,7 +252,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
 
         if (isExtending) {
             if (cooldown > 0) {
-                cooldown -= (worldObj.getTotalWorldTime() - lastWorldTime) * TICK_TIME;
+                cooldown -= (world.getTotalWorldTime() - lastWorldTime) * TICK_TIME;
             } else if (isExtended) {
                 if (extendState == statistics.extendLength) {
                     isExtending = false;
@@ -279,7 +279,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
             markDirty();
         }
 
-        lastWorldTime = worldObj.getTotalWorldTime();
+        lastWorldTime = world.getTotalWorldTime();
     }
 
     @Override
@@ -287,7 +287,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         super.invalidate();
 
         if (fakePlayer != null) {
-            worldObj.removeEntity(fakePlayer);
+            world.removeEntity(fakePlayer);
             fakePlayer = null;
         }
     }

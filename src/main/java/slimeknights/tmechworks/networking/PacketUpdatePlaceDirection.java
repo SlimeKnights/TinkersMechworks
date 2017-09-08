@@ -25,14 +25,14 @@ public class PacketUpdatePlaceDirection extends AbstractPacketThreadsafe {
 
     @Override
     public void handleClientSafe(NetHandlerPlayClient netHandler) {
-        handlePacket(Minecraft.getMinecraft().thePlayer);
+        handlePacket(Minecraft.getMinecraft().player);
     }
 
     @Override
     public void handleServerSafe(NetHandlerPlayServer netHandler) {
-        handlePacket(netHandler.playerEntity);
+        handlePacket(netHandler.player);
 
-        TMechworks.packetPipeline.network.sendToDimension(this, netHandler.playerEntity.dimension);
+        TMechworks.packetPipeline.network.sendToDimension(this, netHandler.player.dimension);
     }
 
     public void handlePacket(EntityPlayer player) {

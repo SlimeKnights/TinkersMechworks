@@ -33,18 +33,18 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
         BlockPos loc = getPos();
         BlockPos position = new BlockPos(loc.getX() + facing.getFrontOffsetX(), loc.getY() + facing.getFrontOffsetY(), loc.getZ() + facing.getFrontOffsetZ());
 
-        IBlockState state = worldObj.getBlockState(position);
+        IBlockState state = world.getBlockState(position);
         if (getRedstoneState() > 0)
         {
-            if (state.getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(worldObj, position))
+            if (state.getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(world, position))
             {
-                worldObj.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
-                worldObj.setBlockState(position, Blocks.FIRE.getDefaultState(), 11);
+                world.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
+                world.setBlockState(position, Blocks.FIRE.getDefaultState(), 11);
             }
         } else if (shouldExtinguish && state.getBlock() == Blocks.FIRE)
         {
-            worldObj.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
-            worldObj.setBlockToAir(position);
+            world.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
+            world.setBlockToAir(position);
         }
     }
 

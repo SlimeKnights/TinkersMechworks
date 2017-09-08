@@ -53,7 +53,7 @@ public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
     }
 
     @Override
-    public boolean onBlockActivated (World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+    public boolean onBlockActivated (World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY,
             float hitZ)
     {
         FirestarterLogic logic = (FirestarterLogic) worldIn.getTileEntity(pos);

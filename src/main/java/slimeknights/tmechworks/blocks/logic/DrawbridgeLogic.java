@@ -113,7 +113,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
         if (breakBlock(nextPos))
         {
-            worldObj.setBlockState(nextPos, Blocks.AIR.getDefaultState());
+            world.setBlockState(nextPos, Blocks.AIR.getDefaultState());
             addLastBlock();
 
             return true;
@@ -148,9 +148,9 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         {
             ItemBlock ib = (ItemBlock) item;
 
-            if (worldObj.getBlockState(position).getBlock().isReplaceable(worldObj, position))
+            if (world.getBlockState(position).getBlock().isReplaceable(world, position))
             {
-                return ForgeHooks.onPlaceItemIntoWorld(stack, fakePlayer, worldObj, position, getPlaceDirection(), 0, 0, 0, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS;
+                return ForgeHooks.onPlaceItemIntoWorld(stack, fakePlayer, world, position, getPlaceDirection(), 0, 0, 0, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS;
             }
             else
             {
@@ -176,10 +176,10 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         {
             ItemBlock ib = (ItemBlock) item;
 
-            if (ib.getBlock() == worldObj.getBlockState(position).getBlock() && (!ib.getHasSubtypes() || ib.getMetadata(stack) == worldObj.getBlockState(position).getBlock()
-                    .getMetaFromState(worldObj.getBlockState(position))))
+            if (ib.getBlock() == world.getBlockState(position).getBlock() && (!ib.getHasSubtypes() || ib.getMetadata(stack) == world.getBlockState(position).getBlock()
+                    .getMetaFromState(world.getBlockState(position))))
             {
-                return worldObj.setBlockToAir(position);
+                return world.setBlockToAir(position);
             }
 
             return false;
@@ -189,10 +189,10 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
         if (block != null)
         {
-            if (block == worldObj.getBlockState(position).getBlock() && (!item.getHasSubtypes() || stack.getMetadata() == worldObj.getBlockState(position).getBlock()
-                    .getMetaFromState(worldObj.getBlockState(position))))
+            if (block == world.getBlockState(position).getBlock() && (!item.getHasSubtypes() || stack.getMetadata() == world.getBlockState(position).getBlock()
+                    .getMetaFromState(world.getBlockState(position))))
             {
-                return worldObj.setBlockToAir(position);
+                return world.setBlockToAir(position);
             }
         }
 

@@ -46,7 +46,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         int sidePow = 0;
 
         for (EnumFacing face : EnumFacing.values()) {
-            int pow = worldObj.getRedstonePower(pos.offset(face), face);
+            int pow = world.getRedstonePower(pos.offset(face), face);
 
             if (face != getFacingDirection() && pow > 0) {
                 if (pow > sidePow) {
@@ -55,7 +55,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
             }
         }
 
-        int pow = worldObj.getRedstonePower(pos, EnumFacing.DOWN);
+        int pow = world.getRedstonePower(pos, EnumFacing.DOWN);
 
         if (pow > sidePow) {
             sidePow = pow;
@@ -141,7 +141,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         if (tags.hasKey("Disguise")) {
             NBTTagCompound itemNBT = tags.getCompoundTag("Disguise");
 
-            ItemStack disguise = ItemStack.loadItemStackFromNBT(itemNBT);
+            ItemStack disguise = new ItemStack(itemNBT);
 
             setDisguiseBlock(disguise);
         }
@@ -175,7 +175,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
 
         writeToNBT(tags);
 
-        return new SPacketUpdateTileEntity(pos, worldObj.getBlockState(pos).getBlock().getMetaFromState(worldObj.getBlockState(pos)), tags);
+        return new SPacketUpdateTileEntity(pos, world.getBlockState(pos).getBlock().getMetaFromState(world.getBlockState(pos)), tags);
     }
 
     @Override
@@ -194,12 +194,12 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
     public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
         readFromNBT(tag);
 
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     public void sync() {
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        world.markBlockRangeForRenderUpdate(pos, pos);
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             SPacketUpdateTileEntity packetUpdateTileEntity = getUpdatePacket();
@@ -208,7 +208,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
                 return;
             }
 
-            for (EntityPlayerMP player : worldObj.getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue())) {
+            for (EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, Predicates.alwaysTrue())) {
                 player.connection.sendPacket(packetUpdateTileEntity);
             }
         }

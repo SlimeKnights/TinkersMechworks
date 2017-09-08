@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +31,7 @@ public class ItemBlockMetaExtra extends ItemBlockMeta {
     @Override
     public void registerItemModels() {
         final Item item = this;
-        final ResourceLocation loc = GameData.getBlockRegistry().getNameForObject(block);
+        final ResourceLocation loc = block.getRegistryName();
 
 
         for (Comparable o : (Collection<Comparable>) mappingProperty.getAllowedValues()) {
