@@ -2,6 +2,7 @@ package slimeknights.tmechworks.inventory;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -32,13 +33,13 @@ public class SlotDisguise extends Slot
 
         Block block = Block.getBlockFromItem(stack.getItem());
 
-        return block != null && block.isNormalCube(block.getDefaultState(), null, null);
+        return block != Blocks.AIR && block.isNormalCube(block.getDefaultState(), null, null);
     }
 
     /**
      * Helper fnct to get the stack in the slot.
      */
-    @Nullable public ItemStack getStack ()
+    @Nonnull public ItemStack getStack ()
     {
         return disguise.getDisguiseBlock();
     }
@@ -46,7 +47,7 @@ public class SlotDisguise extends Slot
     /**
      * Helper method to put a stack in the slot.
      */
-    public void putStack (@Nullable ItemStack stack)
+    public void putStack (@Nonnull ItemStack stack)
     {
         disguise.setDisguiseBlock(stack);
         this.onSlotChanged();
@@ -79,8 +80,8 @@ public class SlotDisguise extends Slot
         {
             return disguise.getDisguiseBlock();
         }
-        disguise.setDisguiseBlock(null);
-        return null;
+        disguise.setDisguiseBlock(ItemStack.EMPTY);
+        return ItemStack.EMPTY;
     }
 
     /**

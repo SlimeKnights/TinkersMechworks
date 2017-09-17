@@ -14,7 +14,6 @@ public class ClientProxy extends CommonProxy
     public void preInit ()
     {
         super.preInit();
-        registerModels();
     }
 
     public void init ()
@@ -27,7 +26,8 @@ public class ClientProxy extends CommonProxy
         super.postInit();
     }
 
-    protected void registerModels ()
+    @Override
+    public void registerModels ()
     {
         MechworksContent.ingots.registerItemModels();
         MechworksContent.nuggets.registerItemModels();

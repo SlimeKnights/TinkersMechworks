@@ -8,6 +8,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -15,6 +16,7 @@ import net.minecraftforge.registries.*;
 import slimeknights.mantle.block.*;
 import slimeknights.mantle.client.CreativeTab;
 import slimeknights.mantle.item.*;
+import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.blocks.Drawbridge;
 import slimeknights.tmechworks.blocks.Firestarter;
 import slimeknights.tmechworks.blocks.IEnumBlock;
@@ -55,24 +57,7 @@ public class MechworksContent
     public static ItemStack blockCopper;
 
     @SubscribeEvent
-    private void registerBlocks (RegistryEvent.Register<Block> event)
-    {
-        IForgeRegistry<Block> registry = event.getRegistry();
-
-        metals = registerBlock(registry, new Metal(), "metal");
-
-        drawbridge = registerBlock(registry, new Drawbridge(), "drawbridge");
-        drawbridge.setCreativeTab(tabMechworks);
-        registerTE(DrawbridgeLogic.class, "drawbridge");
-        registerTE(ExtendedDrawbridgeLogic.class, "drawbridge.extended");
-
-        firestarter = registerBlock(registry, new Firestarter(), "firestarter");
-        firestarter.setCreativeTab(tabMechworks);
-        registerTE(FirestarterLogic.class, "firestarter");
-    }
-
-    @SubscribeEvent
-    private void registerItems (RegistryEvent.Register<Item> event)
+    public void registerItems (RegistryEvent.Register<Item> event)
     {
         IForgeRegistry<Item> registry = event.getRegistry();
 
@@ -95,6 +80,28 @@ public class MechworksContent
         nuggetCopper = nuggets.addMeta(1, "copper");
 
         setupCreativeTabs();
+    }
+
+    @SubscribeEvent
+    public void registerBlocks (RegistryEvent.Register<Block> event)
+    {
+        IForgeRegistry<Block> registry = event.getRegistry();
+
+        metals = registerBlock(registry, new Metal(), "metal");
+
+        drawbridge = registerBlock(registry, new Drawbridge(), "drawbridge");
+        drawbridge.setCreativeTab(tabMechworks);
+        registerTE(DrawbridgeLogic.class, "drawbridge");
+        registerTE(ExtendedDrawbridgeLogic.class, "drawbridge.extended");
+
+        firestarter = registerBlock(registry, new Firestarter(), "firestarter");
+        firestarter.setCreativeTab(tabMechworks);
+        registerTE(FirestarterLogic.class, "firestarter");
+    }
+
+    @SubscribeEvent
+    public void registerModels (ModelRegistryEvent event){
+        TMechworks.proxy.registerModels();
     }
 
     private void setupCreativeTabs ()
