@@ -80,6 +80,7 @@ public class SlotDisguise extends Slot
         {
             return disguise.getDisguiseBlock();
         }
+
         disguise.setDisguiseBlock(ItemStack.EMPTY);
         return ItemStack.EMPTY;
     }
