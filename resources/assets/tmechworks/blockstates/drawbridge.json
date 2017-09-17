@@ -6,7 +6,7 @@
     "textures": {
       "face": "tmechworks:blocks/machines/drawbridge_face",
       "back": "tmechworks:blocks/machines/drawbridge_back",
-      "side": "tmechworks:/blocks/machines/drawbridge_side"
+      "side": "tmechworks:blocks/machines/drawbridge_side"
     }
   },
   "variants": {
@@ -15,14 +15,14 @@
       },
       "advanced": {
         "textures": {
-          "side": "tmechworks:/blocks/machines/drawbridge_side_advanced"
+          "side": "tmechworks:blocks/machines/drawbridge_side_advanced"
         }
       },
       "extended": {
         "textures": {
           "face": "tmechworks:blocks/machines/drawbridge_face_extended",
           "back": "tmechworks:blocks/machines/drawbridge_back_extended",
-          "side": "tmechworks:/blocks/machines/drawbridge_side_extended"
+          "side": "tmechworks:blocks/machines/drawbridge_side_extended"
         }
       }
     },
