@@ -1,15 +1,15 @@
-#[Tinkers' Mechworks](http://www.minecraftforum.net/topic/1659892-tinkers-construct/)
+# [Tinkers' Mechworks](http://www.minecraftforum.net/topic/1659892-tinkers-construct/)
 
-##Development
+## Development
 Install Forge as usual, and setup your IDE as with any other Forge project.
 
-##Compile from Source
+## Compile from Source
 Note: Git MUST be installed and in the system path to use our scripts.
 * setup: Run [gradle]in the repository root: `gradlew[.bat] [setupDevWorkspace|setupDecompWorkspace] [eclipse|idea]`
 * build: Run [gradle]in the repository root: `gradlew[.bat] build'
 * if obscure gradle issues are found try running 'gradlew clean' or/and 'gradlew cleanCache'
 
-##Issue reporting
+## Issue reporting
 Please include the following:
 
 * Minecraft version
@@ -22,7 +22,7 @@ Please include the following:
 	* Steps to reproduce
 	* ForgeModLoader-client-0.log (the FML log) from the root folder of the client
 
-##Licenses
+# #Licenses
 Most code is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 
 Textures and binaries are licensed under [Creative Commons 3](http://creativecommons.org/licenses/by/3.0/).
