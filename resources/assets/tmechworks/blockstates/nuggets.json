@@ -18,6 +18,20 @@
           "layer0": "tmechworks:items/materials/nugget_copper"
         }
       }
+    ],
+    "tin": [
+      {
+        "textures": {
+          "layer0": "tmechworks:items/materials/nugget_tin"
+        }
+      }
+    ],
+    "bronze": [
+      {
+        "textures": {
+          "layer0": "tmechworks:items/materials/nugget_bronze"
+        }
+      }
     ]
   }
 }

@@ -1,6 +1,7 @@
 package slimeknights.tmechworks.blocks.logic;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -15,6 +16,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
 import slimeknights.tmechworks.library.Util;
@@ -54,6 +57,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
         markDirty();
     }
+
 
     public ItemStack getNextBlock ()
     {
@@ -150,6 +154,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
             if (world.getBlockState(position).getBlock().isReplaceable(world, position))
             {
+                fakePlayer.setHeldItem(EnumHand.MAIN_HAND, stack);
                 return ForgeHooks.onPlaceItemIntoWorld(stack, fakePlayer, world, position, getPlaceDirection(), 0, 0, 0, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS;
             }
             else
@@ -176,8 +181,13 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         {
             ItemBlock ib = (ItemBlock) item;
 
-            if (ib.getBlock() == world.getBlockState(position).getBlock() && (!ib.getHasSubtypes() || ib.getMetadata(stack) == world.getBlockState(position).getBlock()
-                    .getMetaFromState(world.getBlockState(position))))
+            if (ib.getBlock() == world.getBlockState(position).getBlock() &&
+                    (
+                            !ib.getHasSubtypes() ||
+                            ib.getMetadata(stack) == world.getBlockState(position).getBlock().getMetaFromState(world.getBlockState(position)) ||
+                            ib.getBlock().getStateForPlacement(world, position, getPlaceDirection(), 0, 0, 0, 0, getFakePlayer(), null) == world.getBlockState(position)
+                    )
+                )
             {
                 return world.setBlockToAir(position);
             }
@@ -204,7 +214,9 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         return new ContainerDrawbridge(this, inventoryplayer);
     }
 
-    @Override public GuiContainer createGui (InventoryPlayer inventoryplayer, World world, BlockPos pos)
+    @Override
+    @SideOnly(Side.CLIENT)
+    public GuiContainer createGui (InventoryPlayer inventoryplayer, World world, BlockPos pos)
     {
         return new GuiDrawbridge(new ContainerDrawbridge(this, inventoryplayer));
     }

@@ -24,7 +24,7 @@ public class Metal extends EnumBlock<Metal.MetalTypes>
 
     public enum MetalTypes implements IStringSerializable, EnumBlock.IEnumMeta
     {
-        ALUMINUM, COPPER;
+        ALUMINUM, COPPER, TIN, BRONZE;
 
         @Override public String getName ()
         {

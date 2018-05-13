@@ -58,7 +58,7 @@ public class SlotDisguise extends Slot
      */
     public void onSlotChanged ()
     {
-        disguise.markDirty();
+        disguise.markDirtyD();
     }
 
     /**

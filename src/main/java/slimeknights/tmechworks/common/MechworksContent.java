@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.*;
 import slimeknights.mantle.block.*;
 import slimeknights.mantle.client.CreativeTab;
@@ -42,19 +43,25 @@ public class MechworksContent
     public static Firestarter firestarter;
 
     // Tabs
-    public static CreativeTab tabMechworks = new CreativeTab("TabMechworks", new ItemStack(Items.POISONOUS_POTATO));
+    public static CreativeTab tabMechworks = new CreativeTab("TabMechworks", new ItemStack(drawbridge));
 
     // Ingot ItemStacks
     public static ItemStack ingotAluminum;
+    public static ItemStack ingotTin;
     public static ItemStack ingotCopper;
+    public static ItemStack ingotBronze;
 
     // Nugget ItemStacks
     public static ItemStack nuggetAluminum;
     public static ItemStack nuggetCopper;
+    public static ItemStack nuggetTin;
+    public static ItemStack nuggetBronze;
 
     // Block ItemStacks
     public static ItemStack blockAluminum;
     public static ItemStack blockCopper;
+    public static ItemStack blockTin;
+    public static ItemStack blockBronze;
 
     @SubscribeEvent
     public void registerItems (RegistryEvent.Register<Item> event)
@@ -65,6 +72,8 @@ public class MechworksContent
         metals = registerEnumItemBlock(registry, metals);
         blockAluminum = new ItemStack(metals, 1, Metal.MetalTypes.ALUMINUM.getMeta());
         blockCopper = new ItemStack(metals, 1, Metal.MetalTypes.COPPER.getMeta());
+        blockTin = new ItemStack(metals, 1, Metal.MetalTypes.TIN.getMeta());
+        blockTin = new ItemStack(metals, 1, Metal.MetalTypes.BRONZE.getMeta());
 
         drawbridge = registerEnumItemBlockExtra(registry, drawbridge);
         firestarter = registerEnumItemBlockExtra(registry, firestarter, "extinguish=true", "facing=inv");
@@ -78,8 +87,15 @@ public class MechworksContent
         nuggetAluminum = nuggets.addMeta(0, "aluminum");
         ingotCopper = ingots.addMeta(1, "copper");
         nuggetCopper = nuggets.addMeta(1, "copper");
+        ingotTin = ingots.addMeta(2, "tin");
+        nuggetTin = nuggets.addMeta(2, "tin");
+        ingotBronze = ingots.addMeta(3, "bronze");
+        nuggetBronze = nuggets.addMeta(3, "bronze");
 
         setupCreativeTabs();
+        OreDictionary.registerOre("ingotBronze", ingotBronze);
+        OreDictionary.registerOre("ingotTin", ingotTin);
+        OreDictionary.registerOre("ingotCopper", ingotCopper);
     }
 
     @SubscribeEvent

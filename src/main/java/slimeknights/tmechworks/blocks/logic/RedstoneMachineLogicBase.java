@@ -111,6 +111,11 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
     }
 
     @Override
+    public void markDirtyD(){
+        this.markDirty();
+    }
+
+    @Override
     public boolean canEditDisguise() {
         return true;
     }

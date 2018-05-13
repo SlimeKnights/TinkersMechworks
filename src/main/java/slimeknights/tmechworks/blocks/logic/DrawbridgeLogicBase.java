@@ -245,6 +245,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     @Override
     public void update() {
         super.update();
+        this.onBlockUpdate();
 
         if (placeDirection == null) {
             setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);

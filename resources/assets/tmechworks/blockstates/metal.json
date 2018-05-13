@@ -15,6 +15,16 @@
         "textures": {
           "all": "tmechworks:blocks/block_copper"
         }
+      },
+      "tin": {
+        "textures": {
+          "all": "tmechworks:blocks/block_tin"
+        }
+      },
+      "bronze": {
+        "textures": {
+          "all": "tmechworks:blocks/block_bronze"
+        }
       }
     }
   }

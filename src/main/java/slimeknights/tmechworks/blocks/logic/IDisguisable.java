@@ -9,7 +9,7 @@ public interface IDisguisable
 
     void setDisguiseBlock (ItemStack disguise);
 
-    void markDirty ();
+    void markDirtyD ();
 
     boolean canEditDisguise ();
 }

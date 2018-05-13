@@ -8,9 +8,9 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
-import scala.actors.threadpool.Arrays;
 import slimeknights.mantle.item.ItemBlockMeta;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public class ItemBlockMetaExtra extends ItemBlockMeta {

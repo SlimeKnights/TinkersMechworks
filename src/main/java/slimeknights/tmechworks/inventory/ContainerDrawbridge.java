@@ -16,7 +16,7 @@ public class ContainerDrawbridge extends BaseContainer<DrawbridgeLogicBase>
         this.inventoryPlayer = inventoryPlayer;
 
         addSlotToContainer(new SlotDisguise(tile, 35, 36));
-        addSlotToContainer(new Slot(tile, 0, 80, 36));
+        addSlotToContainer(new SlotBlacklist(tile, 0, 80, 36));
 
         addPlayerInventory(inventoryPlayer, 8, 84);
     }

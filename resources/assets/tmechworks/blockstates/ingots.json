@@ -18,6 +18,20 @@
           "layer0": "tmechworks:items/materials/ingot_copper"
         }
       }
+    ],
+    "tin": [
+      {
+        "textures": {
+          "layer0": "tmechworks:items/materials/ingot_tin"
+        }
+      }
+    ],
+    "bronze": [
+      {
+        "textures": {
+          "layer0": "tmechworks:items/materials/ingot_bronze"
+        }
+      }
     ]
   }
 }
