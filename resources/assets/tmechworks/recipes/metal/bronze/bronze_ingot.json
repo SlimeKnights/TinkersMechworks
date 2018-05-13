@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "group": "tmechworks:ingot_crafting",
+  "pattern": [
+    "ABC",
+    "BBC",
+    "CCC"
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "ingotTin"
+    },
+    "C": {
+      "item": "minecraft:coal",
+      "data": 0
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "ingotCopper"
+    }
+  },
+  "result": {
+    "item": "tmechworks:ingots",
+    "data": 3
+  }
+}

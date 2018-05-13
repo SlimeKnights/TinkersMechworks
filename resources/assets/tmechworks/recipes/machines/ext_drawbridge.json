@@ -1,0 +1,30 @@
+{
+  "type": "forge:ore_shaped",
+  "group": "tmechworks:block_machine",
+  "pattern": [
+    "AAB",
+    "ACD",
+    "CC "
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "ingotCobalt"
+    },
+    "B" : {
+      "item": "minecraft:redstone_block"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "ingotArdite"
+    },
+    "D": {
+      "item": "tmechworks:drawbridge",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "tmechworks:drawbridge",
+    "data": 2
+  }
+}
