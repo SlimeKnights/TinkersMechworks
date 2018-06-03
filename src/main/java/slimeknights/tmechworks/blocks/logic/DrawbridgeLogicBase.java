@@ -152,7 +152,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     }
 
     @Override
-    public void setPlaceDirectioni(int direction) {
+    public void setPlaceDirection(int direction) {
         if (direction < EnumFacing.values().length)
             setPlaceDirectionRelativeToBlock(EnumFacing.values()[direction]);
         else if (direction - EnumFacing.values().length < Angle.values().length)
@@ -364,7 +364,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
 
     public abstract String getVariantName();
 
-    final class DrawbridgeStats {
+    public static final class DrawbridgeStats {
 
         public int extendLength = 16;
         public float extendDelay = 0.5F;

@@ -39,7 +39,7 @@ public class PacketUpdatePlaceDirection extends AbstractPacketThreadsafe {
         TileEntity te = player.getEntityWorld().getTileEntity(pos);
 
         if (te instanceof IPlaceDirection) {
-            ((IPlaceDirection) te).setPlaceDirectioni(direction);
+            ((IPlaceDirection) te).setPlaceDirection(direction);
         }
     }
 

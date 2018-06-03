@@ -70,7 +70,7 @@ public class GuiDrawbridge extends GuiContainer {
             GuiArrowSelection selBtn = (GuiArrowSelection) button;
 
             TMechworks.packetPipeline.network.sendToServer(new PacketUpdatePlaceDirection(container.getTile().getPos(), selBtn.getHoveredArrow().ordinal()));
-            container.getTile().setPlaceDirectioni(selBtn.getHoveredArrow().ordinal());
+            container.getTile().setPlaceDirection(selBtn.getHoveredArrow().ordinal());
             updateSelection(selBtn);
         }
     }

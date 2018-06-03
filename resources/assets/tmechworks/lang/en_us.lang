@@ -22,11 +22,23 @@ item.tmechworks.nuggets.copper.name=Copper Nugget
 # Creative Tabs
 itemGroup.TabMechworks=Tinkers' Mechworks
 
-# Integration
-option.tmechworks.commons=Common Integration
-
 # Inventory
 ## Drawbridge
 tmechworks.inventory.drawbridge.normal=Drawbridge
 tmechworks.inventory.drawbridge.advanced=Advanced Drawbridge
 tmechworks.inventory.drawbridge.extended=Extended Drawbridge
+
+# Redstone Machine
+tmechworks.machine.stats=§l§nStats:
+## Drawbridge
+tmechworks.drawbridge.stats.length=Max length: %d
+tmechworks.drawbridge.stats.delay=Extend Delay: %f
+
+# Waila Integration
+tmechworks.hud.behaviour=Behaviour
+tmechworks.hud.behaviour.firestarter.extinguish=§9Extinguish
+tmechworks.hud.behaviour.firestarter.keep=§6Keep lit
+tmechworks.hud.state.drawbridge.extending=Extending
+tmechworks.hud.state.drawbridge.extended=Extended
+tmechworks.hud.state.drawbridge.retracted=Retracted
+tmechworks.hud.state.drawbridge.length=(Length: %d blocks)
