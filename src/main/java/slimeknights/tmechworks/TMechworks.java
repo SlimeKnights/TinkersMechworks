@@ -10,7 +10,7 @@ import slimeknights.tmechworks.common.*;
 import slimeknights.tmechworks.integration.WailaIntegration;
 import slimeknights.tmechworks.networking.PacketUpdatePlaceDirection;
 
-@Mod(modid = TMechworks.modID, name = TMechworks.modName, version = TMechworks.modVersion, dependencies = "required-after:forge@[14.21.1.2387,); required-after:mantle@[1.12-1.3.1,); after:jei@[4.2,); after:waila@[1.8,)", acceptedMinecraftVersions = "[1.12, 1.12.1)")
+@Mod(modid = TMechworks.modID, name = TMechworks.modName, version = TMechworks.modVersion, dependencies = "required-after:forge@[14.23.4.2705,); required-after:mantle@[1.12-1.3.2,); after:jei@[4.9,); after:waila@[1.8,)", acceptedMinecraftVersions = "[1.12.2, 1.13)")
 public class TMechworks
 {
     public static final String modID = "tmechworks";

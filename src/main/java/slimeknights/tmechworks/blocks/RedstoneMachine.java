@@ -40,7 +40,8 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
 
     protected RedstoneMachine(Material material, PropertyEnum<E> prop, Class<E> clazz) {
         super(material, prop, clazz);
-        this.isBlockContainer = true;
+        //TODO figure out what this was, and what it missing affects
+        //this.isBlockContainer = true;
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
