@@ -146,10 +146,9 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
         if (item instanceof ItemBlock)
         {
-            ItemBlock ib = (ItemBlock) item;
-
             if (world.getBlockState(position).getBlock().isReplaceable(world, position))
             {
+                fakePlayer.inventory.setInventorySlotContents(0, stack);
                 return ForgeHooks.onPlaceItemIntoWorld(stack, fakePlayer, world, position, getPlaceDirection(), 0, 0, 0, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS;
             }
             else
