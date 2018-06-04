@@ -19,9 +19,9 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
         super(Util.prefix("inventory.firestarter"), 0);
     }
 
-    @Override public void onBlockUpdate ()
+    @Override public void onRedstoneUpdate()
     {
-        super.onBlockUpdate();
+        super.onRedstoneUpdate();
 
         setFire();
     }

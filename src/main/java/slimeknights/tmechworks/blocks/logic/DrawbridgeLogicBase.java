@@ -34,7 +34,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     }
 
     @Override
-    public void onBlockUpdate() {
+    public void onRedstoneUpdate() {
         if (isExtended && getRedstoneState() <= 0) {
             isExtended = false;
             isExtending = true;

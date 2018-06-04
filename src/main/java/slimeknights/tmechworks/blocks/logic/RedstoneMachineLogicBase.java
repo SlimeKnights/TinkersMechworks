@@ -63,6 +63,9 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
 
         redstoneState = sidePow;
 
+        if(pow != oldPow) {
+            onRedstoneUpdate();
+        }
         onBlockUpdate();
 
         if (oldPow != redstoneState) {
@@ -70,8 +73,10 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         }
     }
 
-    public void onBlockUpdate() {
+    public void onRedstoneUpdate() {
     }
+
+    public void onBlockUpdate() {}
 
     public int getRedstoneState() {
         return redstoneState;
