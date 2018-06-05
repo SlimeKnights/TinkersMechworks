@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
 import slimeknights.tmechworks.library.Util;
@@ -203,7 +205,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         return new ContainerDrawbridge(this, inventoryplayer);
     }
 
-    @Override public GuiContainer createGui (InventoryPlayer inventoryplayer, World world, BlockPos pos)
+    @Override @SideOnly(Side.CLIENT) public GuiContainer createGui (InventoryPlayer inventoryplayer, World world, BlockPos pos)
     {
         return new GuiDrawbridge(new ContainerDrawbridge(this, inventoryplayer));
     }

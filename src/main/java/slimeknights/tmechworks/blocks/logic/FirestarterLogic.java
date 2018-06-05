@@ -1,6 +1,7 @@
 package slimeknights.tmechworks.blocks.logic;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,6 +9,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import slimeknights.tmechworks.library.Util;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public class FirestarterLogic extends RedstoneMachineLogicBase
 {
@@ -72,5 +76,15 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
         super.readFromNBT(tags);
 
         shouldExtinguish = tags.getBoolean("ShouldExtinguish");
+    }
+
+    @Override
+    public void getInformation(@Nonnull List<String> info, InformationType type) {
+        super.getInformation(info, type);
+        if(type != InformationType.BODY) {
+            return;
+        }
+
+        info.add(I18n.format("tmechworks.hud.behaviour") + ": " + I18n.format("tmechworks.hud.behaviour.firestarter." + (getShouldExtinguish() ? "extinguish" : "keep")));
     }
 }

@@ -11,6 +11,6 @@ public class WailaRegistrar {
     public static void wailaCallback(IWailaRegistrar registrar){
         registrar.addConfig(TMechworks.modName, CONFIG_REDSTONE_MACHINE, true);
 
-        registrar.registerBodyProvider(new RedstoneMachineDataProvider(), RedstoneMachineLogicBase.class);
+        registrar.registerBodyProvider(new GenericTileDataProvider(CONFIG_REDSTONE_MACHINE), RedstoneMachineLogicBase.class);
     }
 }

@@ -1,6 +1,7 @@
 package slimeknights.tmechworks.blocks.logic;
 
 import com.google.common.base.Predicates;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
@@ -12,11 +13,13 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import slimeknights.mantle.tileentity.TileInventory;
+import slimeknights.tmechworks.integration.IInformationProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-public abstract class RedstoneMachineLogicBase extends TileInventory implements IDisguisable, ITickable {
+public abstract class RedstoneMachineLogicBase extends TileInventory implements IDisguisable, ITickable, IInformationProvider {
     private InventoryBasic disguiseInventory;
 
     private int redstoneState;
@@ -224,5 +227,13 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
 
         stack.setTagInfo("BlockEntityTag", nbttagcompound);
         return stack;
+    }
+
+    @Override
+    public void getInformation(@Nonnull List<String> info, InformationType type) {
+        if(type != InformationType.BODY)
+            return;
+
+        info.add(I18n.format("hud.msg.power") + ": " + getRedstoneState());
     }
 }

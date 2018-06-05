@@ -1,5 +1,6 @@
 package slimeknights.tmechworks.blocks.logic;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -11,6 +12,7 @@ import slimeknights.mantle.common.IInventoryGui;
 import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase implements ITickable, IInventoryGui, IPlaceDirection {
     private static final float TICK_TIME = 0.05F;
@@ -363,6 +365,19 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     public abstract boolean retractNext();
 
     public abstract String getVariantName();
+
+    @Override
+    public void getInformation(@Nonnull List<String> info, InformationType type) {
+        super.getInformation(info, type);
+        if(type != InformationType.BODY) {
+            return;
+        }
+
+        info.add(I18n.format("hud.msg.state") + ": " + I18n.format("tmechworks.hud.state.drawbridge." + (getExtending() ? "extending" : getExtended() ? "extended" : "retracted")) + " " + I18n.format("tmechworks.hud.state.drawbridge.length", getExtendState()));
+        info.add(I18n.format("tmechworks.machine.stats"));
+        info.add(I18n.format("tmechworks.drawbridge.stats.length", getStats().extendLength));
+        info.add(I18n.format("tmechworks.drawbridge.stats.delay", getStats().extendDelay));
+    }
 
     public static final class DrawbridgeStats {
 
