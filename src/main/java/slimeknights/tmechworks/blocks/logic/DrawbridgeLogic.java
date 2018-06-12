@@ -21,6 +21,8 @@ import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
 import slimeknights.tmechworks.library.Util;
 
+import javax.annotation.Nonnull;
+
 public class DrawbridgeLogic extends DrawbridgeLogicBase
 {
     public DrawbridgeLogic ()
@@ -32,12 +34,13 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
     {
     }
 
+    @Nonnull
     @Override public ItemStack getStackInSlot (int slot)
     {
         return super.getStackInSlot(slot == -1 ? 0 : slot);
     }
 
-    @Override public void setInventorySlotContents (int slot, ItemStack item)
+    @Override public void setInventorySlotContents (int slot, @Nonnull ItemStack item)
     {
         super.setInventorySlotContents(slot == -1 ? 0 : slot, item);
 
@@ -49,7 +52,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
             }
             else
             {
-                setInventorySlotContents(1, new ItemStack(item.getItem(), 1, item.getItemDamage()));
+                setInventorySlotContents(1, item.copy());
             }
         }
 
@@ -71,9 +74,9 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         // Handled by onPlaceItemIntoWorld
         /*decrStackSize(-1, 1);
         ItemStack stack = getStackInSlot(0);
-        if (stack != null && stack.stackSize <= 0)
+        if (!stack.isEmpty() && stack.stackSize <= 0)
         {
-            super.setInventorySlotContents(0, null);
+            super.setInventorySlotContents(0, ItemStack.EMPTY);
         }*/
     }
 
@@ -85,7 +88,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         }
         else
         {
-            super.setInventorySlotContents(0, getStackInSlot(1));
+            super.setInventorySlotContents(0, getStackInSlot(1).copy());
         }
     }
 
@@ -138,7 +141,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
         ItemStack stack = getNextBlock();
 
-        if (stack == null)
+        if (stack.isEmpty())
         {
             return false;
         }
@@ -165,7 +168,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
     {
         ItemStack stack = getLastBlock();
 
-        if (stack == null)
+        if (stack.isEmpty())
         {
             return false;
         }
@@ -187,7 +190,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
         Block block = Block.getBlockFromItem(item);
 
-        if (block != null)
+        if (block != Blocks.AIR)
         {
             if (block == world.getBlockState(position).getBlock() && (!item.getHasSubtypes() || stack.getMetadata() == world.getBlockState(position).getBlock()
                     .getMetaFromState(world.getBlockState(position))))

@@ -134,7 +134,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
 
         ItemStack disguise = getDisguiseBlock();
 
-        if (disguise != null) {
+        if (!disguise.isEmpty()) {
             NBTTagCompound itemNBT = new NBTTagCompound();
 
             itemNBT = disguise.writeToNBT(itemNBT);
