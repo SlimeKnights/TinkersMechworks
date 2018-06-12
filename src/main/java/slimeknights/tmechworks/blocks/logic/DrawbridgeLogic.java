@@ -23,7 +23,6 @@ import slimeknights.tmechworks.library.Util;
 
 public class DrawbridgeLogic extends DrawbridgeLogicBase
 {
-
     public DrawbridgeLogic ()
     {
         super(Util.prefix("inventory.drawbridge"), 2);
@@ -44,9 +43,9 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
         if (slot == 0)
         {
-            if (item == null)
+            if (item.isEmpty())
             {
-                setInventorySlotContents(1, null);
+                setInventorySlotContents(1, ItemStack.EMPTY);
             }
             else
             {
@@ -80,7 +79,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
 
     public void addLastBlock ()
     {
-        if (getStackInSlot(0) != null)
+        if (!getStackInSlot(0).isEmpty())
         {
             decrStackSize(-1, -1);
         }

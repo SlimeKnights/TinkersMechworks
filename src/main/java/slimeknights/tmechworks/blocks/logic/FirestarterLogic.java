@@ -45,7 +45,6 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
                 world.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
                 world.setBlockState(position, Blocks.FIRE.getDefaultState(), 11);
             }
-            //TODO registry for extinguishable blocks instead of hardcoded
         } else if (shouldExtinguish && (state.getBlock() == Blocks.FIRE || state.getBlock() == Blocks.PORTAL))
         {
             world.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);

@@ -26,7 +26,7 @@ public class SlotDisguise extends Slot
      */
     public boolean isItemValid (@Nullable ItemStack stack)
     {
-        if (!disguise.canEditDisguise() || stack == null)
+        if (!disguise.canEditDisguise() || stack == null || stack.isEmpty())
         {
             return false;
         }

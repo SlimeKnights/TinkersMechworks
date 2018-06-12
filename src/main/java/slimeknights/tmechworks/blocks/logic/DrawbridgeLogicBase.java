@@ -358,6 +358,11 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         return super.getName() + "." + getVariantName();
     }
 
+    @Override
+    public boolean canEditDisguise(){
+        return !getExtended();
+    }
+
     public abstract void setupStatistics(DrawbridgeStats ds);
 
     public abstract boolean extendNext();
