@@ -32,6 +32,9 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
 
     public void setFire ()
     {
+        if(world.isRemote)
+            return;
+
         EnumFacing facing = getFacingDirection();
 
         BlockPos loc = getPos();

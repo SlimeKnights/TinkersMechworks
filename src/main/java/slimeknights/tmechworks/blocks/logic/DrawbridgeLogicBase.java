@@ -14,7 +14,6 @@ import slimeknights.tmechworks.library.Util;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-// TODO: Guess server place/retract success to avoid desync instead of straight up quitting
 public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase implements ITickable, IInventoryGui, IPlaceDirection {
     private static final float TICK_TIME = 0.05F;
 

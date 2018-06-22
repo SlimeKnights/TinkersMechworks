@@ -126,11 +126,10 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
     }
 
     public boolean placeBlock(BlockPos position) {
-        FakePlayer fakePlayer = getFakePlayer(position.getX(), position.getY(), position.getZ());
-
-        //TODO: refer to TODO in logic base
-        if (fakePlayer == null)
+        if(world.isRemote)
             return false;
+
+        FakePlayer fakePlayer = getFakePlayer(position.getX(), position.getY(), position.getZ());
 
         ItemStack stack = getNextBlock();
 
@@ -199,6 +198,9 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
     }
 
     public boolean breakBlock(BlockPos position) {
+        if(world.isRemote)
+            return false;
+
         ItemStack stack = getLastBlock();
 
         if (stack.isEmpty()) {
