@@ -378,7 +378,6 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
             return;
         }
 
-        info.add(I18n.format("hud.msg.state") + ": " + I18n.format("tmechworks.hud.state.drawbridge." + (getExtending() ? "extending" : getExtended() ? "extended" : "retracted")) + " " + I18n.format("tmechworks.hud.state.drawbridge.length", getExtendState()));
         info.add(I18n.format("tmechworks.machine.stats"));
         info.add(I18n.format("tmechworks.drawbridge.stats.length", getStats().extendLength));
         info.add(I18n.format("tmechworks.drawbridge.stats.delay", getStats().extendDelay));

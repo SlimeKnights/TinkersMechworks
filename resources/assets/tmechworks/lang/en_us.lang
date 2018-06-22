@@ -38,7 +38,3 @@ tmechworks.drawbridge.stats.delay=Extend Delay: %f
 tmechworks.hud.behaviour=Behaviour
 tmechworks.hud.behaviour.firestarter.extinguish=§9Extinguish
 tmechworks.hud.behaviour.firestarter.keep=§6Keep lit
-tmechworks.hud.state.drawbridge.extending=Extending
-tmechworks.hud.state.drawbridge.extended=Extended
-tmechworks.hud.state.drawbridge.retracted=Retracted
-tmechworks.hud.state.drawbridge.length=(Length: %d blocks)
