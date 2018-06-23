@@ -29,6 +29,8 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
+//TODO: remove the copy inventory and replace it with something smarter
+//TODO: lock the gui down whilst the drawbridge is running and/or extended
 public class DrawbridgeLogic extends DrawbridgeLogicBase {
     protected int[] metaMemory;
 
@@ -246,8 +248,8 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
     }
 
     @Override
-    public void readItemData(NBTTagCompound tags) {
-        super.readItemData(tags);
+    public void readFromNBT(NBTTagCompound tags) {
+        super.readFromNBT(tags);
 
         metaMemory = tags.getIntArray("metaMemory");
         if(metaMemory.length != getStats().extendLength){
@@ -256,8 +258,8 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
     }
 
     @Override
-    public NBTTagCompound writeItemData(NBTTagCompound tags) {
-        tags = super.writeItemData(tags);
+    public NBTTagCompound writeToNBT(NBTTagCompound tags) {
+        tags = super.writeToNBT(tags);
 
         tags.setIntArray("metaMemory", metaMemory);
 
