@@ -18,6 +18,7 @@ block.advdrawbridge.name=발전된 도개교
 block.extdrawbridge.name=길어진 도개교
 
 tooltip.spoolofwire=실 투성이
+tooltip.spoolofwire.connecting=Connecting (X:%d, Y:%d, Z:%d, Dim:%d)
 tooltip.drawbridge.inventory=인벤토리: 
 tooltip.drawbridge.amount=양: 
 tooltip.drawbridge.slot=슬롯 
