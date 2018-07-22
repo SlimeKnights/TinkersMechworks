@@ -97,7 +97,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
         EnumFacing face = getFacingDirection();
 
         int extend = getExtendState() + 1;
-        BlockPos nextPos = new BlockPos(pos.getX() + face.getFrontOffsetX() * extend, pos.getY() + face.getFrontOffsetY() * extend, pos.getZ() + face.getFrontOffsetZ() * extend);
+        BlockPos nextPos = new BlockPos(pos.getX() + face.getXOffset() * extend, pos.getY() + face.getYOffset() * extend, pos.getZ() + face.getZOffset() * extend);
 
         if (placeBlock(nextPos)) {
             subtractNextBlock();
@@ -112,7 +112,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
         EnumFacing face = getFacingDirection();
 
         int extend = getExtendState();
-        BlockPos nextPos = new BlockPos(pos.getX() + face.getFrontOffsetX() * extend, pos.getY() + face.getFrontOffsetY() * extend, pos.getZ() + face.getFrontOffsetZ() * extend);
+        BlockPos nextPos = new BlockPos(pos.getX() + face.getXOffset() * extend, pos.getY() + face.getYOffset() * extend, pos.getZ() + face.getZOffset() * extend);
 
         if (breakBlock(nextPos)) {
             addLastBlock();

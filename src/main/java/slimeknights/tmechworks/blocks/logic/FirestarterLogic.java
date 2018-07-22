@@ -38,7 +38,7 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
         EnumFacing facing = getFacingDirection();
 
         BlockPos loc = getPos();
-        BlockPos position = new BlockPos(loc.getX() + facing.getFrontOffsetX(), loc.getY() + facing.getFrontOffsetY(), loc.getZ() + facing.getFrontOffsetZ());
+        BlockPos position = new BlockPos(loc.getX() + facing.getXOffset(), loc.getY() + facing.getYOffset(), loc.getZ() + facing.getZOffset());
 
         IBlockState state = world.getBlockState(position);
         if (getRedstoneState() > 0)
