@@ -22,6 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -131,25 +132,20 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        if (!dropState)
-            return super.getDrops(world, pos, state, fortune);
+    public void getDrops(NonNullList<ItemStack> items, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        RedstoneMachineLogicBase tile = (RedstoneMachineLogicBase) world.getTileEntity(pos);
 
-        RedstoneMachineLogicBase tile = (RedstoneMachineLogicBase) cachedTE;
-
-        if (tile == null)
-            return super.getDrops(world, pos, state, fortune);
-
-        List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
+        if (!dropState || tile == null) {
+            super.getDrops(items, world, pos, state, fortune);
+            return;
+        }
 
         Random rand = world instanceof World ? ((World) world).rand : RANDOM;
 
         Item item = this.getItemDropped(state, rand, fortune);
         if (item != null) {
-            ret.add(tile.storeTileData(new ItemStack(item, 1, this.damageDropped(state))));
+            items.add(tile.storeTileData(new ItemStack(item, 1, this.damageDropped(state))));
         }
-
-        return ret;
     }
 
     @SideOnly(Side.CLIENT)
@@ -241,8 +237,6 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
     @Override
     public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-
-        cachedTE = tileentity;
 
         if (tileentity instanceof TileInventory) {
             if (!dropState)

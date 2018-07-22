@@ -1,11 +1,14 @@
 package slimeknights.tmechworks.blocks.logic;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -13,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -21,6 +25,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import slimeknights.tmechworks.blocks.Drawbridge;
 import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
 import slimeknights.tmechworks.library.Util;
@@ -32,11 +37,10 @@ import java.util.List;
 //TODO: remove the copy inventory and replace it with something smarter
 //TODO: lock the gui down whilst the drawbridge is running and/or extended
 public class DrawbridgeLogic extends DrawbridgeLogicBase {
-    protected int[] metaMemory;
+    private static final ItemStack SILKTOUCH_PICKAXE;
 
     public DrawbridgeLogic() {
         super(Util.prefix("inventory.drawbridge"), 2);
-        metaMemory = new int[getStats().extendLength];
     }
 
     @Override
@@ -96,7 +100,6 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
         BlockPos nextPos = new BlockPos(pos.getX() + face.getFrontOffsetX() * extend, pos.getY() + face.getFrontOffsetY() * extend, pos.getZ() + face.getFrontOffsetZ() * extend);
 
         if (placeBlock(nextPos)) {
-            metaMemory[extend - 1] = world.getBlockState(nextPos).getBlock().getMetaFromState(world.getBlockState(nextPos));
             subtractNextBlock();
             return true;
         }
@@ -112,7 +115,6 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
         BlockPos nextPos = new BlockPos(pos.getX() + face.getFrontOffsetX() * extend, pos.getY() + face.getFrontOffsetY() * extend, pos.getZ() + face.getFrontOffsetZ() * extend);
 
         if (breakBlock(nextPos)) {
-            world.setBlockState(nextPos, Blocks.AIR.getDefaultState());
             addLastBlock();
 
             return true;
@@ -209,31 +211,15 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
             return false;
         }
 
-        Item item = stack.getItem();
+        NonNullList<ItemStack> drops = getBlockDrops(position);
 
-        if (item instanceof ItemBlock) {
-            ItemBlock ib = (ItemBlock) item;
-
-            IBlockState state = world.getBlockState(position);
-            Block block = state.getBlock();
-
-            if (ib.getBlock() == block && (!ib.getHasSubtypes() || metaMemory[getExtendState() - 1] == block.getMetaFromState(state))) {
-                return world.setBlockToAir(position);
-            }
-
+        if(!drops.removeIf(drop -> ItemStack.areItemStackTagsEqual(drop, stack) && ItemStack.areItemsEqual(drop, stack))){
             return false;
         }
 
-        Block block = Block.getBlockFromItem(item);
+        drops.forEach(drop -> Block.spawnAsEntity(world, position, drop));
 
-        if (block != Blocks.AIR) {
-            if (block == world.getBlockState(position).getBlock() && (!item.getHasSubtypes() || stack.getMetadata() == world.getBlockState(position).getBlock()
-                    .getMetaFromState(world.getBlockState(position)))) {
-                return world.setBlockToAir(position);
-            }
-        }
-
-        return false;
+        return world.setBlockToAir(position);
     }
 
     @Override
@@ -250,19 +236,26 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
     @Override
     public void readFromNBT(NBTTagCompound tags) {
         super.readFromNBT(tags);
-
-        metaMemory = tags.getIntArray("metaMemory");
-        if(metaMemory.length != getStats().extendLength){
-            metaMemory = Arrays.copyOf(metaMemory, getStats().extendLength);
-        }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tags) {
         tags = super.writeToNBT(tags);
 
-        tags.setIntArray("metaMemory", metaMemory);
-
         return tags;
+    }
+
+    public NonNullList<ItemStack> getBlockDrops(BlockPos position){
+        Drawbridge.dropCapture(true);
+
+        IBlockState state = world.getBlockState(position);
+        state.getBlock().harvestBlock(world, getFakePlayer(), position, state, world.getTileEntity(position), SILKTOUCH_PICKAXE);
+
+        return Drawbridge.dropCapture(false);
+    }
+
+    static {
+        SILKTOUCH_PICKAXE = new ItemStack(Items.DIAMOND_PICKAXE, 1, 0);
+        EnchantmentHelper.setEnchantments(ImmutableMap.of(Enchantments.SILK_TOUCH, 1), SILKTOUCH_PICKAXE);
     }
 }
