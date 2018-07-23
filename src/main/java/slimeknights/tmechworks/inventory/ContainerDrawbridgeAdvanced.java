@@ -5,11 +5,11 @@ import net.minecraft.inventory.Slot;
 import slimeknights.mantle.inventory.BaseContainer;
 import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogicBase;
 
-public class ContainerDrawbridge extends BaseContainer<DrawbridgeLogicBase>
+public class ContainerDrawbridgeAdvanced extends BaseContainer<DrawbridgeLogicBase>
 {
     public InventoryPlayer inventoryPlayer;
 
-    public ContainerDrawbridge (DrawbridgeLogicBase tile, InventoryPlayer inventoryPlayer)
+    public ContainerDrawbridgeAdvanced (DrawbridgeLogicBase tile, InventoryPlayer inventoryPlayer)
     {
         super(tile);
 
@@ -17,7 +17,8 @@ public class ContainerDrawbridge extends BaseContainer<DrawbridgeLogicBase>
 
         //TODO: Uncomment when disguise done
         //addSlotToContainer(new SlotDisguise(tile, 35, 36));
-        addSlotToContainer(new Slot(tile, 0, 80, 36));
+        for(int i = 0; i < tile.getSizeInventory(); i++)
+            addSlotToContainer(new Slot(tile, i, 80 + i * 16, 36));
 
         addPlayerInventory(inventoryPlayer, 8, 84);
     }

@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.blocks.logic;
+package slimeknights.tmechworks.blocks.logic.drawbridge;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
@@ -9,6 +9,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.FakePlayer;
 import slimeknights.mantle.common.IInventoryGui;
+import slimeknights.tmechworks.blocks.logic.IPlaceDirection;
+import slimeknights.tmechworks.blocks.logic.RedstoneMachineLogicBase;
 import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
@@ -37,10 +39,10 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
 
     @Override
     public void onRedstoneUpdate() {
-        if (isExtended && getRedstoneState() <= 0) {
+        if (getExtended() && getRedstoneState() <= 0) {
             isExtended = false;
             isExtending = true;
-        } else if (!isExtended && getRedstoneState() > 0) {
+        } else if (!getExtended() && getRedstoneState() > 0) {
             isExtended = true;
             isExtending = true;
         }
@@ -252,25 +254,25 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
             setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);
         }
 
-        if (isExtending) {
+        if (getExtending()) {
             if (cooldown > 0) {
                 cooldown -= (world.getTotalWorldTime() - lastWorldTime) * TICK_TIME;
             } else if (isExtended) {
-                if (extendState == statistics.extendLength) {
+                if (getExtendState() == getStats().extendLength) {
                     isExtending = false;
                 } else if (extendNext()) {
                     extendState++;
-                    cooldown = statistics.extendDelay;
+                    cooldown = getStats().extendDelay;
                     playExtendSound();
                 } else {
                     isExtending = false;
                 }
             } else {
-                if (extendState <= 0) {
+                if (getExtendState() <= 0) {
                     isExtending = false;
                 } else if (retractNext()) {
                     extendState--;
-                    cooldown = statistics.extendDelay;
+                    cooldown = getStats().extendDelay;
                     playRetractSound();
                 } else {
                     isExtending = false;
@@ -282,6 +284,11 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         }
 
         lastWorldTime = world.getTotalWorldTime();
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return getStats().extendLength;
     }
 
     @Override

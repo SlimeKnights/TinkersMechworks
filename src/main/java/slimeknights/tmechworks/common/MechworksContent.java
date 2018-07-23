@@ -21,8 +21,9 @@ import slimeknights.tmechworks.blocks.Drawbridge;
 import slimeknights.tmechworks.blocks.Firestarter;
 import slimeknights.tmechworks.blocks.IEnumBlock;
 import slimeknights.tmechworks.blocks.Metal;
-import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
-import slimeknights.tmechworks.blocks.logic.ExtendedDrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.AdvancedDrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.ExtendedDrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
 import slimeknights.tmechworks.items.ItemBlockMetaExtra;
 import slimeknights.tmechworks.library.Util;
@@ -93,6 +94,7 @@ public class MechworksContent
         drawbridge.setCreativeTab(tabMechworks);
         registerTE(DrawbridgeLogic.class, "drawbridge");
         registerTE(ExtendedDrawbridgeLogic.class, "drawbridge.extended");
+        registerTE(AdvancedDrawbridgeLogic.class, "drawbridge.advanced");
 
         firestarter = registerBlock(registry, new Firestarter(), "firestarter");
         firestarter.setCreativeTab(tabMechworks);

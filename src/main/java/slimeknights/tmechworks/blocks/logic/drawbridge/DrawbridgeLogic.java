@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.blocks.logic;
+package slimeknights.tmechworks.blocks.logic.drawbridge;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -41,7 +41,11 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
     protected ItemStack setStack = ItemStack.EMPTY;
 
     public DrawbridgeLogic() {
-        super(Util.prefix("inventory.drawbridge"), 1);
+        this(1);
+    }
+
+    public DrawbridgeLogic(int inventorySize) {
+        super(Util.prefix("inventory.drawbridge"), inventorySize);
     }
 
     @Override

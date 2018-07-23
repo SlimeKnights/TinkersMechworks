@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.blocks.logic;
+package slimeknights.tmechworks.blocks.logic.drawbridge;
 
 public class ExtendedDrawbridgeLogic extends DrawbridgeLogic {
     @Override
