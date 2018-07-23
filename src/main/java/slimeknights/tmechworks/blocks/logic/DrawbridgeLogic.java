@@ -14,12 +14,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.world.BlockEvent;
@@ -30,66 +32,53 @@ import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
 import slimeknights.tmechworks.library.Util;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.List;
 
-//TODO: remove the copy inventory and replace it with something smarter
 //TODO: lock the gui down whilst the drawbridge is running and/or extended
 public class DrawbridgeLogic extends DrawbridgeLogicBase {
-    private static final ItemStack SILKTOUCH_PICKAXE;
+    protected static final ItemStack SILKTOUCH_PICKAXE;
+    protected IBlockState placedState;
+    protected ItemStack setStack = ItemStack.EMPTY;
 
     public DrawbridgeLogic() {
-        super(Util.prefix("inventory.drawbridge"), 2);
+        super(Util.prefix("inventory.drawbridge"), 1);
     }
 
     @Override
     public void setupStatistics(DrawbridgeStats ds) {
     }
 
-    @Nonnull
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return super.getStackInSlot(slot == -1 ? 0 : slot);
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, @Nonnull ItemStack item) {
-        super.setInventorySlotContents(slot == -1 ? 0 : slot, item);
-
-        if (slot == 0) {
-            if (item.isEmpty()) {
-                setInventorySlotContents(1, ItemStack.EMPTY);
-            } else {
-                setInventorySlotContents(1, item.copy());
-            }
-        }
-
-        markDirty();
-    }
-
     public ItemStack getNextBlock() {
-        return getStackInSlot(0);
+        return getStackInSlot(getNextIndex());
     }
 
     public ItemStack getLastBlock() {
-        return getStackInSlot(1);
+        return getStackInSlot(getLastIndex());
     }
 
     public void subtractNextBlock() {
-        decrStackSize(-1, 1);
-        ItemStack stack = getStackInSlot(0);
+        decrStackSize(getNextIndex(), 1);
+        ItemStack stack = getStackInSlot(getNextIndex());
         if (!stack.isEmpty() && stack.getCount() <= 0) {
-            super.setInventorySlotContents(0, ItemStack.EMPTY);
+            super.setInventorySlotContents(getNextIndex(), ItemStack.EMPTY);
         }
     }
 
     public void addLastBlock() {
-        if (!getStackInSlot(0).isEmpty()) {
-            decrStackSize(-1, -1);
+        if (!getStackInSlot(getLastIndex()).isEmpty()) {
+            decrStackSize(getLastIndex(), -1);
         } else {
-            super.setInventorySlotContents(0, getStackInSlot(1).copy());
+            setInventorySlotContents(getLastIndex(), setStack);
+            setStack = ItemStack.EMPTY;
         }
+    }
+
+    public int getNextIndex() {
+        return 0;
+    }
+
+    public int getLastIndex() {
+        return 0;
     }
 
     @Override
@@ -192,6 +181,8 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
 
                         world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                     }
+
+                    placedState = state;
                 }
 
                 return placed;
@@ -205,15 +196,29 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
         if(world.isRemote)
             return false;
 
-        ItemStack stack = getLastBlock();
+        setStack = ItemStack.EMPTY;
 
-        if (stack.isEmpty()) {
-            return false;
-        }
+        ItemStack stack = getLastBlock();
 
         NonNullList<ItemStack> drops = getBlockDrops(position);
 
-        if(!drops.removeIf(drop -> ItemStack.areItemStackTagsEqual(drop, stack) && ItemStack.areItemsEqual(drop, stack))){
+        if(stack.isEmpty() && placedState != null){
+            ItemStack foundDrop = ItemStack.EMPTY;
+
+            for(ItemStack drop : drops){
+                if(drop.getCount() == 1 && drop.getItem() == Item.getItemFromBlock(placedState.getBlock())){
+                    foundDrop = drop;
+                    break;
+                }
+            }
+
+            if(foundDrop.isEmpty())
+                return false;
+
+            drops.remove(foundDrop);
+
+            setStack = foundDrop;
+        } else if (!stack.isEmpty() && !drops.removeIf(drop -> drop.getCount() == 1 && ItemStack.areItemStackTagsEqual(drop, stack) && ItemStack.areItemsEqual(drop, stack))){
             return false;
         }
 
@@ -236,11 +241,20 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
     @Override
     public void readFromNBT(NBTTagCompound tags) {
         super.readFromNBT(tags);
+
+        if(tags.hasKey("placedState", Constants.NBT.TAG_COMPOUND))
+            placedState = NBTUtil.readBlockState(tags.getCompoundTag("placedState"));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tags) {
         tags = super.writeToNBT(tags);
+
+        if(placedState != null) {
+            NBTTagCompound stateCompound = new NBTTagCompound();
+            NBTUtil.writeBlockState(stateCompound, placedState);
+            tags.setTag("placedState", stateCompound);
+        }
 
         return tags;
     }

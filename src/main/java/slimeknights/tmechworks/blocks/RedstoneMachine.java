@@ -134,6 +134,8 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
     @Override
     public void getDrops(NonNullList<ItemStack> items, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         RedstoneMachineLogicBase tile = (RedstoneMachineLogicBase) world.getTileEntity(pos);
+        if(tile == null && cachedTE instanceof RedstoneMachineLogicBase)
+            tile = (RedstoneMachineLogicBase)cachedTE;
 
         if (!dropState || tile == null) {
             super.getDrops(items, world, pos, state, fortune);
@@ -237,6 +239,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
     @Override
     public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
+        cachedTE = tileentity;
 
         if (tileentity instanceof TileInventory) {
             if (!dropState)

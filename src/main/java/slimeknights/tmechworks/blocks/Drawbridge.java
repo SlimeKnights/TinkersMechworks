@@ -75,13 +75,6 @@ public class Drawbridge extends RedstoneMachine<Drawbridge.DrawbridgeType>
         list.add(new ItemStack(itemIn, 1, 2));
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-
-        tooltip.removeIf(s -> s.startsWith("Slot 1"));
-    }
-
     public enum DrawbridgeType implements IStringSerializable, EnumBlock.IEnumMeta
     {
         NORMAL(DrawbridgeLogic.class),

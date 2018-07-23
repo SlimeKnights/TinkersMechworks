@@ -216,6 +216,6 @@ public class MechworksContent
             throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! TE: %s", name));
         }
 
-        GameRegistry.registerTileEntity(teClazz, Util.prefix(name));
+        GameRegistry.registerTileEntity(teClazz, new ResourceLocation(Util.prefix(name)));
     }
 }
