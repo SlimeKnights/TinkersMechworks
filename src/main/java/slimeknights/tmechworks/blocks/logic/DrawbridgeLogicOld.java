@@ -18,14 +18,15 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogicBase;
 import slimeknights.tmechworks.client.gui.GuiDrawbridge;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
 import slimeknights.tmechworks.library.Util;
 
-public class DrawbridgeLogic extends DrawbridgeLogicBase
+public class DrawbridgeLogicOld extends DrawbridgeLogicBase
 {
 
-    public DrawbridgeLogic ()
+    public DrawbridgeLogicOld()
     {
         super(Util.prefix("inventory.drawbridge"), 2);
     }
@@ -97,7 +98,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         EnumFacing face = getFacingDirection();
 
         int extend = getExtendState() + 1;
-        BlockPos nextPos = new BlockPos(pos.getX() + face.getFrontOffsetX() * extend, pos.getY() + face.getFrontOffsetY() * extend, pos.getZ() + face.getFrontOffsetZ() * extend);
+        BlockPos nextPos = new BlockPos(pos.getX() + face.getXOffset() * extend, pos.getY() + face.getYOffset() * extend, pos.getZ() + face.getZOffset() * extend);
 
         if (placeBlock(nextPos))
         {
@@ -113,7 +114,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase
         EnumFacing face = getFacingDirection();
 
         int extend = getExtendState();
-        BlockPos nextPos = new BlockPos(pos.getX() + face.getFrontOffsetX() * extend, pos.getY() + face.getFrontOffsetY() * extend, pos.getZ() + face.getFrontOffsetZ() * extend);
+        BlockPos nextPos = new BlockPos(pos.getX() + face.getXOffset() * extend, pos.getY() + face.getYOffset() * extend, pos.getZ() + face.getZOffset() * extend);
 
         if (breakBlock(nextPos))
         {

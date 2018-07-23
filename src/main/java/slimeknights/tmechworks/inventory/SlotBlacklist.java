@@ -6,7 +6,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
+import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogicBase;
 import slimeknights.tmechworks.library.JsonBlacklist;
 import slimeknights.tmechworks.library.JsonConfig;
 

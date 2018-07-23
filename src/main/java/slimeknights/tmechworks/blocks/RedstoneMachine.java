@@ -49,6 +49,8 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
 
     protected RedstoneMachine(Material material, PropertyEnum<E> prop, Class<E> clazz) {
         super(material, prop, clazz);
+        this.setHardness(2.0f);
+        this.setResistance(2.0F);
         this.hasTileEntity = true;
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }

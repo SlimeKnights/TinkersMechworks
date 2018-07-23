@@ -11,14 +11,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.animation.FastTESR;
 import org.lwjgl.opengl.GL11;
 import slimeknights.tmechworks.blocks.RedstoneMachine;
-import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
-import slimeknights.tmechworks.common.MechworksContent;
+import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogicBase;
 
 public class DrawbridgeTESR extends TileEntitySpecialRenderer<DrawbridgeLogicBase> {
 

@@ -5,9 +5,8 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.registries.GameData;
 import slimeknights.mantle.item.ItemBlockMeta;
-import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogic;
 import slimeknights.tmechworks.common.CommonProxy;
 import slimeknights.tmechworks.common.MechworksContent;
 
