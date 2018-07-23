@@ -24,9 +24,9 @@ public class SlotDisguise extends Slot
     /**
      * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
      */
-    public boolean isItemValid (@Nullable ItemStack stack)
+    public boolean isItemValid (ItemStack stack)
     {
-        if (!disguise.canEditDisguise() || stack == null)
+        if (!disguise.canEditDisguise() || stack.isEmpty())
         {
             return false;
         }
@@ -74,6 +74,7 @@ public class SlotDisguise extends Slot
      * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
      * stack.
      */
+    @Nonnull
     public ItemStack decrStackSize (int amount)
     {
         if (amount == 0)

@@ -13,13 +13,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.mantle.block.EnumBlock;
-import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
-import slimeknights.tmechworks.blocks.logic.DrawbridgeLogicBase;
-import slimeknights.tmechworks.blocks.logic.ExtendedDrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.AdvancedDrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogicBase;
+import slimeknights.tmechworks.blocks.logic.drawbridge.ExtendedDrawbridgeLogic;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -78,11 +80,10 @@ public class Drawbridge extends RedstoneMachine<Drawbridge.DrawbridgeType>
         list.add(new ItemStack(itemIn, 1, 2));
     }
 
-
     public enum DrawbridgeType implements IStringSerializable, EnumBlock.IEnumMeta
     {
         NORMAL(DrawbridgeLogic.class),
-        ADVANCED(DrawbridgeLogicBase.class),
+        ADVANCED(AdvancedDrawbridgeLogic.class),
         EXTENDED(ExtendedDrawbridgeLogic.class);
 
         public final Class<? extends DrawbridgeLogicBase> tileEntityClass;
@@ -100,6 +101,21 @@ public class Drawbridge extends RedstoneMachine<Drawbridge.DrawbridgeType>
         @Override
         public int getMeta() {
             return ordinal();
+        }
+    }
+
+    public static NonNullList<ItemStack> dropCapture(boolean start)
+    {
+        if (start)
+        {
+            captureDrops.set(true);
+            capturedDrops.get().clear();
+            return NonNullList.create();
+        }
+        else
+        {
+            captureDrops.set(false);
+            return capturedDrops.get();
         }
     }
 }

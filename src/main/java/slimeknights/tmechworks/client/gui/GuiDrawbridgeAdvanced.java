@@ -8,15 +8,16 @@ import net.minecraft.util.ResourceLocation;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.client.gui.components.GuiArrowSelection;
 import slimeknights.tmechworks.inventory.ContainerDrawbridge;
+import slimeknights.tmechworks.inventory.ContainerDrawbridgeAdvanced;
 import slimeknights.tmechworks.library.Util;
 import slimeknights.tmechworks.networking.PacketUpdatePlaceDirection;
 
-public class GuiDrawbridge extends GuiContainer {
+public class GuiDrawbridgeAdvanced extends GuiContainer {
     protected static final ResourceLocation TEX_BACKGROUND = Util.getResource("textures/gui/drawbridge.png");
 
-    protected ContainerDrawbridge container;
+    protected ContainerDrawbridgeAdvanced container;
 
-    public GuiDrawbridge(ContainerDrawbridge inventorySlotsIn) {
+    public GuiDrawbridgeAdvanced(ContainerDrawbridgeAdvanced inventorySlotsIn) {
         super(inventorySlotsIn);
 
         container = inventorySlotsIn;

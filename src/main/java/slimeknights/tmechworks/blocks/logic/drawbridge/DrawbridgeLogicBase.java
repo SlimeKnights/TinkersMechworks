@@ -1,5 +1,6 @@
-package slimeknights.tmechworks.blocks.logic;
+package slimeknights.tmechworks.blocks.logic.drawbridge;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -8,9 +9,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.FakePlayer;
 import slimeknights.mantle.common.IInventoryGui;
+import slimeknights.tmechworks.blocks.logic.IPlaceDirection;
+import slimeknights.tmechworks.blocks.logic.RedstoneMachineLogicBase;
 import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase implements ITickable, IInventoryGui, IPlaceDirection {
     private static final float TICK_TIME = 0.05F;
@@ -34,11 +38,11 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     }
 
     @Override
-    public void onBlockUpdate() {
-        if (isExtended && getRedstoneState() <= 0) {
+    public void onRedstoneUpdate() {
+        if (getExtended() && getRedstoneState() <= 0) {
             isExtended = false;
             isExtending = true;
-        } else if (!isExtended && getRedstoneState() > 0) {
+        } else if (!getExtended() && getRedstoneState() > 0) {
             isExtended = true;
             isExtending = true;
         }
@@ -152,7 +156,7 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     }
 
     @Override
-    public void setPlaceDirectioni(int direction) {
+    public void setPlaceDirection(int direction) {
         if (direction < EnumFacing.values().length)
             setPlaceDirectionRelativeToBlock(EnumFacing.values()[direction]);
         else if (direction - EnumFacing.values().length < Angle.values().length)
@@ -251,25 +255,25 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
             setPlaceDirectionRelativeToBlock(EnumFacing.NORTH);
         }
 
-        if (isExtending) {
+        if (getExtending()) {
             if (cooldown > 0) {
                 cooldown -= (world.getTotalWorldTime() - lastWorldTime) * TICK_TIME;
             } else if (isExtended) {
-                if (extendState == statistics.extendLength) {
+                if (getExtendState() == getStats().extendLength) {
                     isExtending = false;
                 } else if (extendNext()) {
                     extendState++;
-                    cooldown = statistics.extendDelay;
+                    cooldown = getStats().extendDelay;
                     playExtendSound();
                 } else {
                     isExtending = false;
                 }
             } else {
-                if (extendState <= 0) {
+                if (getExtendState() <= 0) {
                     isExtending = false;
                 } else if (retractNext()) {
                     extendState--;
-                    cooldown = statistics.extendDelay;
+                    cooldown = getStats().extendDelay;
                     playRetractSound();
                 } else {
                     isExtending = false;
@@ -281,6 +285,11 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         }
 
         lastWorldTime = world.getTotalWorldTime();
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return getStats().extendLength;
     }
 
     @Override
@@ -357,6 +366,11 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
         return super.getName() + "." + getVariantName();
     }
 
+    @Override
+    public boolean canEditDisguise(){
+        return !getExtended();
+    }
+
     public abstract void setupStatistics(DrawbridgeStats ds);
 
     public abstract boolean extendNext();
@@ -365,15 +379,27 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
 
     public abstract String getVariantName();
 
-    final class DrawbridgeStats {
+    @Override
+    public void getInformation(@Nonnull List<String> info, InformationType type) {
+        super.getInformation(info, type);
+        if(type != InformationType.BODY) {
+            return;
+        }
+
+        info.add(I18n.format("tmechworks.machine.stats"));
+        info.add(I18n.format("tmechworks.drawbridge.stats.length", getStats().extendLength));
+        info.add(I18n.format("tmechworks.drawbridge.stats.delay", getStats().extendDelay));
+    }
+
+    public static final class DrawbridgeStats {
 
         public int extendLength = 16;
         public float extendDelay = 0.5F;
     }
 
     public enum Angle {
-        NEUTRAL,
         HIGH,
+        NEUTRAL,
         LOW
     }
 }

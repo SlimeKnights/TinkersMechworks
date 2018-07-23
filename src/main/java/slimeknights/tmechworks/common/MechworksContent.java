@@ -22,8 +22,9 @@ import slimeknights.tmechworks.blocks.Drawbridge;
 import slimeknights.tmechworks.blocks.Firestarter;
 import slimeknights.tmechworks.blocks.IEnumBlock;
 import slimeknights.tmechworks.blocks.Metal;
-import slimeknights.tmechworks.blocks.logic.DrawbridgeLogic;
-import slimeknights.tmechworks.blocks.logic.ExtendedDrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.AdvancedDrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogic;
+import slimeknights.tmechworks.blocks.logic.drawbridge.ExtendedDrawbridgeLogic;
 import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
 import slimeknights.tmechworks.items.ItemBlockMetaExtra;
 import slimeknights.tmechworks.library.Util;
@@ -109,6 +110,7 @@ public class MechworksContent
         drawbridge.setCreativeTab(tabMechworks);
         registerTE(DrawbridgeLogic.class, "drawbridge");
         registerTE(ExtendedDrawbridgeLogic.class, "drawbridge.extended");
+        registerTE(AdvancedDrawbridgeLogic.class, "drawbridge.advanced");
 
         firestarter = registerBlock(registry, new Firestarter(), "firestarter");
         firestarter.setCreativeTab(tabMechworks);
@@ -131,7 +133,7 @@ public class MechworksContent
         }
 
         String prefixedName = Util.prefix(name);
-        block.setUnlocalizedName(prefixedName);
+        block.setTranslationKey(prefixedName);
 
         register(registry, block, name);
         return block;
@@ -145,7 +147,7 @@ public class MechworksContent
 
         ItemBlock itemBlock = new ItemBlockMeta(block);
 
-        itemBlock.setUnlocalizedName(block.getUnlocalizedName());
+        itemBlock.setTranslationKey(block.getTranslationKey());
 
         register(registry, itemBlock, block.getRegistryName());
         return block;
@@ -154,7 +156,7 @@ public class MechworksContent
     protected static <T extends EnumBlock<?>> T registerEnumItemBlock(IForgeRegistry<Item> registry, T block) {
         ItemBlock itemBlock = new ItemBlockMeta(block);
 
-        itemBlock.setUnlocalizedName(block.getUnlocalizedName());
+        itemBlock.setTranslationKey(block.getTranslationKey());
 
         register(registry, itemBlock, block.getRegistryName());
         ItemBlockMeta.setMappingProperty(block, block.prop);
@@ -175,7 +177,7 @@ public class MechworksContent
 
     @SuppressWarnings("unchecked")
     protected static <T extends Block> T registerItemBlock(IForgeRegistry<Item> registry, ItemBlock itemBlock) {
-        itemBlock.setUnlocalizedName(itemBlock.getBlock().getUnlocalizedName());
+        itemBlock.setTranslationKey(itemBlock.getBlock().getTranslationKey());
 
         register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
         return (T) itemBlock.getBlock();
@@ -183,7 +185,7 @@ public class MechworksContent
 
     @SuppressWarnings("unchecked")
     protected static <T extends Block> T registerItemBlockProp(IForgeRegistry<Item> registry, ItemBlock itemBlock, IProperty<?> property) {
-        itemBlock.setUnlocalizedName(itemBlock.getBlock().getUnlocalizedName());
+        itemBlock.setTranslationKey(itemBlock.getBlock().getTranslationKey());
 
         register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
         ItemBlockMeta.setMappingProperty(itemBlock.getBlock(), property);
@@ -194,7 +196,7 @@ public class MechworksContent
         @SuppressWarnings({ "unchecked", "rawtypes" })
         ItemBlock itemBlock = new ItemBlockSlab(block);
 
-        itemBlock.setUnlocalizedName(block.getUnlocalizedName());
+        itemBlock.setTranslationKey(block.getTranslationKey());
 
         register(registry, itemBlock, block.getRegistryName());
         ItemBlockMeta.setMappingProperty(block, block.prop);
@@ -209,7 +211,7 @@ public class MechworksContent
             throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Item: %s", name));
         }
 
-        item.setUnlocalizedName(Util.prefix(name));
+        item.setTranslationKey(Util.prefix(name));
         item.setRegistryName(Util.getResource(name));
         registry.register(item);
         return item;
@@ -232,6 +234,6 @@ public class MechworksContent
             throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! TE: %s", name));
         }
 
-        GameRegistry.registerTileEntity(teClazz, Util.prefix(name));
+        GameRegistry.registerTileEntity(teClazz, new ResourceLocation(Util.prefix(name)));
     }
 }
