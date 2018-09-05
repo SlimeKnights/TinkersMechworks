@@ -60,6 +60,14 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
         return getStackInSlot(getLastIndex());
     }
 
+    public IBlockState getPlacedState(){
+        return placedState;
+    }
+
+    public void setPlacedState(IBlockState state){
+        placedState = state;
+    }
+
     public void subtractNextBlock() {
         decrStackSize(getNextIndex(), 1);
         ItemStack stack = getStackInSlot(getNextIndex());
@@ -186,7 +194,7 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
                         world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
                     }
 
-                    placedState = state;
+                    setPlacedState(state);
                 }
 
                 return placed;
@@ -206,11 +214,12 @@ public class DrawbridgeLogic extends DrawbridgeLogicBase {
 
         NonNullList<ItemStack> drops = getBlockDrops(position);
 
-        if(stack.isEmpty() && placedState != null){
+        if(stack.isEmpty() && getPlacedState() != null){
             ItemStack foundDrop = ItemStack.EMPTY;
 
             for(ItemStack drop : drops){
-                if(drop.getCount() == 1 && drop.getItem() == Item.getItemFromBlock(placedState.getBlock())){
+                //TODO Looks like a bug, the check doesn't match the one below
+                if(drop.getCount() == 1 && drop.getItem() == Item.getItemFromBlock(getPlacedState().getBlock())){
                     foundDrop = drop;
                     break;
                 }
