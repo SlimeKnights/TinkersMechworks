@@ -71,8 +71,7 @@ minecraft {
 }
 
 dependencies {
-    //deobfCompile "slimeknights.mantle:Mantle:${config.minecraft_version}-${config.mantle_version}"
-    deobfCompile "slimeknights.mantle:Mantle:1.12-${config.mantle_version}"
+    deobfCompile "slimeknights.mantle:Mantle:${config.minecraft_version_short}-${config.mantle_version}"
     deobfCompile "slimeknights:TConstruct:${config.minecraft_version}-${config.tinkers_version}"
 	
 	// compile against the JEI API
