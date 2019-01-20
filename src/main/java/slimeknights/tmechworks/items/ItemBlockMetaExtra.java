@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import slimeknights.mantle.item.ItemBlockMeta;
 import slimeknights.tmechworks.blocks.RedstoneMachine;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -52,38 +53,25 @@ public class ItemBlockMetaExtra extends ItemBlockMeta {
         }
     }
 
-    @Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+    @Nullable
+    @Override
+    public net.minecraftforge.common.capabilities.ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         Block block = getBlock();
 
-        if(!(block instanceof RedstoneMachine)) {
-            super.getSubItems(tab, items);
-            return;
-        }
+        if(!(block instanceof RedstoneMachine))
+            return super.initCapabilities(stack, nbt);
 
-        if (this.isInCreativeTab(tab))
-        {
-            ItemStack is = new ItemStack(this);
+        if(nbt == null) {
+            nbt = new NBTTagCompound();
+            stack.setTagCompound(nbt);
+        } else if(nbt.hasKey("BlockEntityTag"))
+            return null;
 
-            NBTTagCompound nbt = new NBTTagCompound();
-            ((RedstoneMachine)block).setDefaultNBT(nbt);
+        NBTTagCompound tags = new NBTTagCompound();
 
-            is.setTagInfo("BlockEntityTag", nbt);
+        ((RedstoneMachine)block).setDefaultNBT(tags);
+        nbt.setTag("BlockEntityTag", tags);
 
-            items.add(is);
-        }
-    }
-
-    @Override public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-        Block block = getBlock();
-
-        if(!(block instanceof RedstoneMachine)) {
-            super.onCreated(stack, worldIn, playerIn);
-            return;
-        }
-
-        NBTTagCompound nbt = new NBTTagCompound();
-        ((RedstoneMachine)block).setDefaultNBT(nbt);
-
-        stack.setTagInfo("BlockEntityTag", nbt);
+        return null;
     }
 }
