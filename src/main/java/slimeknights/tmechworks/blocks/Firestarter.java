@@ -92,6 +92,6 @@ public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
     @Override public void setDefaultNBT(NBTTagCompound tags) {
         super.setDefaultNBT(tags);
 
-        tags.setBoolean("ShouldExtinguish", false);
+        tags.setBoolean("ShouldExtinguish", true);
     }
 }
