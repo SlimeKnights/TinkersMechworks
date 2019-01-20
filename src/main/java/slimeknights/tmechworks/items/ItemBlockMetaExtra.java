@@ -3,11 +3,13 @@ package slimeknights.tmechworks.items;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,8 +52,7 @@ public class ItemBlockMetaExtra extends ItemBlockMeta {
         }
     }
 
-    @Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
-    {
+    @Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         Block block = getBlock();
 
         if(!(block instanceof RedstoneMachine)) {
@@ -70,5 +71,19 @@ public class ItemBlockMetaExtra extends ItemBlockMeta {
 
             items.add(is);
         }
+    }
+
+    @Override public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+        Block block = getBlock();
+
+        if(!(block instanceof RedstoneMachine)) {
+            super.onCreated(stack, worldIn, playerIn);
+            return;
+        }
+
+        NBTTagCompound nbt = new NBTTagCompound();
+        ((RedstoneMachine)block).setDefaultNBT(nbt);
+
+        stack.setTagInfo("BlockEntityTag", nbt);
     }
 }
