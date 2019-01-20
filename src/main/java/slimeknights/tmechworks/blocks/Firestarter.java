@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
+import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,7 +86,7 @@ public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
             shouldExtinguish = stack.getTagCompound().getCompoundTag("BlockEntityTag").getBoolean("ShouldExtinguish");
         }
 
-        tooltip.add(I18n.format("tmechworks.hud.behaviour") + ": " + I18n.format("tmechworks.hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")));
+        tooltip.add(I18n.format(Util.prefix("hud.behaviour")) + ": " + I18n.format(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep"))));
     }
 
     @Override public void setDefaultNBT(NBTTagCompound tags) {

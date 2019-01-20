@@ -9,6 +9,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,6 +34,7 @@ import slimeknights.mantle.block.EnumBlock;
 import slimeknights.mantle.tileentity.TileInventory;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.blocks.logic.RedstoneMachineLogicBase;
+import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -164,7 +166,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
             if(tags.hasKey("Disguise", Constants.NBT.TAG_COMPOUND)){
                 ItemStack disguise = new ItemStack(tags.getCompoundTag("Disguise"));
                 if(disguise != ItemStack.EMPTY) {
-                    tooltip.add(ChatFormatting.BOLD + "Disguise:");
+                    tooltip.add(ChatFormatting.BOLD + I18n.format(Util.prefix("hud.disguise")));
                     tooltip.add(disguise.getDisplayName());
                 }
             }
@@ -173,7 +175,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
                 NBTTagList items = tags.getTagList("Items", Constants.NBT.TAG_COMPOUND);
 
                 if(items.tagCount() > 0){
-                    tooltip.add(ChatFormatting.BOLD + "Items:");
+                    tooltip.add(ChatFormatting.BOLD + I18n.format(Util.prefix("hud.items")));
                 }
 
                 for(int i = 0; i < items.tagCount(); ++i) {
@@ -181,7 +183,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
                     int slot = itemTag.getByte("Slot") & 255;
 
                     ItemStack item = new ItemStack(itemTag);
-                    tooltip.add("Slot " + slot + ": " + item.getDisplayName() + " x" + item.getCount());
+                    tooltip.add(I18n.format(Util.prefix("hud.slot"), slot, item.getDisplayName(), item.getCount()));
                 }
             }
         }

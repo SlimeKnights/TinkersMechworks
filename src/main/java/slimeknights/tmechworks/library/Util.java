@@ -53,7 +53,7 @@ public class Util
      */
     public static String prefix (String name)
     {
-        return String.format("%s.%s", RESOURCE, name.toLowerCase(Locale.US));
+        return String.format("%s:%s", RESOURCE, name.toLowerCase(Locale.US));
     }
 
 }

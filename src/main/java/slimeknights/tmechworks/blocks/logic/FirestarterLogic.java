@@ -86,6 +86,6 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
             return;
         }
 
-        info.add(I18n.format("tmechworks.hud.behaviour") + ": " + I18n.format("tmechworks.hud.behaviour.firestarter." + (getShouldExtinguish() ? "extinguish" : "keep")));
+        info.add(I18n.format(Util.prefix("hud.behaviour")) + ": " + I18n.format(Util.prefix("hud.behaviour.firestarter." + (getShouldExtinguish() ? "extinguish" : "keep"))));
     }
 }

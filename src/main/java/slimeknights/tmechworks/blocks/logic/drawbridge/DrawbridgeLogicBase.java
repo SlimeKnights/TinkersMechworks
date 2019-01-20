@@ -385,9 +385,9 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
             return;
         }
 
-        info.add(I18n.format("tmechworks.machine.stats"));
-        info.add(I18n.format("tmechworks.drawbridge.stats.length", getStats().extendLength));
-        info.add(I18n.format("tmechworks.drawbridge.stats.delay", getStats().extendDelay));
+        info.add(I18n.format(Util.prefix("machine.stats")));
+        info.add(I18n.format(Util.prefix("drawbridge.stats.length"), getStats().extendLength));
+        info.add(I18n.format(Util.prefix("drawbridge.stats.delay"), getStats().extendDelay));
     }
 
     public static final class DrawbridgeStats {
