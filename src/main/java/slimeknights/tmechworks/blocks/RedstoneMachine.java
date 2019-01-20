@@ -51,6 +51,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
         super(material, prop, clazz);
         this.hasTileEntity = true;
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        this.setHardness(3.5F);
     }
 
     protected boolean openGui(EntityPlayer player, World world, BlockPos pos) {
@@ -267,5 +268,15 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
         public int getMeta() {
             return ordinal();
         }
+    }
+
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+    {
+        return true;
+    }
+
+    public void setDefaultNBT(ItemStack item) {
+
     }
 }

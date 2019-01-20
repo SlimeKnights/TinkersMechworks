@@ -170,8 +170,8 @@ public abstract class DrawbridgeLogicBase extends RedstoneMachineLogicBase imple
     }
 
     @Override
-    public void loadData() {
-        super.loadData();
+    public void init() {
+        super.init();
 
         if (rawPlaceDirection == null)
             rawPlaceDirection = EnumFacing.NORTH;

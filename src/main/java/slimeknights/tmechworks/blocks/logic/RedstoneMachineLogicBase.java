@@ -40,6 +40,9 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         disguiseInventory = new InventoryBasic(name + ".disguise", false, 1);
     }
 
+    /**
+     * Updates redstone state
+     */
     public void updateRedstone() {
         if (isFirstTick)
             return;
@@ -76,19 +79,34 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         }
     }
 
+    /**
+     * Called when the redstone state changes
+     */
     public void onRedstoneUpdate() {
     }
 
+    /**
+     * Called when redstone state is updated, but the redstone state remains unchanged
+     */
     public void onBlockUpdate() {}
 
+    /**
+     * @return The redstone power level
+     */
     public int getRedstoneState() {
         return redstoneState;
     }
 
+    /**
+     * @return The direction the block is facing
+     */
     public EnumFacing getFacingDirection() {
         return facingDirection;
     }
 
+    /**
+     * Sets the facing direction
+     */
     public void setFacingDirection(EnumFacing direction) {
         facingDirection = direction;
         markDirty();
@@ -99,12 +117,15 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         if (isFirstTick) {
             isFirstTick = false;
             updateRedstone();
-            loadData();
+            init();
             sync();
         }
     }
 
-    public void loadData() {
+    /**
+     * Gets called the first tick this tile exists
+     */
+    public void init() {
 
     }
 
@@ -123,14 +144,11 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         return true;
     }
 
+    /**
+     * Writes inventory information
+     */
     public NBTTagCompound writeItemData(NBTTagCompound tags) {
-        tags.setInteger("InventorySize", getSizeInventory());
-
-        writeInventoryToNBT(tags);
-
-        if (this.hasCustomName()) {
-            tags.setString("CustomName", this.inventoryTitle);
-        }
+        tags = super.writeToNBT(tags);
 
         ItemStack disguise = getDisguiseBlock();
 
@@ -145,7 +163,12 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         return tags;
     }
 
+    /**
+     * Reads inventory information
+     */
     public void readItemData(NBTTagCompound tags) {
+        super.readFromNBT(tags);
+
         if (tags.hasKey("Disguise")) {
             NBTTagCompound itemNBT = tags.getCompoundTag("Disguise");
 
@@ -158,7 +181,6 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
     @Override
     @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound tags) {
-        tags = super.writeToNBT(tags);
         tags = writeItemData(tags);
 
         tags.setInteger("Redstone", redstoneState);
@@ -169,7 +191,6 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
 
     @Override
     public void readFromNBT(NBTTagCompound tags) {
-        super.readFromNBT(tags);
         readItemData(tags);
 
         redstoneState = tags.getInteger("Redstone");
@@ -222,6 +243,9 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         }
     }
 
+    /**
+     * Stores information in an itemstack
+     */
     public ItemStack storeTileData(ItemStack stack) {
         NBTTagCompound nbttagcompound = writeItemData(new NBTTagCompound());
 

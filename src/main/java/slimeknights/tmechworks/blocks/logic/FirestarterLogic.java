@@ -4,6 +4,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
@@ -64,18 +65,16 @@ public class FirestarterLogic extends RedstoneMachineLogicBase
         return shouldExtinguish;
     }
 
-    @Override public NBTTagCompound writeToNBT (NBTTagCompound tags)
-    {
-        tags = super.writeToNBT(tags);
+    @Override public NBTTagCompound writeItemData(NBTTagCompound tags) {
+        tags = super.writeItemData(tags);
 
         tags.setBoolean("ShouldExtinguish", shouldExtinguish);
 
         return tags;
     }
 
-    @Override public void readFromNBT (NBTTagCompound tags)
-    {
-        super.readFromNBT(tags);
+    @Override public void readItemData(NBTTagCompound tags) {
+        super.readItemData(tags);
 
         shouldExtinguish = tags.getBoolean("ShouldExtinguish");
     }
