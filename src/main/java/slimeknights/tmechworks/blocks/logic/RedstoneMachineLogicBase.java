@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
@@ -148,7 +149,12 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
      * Writes inventory information
      */
     public NBTTagCompound writeItemData(NBTTagCompound tags) {
-        tags = super.writeToNBT(tags);
+        tags.setInteger("InventorySize", getSizeInventory());
+        writeInventoryToNBT(tags);
+
+        if(this.hasCustomName()) {
+            tags.setString("CustomName", this.inventoryTitle);
+        }
 
         ItemStack disguise = getDisguiseBlock();
 
@@ -181,6 +187,7 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
     @Override
     @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound tags) {
+        super.writeToNBT(tags);
         tags = writeItemData(tags);
 
         tags.setInteger("Redstone", redstoneState);
@@ -250,6 +257,14 @@ public abstract class RedstoneMachineLogicBase extends TileInventory implements 
         NBTTagCompound nbttagcompound = writeItemData(new NBTTagCompound());
 
         stack.setTagInfo("BlockEntityTag", nbttagcompound);
+
+        if(this.hasCustomName()){
+            NBTTagCompound name = new NBTTagCompound();
+            name.setString("Name", inventoryTitle);
+
+            stack.setTagInfo("display", name);
+        }
+
         return stack;
     }
 
