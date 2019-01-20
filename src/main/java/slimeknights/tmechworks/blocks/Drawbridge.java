@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
@@ -106,5 +107,13 @@ public class Drawbridge extends RedstoneMachine<Drawbridge.DrawbridgeType>
             captureDrops.set(false);
             return capturedDrops.get();
         }
+    }
+
+    @Override public void setDefaultNBT(NBTTagCompound tags){
+        super.setDefaultNBT(tags);
+
+        tags.setInteger("PlaceAngle", 1);
+        tags.setInteger("PlaceDirectionRaw", 2);
+        tags.setInteger("InventorySize", 1);
     }
 }

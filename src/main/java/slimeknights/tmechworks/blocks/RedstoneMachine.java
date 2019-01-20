@@ -152,6 +152,7 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
     }
 
     @SideOnly(Side.CLIENT)
+    @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         if(!stack.hasTagCompound())
             return;
@@ -276,7 +277,11 @@ public abstract class RedstoneMachine<E extends Enum<E> & EnumBlock.IEnumMeta & 
         return true;
     }
 
-    public void setDefaultNBT(ItemStack item) {
-
+    /**
+     * Set default BlockEntityTag nbt for item
+     */
+    public void setDefaultNBT(NBTTagCompound tags) {
+        tags.setTag("Items", new NBTTagList());
+        tags.setInteger("InventorySize", 0);
     }
 }

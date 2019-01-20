@@ -4,9 +4,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -14,10 +17,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
 {
@@ -32,14 +38,14 @@ public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
     {
         FirestarterLogic firestarter = (FirestarterLogic) worldIn.getTileEntity(pos);
 
-        boolean extenguishFire = true;
+        boolean extinguishFire = true;
 
         if (firestarter != null)
         {
-            extenguishFire = firestarter.getShouldExtinguish();
+            extinguishFire = firestarter.getShouldExtinguish();
         }
 
-        return super.getActualState(state, worldIn, pos).withProperty(SHOULD_EXTINGUISH, extenguishFire);
+        return super.getActualState(state, worldIn, pos).withProperty(SHOULD_EXTINGUISH, extinguishFire);
     }
 
     @Nonnull @Override protected BlockStateContainer createBlockState ()
@@ -66,5 +72,25 @@ public class Firestarter extends RedstoneMachine<RedstoneMachine.DefaultTypes>
         }
 
         return true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+
+        boolean shouldExtinguish = false;
+
+        if(stack.hasTagCompound()){
+            shouldExtinguish = stack.getTagCompound().getCompoundTag("BlockEntityTag").getBoolean("ShouldExtinguish");
+        }
+
+        tooltip.add(I18n.format("tmechworks.hud.behaviour") + ": " + I18n.format("tmechworks.hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")));
+    }
+
+    @Override public void setDefaultNBT(NBTTagCompound tags) {
+        super.setDefaultNBT(tags);
+
+        tags.setBoolean("ShouldExtinguish", false);
     }
 }
