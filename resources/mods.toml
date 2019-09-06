@@ -1,0 +1,20 @@
+modLoader="javafml"
+loaderVersion="[24,)"
+issueTrackerURL="https://github.com/SlimeKnights/TinkersMechworks/issues"
+logoFile=""
+
+[[mods]]
+    modId="tmechworks"
+    version="${version}"
+    displayName="Tinkers' Mechworks"
+    authors="Slime Knights"
+    description='''
+
+    '''
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/tinkers-mechworks"
+    [[dependencies.mantle]]
+        modId="forge"
+        mandatory=true
+        versionRange="[${forge_version},)"
+        ordering="NONE"
+        side="BOTH"
