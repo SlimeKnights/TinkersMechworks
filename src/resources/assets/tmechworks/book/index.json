@@ -1,0 +1,20 @@
+[
+  {
+    "name": "intro",
+    "data": "sections/intro.json",
+    "icon": {
+      "item": {
+        "id": "minecraft:lime_banner"
+      }
+    }
+  },
+  {
+    "name": "intro2test",
+    "data": "sections/intro.json",
+    "icon": {
+      "item": {
+        "id": "minecraft:apple"
+      }
+    }
+  }
+]

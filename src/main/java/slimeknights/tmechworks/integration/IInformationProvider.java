@@ -1,13 +1,13 @@
 package slimeknights.tmechworks.integration;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface IInformationProvider {
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     void getInformation(@Nonnull List<String> info, @Nonnull InformationType type);
 
     enum InformationType {

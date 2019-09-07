@@ -1,0 +1,20 @@
+// This style of comment is not part of the JSON spec, but for lack of better alternative, I will use them
+
+{
+  // Blocks
+  "block.tmechworks.copper_block": "Block of Copper",
+  "block.tmechworks.aluminum_block": "Block of Aluminum",
+
+  // Items
+  "item.tmechworks.book": "Mechanical Tinkering",
+  "item.tmechworks.book.tooltip": "The best kind of book\\nby Da Vinci",
+  //// Materials
+  "item.tmechworks.copper_ingot": "Copper Ingot",
+  "item.tmechworks.copper_nugget": "Copper Nugget",
+  "item.tmechworks.aluminum_ingot": "Aluminum Ingot",
+  "item.tmechworks.aluminum_nugget": "Aluminum Nugget",
+
+  // Creative Tabs
+  "itemGroup.TinkersMechworks": "Tinkers' Mechworks"
+
+}

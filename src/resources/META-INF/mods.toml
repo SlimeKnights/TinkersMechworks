@@ -12,9 +12,13 @@ logoFile=""
 
     '''
     displayURL="https://www.curseforge.com/minecraft/mc-mods/tinkers-mechworks"
-    [[dependencies.mantle]]
+    [[dependencies.tmechworks]]
         modId="forge"
         mandatory=true
         versionRange="[${forge_version},)"
         ordering="NONE"
         side="BOTH"
+    [[dependencies.tmechworks]]
+        modId="mantle"
+        mandatory=true
+        versionRange="[1.4.23,)"

@@ -1,12 +1,12 @@
 package slimeknights.tmechworks.library;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import slimeknights.tmechworks.TMechworks;
 
 import java.util.Locale;
 import java.util.Random;
@@ -15,17 +15,17 @@ import java.util.UUID;
 public class Util
 {
 
-    public static final String RESOURCE = "tmechworks";
+    public static final String RESOURCE = TMechworks.modId;
     public static final Random rand = new Random();
 
     public static FakePlayer createFakePlayer (World world)
     {
-        if (!(world instanceof WorldServer))
+        if (!(world instanceof ServerWorld))
         {
             return null;
         }
 
-        return FakePlayerFactory.get((WorldServer) world, new GameProfile(UUID.randomUUID(), "MechworksWorker"));
+        return FakePlayerFactory.get((ServerWorld) world, new GameProfile(UUID.randomUUID(), "MechworksWorker"));
     }
 
     /**
@@ -42,10 +42,10 @@ public class Util
         return new ResourceLocation(RESOURCE, res);
     }
 
-    public static ModelResourceLocation getModelResource (String res, String variant)
-    {
-        return new ModelResourceLocation(resource(res), variant);
-    }
+//    public static ResourceLocation getModelResource (String res, String variant)
+//    {
+//        return new ModelResourceLocation(resource(res), variant);
+//    }
 
     /**
      * Prefixes the given unlocalized name with tinkers prefix. Use this when passing unlocalized names for a uniform

@@ -67,7 +67,7 @@ minecraft {
 			property 'forge.logging.console.level', 'debug'
 			
 			mods {
-				mantle {
+				tmechworks {
 					source sourceSets.main
 				}
 			}
@@ -80,7 +80,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                mantle {
+                tmechworks {
                     source sourceSets.main
                 }
             }
@@ -121,7 +121,7 @@ dependencies {
 sourceSets {
     main {
         resources {
-            srcDir 'resources'
+            srcDir 'src/resources'
         }
     }
 }
@@ -133,15 +133,15 @@ processResources {
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mods.toml'
+        include 'META-INF/mods.toml'
 
         // replace version and mcversion
-        expand 'version': mod_version, 'MCversion': minecraft_version
+        expand 'version': mod_version, 'MCversion': minecraft_version, 'forge_version': forge_version_toml
     }
 
     // copy everything else
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mods.toml'
+        exclude 'META-INF/mods.toml'
     }
 }
 

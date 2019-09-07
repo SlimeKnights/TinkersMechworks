@@ -1,25 +1,17 @@
 package slimeknights.tmechworks.common;
 
-public class CommonProxy
-{
+import slimeknights.tmechworks.TMechworks;
 
-    public void preInit ()
-    {
-
-    }
-
-    public void init ()
-    {
+public class CommonProxy {
+    public void preInit() {
 
     }
 
-    public void postInit ()
-    {
+    public void init() {
 
     }
 
-    public void registerModels ()
-    {
+    public void postInit() {
 
     }
 }
