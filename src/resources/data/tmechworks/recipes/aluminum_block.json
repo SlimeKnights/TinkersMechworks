@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "aluminum_block",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "tmechworks:aluminum_ingot"
+    }
+  },
+  "result": {
+    "item": "tmechworks:aluminum_block"
+  }
+}

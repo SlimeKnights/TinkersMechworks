@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "aluminum_nugget",
+  "ingredients": [
+    {
+      "item": "tmechworks:aluminum_ingot"
+    }
+  ],
+  "result": {
+    "item": "tmechworks:aluminum_nugget",
+    "count": 9
+  }
+}

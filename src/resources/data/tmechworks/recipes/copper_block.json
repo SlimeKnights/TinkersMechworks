@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "copper_block",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "tmechworks:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "tmechworks:copper_block"
+  }
+}
