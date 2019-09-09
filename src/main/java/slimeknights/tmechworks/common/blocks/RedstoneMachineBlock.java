@@ -14,6 +14,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -50,6 +51,12 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
 
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        super.fillStateContainer(builder);
+        builder.add(FACING);
+    }
+
     protected boolean openGui(PlayerEntity player, World world, BlockPos pos) {
         if (player instanceof ServerPlayerEntity && !(player instanceof FakePlayer)) {
             TileEntity te = world.getTileEntity(pos);
@@ -64,8 +71,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        RedstoneMachineTileEntity logicBase = (RedstoneMachineTileEntity) world.getTileEntity(pos);
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
+
+        RedstoneMachineTileEntity logicBase = (RedstoneMachineTileEntity) worldIn.getTileEntity(pos);
 
         if (logicBase != null) {
             logicBase.updateRedstone();
@@ -111,12 +120,16 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (blockMatches(state, worldIn, pos, newState, isMoving))
+            return;
         TileEntity te = worldIn.getTileEntity(pos);
 
         if (te instanceof RedstoneMachineTileEntity) {
             // Forego loot table as they scare me when this much data is needed
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
             ItemStack item = new ItemStack(this, 1);
+
+            writeAdditionalItemData(state, worldIn, pos);
 
             if (dropState) {
                 machine.storeTileData(item);
@@ -129,6 +142,13 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         }
 
         super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
+
+    public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos) {
+    }
+
+    public boolean blockMatches(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
+        return state.getBlock() == newState.getBlock();
     }
 
     @OnlyIn(Dist.CLIENT)
