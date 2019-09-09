@@ -1,3 +1,7 @@
 {
-  "parent": "tmechworks:block/firestarter"
+  "parent": "tmechworks:block/firestarter",
+  "overrides": [
+    { "predicate": { "extinguish": 0 }, "model": "tmechworks:block/firestarter_keeplit" },
+    { "predicate": { "extinguish": 1 }, "model": "tmechworks:block/firestarter" }
+  ]
 }

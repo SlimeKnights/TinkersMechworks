@@ -1,9 +1,7 @@
 package slimeknights.tmechworks.common;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
@@ -17,10 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.client.CreativeTab;
 import slimeknights.mantle.common.IRegisterUtil;
+import slimeknights.mantle.item.BlockTooltipItem;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.blocks.FirestarterBlock;
 import slimeknights.tmechworks.common.blocks.MetalBlock;
 import slimeknights.tmechworks.common.blocks.tileentity.FirestarterTileEntity;
+import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.common.items.MechworksBookItem;
 
 import java.util.function.Supplier;
@@ -36,7 +36,6 @@ public class TMechContent implements IRegisterUtil {
     public static final MetalBlock aluminum_block = null;
     public static final MetalBlock copper_block = null;
     public static final FirestarterBlock firestarter = null;
-    public static final FirestarterBlock firestarter_keeplit = null;
 
     // Items
     public static final MechworksBookItem book = null;
@@ -57,8 +56,7 @@ public class TMechContent implements IRegisterUtil {
         register(registry, new MetalBlock(), "copper_block");
 
         // Machines
-        register(registry, new FirestarterBlock(true), "firestarter");
-        register(registry, new FirestarterBlock(false), "firestarter_keeplit");
+        register(registry, new FirestarterBlock(), "firestarter");
     }
 
     @SubscribeEvent
@@ -78,7 +76,6 @@ public class TMechContent implements IRegisterUtil {
 
         // Machines
         registerBlockItem(registry, firestarter, tabMechworks);
-        registerBlockItem(registry, firestarter_keeplit, tabMechworks);
     }
 
     @SubscribeEvent
@@ -100,5 +97,11 @@ public class TMechContent implements IRegisterUtil {
 
     public void postInit(InterModProcessEvent event){
         tabMechworks.setDisplayIcon(new ItemStack(book));
+    }
+
+    @Override
+    public BlockItem registerBlockItem(IForgeRegistry<Item> registry, Block block, ItemGroup group) {
+        BlockItem itemBlock = new MechworksBlockItem(block, new Item.Properties().group(group));
+        return this.register(registry, itemBlock, block.getRegistryName());
     }
 }

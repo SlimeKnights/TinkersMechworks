@@ -1,10 +1,16 @@
 {
   "variants": {
-    "facing=down": { "model": "tmechworks:block/firestarter", "x": 180 },
-    "facing=up": { "model": "tmechworks:block/firestarter" },
-    "facing=north": { "model": "tmechworks:block/firestarter", "x": 90 },
-    "facing=south": { "model": "tmechworks:block/firestarter", "x": -90 },
-    "facing=west": { "model": "tmechworks:block/firestarter", "x": 90, "y": -90 },
-    "facing=east": { "model": "tmechworks:block/firestarter", "x": 90, "y": 90 }
+    "facing=down,extinguish=true": { "model": "tmechworks:block/firestarter", "x": 180 },
+    "facing=up,extinguish=true": { "model": "tmechworks:block/firestarter" },
+    "facing=north,extinguish=true": { "model": "tmechworks:block/firestarter", "x": 90 },
+    "facing=south,extinguish=true": { "model": "tmechworks:block/firestarter", "x": -90 },
+    "facing=west,extinguish=true": { "model": "tmechworks:block/firestarter", "x": 90, "y": -90 },
+    "facing=east,extinguish=true": { "model": "tmechworks:block/firestarter", "x": 90, "y": 90 },
+    "facing=down,extinguish=false": { "model": "tmechworks:block/firestarter_keeplit", "x": 180 },
+    "facing=up,extinguish=false": { "model": "tmechworks:block/firestarter_keeplit" },
+    "facing=north,extinguish=false": { "model": "tmechworks:block/firestarter_keeplit", "x": 90 },
+    "facing=south,extinguish=false": { "model": "tmechworks:block/firestarter_keeplit", "x": -90 },
+    "facing=west,extinguish=false": { "model": "tmechworks:block/firestarter_keeplit", "x": 90, "y": -90 },
+    "facing=east,extinguish=false": { "model": "tmechworks:block/firestarter_keeplit", "x": 90, "y": 90 }
   }
 }

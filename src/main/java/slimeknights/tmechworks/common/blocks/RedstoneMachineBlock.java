@@ -129,7 +129,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
             ItemStack item = new ItemStack(this, 1);
 
-            writeAdditionalItemData(state, worldIn, pos);
+            writeAdditionalItemData(state, worldIn, pos, item);
 
             if (dropState) {
                 machine.storeTileData(item);
@@ -144,7 +144,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
-    public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos) {
+    public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
     }
 
     public boolean blockMatches(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
@@ -230,5 +230,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     @Override
     public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
         return true;
+    }
+
+    public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState){
+        blockState.put("Items", new ListNBT());
+        blockState.putInt("InventorySize", 0);
     }
 }

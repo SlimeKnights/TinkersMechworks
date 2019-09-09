@@ -6,14 +6,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -24,23 +23,50 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
-import slimeknights.tmechworks.common.TMechContent;
 import slimeknights.tmechworks.common.blocks.tileentity.FirestarterTileEntity;
+import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FirestarterBlock extends RedstoneMachineBlock
+public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItemConstruct
 {
-    public final boolean shouldExtinguish;
+    public static final BooleanProperty EXTINGUISH = BooleanProperty.create("extinguish");
 
-    public FirestarterBlock(boolean shouldExtinguish)
+    public FirestarterBlock()
     {
         super(Material.IRON);
+        setDefaultState(getDefaultState().with(EXTINGUISH, true));
+    }
 
-        this.shouldExtinguish = shouldExtinguish;
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        super.fillStateContainer(builder);
+        builder.add(EXTINGUISH);
+    }
+
+    @Override
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+        ItemStack extinguishStack = new ItemStack(this, 1);
+        ItemStack keepLitStack = new ItemStack(this, 1);
+
+        CompoundNBT extinguish = extinguishStack.getOrCreateTag();
+        extinguish.putBoolean("extinguish", true);
+        CompoundNBT keepLit = keepLitStack.getOrCreateTag();
+        keepLit.putBoolean("extinguish", false);
+
+        items.add(extinguishStack);
+        items.add(keepLitStack);
+    }
+
+    @Override
+    public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
+        super.writeAdditionalItemData(state, worldIn, pos, stack);
+
+        CompoundNBT tags = stack.getOrCreateTag();
+        tags.putBoolean("extinguish", state.get(EXTINGUISH));
     }
 
     @Nonnull
@@ -49,21 +75,26 @@ public class FirestarterBlock extends RedstoneMachineBlock
         return new FirestarterTileEntity();
     }
 
+    @Nullable
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        Block newBlock = shouldExtinguish ? TMechContent.firestarter_keeplit : TMechContent.firestarter;
-        BlockState newState = newBlock.getDefaultState();
-        newState = newState.with(FACING, state.get(FACING));
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        boolean shouldExtinguish = true;
+        ItemStack stack = context.getItem();
 
-        worldIn.setBlockState(pos, newState);
-        worldIn.playSound(player, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
+        if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
+            shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
-        return true;
+        return super.getStateForPlacement(context).with(EXTINGUISH, shouldExtinguish);
     }
 
     @Override
-    public boolean blockMatches(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        return newState.getBlock() == TMechContent.firestarter || newState.getBlock() == TMechContent.firestarter_keeplit;
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        state = state.cycle(EXTINGUISH);
+
+        worldIn.setBlockState(pos, state);
+        worldIn.playSound(player, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
+
+        return true;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -71,11 +102,31 @@ public class FirestarterBlock extends RedstoneMachineBlock
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
 
+        boolean shouldExtinguish = true;
+
+        if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
+            shouldExtinguish = stack.getTag().getBoolean("extinguish");
+
         tooltip.add(new TranslationTextComponent(Util.prefix("hud.behaviour")).appendText(": ").appendSibling(new TranslationTextComponent(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).applyTextStyle(TextFormatting.GRAY));
     }
 
     @Override
-    public String getTranslationKey() {
-        return "block.tmechworks.firestarter";
+    public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState) {
+        super.setDefaultNBT(nbt, blockState);
+
+        if(!nbt.contains("extinguish"))
+            nbt.putBoolean("extinguish", true);
+    }
+
+    @Override
+    public void onBlockItemConstruct(MechworksBlockItem item) {
+        item.addPropertyOverride(new ResourceLocation("extinguish"), (stack, world, entity) -> {
+            boolean shouldExtinguish = true;
+
+            if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
+                shouldExtinguish = stack.getTag().getBoolean("extinguish");
+
+            return shouldExtinguish ? 1F : 0F;
+        });
     }
 }

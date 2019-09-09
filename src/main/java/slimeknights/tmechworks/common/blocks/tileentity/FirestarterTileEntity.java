@@ -37,7 +37,7 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
 
         BlockState state = getWorld().getBlockState(getPos());
         Direction facing = state.get(FirestarterBlock.FACING);
-        boolean shouldExtinguish = state.getBlock() == TMechContent.firestarter;
+        boolean shouldExtinguish = state.get(FirestarterBlock.EXTINGUISH);
 
         BlockPos loc = getPos();
         BlockPos position = new BlockPos(loc.getX() + facing.getXOffset(), loc.getY() + facing.getYOffset(), loc.getZ() + facing.getZOffset());
@@ -70,7 +70,7 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
         }
 
         BlockState state = getWorld().getBlockState(getPos());
-        boolean shouldExtinguish = state.getBlock() == TMechContent.firestarter;
+        boolean shouldExtinguish = state.get(FirestarterBlock.EXTINGUISH);
 
         info.add(I18n.format(Util.prefix("hud.behaviour")) + ": " + I18n.format(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep"))));
     }
