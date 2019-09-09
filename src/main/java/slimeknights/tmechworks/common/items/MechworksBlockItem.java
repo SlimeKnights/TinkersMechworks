@@ -26,9 +26,7 @@ public class MechworksBlockItem extends BlockTooltipItem {
         if(!(block instanceof RedstoneMachineBlock))
             return super.initCapabilities(stack, nbt);
 
-        if(nbt == null) {
-            nbt = new CompoundNBT();
-        }
+        nbt = stack.getOrCreateTag();
 
         CompoundNBT tags = new CompoundNBT();
         ((RedstoneMachineBlock)block).setDefaultNBT(nbt, tags);
