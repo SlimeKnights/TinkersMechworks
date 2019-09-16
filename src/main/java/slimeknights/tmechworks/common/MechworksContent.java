@@ -1,223 +1,162 @@
 package slimeknights.tmechworks.common;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.init.Items;
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.registries.*;
-import slimeknights.mantle.block.*;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.client.CreativeTab;
-import slimeknights.mantle.item.*;
+import slimeknights.mantle.common.IRegisterUtil;
 import slimeknights.tmechworks.TMechworks;
-import slimeknights.tmechworks.blocks.Drawbridge;
-import slimeknights.tmechworks.blocks.Firestarter;
-import slimeknights.tmechworks.blocks.IEnumBlock;
-import slimeknights.tmechworks.blocks.Metal;
-import slimeknights.tmechworks.blocks.logic.drawbridge.AdvancedDrawbridgeLogic;
-import slimeknights.tmechworks.blocks.logic.drawbridge.DrawbridgeLogic;
-import slimeknights.tmechworks.blocks.logic.drawbridge.ExtendedDrawbridgeLogic;
-import slimeknights.tmechworks.blocks.logic.FirestarterLogic;
-import slimeknights.tmechworks.items.ItemBlockMetaExtra;
-import slimeknights.tmechworks.library.Util;
+import slimeknights.tmechworks.client.gui.DrawbridgeScreen;
+import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
+import slimeknights.tmechworks.common.blocks.FirestarterBlock;
+import slimeknights.tmechworks.common.blocks.MetalBlock;
+import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
+import slimeknights.tmechworks.common.blocks.tileentity.FirestarterTileEntity;
+import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
+import slimeknights.tmechworks.common.items.MachineUpgradeItem;
+import slimeknights.tmechworks.common.items.MechworksBlockItem;
+import slimeknights.tmechworks.common.items.MechworksBookItem;
 
-import java.util.Locale;
+import java.util.function.Supplier;
 
-public class MechworksContent
-{
+public class MechworksContent implements IRegisterUtil {
+    private Logger log = LogManager.getLogger(TMechworks.modId + ".content");
 
-    // Items
-    public static ItemMetaDynamic ingots;
-    public static ItemMetaDynamic nuggets;
+    // Creative tabs
+    public static CreativeTab tabMechworks = new CreativeTab("TinkersMechworks", new ItemStack(net.minecraft.item.Items.LIME_BANNER));
 
-    // Blocks
-    public static Metal metals;
-    public static Drawbridge drawbridge;
-    public static Firestarter firestarter;
+    @ObjectHolder(TMechworks.modId)
+    public static class Blocks {
+        public static final MetalBlock aluminum_block = null;
+        public static final MetalBlock copper_block = null;
+        public static final FirestarterBlock firestarter = null;
+        public static final DrawbridgeBlock drawbridge = null;
+    }
 
-    // Tabs
-    public static CreativeTab tabMechworks = new CreativeTab("TabMechworks", new ItemStack(Items.POISONOUS_POTATO));
+    @ObjectHolder(TMechworks.modId)
+    public static class Items {
+        public static final MechworksBookItem book = null;
 
-    // Ingot ItemStacks
-    public static ItemStack ingotAluminum;
-    public static ItemStack ingotCopper;
+        // Upgrades
+        public static final MachineUpgradeItem upgrade_drawbridge_advanced = null;
+        public static final MachineUpgradeItem upgrade_drawbridge_distance = null;
+        public static final MachineUpgradeItem upgrade_speed = null;
+    }
 
-    // Nugget ItemStacks
-    public static ItemStack nuggetAluminum;
-    public static ItemStack nuggetCopper;
+    @ObjectHolder(TMechworks.modId)
+    public static class TileEntities {
+        public static final TileEntityType<?> firestarter = null;
+        public static final TileEntityType<?> drawbridge = null;
+    }
 
-    // Block ItemStacks
-    public static ItemStack blockAluminum;
-    public static ItemStack blockCopper;
+    @ObjectHolder(TMechworks.modId)
+    public static class Containers {
+        public static final ContainerType<DrawbridgeContainer> drawbridge = null;
+    }
 
-    @SubscribeEvent
-    public void registerItems (RegistryEvent.Register<Item> event)
-    {
-        IForgeRegistry<Item> registry = event.getRegistry();
-
-        // Item Blocks
-        metals = registerEnumItemBlock(registry, metals);
-        blockAluminum = new ItemStack(metals, 1, Metal.MetalTypes.ALUMINUM.getMeta());
-        blockCopper = new ItemStack(metals, 1, Metal.MetalTypes.COPPER.getMeta());
-
-        drawbridge = registerEnumItemBlockExtra(registry, drawbridge);
-        firestarter = registerEnumItemBlockExtra(registry, firestarter, "extinguish=true", "facing=inv");
-
-        ingots = registerItem(registry, new ItemMetaDynamic(), "ingots");
-        ingots.setCreativeTab(tabMechworks);
-        nuggets = registerItem(registry, new ItemMetaDynamic(), "nuggets");
-        nuggets.setCreativeTab(tabMechworks);
-
-        ingotAluminum = ingots.addMeta(0, "aluminum");
-        nuggetAluminum = nuggets.addMeta(0, "aluminum");
-        ingotCopper = ingots.addMeta(1, "copper");
-        nuggetCopper = nuggets.addMeta(1, "copper");
-
-        setupCreativeTabs();
+    @Override
+    public String getModId() {
+        return TMechworks.modId;
     }
 
     @SubscribeEvent
-    public void registerBlocks (RegistryEvent.Register<Block> event)
-    {
+    public void registerBlocks(final RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> registry = event.getRegistry();
 
-        metals = registerBlock(registry, new Metal(), "metal");
+        register(registry, new MetalBlock(), "aluminum_block");
+        register(registry, new MetalBlock(), "copper_block");
 
-        drawbridge = registerBlock(registry, new Drawbridge(), "drawbridge");
-        drawbridge.setCreativeTab(tabMechworks);
-        registerTE(DrawbridgeLogic.class, "drawbridge");
-        registerTE(ExtendedDrawbridgeLogic.class, "drawbridge.extended");
-        registerTE(AdvancedDrawbridgeLogic.class, "drawbridge.advanced");
-
-        firestarter = registerBlock(registry, new Firestarter(), "firestarter");
-        firestarter.setCreativeTab(tabMechworks);
-        registerTE(FirestarterLogic.class, "firestarter");
+        // Machines
+        register(registry, new FirestarterBlock(), "firestarter");
+        register(registry, new DrawbridgeBlock(), "drawbridge");
     }
 
     @SubscribeEvent
-    public void registerModels (ModelRegistryEvent event){
-        TMechworks.proxy.registerModels();
+    public void registerItems(final RegistryEvent.Register<Item> event) {
+        IForgeRegistry<Item> registry = event.getRegistry();
+
+        register(registry, new MechworksBookItem(), "book");
+
+        // Metals
+        registerBlockItem(registry, Blocks.copper_block, tabMechworks);
+        registerBlockItem(registry, Blocks.aluminum_block, tabMechworks);
+
+        register(registry, new Item(new Item.Properties().group(tabMechworks)), "copper_ingot");
+        register(registry, new Item(new Item.Properties().group(tabMechworks)), "aluminum_ingot");
+        register(registry, new Item(new Item.Properties().group(tabMechworks)), "copper_nugget");
+        register(registry, new Item(new Item.Properties().group(tabMechworks)), "aluminum_nugget");
+
+        // Machines
+        registerBlockItem(registry, Blocks.firestarter, tabMechworks);
+        registerBlockItem(registry, Blocks.drawbridge, tabMechworks);
+
+        // Machine Upgrades
+        register(registry, new MachineUpgradeItem(stats -> stats.isAdvanced = true), "upgrade_drawbridge_advanced");
+        register(registry, new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.getInstance().drawbridgeExtendUpgradeValue).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.getInstance().drawbridgeExtendUpgradeValue}), "upgrade_drawbridge_distance");
+        register(registry, new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.getInstance().drawbridgeSpeedUpgradeValue).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.getInstance().drawbridgeSpeedUpgradeValue}), "upgrade_speed");
     }
 
-    private void setupCreativeTabs ()
-    {
-        tabMechworks.setDisplayIcon(new ItemStack(drawbridge, 1, 0));
+    @SubscribeEvent
+    public void registerTileEntities(final RegistryEvent.Register<TileEntityType<?>> event) {
+        IForgeRegistry<TileEntityType<?>> registry = event.getRegistry();
+
+        registerTE(registry, FirestarterTileEntity::new, "firestarter", Blocks.firestarter);
+        registerTE(registry, DrawbridgeTileEntity::new, "drawbridge", Blocks.drawbridge);
     }
 
-    protected static <T extends Block> T registerBlock(IForgeRegistry<Block> registry, T block, String name) {
-        if(!name.equals(name.toLowerCase(Locale.US))) {
-            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
-        }
+    @SubscribeEvent
+    public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
+        IForgeRegistry<ContainerType<?>> registry = event.getRegistry();
 
-        String prefixedName = Util.prefix(name);
-        block.setTranslationKey(prefixedName);
-
-        register(registry, block, name);
-        return block;
+        register(registry, IForgeContainerType.create(DrawbridgeContainer::factory), "drawbridge");
+//        register(registry, new ContainerType<>(DrawbridgeContainer::factory), "drawbridge");
     }
 
-    protected static <E extends Enum<E> & EnumBlock.IEnumMeta & IStringSerializable> BlockStairsBase registerBlockStairsFrom(IForgeRegistry<Block> registry, EnumBlock<E> block, E value, String name) {
-        return registerBlock(registry, new BlockStairsBase(block.getDefaultState().withProperty(block.prop, value)), name);
+    @OnlyIn(Dist.CLIENT)
+    public void registerScreenFactories() {
+        ScreenManager.registerFactory(Containers.drawbridge, DrawbridgeScreen::create);
     }
 
-    protected static <T extends Block> T registerItemBlock(IForgeRegistry<Item> registry, T block) {
+//    public void registerEntities(final RegistryEvent.Register<EntityType<?>> event){}
 
-        ItemBlock itemBlock = new ItemBlockMeta(block);
+    public void preInit(FMLCommonSetupEvent event) {
 
-        itemBlock.setTranslationKey(block.getTranslationKey());
-
-        register(registry, itemBlock, block.getRegistryName());
-        return block;
     }
 
-    protected static <T extends EnumBlock<?>> T registerEnumItemBlock(IForgeRegistry<Item> registry, T block) {
-        ItemBlock itemBlock = new ItemBlockMeta(block);
+    public void init(InterModEnqueueEvent event) {
 
-        itemBlock.setTranslationKey(block.getTranslationKey());
-
-        register(registry, itemBlock, block.getRegistryName());
-        ItemBlockMeta.setMappingProperty(block, block.prop);
-        return block;
     }
 
-    protected static <T extends EnumBlock<?>> T registerEnumItemBlockExtra(IForgeRegistry<Item> registry, T block, String... extra) {
-        registerItemBlock(registry, new ItemBlockMetaExtra(block, extra));
-        ItemBlockMeta.setMappingProperty(block, block.prop);
-        return block;
+    public void postInit(InterModProcessEvent event) {
+        tabMechworks.setDisplayIcon(new ItemStack(Items.book));
     }
 
-    protected static <T extends IEnumBlock<?>> T registerEnumItemBlockExtra(IForgeRegistry<Item> registry, T block, String... extra) {
-        registerItemBlock(registry, new ItemBlockMetaExtra(block.getSelf(), extra));
-        ItemBlockMeta.setMappingProperty(block.getSelf(), block.getProperty());
-        return block;
+    @Override
+    public BlockItem registerBlockItem(IForgeRegistry<Item> registry, Block block, ItemGroup group) {
+        BlockItem itemBlock = new MechworksBlockItem(block, new Item.Properties().group(group));
+        return this.register(registry, itemBlock, block.getRegistryName());
     }
 
-    @SuppressWarnings("unchecked")
-    protected static <T extends Block> T registerItemBlock(IForgeRegistry<Item> registry, ItemBlock itemBlock) {
-        itemBlock.setTranslationKey(itemBlock.getBlock().getTranslationKey());
-
-        register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
-        return (T) itemBlock.getBlock();
-    }
-
-    @SuppressWarnings("unchecked")
-    protected static <T extends Block> T registerItemBlockProp(IForgeRegistry<Item> registry, ItemBlock itemBlock, IProperty<?> property) {
-        itemBlock.setTranslationKey(itemBlock.getBlock().getTranslationKey());
-
-        register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
-        ItemBlockMeta.setMappingProperty(itemBlock.getBlock(), property);
-        return (T) itemBlock.getBlock();
-    }
-
-    protected static <T extends EnumBlockSlab<?>> T registerEnumItemBlockSlab(IForgeRegistry<Item> registry, T block) {
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-        ItemBlock itemBlock = new ItemBlockSlab(block);
-
-        itemBlock.setTranslationKey(block.getTranslationKey());
-
-        register(registry, itemBlock, block.getRegistryName());
-        ItemBlockMeta.setMappingProperty(block, block.prop);
-        return block;
-    }
-
-    /**
-     * Sets the correct unlocalized name and registers the item.
-     */
-    protected static <T extends Item> T registerItem(IForgeRegistry<Item> registry, T item, String name) {
-        if(!name.equals(name.toLowerCase(Locale.US))) {
-            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Item: %s", name));
-        }
-
-        item.setTranslationKey(Util.prefix(name));
-        item.setRegistryName(Util.getResource(name));
-        registry.register(item);
-        return item;
-    }
-
-    protected static <T extends IForgeRegistryEntry<T>> T register(IForgeRegistry<T> registry, T thing, String name) {
-        thing.setRegistryName(Util.getResource(name));
-        registry.register(thing);
-        return thing;
-    }
-
-    protected static <T extends IForgeRegistryEntry<T>> T register(IForgeRegistry<T> registry, T thing, ResourceLocation name) {
-        thing.setRegistryName(name);
-        registry.register(thing);
-        return thing;
-    }
-
-    protected static void registerTE(Class<? extends TileEntity> teClazz, String name) {
-        if(!name.equals(name.toLowerCase(Locale.US))) {
-            throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! TE: %s", name));
-        }
-
-        GameRegistry.registerTileEntity(teClazz, new ResourceLocation(Util.prefix(name)));
+    public <T extends TileEntity> TileEntityType<T> registerTE(IForgeRegistry<TileEntityType<?>> registry, Supplier<T> constructor, String name, Block... validBlocks) {
+        TileEntityType<T> type = TileEntityType.Builder.create(constructor, validBlocks).build(null);
+        return this.register(registry, type, name);
     }
 }

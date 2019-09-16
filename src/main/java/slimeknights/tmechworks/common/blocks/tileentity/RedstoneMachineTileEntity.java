@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class RedstoneMachineTileEntity extends InventoryTileEntity implements IInventory, IDisguisable, ITickableTileEntity, IInformationProvider {
+public abstract class RedstoneMachineTileEntity extends InventoryTileEntity implements IDisguisable, ITickableTileEntity, IInformationProvider {
     private Inventory disguiseInventory;
 
     private int redstoneState;
@@ -263,7 +263,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
     @Nullable
     @Override
-    public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
+    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return null;
     }
 }

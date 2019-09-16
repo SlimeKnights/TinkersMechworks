@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=down,advanced=false": { "model": "tmechworks:block/drawbridge", "x": 180 },
+    "facing=up,advanced=false": { "model": "tmechworks:block/drawbridge" },
+    "facing=north,advanced=false": { "model": "tmechworks:block/drawbridge", "x": 90 },
+    "facing=south,advanced=false": { "model": "tmechworks:block/drawbridge", "x": -90 },
+    "facing=west,advanced=false": { "model": "tmechworks:block/drawbridge", "x": 90, "y": -90 },
+    "facing=east,advanced=false": { "model": "tmechworks:block/drawbridge", "x": 90, "y": 90 },
+    "facing=down,advanced=true": { "model": "tmechworks:block/drawbridge_advanced", "x": 180 },
+    "facing=up,advanced=true": { "model": "tmechworks:block/drawbridge_advanced" },
+    "facing=north,advanced=true": { "model": "tmechworks:block/drawbridge_advanced", "x": 90 },
+    "facing=south,advanced=true": { "model": "tmechworks:block/drawbridge_advanced", "x": -90 },
+    "facing=west,advanced=true": { "model": "tmechworks:block/drawbridge_advanced", "x": 90, "y": -90 },
+    "facing=east,advanced=true": { "model": "tmechworks:block/drawbridge_advanced", "x": 90, "y": 90 }
+  }
+}

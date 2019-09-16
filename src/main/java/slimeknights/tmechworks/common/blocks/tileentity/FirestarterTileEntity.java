@@ -9,7 +9,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
-import slimeknights.tmechworks.common.TMechContent;
+import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.blocks.FirestarterBlock;
 import slimeknights.tmechworks.library.Util;
 
@@ -20,7 +20,7 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
 {
     public FirestarterTileEntity()
     {
-        super(TMechContent.firestarter_te, new TranslationTextComponent(Util.prefix("inventory.firestarter")), 0);
+        super(MechworksContent.TileEntities.firestarter, new TranslationTextComponent(Util.prefix("inventory.firestarter")), 0);
     }
 
     @Override public void onRedstoneUpdate()

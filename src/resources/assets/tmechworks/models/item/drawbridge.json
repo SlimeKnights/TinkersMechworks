@@ -1,0 +1,7 @@
+{
+  "parent": "tmechworks:block/drawbridge",
+  "overrides": [
+    { "predicate": { "advanced": 0 }, "model": "tmechworks:block/drawbridge" },
+    { "predicate": { "advanced": 1 }, "model": "tmechworks:block/drawbridge_advanced" }
+  ]
+}

@@ -1,40 +1,49 @@
 package slimeknights.tmechworks.client.gui.components;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import org.lwjgl.util.vector.Vector2f;
-import slimeknights.tmechworks.library.Util;
 
+import javax.vecmath.Vector2f;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
-public class GuiArrowSelection extends GuiButton {
+public class ArrowWidget extends Widget {
+    public static final ResourceLocation ARROW_WIDGET = new ResourceLocation("tmechworks", "textures/gui/arrows.png");
 
-    public static String[] LABELSET_DEFAULT = {"Down", "Up", "Front", "Back", "Left", "Right", "Place High", "Place Middle", "Place Low"};
-
+    public static final String[] LABELS_DEFAULT = {
+            "tmechworks:widget.arrow.down",
+            "tmechworks:widget.arrow.up",
+            "tmechworks:widget.arrow.front",
+            "tmechworks:widget.arrow.back",
+            "tmechworks:widget.arrow.left",
+            "tmechworks:widget.arrow.right",
+            "tmechworks:widget.arrow.high",
+            "tmechworks:widget.arrow.middle",
+            "tmechworks:widget.arrow.low"
+    };
     private static final int ARROW_SIZE = 20;
     private static final int ARROW_SMALL_SIZE = 6;
     private static final int ARROW_ROWS = 2;
 
-    private static final ResourceLocation textures = Util.getResource("textures/gui/arrows.png");
-
-    private String[] labelset;
+    private String[] labels;
     private ArrowState[] states = new ArrowState[Arrow.values().length];
     private Arrow hoveredArrow;
-
     private int screenW, screenH;
+    private IArrowPressed onClick;
 
-    public GuiArrowSelection(int buttonId, int x, int y, int screenW, int screenH) {
-        this(buttonId, x, y, screenW, screenH, false);
+    public ArrowWidget(int x, int y, int screenW, int screenH, IArrowPressed onClick) {
+        this(x, y, screenW, screenH, false, onClick);
     }
 
-    public GuiArrowSelection(int buttonId, int x, int y, int screenW, int screenH, boolean drawAdditionalArrows) {
-        super(buttonId, x, y, "");
+    public ArrowWidget(int x, int y, int screenW, int screenH, boolean drawAdditionalArrows, IArrowPressed onClick) {
+        super(x, y, "");
 
-        setLabelSet(LABELSET_DEFAULT);
+        setLabels(LABELS_DEFAULT);
         Arrays.fill(states, ArrowState.ENABLED);
 
         if (!drawAdditionalArrows) {
@@ -45,19 +54,20 @@ public class GuiArrowSelection extends GuiButton {
 
         this.screenW = screenW;
         this.screenH = screenH;
+        this.onClick = onClick;
     }
 
-    public GuiArrowSelection setLabelSet(String[] labels) {
+    public ArrowWidget setLabels(String[] labels) {
         if (labels.length < Arrow.values().length) {
-            labelset = new String[Arrow.values().length];
-            Arrays.fill(labelset, "");
+            labels = new String[Arrow.values().length];
+            Arrays.fill(this.labels, "");
 
-            for (int i = 0; i < labelset.length; i++) {
+            for (int i = 0; i < this.labels.length; i++) {
                 if (i < labels.length)
-                    labelset[i] = labels[i];
+                    this.labels[i] = labels[i];
             }
         } else {
-            this.labelset = labels;
+            this.labels = labels;
         }
 
         return this;
@@ -67,7 +77,7 @@ public class GuiArrowSelection extends GuiButton {
         return states[arrow.ordinal()];
     }
 
-    public GuiArrowSelection setState(Arrow arrow, ArrowState state) {
+    public ArrowWidget setState(Arrow arrow, ArrowState state) {
         states[arrow.ordinal()] = state;
 
         return this;
@@ -78,17 +88,16 @@ public class GuiArrowSelection extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-        if (!visible)
-            return;
+    public void renderButton(int mouseX, int mouseY, float partialTicks) {
+        Minecraft mc = Minecraft.getInstance();
 
         Arrow.SMALL_DOWN.position.y = ARROW_SIZE + 8;
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.translatef(x, y, 0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        mc.getTextureManager().bindTexture(textures);
+        mc.getTextureManager().bindTexture(ARROW_WIDGET);
 
         hoveredArrow = null;
         boolean canHover = true;
@@ -122,25 +131,34 @@ public class GuiArrowSelection extends GuiButton {
             int indexX = arrow.indexX * arrow.w + arrow.subX * arrow.subW;
             int indexY = (arrow.indexY + state.ordinal() * ARROW_ROWS) * arrow.h + arrow.subY * arrow.subH;
 
-            drawTexturedModalRect(arrow.position.getX(), arrow.position.getY(), indexX, indexY, arrow.subW, arrow.subH);
+            blit((int) arrow.position.getX(), (int) arrow.position.getY(), indexX, indexY, arrow.subW, arrow.subH);
         }
 
         GlStateManager.popMatrix();
-    }
 
-    @Override
-    public void drawButtonForegroundLayer(int mouseX, int mouseY) {
         if (hoveredArrow == null)
             return;
 
-        if (labelset != null && states[hoveredArrow.ordinal()] == ArrowState.HOVER && !labelset[hoveredArrow.ordinal()].trim().isEmpty()) {
-            GuiUtils.drawHoveringText(ImmutableList.of(labelset[hoveredArrow.ordinal()]), mouseX, mouseY, screenW, screenH, 100, Minecraft.getMinecraft().fontRenderer);
+        if (labels != null && states[hoveredArrow.ordinal()] == ArrowState.HOVER && !labels[hoveredArrow.ordinal()].trim().isEmpty()) {
+            GuiUtils.drawHoveringText(ImmutableList.of(I18n.format(labels[hoveredArrow.ordinal()])), mouseX, mouseY, screenW, screenH, 100, Minecraft.getInstance().fontRenderer);
         }
     }
 
+    public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+        if (hoveredArrow != null) {
+            this.playDownSound(Minecraft.getInstance().getSoundHandler());
+            onClick(p_mouseClicked_1_, p_mouseClicked_3_);
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
-    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        return hoveredArrow != null;
+    public void onClick(double p_onClick_1_, double p_onClick_3_) {
+        super.onClick(p_onClick_1_, p_onClick_3_);
+
+        onClick.onPress(this, hoveredArrow);
     }
 
     public enum Arrow {
@@ -188,5 +206,9 @@ public class GuiArrowSelection extends GuiButton {
         HOVER,
         SELECTED,
         NO_DRAW
+    }
+
+    public interface IArrowPressed {
+        void onPress(ArrowWidget widget, Arrow arrow);
     }
 }

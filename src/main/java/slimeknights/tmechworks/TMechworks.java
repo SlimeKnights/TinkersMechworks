@@ -2,6 +2,7 @@ package slimeknights.tmechworks;
 
 
 import net.minecraft.data.DataGenerator;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -10,12 +11,14 @@ import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.util.ModelJsonGenerator;
 import slimeknights.tmechworks.client.ClientProxy;
 import slimeknights.tmechworks.common.CommonProxy;
-import slimeknights.tmechworks.common.TMechContent;
+import slimeknights.tmechworks.common.MechworksContent;
+import slimeknights.tmechworks.common.network.PacketHandler;
 
 @Mod(TMechworks.modId)
 public class TMechworks {
@@ -25,7 +28,7 @@ public class TMechworks {
 
     public static TMechworks instance;
     public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
-    public static TMechContent content;
+    public static MechworksContent content;
 
     public TMechworks() {
         instance = this;
@@ -37,7 +40,7 @@ public class TMechworks {
         bus.addListener(this::postInit);
         bus.addListener(this::gatherData);
 
-        content = new TMechContent();
+        content = new MechworksContent();
         bus.register(content);
     }
 
@@ -45,6 +48,9 @@ public class TMechworks {
         proxy.preInit();
 
         content.preInit(event);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> content::registerScreenFactories);
+
+        PacketHandler.register();
     }
 
     private void init(final InterModEnqueueEvent event) {
