@@ -8,6 +8,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -18,6 +19,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -27,6 +29,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
@@ -115,29 +118,37 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        return Collections.emptyList();
+        TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+
+        if(te instanceof RedstoneMachineTileEntity) {
+            List<ItemStack> drops = NonNullList.create();
+
+            RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
+            ItemStack item = new ItemStack(this, 1);
+
+            writeAdditionalItemData(state, builder.getWorld(), builder.get(LootParameters.POSITION), item);
+
+            if (dropState)
+                machine.storeTileData(item);
+
+            drops.add(item);
+            return drops;
+        }
+
+        return super.getDrops(state, builder);
     }
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (blockMatches(state, worldIn, pos, newState, isMoving))
             return;
+
         TileEntity te = worldIn.getTileEntity(pos);
 
-        if (te instanceof RedstoneMachineTileEntity) {
-            // Forego loot table as they scare me when this much data is needed
-            RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
-            ItemStack item = new ItemStack(this, 1);
+        if(te instanceof IInventory) {
+            if(!dropState)
+                InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)te);
 
-            writeAdditionalItemData(state, worldIn, pos, item);
-
-            if (dropState) {
-                machine.storeTileData(item);
-            } else {
-                InventoryHelper.dropInventoryItems(worldIn, pos, machine);
-            }
-
-            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
             worldIn.updateComparatorOutputLevel(pos, this);
         }
 
