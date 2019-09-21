@@ -4,17 +4,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import slimeknights.mantle.tileentity.MantleTileEntity;
+import slimeknights.tmechworks.common.inventory.slots.ISlotValidate;
 
 import java.util.function.Predicate;
 
-public class FragmentedInventory implements IInventory {
+public class FragmentedInventory implements IInventory, ISlotValidate {
     private final IInventory parent;
     private final int startSlot;
     private int size;
 
     private boolean overrideStackLimit;
     private int stackLimit = 64;
-    private Predicate<ItemStack> validItems = itemStack -> true;
+    private Predicate<ItemStack> validItems = stack -> true;
 
     public FragmentedInventory(IInventory parent, int startSlot, int size) {
         this.parent = parent;
@@ -78,11 +79,13 @@ public class FragmentedInventory implements IInventory {
     }
 
     /**
-     * Only works with mantle tile entity as the parent
+     * Calls regular markDirty if not child of MantleTileEntity
      */
     public void markDirtyFast() {
         if (parent instanceof MantleTileEntity)
             ((MantleTileEntity) parent).markDirtyFast();
+        else
+            markDirty();
     }
 
     @Override
@@ -143,5 +146,10 @@ public class FragmentedInventory implements IInventory {
 
     public int getStartSlot() {
         return startSlot;
+    }
+
+    @Override
+    public boolean isItemValidForValidatingSlot(int slot, ItemStack item) {
+        return validItems.test(item);
     }
 }

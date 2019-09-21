@@ -44,5 +44,8 @@
   "tmechworks:widget.arrow.right": "Right",
   "tmechworks:widget.arrow.high": "Place High",
   "tmechworks:widget.arrow.middle": "Place Middle",
-  "tmechworks:widget.arrow.low": "Place Low"
+  "tmechworks:widget.arrow.low": "Place Low",
+
+  // GUI
+  "tmechworks:gui.upgrades": "Upgrades"
 }

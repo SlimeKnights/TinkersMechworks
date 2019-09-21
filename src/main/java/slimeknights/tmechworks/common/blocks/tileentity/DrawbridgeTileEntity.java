@@ -65,7 +65,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     public DrawbridgeTileEntity() {
         super(MechworksContent.TileEntities.drawbridge, new TranslationTextComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1);
 
-        upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1);
+        upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
         slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem);
     }
 
@@ -506,6 +506,14 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         player.prevRotationYaw = player.rotationYaw;
         player.rotationYawHead = player.rotationYaw;
         player.prevRotationYawHead = player.rotationYawHead;
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, @Nonnull ItemStack itemstack) {
+        super.setInventorySlotContents(slot, itemstack);
+
+        if(upgrades.isSlotInInventory(slot))
+            computeStats();
     }
 
     public FakePlayer getFakePlayer(BlockPos pos) {

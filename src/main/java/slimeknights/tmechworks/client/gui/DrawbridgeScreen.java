@@ -2,6 +2,7 @@ package slimeknights.tmechworks.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -11,6 +12,7 @@ import slimeknights.tmechworks.client.gui.components.ArrowWidget;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.network.PacketHandler;
 import slimeknights.tmechworks.common.network.UpdatePlaceDirectionPacket;
+import slimeknights.tmechworks.library.Util;
 
 public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation("tmechworks", "textures/gui/drawbridge.png");
@@ -45,6 +47,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         this.minecraft.getTextureManager().bindTexture(SCREEN_LOCATION);
 
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
+        blit(guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60);
     }
 
     @Override
@@ -52,8 +55,16 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         String s = title.getFormattedText();
-        font.drawString(s, xSize / 2 - font.getStringWidth(s) / 2, 6, 4210752);
+        font.drawString(s, xSize / 2F - font.getStringWidth(s) / 2F, 6, 4210752);
         font.drawString(playerInventory.getDisplayName().getFormattedText(), 8, ySize - 96 + 2, 4210752);
+
+        float scale = .75F;
+        float invScale = 1 / scale;
+
+        GlStateManager.scalef(scale, scale, scale);
+        String upgrades = I18n.format(Util.prefix("gui.upgrades"));
+        font.drawString(upgrades, 47 / 2F - font.getStringWidth(upgrades) / 2F - 50, (xSize - 69) * invScale, 4210752);
+        GlStateManager.scalef(invScale, invScale, invScale);
     }
 
     private void arrowClicked(ArrowWidget widget, ArrowWidget.Arrow arrow) {
