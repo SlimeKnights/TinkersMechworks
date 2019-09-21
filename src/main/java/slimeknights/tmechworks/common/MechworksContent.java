@@ -154,9 +154,4 @@ public class MechworksContent implements IRegisterUtil {
         BlockItem itemBlock = new MechworksBlockItem(block, new Item.Properties().group(group));
         return this.register(registry, itemBlock, block.getRegistryName());
     }
-
-    public <T extends TileEntity> TileEntityType<T> registerTE(IForgeRegistry<TileEntityType<?>> registry, Supplier<T> constructor, String name, Block... validBlocks) {
-        TileEntityType<T> type = TileEntityType.Builder.create(constructor, validBlocks).build(null);
-        return this.register(registry, type, name);
-    }
 }

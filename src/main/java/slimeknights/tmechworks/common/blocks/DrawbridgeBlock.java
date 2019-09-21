@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import slimeknights.tmechworks.common.MechworksConfig;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 
@@ -68,7 +69,8 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
 
         blockState.putInt("PlaceAngle", 1);
         blockState.putInt("PlaceDirectionRaw", 2);
-        blockState.putInt("InventorySize", 1);
+        blockState.putInt("InventorySize", DrawbridgeTileEntity.UPGRADES_SIZE + 1);
+        nbt.putBoolean("drawAdvanced", false);
     }
 
     @Override
@@ -76,8 +78,8 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
         item.addPropertyOverride(new ResourceLocation("advanced"), (stack, world, entity) -> {
             boolean advanced = false;
 
-            if(stack.hasTag() && stack.getTag().contains("renderAdvanced", Constants.NBT.TAG_BYTE))
-                advanced = stack.getTag().getBoolean("renderAdvanced");
+            if(stack.hasTag() && stack.getTag().contains("drawAdvanced", Constants.NBT.TAG_BYTE))
+                advanced = stack.getTag().getBoolean("drawAdvanced");
 
             return advanced ? 1F : 0F;
         });

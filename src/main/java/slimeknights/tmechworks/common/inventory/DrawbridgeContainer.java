@@ -17,7 +17,7 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
 
         te.openInventory(playerInventory.player);
 
-        addSlot(new Slot(tile, 0, 80, 36));
+        addSlot(new Slot(tile, tile.slots.getStartSlot(), 80, 36));
         addPlayerInventory(playerInventory, 8, 84);
     }
 

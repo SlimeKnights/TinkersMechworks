@@ -244,7 +244,6 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState){
-        blockState.put("Items", new ListNBT());
         blockState.putInt("InventorySize", 0);
     }
 }

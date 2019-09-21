@@ -4,7 +4,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
@@ -48,31 +47,27 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         if (isFirstTick)
             return;
 
+        Direction facing = getWorld().getBlockState(getPos()).get(RedstoneMachineBlock.FACING);
         int oldPow = redstoneState;
 
-        int sidePow = 0;
+        Direction[] directions = Direction.values();
+        int maxPow = 0;
 
-        Direction facing = getWorld().getBlockState(getPos()).get(RedstoneMachineBlock.FACING);
-
-        for (Direction face : Direction.values()) {
-            int pow = world.getRedstonePower(pos.offset(face), face);
-
-            if (face != facing && pow > 0) {
-                if (pow > sidePow) {
-                    sidePow = pow;
-                }
+        for(Direction dir : directions) {
+            if(dir != facing){
+                int pow = world.getRedstonePower(pos.offset(dir), dir);
+                if(pow > maxPow)
+                    maxPow = pow;
             }
         }
 
-        int pow = world.getRedstonePower(pos, Direction.DOWN);
+        int downPow = world.getRedstonePower(pos, Direction.DOWN);
+        if(downPow > maxPow)
+            maxPow = downPow;
 
-        if (pow > sidePow) {
-            sidePow = pow;
-        }
+        redstoneState = maxPow;
 
-        redstoneState = sidePow;
-
-        if(pow != oldPow) {
+        if(maxPow != oldPow) {
             onRedstoneUpdate();
         }
         onBlockUpdate();
@@ -187,6 +182,12 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         readItemData(tags);
 
         redstoneState = tags.getInt("Redstone");
+    }
+
+    @Override
+    public void writeInventoryToNBT(CompoundNBT tag) {
+        if(!isEmpty())
+            super.writeInventoryToNBT(tag);
     }
 
     @Override

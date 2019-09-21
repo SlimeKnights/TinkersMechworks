@@ -15,9 +15,9 @@ import java.util.UUID;
 
 public class Util
 {
-
     public static final String RESOURCE = TMechworks.modId;
     public static final Random rand = new Random();
+    public static final String FAKEPLAYER_NAME = "MechworksWorker";
 
     public static WeakReference<FakePlayer> createFakePlayer (World world)
     {
@@ -26,7 +26,7 @@ public class Util
             return null;
         }
 
-        return new WeakReference<FakePlayer>(FakePlayerFactory.get((ServerWorld) world, new GameProfile(UUID.randomUUID(), "MechworksWorker")));
+        return new WeakReference<>(FakePlayerFactory.get((ServerWorld) world, new GameProfile(UUID.randomUUID(), FAKEPLAYER_NAME)));
     }
 
     /**

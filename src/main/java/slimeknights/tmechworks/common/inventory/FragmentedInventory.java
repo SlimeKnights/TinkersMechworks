@@ -43,7 +43,7 @@ public class FragmentedInventory implements IInventory {
         if (!isSlotInInventory(slot))
             return ItemStack.EMPTY;
 
-        return parent.getStackInSlot(slot + startSlot);
+        return parent.getStackInSlot(getSlot(slot));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class FragmentedInventory implements IInventory {
         if (!isSlotInInventory(slot))
             return ItemStack.EMPTY;
 
-        return parent.decrStackSize(slot + startSlot, count);
+        return parent.decrStackSize(getSlot(slot), count);
     }
 
     @Override
@@ -59,13 +59,17 @@ public class FragmentedInventory implements IInventory {
         if (!isSlotInInventory(slot))
             return ItemStack.EMPTY;
 
-        return parent.removeStackFromSlot(slot + startSlot);
+        return parent.removeStackFromSlot(getSlot(slot));
     }
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack itemStack) {
         if (isSlotInInventory(slot))
-            parent.setInventorySlotContents(slot + startSlot, itemStack);
+            parent.setInventorySlotContents(getSlot(slot), itemStack);
+    }
+
+    public int getSlot(int slot){
+        return slot + startSlot;
     }
 
     @Override
@@ -108,6 +112,12 @@ public class FragmentedInventory implements IInventory {
         return this;
     }
 
+    public FragmentedInventory setValidItemsPredicate(Predicate<ItemStack> validItemsPredicate) {
+        validItems = validItemsPredicate;
+
+        return this;
+    }
+
     @Override
     public void openInventory(PlayerEntity player) {
         parent.openInventory(player);
@@ -120,7 +130,7 @@ public class FragmentedInventory implements IInventory {
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
-        return validItems.test(itemStack);
+        return validItems.test(itemStack) && parent.isItemValidForSlot(getSlot(slot), itemStack);
     }
 
     public boolean isSlotInInventory(int i) {
@@ -129,5 +139,9 @@ public class FragmentedInventory implements IInventory {
 
     public void resize(int newSize){
         size = newSize;
+    }
+
+    public int getStartSlot() {
+        return startSlot;
     }
 }
