@@ -2,6 +2,7 @@ package slimeknights.tmechworks.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.Direction;
@@ -68,6 +69,9 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
 
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
         blit(guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60);
+
+        drawSlicedBox(guiLeft + 34, guiTop + 35, 18, 18, 17, 166); // Disguise slot
+        drawSlicedBox(guiLeft + 75, guiTop + 31, 26, 26, 17, 166); // Drawbridge slot
     }
 
     @Override
@@ -101,5 +105,30 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
 
         arrow.setState(ArrowWidget.Arrow.values()[container.getTile().getRawPlaceDirection().ordinal()], ArrowWidget.ArrowState.SELECTED);
         arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + container.getTile().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
+    }
+
+    private void drawSlicedBox(int x, int y, int width, int height, int u, int v) {
+        // Corners
+        blit(x, y, u, v, 4, 4); // Top Left
+        blit(x + width - 4, y, u + 12, v, 4, 4); // Top Right
+        blit(x, y + height - 4, u, v + 12, 4, 4); // Bottom Left
+        blit(x + width - 4, y + height - 4, u + 12, v + 12, 4, 4); // Bottom Right
+
+        // Sides
+        blit(x + 4, y, width - 8, 4, u + 6, u + 10, v, v + 4); // Top
+        blit(x + 4, y + height - 4, width - 8, 4, u + 6, u + 10, v + 12, v + 16); // Bottom
+        blit(x, y + 4, 4, height - 8, u, u + 4, v + 6, v + 10); // Left
+        blit(x + width - 4, y + 4, 4, height - 8, u + 12, u + 16, v + 6, v + 10); // Right
+
+        // Center
+        blit(x + 4, y + 4, width - 8, height - 8, u + 6, u + 10, v + 6, v + 10);
+    }
+
+    public static void blit(int x, int y, int w, int h, int minU, int maxU, int minV, int maxV) {
+        blit(x, y, w, h, minU, maxU, minV, maxV, 256F, 256F);
+    }
+
+    public static void blit(int x, int y, int w, int h, int minU, int maxU, int minV, int maxV, float tw, float th) {
+        innerBlit(x, x + w, y, y + h, 0, minU / tw, maxU / tw, minV / th, maxV / th);
     }
 }
