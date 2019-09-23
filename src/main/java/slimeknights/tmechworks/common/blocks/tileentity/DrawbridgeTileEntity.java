@@ -293,6 +293,19 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     public void onStatsUpdated() {
         int blockSlots = stats.isAdvanced ? stats.extendLength : 1;
 
+        World world = getWorld();
+        BlockPos pos = getPos();
+
+        // Drop items in removed slots
+        for(int i = slots.getSizeInventory() - 1; i >= blockSlots; i--) {
+            ItemStack stack = slots.getStackInSlot(i);
+
+            if(!stack.isEmpty()) {
+                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+                slots.setInventorySlotContents(i, ItemStack.EMPTY);
+            }
+        }
+
         resize(UPGRADES_SIZE + blockSlots);
         slots.resize(blockSlots);
 
