@@ -60,7 +60,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         builder.add(FACING);
     }
 
-    protected boolean openGui(PlayerEntity player, World world, BlockPos pos) {
+    public boolean openGui(PlayerEntity player, World world, BlockPos pos) {
         if (player instanceof ServerPlayerEntity && !(player instanceof FakePlayer)) {
             TileEntity te = world.getTileEntity(pos);
 

@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.common.network;
+package slimeknights.tmechworks.common.network.packet;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,6 +9,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import slimeknights.tmechworks.common.blocks.tileentity.IPlaceDirection;
+import slimeknights.tmechworks.common.network.PacketHandler;
 
 import java.util.function.Supplier;
 

@@ -11,14 +11,19 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.network.PacketHandler;
-import slimeknights.tmechworks.common.network.UpdatePlaceDirectionPacket;
+import slimeknights.tmechworks.common.network.packet.ServerReopenUiPacket;
+import slimeknights.tmechworks.common.network.packet.UpdatePlaceDirectionPacket;
 import slimeknights.tmechworks.library.Util;
 
 public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation("tmechworks", "textures/gui/drawbridge.png");
 
+    private final boolean isAdvanced;
+
     public DrawbridgeScreen(DrawbridgeContainer container, PlayerInventory inventory, ITextComponent name) {
         super(container, inventory, name);
+
+        isAdvanced = container.getTile().stats.isAdvanced;
     }
 
     public static DrawbridgeScreen create(DrawbridgeContainer container, PlayerInventory player, ITextComponent title){
@@ -32,6 +37,16 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         ArrowWidget arrow = new ArrowWidget((this.width - this.xSize) / 2 + 110, (this.height - this.ySize) / 2 + 20, width, height, true, this::arrowClicked);
         updateSelection(arrow);
         addButton(arrow);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        // Reinitialize UI if the drawbridge type changes
+        if(isAdvanced != container.getTile().stats.isAdvanced) {
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(container.getTile().getPos()));
+        }
     }
 
     @Override

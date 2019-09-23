@@ -12,12 +12,15 @@ import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.inventory.slots.ValidatingSlot;
 
 public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
+    public final PlayerInventory playerInventory;
+
     public DrawbridgeContainer(int id, PlayerInventory playerInventory, DrawbridgeTileEntity te) {
         super(MechworksContent.Containers.drawbridge, id, te);
 
+        this.playerInventory = playerInventory;
         te.openInventory(playerInventory.player);
 
-        addSlot(new ValidatingSlot(tile.slots, 0, 80, 36));
+        addDrawbridgeSlots();
 
         for(int x = 0; x < 2; x++){
             for(int y = 0; y < 2; y++){
@@ -26,6 +29,10 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
         }
 
         addPlayerInventory(playerInventory, 8, 84);
+    }
+
+    protected void addDrawbridgeSlots(){
+        addSlot(new ValidatingSlot(tile.slots, 0, 80, 36));
     }
 
     @OnlyIn(Dist.CLIENT)
