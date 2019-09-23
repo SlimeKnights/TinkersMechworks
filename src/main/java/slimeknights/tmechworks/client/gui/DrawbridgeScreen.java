@@ -70,7 +70,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
         blit(guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60);
 
-        drawSlicedBox(guiLeft + 34, guiTop + 35, 18, 18, 17, 166); // Disguise slot
+//        drawSlicedBox(guiLeft + 34, guiTop + 35, 18, 18, 17, 166); // Disguise slot
         drawSlicedBox(guiLeft + 75, guiTop + 31, 26, 26, 17, 166); // Drawbridge slot
     }
 
