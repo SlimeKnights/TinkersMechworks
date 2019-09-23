@@ -47,6 +47,8 @@ public class ServerReopenUiPacket {
                     PacketHandler.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new ClientSetCursorStackPacket(cursorStack));
                 }
             });
+
+            context.setPacketHandled(true);
         }
     }
 }

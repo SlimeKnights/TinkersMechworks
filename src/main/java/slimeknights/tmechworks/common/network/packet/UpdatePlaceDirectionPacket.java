@@ -53,6 +53,8 @@ public class UpdatePlaceDirectionPacket {
                 if(te instanceof IPlaceDirection)
                     ((IPlaceDirection)te).setPlaceDirection(msg.direction);
             });
+
+            context.setPacketHandled(true);
         }
     }
 }

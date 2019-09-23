@@ -36,6 +36,8 @@ public class ClientSetCursorStackPacket {
             context.enqueueWork(() -> {
                 player.inventory.setItemStack(msg.stack);
             });
+
+            context.setPacketHandled(true);
         }
     }
 }
