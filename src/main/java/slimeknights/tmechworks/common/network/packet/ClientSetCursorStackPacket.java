@@ -1,13 +1,10 @@
 package slimeknights.tmechworks.common.network.packet;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
-import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
 
 import java.util.function.Supplier;
 

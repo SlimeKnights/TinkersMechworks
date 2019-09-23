@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
+import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.network.PacketHandler;
 import slimeknights.tmechworks.common.network.packet.ServerReopenUiPacket;
@@ -19,11 +20,13 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation("tmechworks", "textures/gui/drawbridge.png");
 
     private final boolean isAdvanced;
+    private final int slotCount;
 
     public DrawbridgeScreen(DrawbridgeContainer container, PlayerInventory inventory, ITextComponent name) {
         super(container, inventory, name);
 
         isAdvanced = container.getTile().stats.isAdvanced;
+        slotCount = container.getTile().slots.getSizeInventory();
     }
 
     public static DrawbridgeScreen create(DrawbridgeContainer container, PlayerInventory player, ITextComponent title){
@@ -43,8 +46,10 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public void tick() {
         super.tick();
 
-        // Reinitialize UI if the drawbridge type changes
-        if(isAdvanced != container.getTile().stats.isAdvanced) {
+        DrawbridgeTileEntity te = container.getTile();
+
+        // Reinitialize UI if the drawbridge size or type changes
+        if(isAdvanced != te.stats.isAdvanced || slotCount != te.slots.getSizeInventory()) {
             PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(container.getTile().getPos()));
         }
     }
