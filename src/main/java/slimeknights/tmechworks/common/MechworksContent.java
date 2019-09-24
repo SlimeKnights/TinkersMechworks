@@ -113,8 +113,8 @@ public class MechworksContent implements IRegisterUtil {
 
         // Machine Upgrades
         register(registry, new MachineUpgradeItem(stats -> stats.isAdvanced = true), "upgrade_drawbridge_advanced");
-        register(registry, new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.getInstance().drawbridgeExtendUpgradeValue).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.getInstance().drawbridgeExtendUpgradeValue}), "upgrade_drawbridge_distance");
-        register(registry, new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.getInstance().drawbridgeSpeedUpgradeValue).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.getInstance().drawbridgeSpeedUpgradeValue}), "upgrade_speed");
+        register(registry, new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.DRAWBRIDGE.extendUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.extendUpgradeValue}), "upgrade_drawbridge_distance");
+        register(registry, new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.DRAWBRIDGE.speedUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.speedUpgradeValue}), "upgrade_speed");
     }
 
     @SubscribeEvent
