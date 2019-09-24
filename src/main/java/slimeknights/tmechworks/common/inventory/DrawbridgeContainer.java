@@ -31,7 +31,6 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
         this.playerInventory = playerInventory;
         te.openInventory(playerInventory.player);
 
-        int slotCount = te.slots.getSizeInventory();
         rows = MathHelper.ceil((float)te.slots.getSizeInventory() / ADVANCED_COLUMNS);
         mainSlots = addDrawbridgeSlots();
 
@@ -40,6 +39,8 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
                 addSlot(new ValidatingSlot(tile.upgrades, x * 2 + y, -36 + x * 18, 119 + y * 18));
             }
         }
+
+        addSlot(new ValidatingSlot(tile.getDisguiseInventory(), 0, 178, 137));
 
         addPlayerInventory(playerInventory, 8, 84);
     }

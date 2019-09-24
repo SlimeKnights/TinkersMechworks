@@ -48,8 +48,8 @@ public class JeiIntegration implements IModPlugin {
                 int xSize = gui.getXSize();
                 int ySize = gui.getYSize();
 
-                // Upgrades UI cutout
-                rects.add(new Rectangle2d(guiLeft - 44, guiTop + ySize - 65, 47, 60));
+                rects.add(new Rectangle2d(guiLeft - 44, guiTop + ySize - 65, 47, 60)); // Upgrades cutout
+                rects.add(new Rectangle2d(guiLeft + xSize - 3, guiTop + ySize - 37, 29, 32)); // Disguise cutout
 
                 if(gui.isAdvanced){
                     rects.add(new Rectangle2d(guiLeft - 18, guiTop - 80, 213, 148)); // Advanced UI

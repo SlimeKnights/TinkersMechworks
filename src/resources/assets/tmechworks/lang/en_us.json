@@ -46,6 +46,7 @@
 
   // Inventory
   "tmechworks:inventory.drawbridge": "Drawbridge",
+  "tmechworks:inventory.firestarter": "Firestarter",
 
   // Widget
   "tmechworks:widget.arrow.down": "Down",

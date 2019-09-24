@@ -11,12 +11,9 @@ public class ValidatingSlot extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        if(!super.isItemValid(stack))
-            return false;
-
         if(inventory instanceof ISlotValidate)
             return ((ISlotValidate)inventory).isItemValidForValidatingSlot(getSlotIndex(), stack);
-
-        return true;
+        else
+            return inventory.isItemValidForSlot(getSlotIndex(), stack);
     }
 }

@@ -89,6 +89,9 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
 
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(player.isSneaking())
+            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+
         state = state.cycle(EXTINGUISH);
 
         worldIn.setBlockState(pos, state);

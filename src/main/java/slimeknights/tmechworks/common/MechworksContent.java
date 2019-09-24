@@ -24,12 +24,14 @@ import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.client.CreativeTab;
 import slimeknights.mantle.common.IRegisterUtil;
 import slimeknights.tmechworks.TMechworks;
+import slimeknights.tmechworks.client.gui.DisguiseScreen;
 import slimeknights.tmechworks.client.gui.DrawbridgeScreen;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.FirestarterBlock;
 import slimeknights.tmechworks.common.blocks.MetalBlock;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.blocks.tileentity.FirestarterTileEntity;
+import slimeknights.tmechworks.common.inventory.DisguiseContainer;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
@@ -69,6 +71,7 @@ public class MechworksContent implements IRegisterUtil {
 
     @ObjectHolder(TMechworks.modId)
     public static class Containers {
+        public static final ContainerType<DisguiseContainer> disguise = null;
         public static final ContainerType<DrawbridgeContainer> drawbridge = null;
     }
 
@@ -126,12 +129,13 @@ public class MechworksContent implements IRegisterUtil {
     public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
         IForgeRegistry<ContainerType<?>> registry = event.getRegistry();
 
+        register(registry, IForgeContainerType.create(DisguiseContainer::factory), "disguise");
         register(registry, IForgeContainerType.create(DrawbridgeContainer::factory), "drawbridge");
-//        register(registry, new ContainerType<>(DrawbridgeContainer::factory), "drawbridge");
     }
 
     @OnlyIn(Dist.CLIENT)
     public void registerScreenFactories() {
+        ScreenManager.registerFactory(Containers.disguise, DisguiseScreen::create);
         ScreenManager.registerFactory(Containers.drawbridge, DrawbridgeScreen::create);
     }
 

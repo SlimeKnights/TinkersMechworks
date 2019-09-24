@@ -85,6 +85,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
 
         blit(guiLeft, guiTop, 0, 0, xSize, ySize); // Background
         blit(guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60); // Upgrades cutout
+        blit(guiLeft + xSize - 3, guiTop + ySize - 37, 52, 182, 29, 32); // Disguise cutout
 
         if(!isAdvanced) {
 //        drawSlicedBox(guiLeft + 34, guiTop + 35, 18, 18, 17, 166); // Disguise slot

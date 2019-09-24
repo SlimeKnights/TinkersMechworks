@@ -1,11 +1,13 @@
 package slimeknights.tmechworks.common.blocks.tileentity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -15,17 +17,23 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import slimeknights.mantle.tileentity.InventoryTileEntity;
+import slimeknights.tmechworks.client.model.DisguiseBakedModel;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
+import slimeknights.tmechworks.common.inventory.DisguiseContainer;
 import slimeknights.tmechworks.integration.waila.IInformationProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class RedstoneMachineTileEntity extends InventoryTileEntity implements IDisguisable, ITickableTileEntity, IInformationProvider {
+public abstract class RedstoneMachineTileEntity extends InventoryTileEntity implements ITickableTileEntity, IInformationProvider {
     private Inventory disguiseInventory;
 
     private int redstoneState;
@@ -38,7 +46,17 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     public RedstoneMachineTileEntity(TileEntityType<?> type, ITextComponent name, int inventorySize, int maxStackSize) {
         super(type, name, inventorySize, maxStackSize);
 
-        disguiseInventory = new Inventory(1);
+        disguiseInventory = new Inventory(1) {
+            @Override
+            public boolean isItemValidForSlot(int index, ItemStack stack) {
+                return stack.getItem() instanceof BlockItem;
+            }
+
+            @Override
+            public int getInventoryStackLimit() {
+                return 1;
+            }
+        };
     }
 
     /**
@@ -110,22 +128,38 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
      * Gets called the first tick this tile exists
      */
     public void init() {
-
+        disguiseInventory.addListener(inv -> refreshDisguise());
     }
 
-    @Override
     public ItemStack getDisguiseBlock() {
         return disguiseInventory.getStackInSlot(0);
     }
 
-    @Override
     public void setDisguiseBlock(ItemStack disguise) {
         disguiseInventory.setInventorySlotContents(0, disguise);
     }
 
-    @Override
-    public boolean canEditDisguise() {
-        return true;
+    public Inventory getDisguiseInventory() {
+        return disguiseInventory;
+    }
+
+    public void refreshDisguise() {
+        requestModelDataUpdate();
+        markDirtyFast();
+
+        BlockState state = getBlockState();
+        ItemStack item = getDisguiseBlock();
+        boolean hasDisguise = !item.isEmpty() && item.getItem() instanceof BlockItem;
+        state = state.with(RedstoneMachineBlock.HAS_DISGUISE, hasDisguise);
+
+        if(hasDisguise) {
+            BlockState disguiseState = ((BlockItem)item.getItem()).getBlock().getDefaultState();
+
+            state = state.with(RedstoneMachineBlock.LIGHT_VALUE, Math.max(disguiseState.getBlock().getLightValue(disguiseState, getWorld(), getPos()), disguiseState.getBlock().getLightValue(disguiseState)));
+        }
+
+        getWorld().setBlockState(getPos(), state);
+        getWorld().notifyBlockUpdate(getPos(), state, state, 3);
     }
 
     /**
@@ -255,6 +289,12 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         return stack;
     }
 
+    @Nonnull
+    @Override
+    public IModelData getModelData() {
+        return new ModelDataMap.Builder().withInitial(DisguiseBakedModel.DISGUISE, getDisguiseBlock()).build();
+    }
+
     @Override
     public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, PlayerEntity player) {
         if(type != InformationType.BODY)
@@ -271,6 +311,6 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     @Nullable
     @Override
     public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return null;
+        return new DisguiseContainer(id, playerInventory, this);
     }
 }

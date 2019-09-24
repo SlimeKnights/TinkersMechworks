@@ -11,21 +11,28 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
@@ -43,8 +50,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class RedstoneMachineBlock extends DirectionalBlock {
+    public static final BooleanProperty HAS_DISGUISE = BooleanProperty.create("has_disguise");
+    public static final IntegerProperty LIGHT_VALUE = IntegerProperty.create("light_value", 0, 15);
+
     public boolean dropState = true;
 
     private TileEntity cachedTE;
@@ -58,6 +71,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
         builder.add(FACING);
+
+        // Disguise properties
+        builder.add(HAS_DISGUISE);
+        builder.add(LIGHT_VALUE);
     }
 
     public boolean openGui(PlayerEntity player, World world, BlockPos pos) {
@@ -245,5 +262,85 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState){
         blockState.putInt("InventorySize", 0);
+    }
+
+    ////////////////////////
+    // Disguise Overrides //
+    ////////////////////////
+    public <T> T runOnDisguiseBlock(BlockState state, IBlockReader worldIn, BlockPos pos, Function<BlockState, T> func, Supplier<T> orElse) {
+        if(!state.get(HAS_DISGUISE))
+            return orElse.get();
+
+        TileEntity te = worldIn.getTileEntity(pos);
+
+        if(te instanceof RedstoneMachineTileEntity) {
+            ItemStack disguise = ((RedstoneMachineTileEntity)te).getDisguiseBlock();
+
+            if(disguise.getItem() instanceof BlockItem) {
+                return func.apply(((BlockItem) disguise.getItem()).getBlock().getDefaultState());
+            }
+        }
+
+        return orElse.get();
+    }
+
+    @Override
+    public boolean isVariableOpacity() {
+        return true;
+    }
+
+    @Override
+    public boolean isSolid(BlockState state) {
+        return !state.get(HAS_DISGUISE) && state.get(LIGHT_VALUE) == 0;
+    }
+
+    @Override
+    public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
+        return true;
+    }
+
+    @Override
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.isNormalCube(worldIn, pos), () -> super.isNormalCube(state, worldIn, pos));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getShape(worldIn, pos, context), () -> super.getShape(state, worldIn, pos, context));
+    }
+
+    @Override
+    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getRenderShape(worldIn, pos), () -> super.getRenderShape(state, worldIn, pos));
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getCollisionShape(worldIn, pos, context), () -> super.getCollisionShape(state, worldIn, pos, context));
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+        return runOnDisguiseBlock(state, reader, pos, disguise -> disguise.propagatesSkylightDown(reader, pos), () -> super.propagatesSkylightDown(state, reader, pos));
+    }
+
+    @Override
+    public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getOpacity(worldIn, pos), () -> super.getOpacity(state, worldIn, pos));
+    }
+
+    @Override
+    public boolean doesSideBlockRendering(BlockState state, IEnviromentBlockReader world, BlockPos pos, Direction face) {
+        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.doesSideBlockRendering(world, pos, face), () -> super.doesSideBlockRendering(state, world, pos, face));
+    }
+
+    @Override
+    public int getLightValue(BlockState state) {
+        return state.get(HAS_DISGUISE) ? state.get(LIGHT_VALUE) : 0;
+    }
+
+    @Override
+    public boolean canBeConnectedTo(BlockState state, IBlockReader world, BlockPos pos, Direction facing) {
+        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.canBeConnectedTo(world, pos, facing), () -> super.canBeConnectedTo(state, world, pos, facing));
     }
 }
