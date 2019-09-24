@@ -1,6 +1,5 @@
 package slimeknights.tmechworks.integration;
 
-import com.google.common.collect.ImmutableList;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
@@ -13,6 +12,7 @@ import slimeknights.tmechworks.client.gui.DrawbridgeScreen;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.library.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JeiPlugin
@@ -41,8 +41,22 @@ public class JeiIntegration implements IModPlugin {
         registration.addGuiContainerHandler(DrawbridgeScreen.class, new IGuiContainerHandler<DrawbridgeScreen>() {
             @Override
             public List<Rectangle2d> getGuiExtraAreas(DrawbridgeScreen gui) {
+                List<Rectangle2d> rects = new ArrayList<>();
+
+                int guiLeft = gui.getGuiLeft();
+                int guiTop = gui.getGuiTop();
+                int xSize = gui.getXSize();
+                int ySize = gui.getYSize();
+
                 // Upgrades UI cutout
-                return ImmutableList.of(new Rectangle2d(gui.getGuiLeft() - 44, gui.getGuiTop() + gui.getYSize() - 65, 47, 60));
+                rects.add(new Rectangle2d(guiLeft - 44, guiTop + ySize - 65, 47, 60));
+
+                if(gui.isAdvanced){
+                    rects.add(new Rectangle2d(guiLeft - 18, guiTop - 80, 213, 148)); // Advanced UI
+                    rects.add(new Rectangle2d(guiLeft + 191, guiTop + 4, 63, 60)); // Advanced arrows
+                }
+
+                return rects;
             }
         });
     }

@@ -2,12 +2,15 @@ package slimeknights.tmechworks.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.network.PacketDistributor;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
@@ -17,10 +20,13 @@ import slimeknights.tmechworks.common.network.packet.ServerReopenUiPacket;
 import slimeknights.tmechworks.common.network.packet.UpdatePlaceDirectionPacket;
 import slimeknights.tmechworks.library.Util;
 
+import java.util.List;
+
 public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation("tmechworks", "textures/gui/drawbridge.png");
+    public static final ResourceLocation ADVANCED_LOCATION = new ResourceLocation("tmechworks", "textures/gui/drawbridge_advanced.png");
 
-    private final boolean isAdvanced;
+    public final boolean isAdvanced;
     private final int slotCount;
 
     public DrawbridgeScreen(DrawbridgeContainer container, PlayerInventory inventory, ITextComponent name) {
@@ -38,7 +44,17 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     protected void init() {
         super.init();
 
-        ArrowWidget arrow = new ArrowWidget((this.width - this.xSize) / 2 + 110, (this.height - this.ySize) / 2 + 20, width, height, true, this::arrowClicked);
+        int aX = 0, aY = 0;
+
+        if(isAdvanced) {
+            aX = guiLeft + 192;
+            aY = guiTop + 10;
+        } else {
+            aX = (this.width - this.xSize) / 2 + 110;
+            aY = (this.height - this.ySize) / 2 + 20;
+        }            //blit(guiLeft + 191, guiTop + 4, 0, 196, 63, 60);
+
+        ArrowWidget arrow = new ArrowWidget(aX, aY, width, height, true, this::arrowClicked);
         updateSelection(arrow);
         addButton(arrow);
     }
@@ -67,19 +83,61 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(SCREEN_LOCATION);
 
-        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
-        blit(guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60);
+        blit(guiLeft, guiTop, 0, 0, xSize, ySize); // Background
+        blit(guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60); // Upgrades cutout
 
+        if(!isAdvanced) {
 //        drawSlicedBox(guiLeft + 34, guiTop + 35, 18, 18, 17, 166); // Disguise slot
-        drawSlicedBox(guiLeft + 75, guiTop + 31, 26, 26, 17, 166); // Drawbridge slot
+            drawSlicedBox(guiLeft + 75, guiTop + 31, 26, 26, 17, 166); // Drawbridge slot
+        } else {
+            this.minecraft.getTextureManager().bindTexture(ADVANCED_LOCATION);
+
+            blit(guiLeft - 18, guiTop - 80, 0, 0, 213, 148); // Advanced cutout
+            blit(guiLeft + 191, guiTop + 4, 0, 196, 63, 60); // Arrow cutout
+
+            drawAdvancedSlots();
+        }
+    }
+
+    private void drawAdvancedSlots() {
+        for(Slot s : container.mainSlots){
+            blit(guiLeft + s.xPos - 1, guiTop + s.yPos - 1, 0, 166, 18, 18);
+        }
+    }
+
+    @Override
+    protected void renderHoveredToolTip(int mouseX, int mouseY) {
+        if(this.hoveredSlot == null)
+            return;
+
+        if(!isAdvanced || this.hoveredSlot.getHasStack()) {
+            super.renderHoveredToolTip(mouseX, mouseY);
+        } else if(hoveredSlot.inventory == getContainer().getTile().slots) {
+            renderTooltip(I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1), mouseX, mouseY);
+        }
+    }
+
+    @Override
+    public List<String> getTooltipFromItem(ItemStack stack) {
+        List<String> list = super.getTooltipFromItem(stack);
+
+        if(isAdvanced && hoveredSlot.inventory == getContainer().getTile().slots) {
+            list.add("");
+            list.add(TextFormatting.GRAY + I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1));
+        }
+
+        return list;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
+        int screenTop = isAdvanced ? -80  : 0;
+
         String s = title.getFormattedText();
-        font.drawString(s, xSize / 2F - font.getStringWidth(s) / 2F, 6, 4210752);
+        font.drawString(s, xSize / 2F - font.getStringWidth(s) / 2F, screenTop + 6, 4210752);
+
         font.drawString(playerInventory.getDisplayName().getFormattedText(), 8, ySize - 96 + 2, 4210752);
 
         float scale = .75F;

@@ -47,5 +47,6 @@
   "tmechworks:widget.arrow.low": "Place Low",
 
   // GUI
-  "tmechworks:gui.upgrades": "Upgrades"
+  "tmechworks:gui.upgrades": "Upgrades",
+  "tmechworks:gui.blocknum": "Block #%d"
 }

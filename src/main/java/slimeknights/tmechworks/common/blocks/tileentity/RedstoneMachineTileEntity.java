@@ -18,7 +18,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import slimeknights.mantle.tileentity.InventoryTileEntity;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
-import slimeknights.tmechworks.integration.IInformationProvider;
+import slimeknights.tmechworks.integration.waila.IInformationProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

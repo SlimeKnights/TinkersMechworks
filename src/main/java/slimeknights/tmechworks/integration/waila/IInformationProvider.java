@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.integration;
+package slimeknights.tmechworks.integration.waila;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

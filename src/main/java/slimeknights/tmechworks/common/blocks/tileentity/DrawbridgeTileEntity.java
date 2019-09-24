@@ -66,7 +66,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         super(MechworksContent.TileEntities.drawbridge, new TranslationTextComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1);
 
         upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
-        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem);
+        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem).overrideStackLimit(64);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
                     return;
                 }
             } else {
-                if(extendedLength > stats.extendLength)
+                if (extendedLength > stats.extendLength)
                     extendedLength = stats.extendLength;
 
                 if (extendedLength <= 0) {
@@ -172,11 +172,10 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             World world = getWorld();
 
             // Clamp extended state to nearest air block
-            for(int i = 1; i <= extendedLength; i++){
+            for (int i = 1; i <= extendedLength; i++) {
                 BlockPos pos = new BlockPos(getPos().getX() + dir.getXOffset() * i, getPos().getY() + dir.getYOffset() * i, getPos().getZ() + dir.getZOffset() * i);
 
-                if(world.isAirBlock(pos))
-                {
+                if (world.isAirBlock(pos)) {
                     extendedLength = i - 1;
                     break;
                 }
@@ -191,7 +190,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         if (!stats.isAdvanced)
             return 0;
         else
-            return isExtended ? extendedLength - 1 : extendedLength;
+            return isExtended ? extendedLength : extendedLength - 1;
     }
 
     public boolean placeBlock(BlockPos pos, ItemStack stack) {
@@ -255,12 +254,12 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             ItemStack target = drops.stream().filter(x -> stack.isItemEqual(x) && ItemStack.areItemStackTagsEqual(stack, x)).findFirst().orElse(ItemStack.EMPTY);
 
             if (!target.isEmpty() && drops.remove(target)) {
-                int remainder = Math.max(stack.getCount() + target.getCount() - stack.getMaxStackSize(), 0);
+                int remainder = Math.max(stack.getCount() + target.getCount() - Math.min(stack.getMaxStackSize(), slots.getInventoryStackLimit()), 0);
                 int targetCount = target.getCount() - remainder;
 
                 stack.setCount(stack.getCount() + targetCount);
 
-                if(remainder > 0){
+                if (remainder > 0) {
                     target.setCount(remainder);
                     drops.add(target);
                 }
@@ -297,10 +296,10 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         BlockPos pos = getPos();
 
         // Drop items in removed slots
-        for(int i = slots.getSizeInventory() - 1; i >= blockSlots; i--) {
+        for (int i = slots.getSizeInventory() - 1; i >= blockSlots; i--) {
             ItemStack stack = slots.getStackInSlot(i);
 
-            if(!stack.isEmpty()) {
+            if (!stack.isEmpty()) {
                 InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
                 slots.setInventorySlotContents(i, ItemStack.EMPTY);
             }
@@ -308,6 +307,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         resize(UPGRADES_SIZE + blockSlots);
         slots.resize(blockSlots);
+        slots.overrideStackLimit(stats.isAdvanced ? 1 : 64);
 
         BlockState state = getWorld().getBlockState(getPos());
         getWorld().setBlockState(getPos(), state.with(DrawbridgeBlock.ADVANCED, stats.isAdvanced));
@@ -525,7 +525,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     public void setInventorySlotContents(int slot, @Nonnull ItemStack itemstack) {
         super.setInventorySlotContents(slot, itemstack);
 
-        if(upgrades.isSlotInInventory(slot))
+        if (upgrades.isSlotInInventory(slot))
             computeStats();
     }
 
@@ -661,7 +661,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         }
 
         public static ItemStack getByType(ToolType type) {
-            if(type == null)
+            if (type == null)
                 return PICKAXE;
 
             switch (type.getName()) {
