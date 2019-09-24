@@ -113,7 +113,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         if(!isAdvanced || this.hoveredSlot.getHasStack()) {
             super.renderHoveredToolTip(mouseX, mouseY);
         } else if(hoveredSlot.inventory == getContainer().getTile().slots) {
-            renderTooltip(I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1), mouseX, mouseY);
+            renderTooltip(TextFormatting.GRAY + I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1), mouseX, mouseY);
         }
     }
 
