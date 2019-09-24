@@ -42,6 +42,7 @@ public class TMechworks {
         bus.addListener(this::init);
         bus.addListener(this::postInit);
         bus.addListener(this::gatherData);
+        bus.addListener(this::setupClient);
 
         content = new MechworksContent();
         bus.register(content);

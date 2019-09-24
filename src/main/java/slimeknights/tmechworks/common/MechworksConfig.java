@@ -2,7 +2,6 @@ package slimeknights.tmechworks.common;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
-import slimeknights.tmechworks.TMechworks;
 
 import java.nio.file.Paths;
 
