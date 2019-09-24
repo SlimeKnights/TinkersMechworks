@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
@@ -15,7 +16,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootContext;
@@ -533,6 +534,35 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         updateFakePlayer(pos);
 
         return fakePlayer.get();
+    }
+
+    @Override
+    public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, CompoundNBT serverData, PlayerEntity player) {
+        super.getInformation(info, type, serverData, player);
+
+        if (type != InformationType.BODY) {
+            return;
+        }
+
+        info.add(new TranslationTextComponent(Util.prefix("machine.stats")));
+        info.add(new TranslationTextComponent(Util.prefix("drawbridge.stats.advanced"), stats.isAdvanced));
+        info.add(new TranslationTextComponent(Util.prefix("drawbridge.stats.length"), stats.extendLength));
+        info.add(new TranslationTextComponent(Util.prefix("drawbridge.stats.delay"), stats.extendDelay));
+        info.add(new StringTextComponent(""));
+
+        requireSneak(info, player, () -> {
+            info.add(new TranslationTextComponent(Util.prefix("machine.state")));
+            info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.moving"), serverData.getBoolean("moving")));
+            info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.extended"), serverData.getBoolean("extended")));
+            info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.extendedcount"), serverData.getInt("extendedCount")));
+        });
+    }
+
+    @Override
+    public void syncInformation(CompoundNBT nbt, ServerPlayerEntity player) {
+        nbt.putBoolean("extended", isExtended);
+        nbt.putBoolean("moving", isMoving);
+        nbt.putInt("extendedCount", extendedLength);
     }
 
     /**

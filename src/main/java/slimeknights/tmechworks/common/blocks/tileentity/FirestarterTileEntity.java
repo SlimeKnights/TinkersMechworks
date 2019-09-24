@@ -3,11 +3,13 @@ package slimeknights.tmechworks.common.blocks.tileentity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.blocks.FirestarterBlock;
@@ -63,8 +65,8 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
     }
 
     @Override
-    public void getInformation(@Nonnull List<String> info, InformationType type) {
-        super.getInformation(info, type);
+    public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, PlayerEntity player) {
+        super.getInformation(info, type, player);
         if(type != InformationType.BODY) {
             return;
         }
@@ -72,6 +74,6 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
         BlockState state = getWorld().getBlockState(getPos());
         boolean shouldExtinguish = state.get(FirestarterBlock.EXTINGUISH);
 
-        info.add(I18n.format(Util.prefix("hud.behaviour")) + ": " + I18n.format(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep"))));
+        info.add(new TranslationTextComponent(Util.prefix("hud.behaviour"), I18n.format(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))));
     }
 }

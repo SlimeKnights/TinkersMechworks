@@ -11,7 +11,6 @@ import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.util.ModelJsonGenerator;
@@ -23,6 +22,7 @@ import slimeknights.tmechworks.common.network.PacketHandler;
 @Mod(TMechworks.modId)
 public class TMechworks {
     public static final String modId = "tmechworks";
+    public static final String modName = "Tinkers' Mechworks";
 
     public static final Logger log = LogManager.getLogger(modId);
 

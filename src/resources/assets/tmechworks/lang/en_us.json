@@ -28,9 +28,21 @@
   "itemGroup.TinkersMechworks": "Tinkers' Mechworks",
 
   // HUD
-  "tmechworks:hud.behaviour": "Behaviour",
-  "tmechworks:hud.behaviour.firestarter.extinguish": "§9Extinguish",
-  "tmechworks:hud.behaviour.firestarter.keep": "§6Keep lit",
+  "tmechworks:tooltip.behaviour": "Behaviour: %s",
+  "tmechworks:tooltip.behaviour.firestarter.extinguish": "§9Extinguish",
+  "tmechworks:tooltip.behaviour.firestarter.keep": "§6Keep lit",
+
+  //// Stats
+  "tmechworks:machine.stats": "§lStats",
+  "tmechworks:drawbridge.stats.advanced": "Is Advanced: %s",
+  "tmechworks:drawbridge.stats.length": "Extend Distance: %d Blocks",
+  "tmechworks:drawbridge.stats.delay": "Extend Delay: %f",
+
+  //// State
+  "tmechworks:machine.state": "§lState",
+  "tmechworks:drawbridge.state.moving": "Is Moving: %s",
+  "tmechworks:drawbridge.state.extended": "Extended: %s",
+  "tmechworks:drawbridge.state.extendedcount": "Distance: %d Blocks",
 
   // Inventory
   "tmechworks:inventory.drawbridge": "Drawbridge",

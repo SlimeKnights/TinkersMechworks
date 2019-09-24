@@ -14,6 +14,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import slimeknights.mantle.tileentity.InventoryTileEntity;
@@ -255,11 +256,16 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     @Override
-    public void getInformation(@Nonnull List<String> info, InformationType type) {
+    public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, PlayerEntity player) {
         if(type != InformationType.BODY)
             return;
 
-        info.add(I18n.format("hud.msg.power") + ": " + getRedstoneState());
+        info.add(new TranslationTextComponent("tooltip.waila.power", getRedstoneState()));
+    }
+
+    @Override
+    public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, CompoundNBT serverData, PlayerEntity player) {
+        getInformation(info, type, player);
     }
 
     @Nullable
