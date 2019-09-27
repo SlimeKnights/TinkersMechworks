@@ -6,6 +6,8 @@
   "block.tmechworks.aluminum_block": "Block of Aluminum",
   "block.tmechworks.firestarter": "Firestarter",
   "block.tmechworks.drawbridge": "Drawbridge",
+  "block.tmechworks.copper_ore": "Copper Ore",
+  "block.tmechworks.aluminum_ore": "Aluminum Ore",
 
   // Items
   "item.tmechworks.book": "Mechanical Tinkering",

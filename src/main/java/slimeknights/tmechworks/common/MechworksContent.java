@@ -1,16 +1,16 @@
 package slimeknights.tmechworks.common;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.OreBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,6 +36,7 @@ import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.common.items.MechworksBookItem;
+import slimeknights.tmechworks.common.worldgen.MechworksWorld;
 
 import java.util.function.Supplier;
 
@@ -47,6 +48,8 @@ public class MechworksContent implements IRegisterUtil {
 
     @ObjectHolder(TMechworks.modId)
     public static class Blocks {
+        public static final OreBlock aluminum_ore = null;
+        public static final OreBlock copper_ore = null;
         public static final MetalBlock aluminum_block = null;
         public static final MetalBlock copper_block = null;
         public static final FirestarterBlock firestarter = null;
@@ -84,6 +87,11 @@ public class MechworksContent implements IRegisterUtil {
     public void registerBlocks(final RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> registry = event.getRegistry();
 
+        // Ores
+        register(registry, new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getHarvestLevel())), "aluminum_ore");
+        register(registry, new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getHarvestLevel())), "copper_ore");
+
+        // Metals
         register(registry, new MetalBlock(), "aluminum_block");
         register(registry, new MetalBlock(), "copper_block");
 
@@ -97,6 +105,10 @@ public class MechworksContent implements IRegisterUtil {
         IForgeRegistry<Item> registry = event.getRegistry();
 
         register(registry, new MechworksBookItem(), "book");
+
+        // Ores
+        registerBlockItem(registry, Blocks.aluminum_ore, tabMechworks);
+        registerBlockItem(registry, Blocks.copper_ore, tabMechworks);
 
         // Metals
         registerBlockItem(registry, Blocks.copper_block, tabMechworks);
@@ -142,15 +154,14 @@ public class MechworksContent implements IRegisterUtil {
 //    public void registerEntities(final RegistryEvent.Register<EntityType<?>> event){}
 
     public void preInit(FMLCommonSetupEvent event) {
-
     }
 
     public void init(InterModEnqueueEvent event) {
-
     }
 
     public void postInit(InterModProcessEvent event) {
         tabMechworks.setDisplayIcon(new ItemStack(Items.book));
+        MechworksWorld.registerWorldGeneration();
     }
 
     @Override

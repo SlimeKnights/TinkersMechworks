@@ -45,37 +45,15 @@ repositories {
 
 group = "slimeknights"
 
-// define the peroperties file
-//ext.configFile = file "build.properties"
-//configFile.withReader {
-    // Load config.  It shall from now be referenced as simply config or project.config
-//    def prop = new Properties()
-//    prop.load(it)
-//    project.ext.config = new ConfigSlurper().parse prop
-//}
-
 version = "${minecraft_version}-${mod_version}"
 
 minecraft {
-	mappings channel: mappings_channel, version: mappings_version
-	
-	runs {
-		client {
-			workingDirectory project.file('run')
-			
-			property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP,CORE,PULSAR'
-			property 'forge.logging.console.level', 'debug'
-			
-			mods {
-				tmechworks {
-					source sourceSets.main
-				}
-			}
-		}
-		
-		server {
-			workingDirectory project.file('run')
-			
+    mappings channel: mappings_channel, version: mappings_version
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP,CORE,PULSAR'
             property 'forge.logging.console.level', 'debug'
 
@@ -84,23 +62,21 @@ minecraft {
                     source sourceSets.main
                 }
             }
-		}
-		
-		data {
-			workingDirectory project.file('run')
-			
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP,CORE,PULSAR'
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP,CORE,PULSAR'
             property 'forge.logging.console.level', 'debug'
-			
-			args '--mod', 'tmechworks', '--all', '--output', file('generated/resources/')
-			
-			mods {
-				tmechworks {
-					source sourceSets.main
-				}
-			}
-		}
-	}
+
+            mods {
+                tmechworks {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 dependencies {
