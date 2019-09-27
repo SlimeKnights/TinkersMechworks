@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:smelting",
+  "type": "minecraft:blasting",
   "ingredient": {
     "item": "tmechworks:aluminum_ore"
   },
   "result": "tmechworks:aluminum_ingot",
   "experience": 1.0,
-  "cookingtime": 200
+  "cookingtime": 100
 }

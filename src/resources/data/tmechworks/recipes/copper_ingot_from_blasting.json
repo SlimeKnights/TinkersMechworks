@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:smelting",
+  "type": "minecraft:blasting",
   "ingredient": {
     "item": "tmechworks:copper_ore"
   },
   "result": "tmechworks:copper_ingot",
   "experience": 1.0,
-  "cookingtime": 200
+  "cookingtime": 100
 }
