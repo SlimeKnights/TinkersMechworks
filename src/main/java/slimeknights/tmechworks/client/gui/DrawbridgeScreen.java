@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -14,6 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.network.PacketDistributor;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
+import slimeknights.tmechworks.common.config.BlacklistConfig;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.network.PacketHandler;
 import slimeknights.tmechworks.common.network.packet.ServerReopenUiPacket;
@@ -125,6 +127,11 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         if(isAdvanced && hoveredSlot.inventory == getContainer().getTile().slots) {
             list.add("");
             list.add(TextFormatting.GRAY + I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1));
+        }
+
+        if(stack.getItem() instanceof BlockItem && BlacklistConfig.DRAWBRIDGE.isBlacklisted(((BlockItem)stack.getItem()).getBlock().getRegistryName())) {
+            list.add("");
+            list.add(I18n.format(Util.prefix("gui.blacklisted")));
         }
 
         return list;

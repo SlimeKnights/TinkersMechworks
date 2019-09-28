@@ -5,8 +5,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ExtensionPoint;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -15,17 +13,21 @@ import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.util.ModelJsonGenerator;
 import slimeknights.tmechworks.client.ClientProxy;
 import slimeknights.tmechworks.common.CommonProxy;
-import slimeknights.tmechworks.common.MechworksConfig;
+import slimeknights.tmechworks.common.config.BlacklistConfig;
+import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.network.PacketHandler;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Mod(TMechworks.modId)
 public class TMechworks {
     public static final String modId = "tmechworks";
     public static final String modName = "Tinkers' Mechworks";
+
+    public static final Path CONFIG_ROOT = Paths.get("config", "Tinkers Mechworks");
 
     public static final Logger log = LogManager.getLogger(modId);
 
@@ -49,10 +51,9 @@ public class TMechworks {
     }
 
     private void preInit(final FMLCommonSetupEvent event) {
-        File configPath = new File("config");
-        if(!configPath.exists())
-            configPath.mkdirs();
+        CONFIG_ROOT.toFile().mkdirs();
         MechworksConfig.load();
+        BlacklistConfig.ping();
 
         proxy.preInit();
 

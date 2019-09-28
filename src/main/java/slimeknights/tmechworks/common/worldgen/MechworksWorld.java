@@ -9,7 +9,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
-import slimeknights.tmechworks.common.MechworksConfig;
+import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.MechworksContent;
 
 import java.util.List;

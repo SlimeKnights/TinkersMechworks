@@ -25,7 +25,8 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ForgeEventFactory;
-import slimeknights.tmechworks.common.MechworksConfig;
+import slimeknights.tmechworks.common.config.BlacklistConfig;
+import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
@@ -67,7 +68,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         super(MechworksContent.TileEntities.drawbridge, new TranslationTextComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1);
 
         upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
-        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem).overrideStackLimit(64);
+        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !BlacklistConfig.DRAWBRIDGE.isBlacklisted(((BlockItem)stack.getItem()).getBlock().getRegistryName())).overrideStackLimit(64);
     }
 
     @Override
@@ -199,6 +200,9 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             return false;
         if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
             return false;
+        if(BlacklistConfig.DRAWBRIDGE.isBlacklisted(((BlockItem)stack.getItem()).getBlock().getRegistryName()))
+            return false;
+
 
         FakePlayer player = getFakePlayer(pos);
 

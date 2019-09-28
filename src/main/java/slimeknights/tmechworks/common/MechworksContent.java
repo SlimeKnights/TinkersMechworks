@@ -6,7 +6,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,14 +30,13 @@ import slimeknights.tmechworks.common.blocks.FirestarterBlock;
 import slimeknights.tmechworks.common.blocks.MetalBlock;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.blocks.tileentity.FirestarterTileEntity;
+import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.inventory.DisguiseContainer;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.common.items.MechworksBookItem;
 import slimeknights.tmechworks.common.worldgen.MechworksWorld;
-
-import java.util.function.Supplier;
 
 public class MechworksContent implements IRegisterUtil {
     private Logger log = LogManager.getLogger(TMechworks.modId + ".content");

@@ -63,5 +63,10 @@
 
   // GUI
   "tmechworks:gui.upgrades": "Upgrades",
-  "tmechworks:gui.blocknum": "Block #%d"
+  "tmechworks:gui.blocknum": "Block #%d",
+  "tmechworks:gui.blacklisted": "§4BLACKLISTED",
+
+  // Integrations
+  "config.waila.plugin_tmechworks": "Tinkers' Mechworks",
+  "config.waila.plugin_tmechworks.redstone_machine": "Redstone Machines"
 }
