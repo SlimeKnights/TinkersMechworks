@@ -1,16 +1,23 @@
-package slimeknights.tmechworks.common;
+package slimeknights.tmechworks.common.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
+import slimeknights.tmechworks.TMechworks;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
 public class MechworksConfig {
+    public static final Path CONFIG_PATH = Paths.get(TMechworks.CONFIG_ROOT.toString(), "Config.toml");
+
     public static void load() {
-        SPEC.setConfig(CommentedFileConfig.builder(Paths.get("config", "Tinkers Mechworks.toml")).build());
+        SPEC.setConfig(CommentedFileConfig.builder(CONFIG_PATH).build());
     }
 
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -59,7 +66,7 @@ public class MechworksConfig {
                         .comment("A list of fully qualified biome names, for example \"minecraft:river\"")
                         .defineList("filter", filter, (obj) -> obj != null && ResourceLocation.isResouceNameValid(obj.toString()));
 
-                BUILDER.pop();
+                BUILDER.pop(2);
             }
         }
     }
