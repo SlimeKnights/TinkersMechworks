@@ -1,0 +1,65 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "group": "tmechworks:upgrade",
+        "pattern": [
+          "ACA",
+          "PBP",
+          " A "
+        ],
+        "key": {
+          "B": {
+            "item": "tmechworks:upgrade_blank"
+          },
+          "P": {
+            "item": "minecraft:piston"
+          },
+          "C": {
+            "tag": "forge:ingots/copper"
+          },
+          "A": {
+            "tag": "forge:ingots/aluminum"
+          }
+        },
+        "result": {
+          "item": "tmechworks:upgrade_drawbridge_distance"
+        }
+      },
+      "conditions": [
+        {
+          "type": "forge:tag_empty",
+          "tag": "forge:ingots/aluminum_brass"
+        }
+      ]
+    },
+    {
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "group": "tmechworks:upgrade",
+        "pattern": [
+          "A A",
+          "PBP",
+          "A A"
+        ],
+        "key": {
+          "B": {
+            "item": "tmechworks:upgrade_blank"
+          },
+          "P": {
+            "item": "minecraft:piston"
+          },
+          "A": {
+            "tag": "forge:ingots/aluminum_brass"
+          }
+        },
+        "result": {
+          "item": "tmechworks:upgrade_drawbridge_distance"
+        }
+      },
+      "conditions": []
+    }
+  ]
+}

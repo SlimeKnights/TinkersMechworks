@@ -3,6 +3,7 @@ package slimeknights.tmechworks.common.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -110,7 +111,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
             shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
-        tooltip.add(new TranslationTextComponent(Util.prefix("hud.behaviour")).appendText(": ").appendSibling(new TranslationTextComponent(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent(Util.prefix("hud.behaviour"), I18n.format(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).applyTextStyle(TextFormatting.GRAY));
     }
 
     @Override

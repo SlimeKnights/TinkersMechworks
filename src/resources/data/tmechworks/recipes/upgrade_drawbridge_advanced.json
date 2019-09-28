@@ -1,0 +1,77 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "group": "tmechworks:upgrade",
+        "pattern": [
+          "CHC",
+          "LBL",
+          "ASA"
+        ],
+        "key": {
+          "B": {
+            "item": "tmechworks:upgrade_blank"
+          },
+          "H": {
+            "item": "minecraft:hopper"
+          },
+          "C": {
+            "tag": "forge:ingots/copper"
+          },
+          "A": {
+            "tag": "forge:ingots/aluminum"
+          },
+          "L": {
+            "tag": "forge:storage_blocks/lapis"
+          },
+          "S": {
+            "item": "minecraft:chest"
+          }
+        },
+        "result": {
+          "item": "tmechworks:upgrade_drawbridge_advanced"
+        }
+      },
+      "conditions": [
+        {
+          "type": "forge:tag_empty",
+          "tag": "forge:ingots/aluminum_brass"
+        }
+      ]
+    },
+    {
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "group": "tmechworks:upgrade",
+        "pattern": [
+          "AHA",
+          "LBL",
+          "ASA"
+        ],
+        "key": {
+          "B": {
+            "item": "tmechworks:upgrade_blank"
+          },
+          "A": {
+            "tag": "forge:ingots/aluminum_brass"
+          },
+          "H": {
+            "item": "minecraft:hopper"
+          },
+          "L": {
+            "tag": "forge:storage_blocks/lapis"
+          },
+          "S": {
+            "item": "minecraft:chest"
+          }
+        },
+        "result": {
+          "item": "tmechworks:upgrade_drawbridge_advanced"
+        }
+      },
+      "conditions": []
+    }
+  ]
+}

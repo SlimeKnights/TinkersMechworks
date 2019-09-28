@@ -38,15 +38,18 @@ public class MechworksBlockItem extends BlockItem {
         if(!(block instanceof RedstoneMachineBlock))
             return super.initCapabilities(stack, nbt);
 
-        nbt = stack.getOrCreateTag();
+        nbt = stack.getTag();
+
+        if(nbt == null)
+            nbt = new CompoundNBT();
 
         CompoundNBT tags = new CompoundNBT();
         ((RedstoneMachineBlock)block).setDefaultNBT(nbt, tags);
 
-        if(!nbt.contains("BlockEntityTag"))
+        if(!tags.isEmpty() && !nbt.contains("BlockEntityTag"))
             nbt.put("BlockEntityTag", tags);
-
-        stack.setTag(nbt);
+        if(!nbt.isEmpty())
+            stack.setTag(nbt);
 
         return null;
     }
@@ -68,5 +71,7 @@ public class MechworksBlockItem extends BlockItem {
         if (I18n.hasKey(getTranslationKey(stack) + ".tooltip")) {
             tooltip.addAll(LocUtils.getTooltips(I18n.format(getTranslationKey(stack) + ".tooltip", tooltipFormatSupplier.get())).stream().map(x -> x.applyTextStyle(TextFormatting.GRAY)).collect(Collectors.toList()));
         }
+
+        super.addInformation(stack, world, tooltip, flag);
     }
 }
