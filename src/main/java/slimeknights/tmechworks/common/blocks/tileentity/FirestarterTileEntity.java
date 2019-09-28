@@ -47,7 +47,7 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
         BlockState forwardState = world.getBlockState(position);
         if (getRedstoneState() > 0)
         {
-            if (forwardState.getBlock() == Blocks.AIR && Blocks.FIRE.isValidPosition(forwardState, world, position))
+            if (forwardState.isAir(getWorld(), position) && Blocks.FIRE.isValidPosition(forwardState, world, position))
             {
                 world.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
                 world.setBlockState(position, Blocks.FIRE.getDefaultState(), 11);
