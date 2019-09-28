@@ -19,6 +19,7 @@
   "item.tmechworks.aluminum_nugget": "Aluminum Nugget",
 
   //// Upgrades
+  "item.tmechworks.upgrade_blank": "Blank Upgrade",
   "item.tmechworks.upgrade_drawbridge_advanced": "Drawbridge Advanced Upgrade",
   "item.tmechworks.upgrade_drawbridge_distance": "Drawbridge Distance Upgrade",
   "item.tmechworks.upgrade_speed": "Speed Upgrade",

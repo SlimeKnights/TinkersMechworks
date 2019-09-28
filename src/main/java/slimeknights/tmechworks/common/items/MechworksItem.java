@@ -8,6 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import slimeknights.mantle.util.LocUtils;
+import slimeknights.tmechworks.common.MechworksContent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -18,8 +19,12 @@ public class MechworksItem extends Item {
     private Object[] tooltipFormat;
     private Supplier<Object[]> tooltipFormatSupplier = () -> tooltipFormat;
 
+    public MechworksItem() {
+        this(new Properties());
+    }
+
     public MechworksItem(Properties properties) {
-        super(properties);
+        super(properties.group(MechworksContent.tabMechworks));
     }
 
     public MechworksItem setTooltipFormat(Object... format){

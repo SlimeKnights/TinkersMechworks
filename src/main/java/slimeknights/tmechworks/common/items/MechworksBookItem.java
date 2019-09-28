@@ -19,7 +19,7 @@ public class MechworksBookItem extends MechworksItem {
     private static final BookData book = BookLoader.registerBook("tmechworks:book", true, false, new FileRepository("tmechworks:book"));
 
     public MechworksBookItem() {
-        super(new Item.Properties().group(MechworksContent.tabMechworks).maxStackSize(1));
+        super(new Item.Properties().maxStackSize(1));
     }
 
     @Nonnull

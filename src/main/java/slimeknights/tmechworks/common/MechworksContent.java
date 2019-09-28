@@ -36,6 +36,7 @@ import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.common.items.MechworksBookItem;
+import slimeknights.tmechworks.common.items.MechworksItem;
 import slimeknights.tmechworks.common.worldgen.MechworksWorld;
 
 public class MechworksContent implements IRegisterUtil {
@@ -59,6 +60,7 @@ public class MechworksContent implements IRegisterUtil {
         public static final MechworksBookItem book = null;
 
         // Upgrades
+        public static final MachineUpgradeItem upgrade_blank = null;
         public static final MachineUpgradeItem upgrade_drawbridge_advanced = null;
         public static final MachineUpgradeItem upgrade_drawbridge_distance = null;
         public static final MachineUpgradeItem upgrade_speed = null;
@@ -105,26 +107,27 @@ public class MechworksContent implements IRegisterUtil {
         register(registry, new MechworksBookItem(), "book");
 
         // Ores
-        registerBlockItem(registry, Blocks.aluminum_ore, tabMechworks);
-        registerBlockItem(registry, Blocks.copper_ore, tabMechworks);
+        registerBlockItem(registry, Blocks.aluminum_ore);
+        registerBlockItem(registry, Blocks.copper_ore);
 
         // Metals
-        registerBlockItem(registry, Blocks.copper_block, tabMechworks);
-        registerBlockItem(registry, Blocks.aluminum_block, tabMechworks);
+        registerBlockItem(registry, Blocks.copper_block);
+        registerBlockItem(registry, Blocks.aluminum_block);
 
-        register(registry, new Item(new Item.Properties().group(tabMechworks)), "copper_ingot");
-        register(registry, new Item(new Item.Properties().group(tabMechworks)), "aluminum_ingot");
-        register(registry, new Item(new Item.Properties().group(tabMechworks)), "copper_nugget");
-        register(registry, new Item(new Item.Properties().group(tabMechworks)), "aluminum_nugget");
+        register(registry, new MechworksItem(), "copper_ingot");
+        register(registry, new MechworksItem(), "aluminum_ingot");
+        register(registry, new MechworksItem(), "copper_nugget");
+        register(registry, new MechworksItem(), "aluminum_nugget");
 
         // Machines
-        registerBlockItem(registry, Blocks.firestarter, tabMechworks);
-        registerBlockItem(registry, Blocks.drawbridge, tabMechworks);
+        registerBlockItem(registry, Blocks.firestarter);
+        registerBlockItem(registry, Blocks.drawbridge);
 
         // Machine Upgrades
+        register(registry, new MechworksItem(), "upgrade_blank");
         register(registry, new MachineUpgradeItem(stats -> stats.isAdvanced = true), "upgrade_drawbridge_advanced");
-        register(registry, new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.DRAWBRIDGE.extendUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.extendUpgradeValue}), "upgrade_drawbridge_distance");
-        register(registry, new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.DRAWBRIDGE.speedUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.speedUpgradeValue}), "upgrade_speed");
+        register(registry, new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.DRAWBRIDGE.extendUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.extendUpgradeValue.get()}), "upgrade_drawbridge_distance");
+        register(registry, new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.DRAWBRIDGE.speedUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.speedUpgradeValue.get()}), "upgrade_speed");
     }
 
     @SubscribeEvent
@@ -163,8 +166,8 @@ public class MechworksContent implements IRegisterUtil {
     }
 
     @Override
-    public BlockItem registerBlockItem(IForgeRegistry<Item> registry, Block block, ItemGroup group) {
-        BlockItem itemBlock = new MechworksBlockItem(block, new Item.Properties().group(group));
+    public BlockItem registerBlockItem(IForgeRegistry<Item> registry, Block block) {
+        BlockItem itemBlock = new MechworksBlockItem(block, new Item.Properties().group(tabMechworks));
         return this.register(registry, itemBlock, block.getRegistryName());
     }
 }
