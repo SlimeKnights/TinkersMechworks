@@ -5,7 +5,10 @@ import net.minecraft.block.OreBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -60,7 +63,7 @@ public class MechworksContent implements IRegisterUtil {
         public static final MechworksBookItem book = null;
 
         // Upgrades
-        public static final MachineUpgradeItem upgrade_blank = null;
+        public static final MechworksItem upgrade_blank = null;
         public static final MachineUpgradeItem upgrade_drawbridge_advanced = null;
         public static final MachineUpgradeItem upgrade_drawbridge_distance = null;
         public static final MachineUpgradeItem upgrade_speed = null;

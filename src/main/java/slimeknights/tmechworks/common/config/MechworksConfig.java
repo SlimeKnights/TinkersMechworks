@@ -1,9 +1,9 @@
 package slimeknights.tmechworks.common.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import slimeknights.tmechworks.TMechworks;
+import slimeknights.tmechworks.library.Util;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,7 +63,7 @@ public class MechworksConfig {
                         .define("isWhitelist", isWhitelist);
                 this.filter = BUILDER
                         .comment("A list of fully qualified biome names, for example \"minecraft:river\"")
-                        .defineList("filter", filter, (obj) -> obj != null && ResourceLocation.isResouceNameValid(obj.toString()));
+                        .defineList("filter", filter, (obj) -> obj != null && Util.validateResourceName(obj.toString()));
 
                 BUILDER.pop(2);
             }

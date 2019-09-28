@@ -7,6 +7,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import slimeknights.tmechworks.TMechworks;
+import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nullable;
 import java.nio.file.Path;
@@ -44,7 +45,7 @@ public class ListConfig {
 
         list = builder
                 .comment(comment.toString())
-                .defineList(type.path, defaultValues, obj -> ResourceLocation.isResouceNameValid(obj.toString()));
+                .defineList(type.path, defaultValues, obj -> Util.validateResourceName(obj.toString()));
 
         spec = builder.build();
 

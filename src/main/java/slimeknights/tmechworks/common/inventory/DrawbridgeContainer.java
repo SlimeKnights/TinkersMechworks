@@ -75,7 +75,6 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static DrawbridgeContainer factory(int id, PlayerInventory playerInventory, PacketBuffer extraData) {
         BlockPos pos = extraData.readBlockPos();
 

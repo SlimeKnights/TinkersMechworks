@@ -1,6 +1,6 @@
 package slimeknights.tmechworks.common;
 
-import slimeknights.tmechworks.TMechworks;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class CommonProxy {
     public void preInit() {
@@ -17,5 +17,9 @@ public class CommonProxy {
 
     public void setupClient() {
 
+    }
+
+    public PlayerEntity getPlayer() {
+        return null;
     }
 }

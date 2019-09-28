@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import org.apache.commons.lang3.StringUtils;
 import slimeknights.tmechworks.TMechworks;
 
 import java.lang.ref.WeakReference;
@@ -57,4 +58,24 @@ public class Util
         return String.format("%s:%s", RESOURCE, name.toLowerCase(Locale.US));
     }
 
+    public static boolean validateResourceName(String resourceName){
+        String namespace = "minecraft";
+        String path = resourceName;
+
+        int i = resourceName.indexOf(':');
+        if (i >= 0) {
+            path = resourceName.substring(i + 1);
+            if (i >= 1) {
+                namespace = resourceName.substring(0, i);
+            }
+        }
+
+        if(StringUtils.isEmpty(namespace))
+            namespace = "minecraft";
+
+        boolean namespaceValid = namespace.chars().allMatch(c -> c == 95 || c == 45 || c >= 97 && c <= 122 || c >= 48 && c <= 57 || c == 46);
+        boolean pathValid = path.chars().allMatch(c -> c == 95 || c == 45 || c >= 97 && c <= 122 || c >= 48 && c <= 57 || c == 47 || c == 46);
+
+        return namespaceValid && pathValid;
+    }
 }

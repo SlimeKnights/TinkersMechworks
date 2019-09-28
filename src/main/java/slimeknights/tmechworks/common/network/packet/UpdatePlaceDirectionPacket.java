@@ -1,6 +1,5 @@
 package slimeknights.tmechworks.common.network.packet;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -8,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
+import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.blocks.tileentity.IPlaceDirection;
 import slimeknights.tmechworks.common.network.PacketHandler;
 
@@ -44,7 +44,7 @@ public class UpdatePlaceDirectionPacket {
 
                 PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.dimension), msg);
             } else {
-                player = Minecraft.getInstance().player;
+                player = TMechworks.proxy.getPlayer();
             }
 
             context.enqueueWork(() -> {

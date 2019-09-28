@@ -1,21 +1,21 @@
 package slimeknights.tmechworks;
 
-
-import net.minecraft.data.DataGenerator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.*;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import slimeknights.mantle.util.ModelJsonGenerator;
 import slimeknights.tmechworks.client.ClientProxy;
 import slimeknights.tmechworks.common.CommonProxy;
+import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.config.ListConfig;
 import slimeknights.tmechworks.common.config.MechworksConfig;
-import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.network.PacketHandler;
 
 import java.nio.file.Path;
@@ -31,7 +31,7 @@ public class TMechworks {
     public static final Logger log = LogManager.getLogger(modId);
 
     public static TMechworks instance;
-    public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+    public static CommonProxy proxy = DistExecutor.runForDist(()->()->new ClientProxy(), ()->()->new CommonProxy());
     public static MechworksContent content;
 
     public TMechworks() {
@@ -42,7 +42,6 @@ public class TMechworks {
         bus.addListener(this::preInit);
         bus.addListener(this::init);
         bus.addListener(this::postInit);
-        bus.addListener(this::gatherData);
         bus.addListener(this::setupClient);
 
         content = new MechworksContent();
@@ -74,10 +73,5 @@ public class TMechworks {
 
     private void setupClient(final FMLClientSetupEvent event) {
         proxy.setupClient();
-    }
-
-    private void gatherData(final GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        generator.addProvider(new ModelJsonGenerator(generator, modId));
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+import slimeknights.tmechworks.TMechworks;
 
 import java.util.function.Supplier;
 
@@ -28,7 +29,7 @@ public class ClientSetCursorStackPacket {
     public static class Handler {
         public static void handle(final ClientSetCursorStackPacket msg, Supplier<NetworkEvent.Context> ctx) {
             NetworkEvent.Context context = ctx.get();
-            PlayerEntity player = Minecraft.getInstance().player;
+            PlayerEntity player = TMechworks.proxy.getPlayer();
 
             context.enqueueWork(() -> {
                 player.inventory.setItemStack(msg.stack);

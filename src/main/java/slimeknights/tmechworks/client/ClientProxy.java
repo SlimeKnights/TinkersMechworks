@@ -1,10 +1,19 @@
 package slimeknights.tmechworks.client;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import slimeknights.mantle.client.book.BookLoader;
+import slimeknights.mantle.client.book.data.BookData;
+import slimeknights.mantle.client.book.repository.FileRepository;
 import slimeknights.tmechworks.common.CommonProxy;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.event.ModelBakeEventListener;
 
 public class ClientProxy extends CommonProxy {
+    public static final BookData book = BookLoader.registerBook("tmechworks:book", true, false, new FileRepository("tmechworks:book"));
+
     @Override
     public void preInit() {
         super.preInit();
@@ -21,6 +30,11 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void setupClient() {
         // TODO mod config gui
+    }
+
+    @Override
+    public PlayerEntity getPlayer() {
+        return Minecraft.getInstance().player;
     }
 
     // Hack to enable config gui

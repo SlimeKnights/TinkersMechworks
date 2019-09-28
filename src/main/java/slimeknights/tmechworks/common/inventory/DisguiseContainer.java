@@ -21,7 +21,6 @@ public class DisguiseContainer extends BaseContainer<RedstoneMachineTileEntity> 
         addPlayerInventory(playerInventory, 8, 84);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static DisguiseContainer factory(int id, PlayerInventory playerInventory, PacketBuffer extraData) {
         BlockPos pos = extraData.readBlockPos();
 
