@@ -13,12 +13,11 @@ import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.util.ModelJsonGenerator;
 import slimeknights.tmechworks.client.ClientProxy;
 import slimeknights.tmechworks.common.CommonProxy;
-import slimeknights.tmechworks.common.config.BlacklistConfig;
+import slimeknights.tmechworks.common.config.ListConfig;
 import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.network.PacketHandler;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -53,7 +52,7 @@ public class TMechworks {
     private void preInit(final FMLCommonSetupEvent event) {
         CONFIG_ROOT.toFile().mkdirs();
         MechworksConfig.load();
-        BlacklistConfig.ping();
+        ListConfig.ping();
 
         proxy.preInit();
 

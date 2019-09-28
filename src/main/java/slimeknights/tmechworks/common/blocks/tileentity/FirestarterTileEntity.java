@@ -13,6 +13,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.blocks.FirestarterBlock;
+import slimeknights.tmechworks.common.config.ListConfig;
 import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
@@ -52,10 +53,10 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
                 world.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
                 world.setBlockState(position, Blocks.FIRE.getDefaultState(), 11);
             }
-        } else if (shouldExtinguish && (forwardState.getBlock() == Blocks.FIRE || forwardState.getBlock() == Blocks.NETHER_PORTAL))
+        } else if (shouldExtinguish && ListConfig.FIRESTARTER_WHITELIST.isListed(forwardState.getBlock().getRegistryName()))
         {
             world.playSound(null, loc.getX() + 0.5D, loc.getY() + 0.5D, loc.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, Util.rand.nextFloat() * 0.4F + 0.8F);
-            world.setBlockState(position, Blocks.AIR.getDefaultState());
+            world.removeBlock(position, false);
         }
     }
 
