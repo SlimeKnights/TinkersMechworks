@@ -5,9 +5,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import slimeknights.tmechworks.TMechworks;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -17,7 +14,9 @@ public class MechworksConfig {
     public static final Path CONFIG_PATH = Paths.get(TMechworks.CONFIG_ROOT.toString(), "Config.toml");
 
     public static void load() {
-        SPEC.setConfig(CommentedFileConfig.builder(CONFIG_PATH).build());
+        CommentedFileConfig config = CommentedFileConfig.builder(CONFIG_PATH).build();
+        config.load();
+        SPEC.setConfig(config);
     }
 
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
