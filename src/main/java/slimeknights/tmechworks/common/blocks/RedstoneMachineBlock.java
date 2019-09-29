@@ -64,7 +64,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     protected RedstoneMachineBlock(Material material) {
         super(Block.Properties.create(material).hardnessAndResistance(3.5F));
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        this.setDefaultState(this.stateContainer.getBaseState()
+                .with(FACING, Direction.NORTH)
+                .with(HAS_DISGUISE, false)
+                .with(LIGHT_VALUE, 0));
     }
 
     @Override
@@ -137,7 +140,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
 
-        if(te instanceof RedstoneMachineTileEntity) {
+        if (te instanceof RedstoneMachineTileEntity) {
             List<ItemStack> drops = NonNullList.create();
 
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
@@ -162,9 +165,9 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
         TileEntity te = worldIn.getTileEntity(pos);
 
-        if(te instanceof IInventory) {
-            if(!dropState)
-                InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)te);
+        if (te instanceof IInventory) {
+            if (!dropState)
+                InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) te);
 
             worldIn.updateComparatorOutputLevel(pos, this);
         }
@@ -175,7 +178,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
     }
 
-    public boolean blockMatches(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving){
+    public boolean blockMatches(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         return state.getBlock() == newState.getBlock();
     }
 
@@ -260,7 +263,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         return true;
     }
 
-    public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState){
+    public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState) {
         blockState.putInt("InventorySize", 0);
     }
 
@@ -268,15 +271,15 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     // Disguise Overrides //
     ////////////////////////
     public <T> T runOnDisguiseBlock(BlockState state, IBlockReader worldIn, BlockPos pos, Function<BlockState, T> func, Supplier<T> orElse) {
-        if(!state.get(HAS_DISGUISE))
+        if (!state.get(HAS_DISGUISE))
             return orElse.get();
 
         TileEntity te = worldIn.getTileEntity(pos);
 
-        if(te instanceof RedstoneMachineTileEntity) {
-            ItemStack disguise = ((RedstoneMachineTileEntity)te).getDisguiseBlock();
+        if (te instanceof RedstoneMachineTileEntity) {
+            ItemStack disguise = ((RedstoneMachineTileEntity) te).getDisguiseBlock();
 
-            if(disguise.getItem() instanceof BlockItem) {
+            if (disguise.getItem() instanceof BlockItem) {
                 return func.apply(((BlockItem) disguise.getItem()).getBlock().getDefaultState());
             }
         }
