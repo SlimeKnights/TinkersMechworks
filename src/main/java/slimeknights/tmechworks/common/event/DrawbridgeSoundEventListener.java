@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.library.Util;
 
