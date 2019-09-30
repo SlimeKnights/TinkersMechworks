@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +35,7 @@ import java.util.List;
 
 public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItemConstruct
 {
+    public static final BlockTags.Wrapper WHITELIST = new BlockTags.Wrapper(new ResourceLocation("tmechworks:firestarter_extinguish_whitelist"));
     public static final BooleanProperty EXTINGUISH = BooleanProperty.create("extinguish");
 
     public FirestarterBlock()

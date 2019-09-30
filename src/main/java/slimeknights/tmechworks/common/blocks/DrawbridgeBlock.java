@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 
 public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemConstruct
 {
+    public static final BlockTags.Wrapper BLACKLIST = new BlockTags.Wrapper(new ResourceLocation("tmechworks:drawbridge_blacklist"));
     public static final BooleanProperty ADVANCED = BooleanProperty.create("advanced");
 
     public DrawbridgeBlock()

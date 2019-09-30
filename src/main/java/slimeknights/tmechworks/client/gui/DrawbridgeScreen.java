@@ -1,11 +1,11 @@
 package slimeknights.tmechworks.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -13,8 +13,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.network.PacketDistributor;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
+import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
-import slimeknights.tmechworks.common.config.ListConfig;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.network.PacketHandler;
 import slimeknights.tmechworks.common.network.packet.ServerReopenUiPacket;
@@ -128,7 +128,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
             list.add(TextFormatting.GRAY + I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1));
         }
 
-        if(stack.getItem() instanceof BlockItem && ListConfig.DRAWBRIDGE_BLACKLIST.isListed(((BlockItem)stack.getItem()).getBlock().getRegistryName())) {
+        if(DrawbridgeBlock.BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))) {
             list.add("");
             list.add(I18n.format(Util.prefix("gui.blacklisted")));
         }

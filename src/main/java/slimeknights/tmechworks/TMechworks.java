@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import slimeknights.tmechworks.client.ClientProxy;
 import slimeknights.tmechworks.common.CommonProxy;
 import slimeknights.tmechworks.common.MechworksContent;
-import slimeknights.tmechworks.common.config.ListConfig;
 import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.network.PacketHandler;
 
@@ -51,7 +50,6 @@ public class TMechworks {
     private void preInit(final FMLCommonSetupEvent event) {
         CONFIG_ROOT.toFile().mkdirs();
         MechworksConfig.load();
-        ListConfig.ping();
 
         proxy.preInit();
 
