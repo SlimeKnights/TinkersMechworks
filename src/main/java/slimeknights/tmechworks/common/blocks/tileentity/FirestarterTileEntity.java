@@ -74,6 +74,6 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
         BlockState state = getWorld().getBlockState(getPos());
         boolean shouldExtinguish = state.get(FirestarterBlock.EXTINGUISH);
 
-        info.add(new TranslationTextComponent(Util.prefix("hud.behaviour"), I18n.format(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))));
+        info.add(new TranslationTextComponent(Util.prefix("tooltip.behaviour"), I18n.format(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))));
     }
 }

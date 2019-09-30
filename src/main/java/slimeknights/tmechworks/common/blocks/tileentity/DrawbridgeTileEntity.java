@@ -555,12 +555,14 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         info.add(new TranslationTextComponent(Util.prefix("drawbridge.stats.delay"), stats.extendDelay));
         info.add(new StringTextComponent(""));
 
-        requireSneak(info, player, () -> {
-            info.add(new TranslationTextComponent(Util.prefix("machine.state")));
-            info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.moving"), serverData.getBoolean("moving")));
-            info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.extended"), serverData.getBoolean("extended")));
-            info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.extendedcount"), serverData.getInt("extendedCount")));
-        });
+        if(!serverData.isEmpty()) {
+            requireSneak(info, player, () -> {
+                info.add(new TranslationTextComponent(Util.prefix("machine.state")));
+                info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.moving"), serverData.getBoolean("moving")));
+                info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.extended"), serverData.getBoolean("extended")));
+                info.add(new TranslationTextComponent(Util.prefix("drawbridge.state.extendedcount"), serverData.getInt("extendedCount")));
+            });
+        }
     }
 
     @Override

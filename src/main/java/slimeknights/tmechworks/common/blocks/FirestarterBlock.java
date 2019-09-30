@@ -113,7 +113,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
             shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
-        tooltip.add(new TranslationTextComponent(Util.prefix("hud.behaviour"), I18n.format(Util.prefix("hud.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent(Util.prefix("tooltip.behaviour"), I18n.format(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).applyTextStyle(TextFormatting.GRAY));
     }
 
     @Override
