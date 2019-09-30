@@ -202,7 +202,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             return false;
         if(DrawbridgeBlock.BLACKLIST.contains(Block.getBlockFromItem(stack.getItem())))
             return false;
-
+        if(Block.getBlockFromItem(stack.getItem()).getDefaultState().getBlockHardness(getWorld(), getPos()) < 0)
+            return false;
 
         FakePlayer player = getFakePlayer(pos);
 
@@ -234,7 +235,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             return false;
 
         BlockState state = world.getBlockState(pos);
-        if (state.isAir(world, pos)) {
+        if (state.isAir(world, pos) || state.getBlockHardness(getWorld(), getPos()) < 0 || DrawbridgeBlock.BLACKLIST.contains(state.getBlock())) {
             return false;
         }
 
