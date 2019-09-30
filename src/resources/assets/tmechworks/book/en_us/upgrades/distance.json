@@ -1,0 +1,12 @@
+{
+  "text1": [
+    {
+      "text": "Distance upgrades increase the distance that the drawbridge can extend."
+    }
+  ],
+  "image": {
+    "item": {
+      "id": "tmechworks:upgrade_drawbridge_distance"
+    }
+  }
+}

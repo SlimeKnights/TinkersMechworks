@@ -1,0 +1,17 @@
+{
+  "text1": [
+    {
+      "text": "Advanced upgrades make it so that you can specify each block that the drawbridge will place."
+    }
+  ],
+  "text2": [
+    {
+      "text": "Advanced upgrades change the drawbridge UI, increasing the amount of slots to equal the distance and change the maximum stack size of each slot to 1."
+    }
+  ],
+  "image": {
+    "item": {
+      "id": "tmechworks:upgrade_drawbridge_advanced"
+    }
+  }
+}

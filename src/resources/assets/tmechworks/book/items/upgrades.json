@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": "tmechworks:upgrade_blank"
+    },
+    {
+      "id": "tmechworks:upgrade_speed"
+    },
+    {
+      "id": "tmechworks:upgrade_drawbridge_distance"
+    },
+    {
+      "id": "tmechworks:upgrade_drawbridge_advanced"
+    }
+  ]
+}

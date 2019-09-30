@@ -1,0 +1,32 @@
+[
+  {
+    "name": "speed",
+    "type": "text with left image etch",
+    "data": "upgrades/speed.json"
+  },
+  {
+    "name": "speed_craft",
+    "type": "crafting",
+    "data": "upgrades/speed_craft.json"
+  },
+  {
+    "name": "distance",
+    "type": "text with left image etch",
+    "data": "upgrades/distance.json"
+  },
+  {
+    "name": "distance_craft",
+    "type": "crafting",
+    "data": "upgrades/distance_craft.json"
+  },
+  {
+    "name": "advanced",
+    "type": "text with left image etch",
+    "data": "upgrades/advanced.json"
+  },
+  {
+    "name": "advanced_craft",
+    "type": "crafting",
+    "data": "upgrades/advanced_craft.json"
+  }
+]

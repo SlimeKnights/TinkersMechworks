@@ -1,0 +1,12 @@
+{
+  "text1": [
+    {
+      "text": "Speed upgrades reduce the delay between each cycle of the drawbridge."
+    }
+  ],
+  "image": {
+    "item": {
+      "id": "tmechworks:upgrade_speed"
+    }
+  }
+}

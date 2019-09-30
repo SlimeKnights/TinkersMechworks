@@ -28,5 +28,14 @@
         }
       }
     }
+  },
+  {
+    "name": "upgrades",
+    "data": "sections/upgrades.json",
+    "icon": {
+      "item": {
+        "itemList": "items/upgrades.json"
+      }
+    }
   }
 ]
