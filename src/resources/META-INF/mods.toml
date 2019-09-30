@@ -21,4 +21,4 @@ logoFile=""
     [[dependencies.tmechworks]]
         modId="mantle"
         mandatory=true
-        versionRange="[1.4.23,)"
+        versionRange="[1.4.29,)"
