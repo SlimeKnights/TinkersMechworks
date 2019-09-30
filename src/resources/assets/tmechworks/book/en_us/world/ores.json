@@ -1,0 +1,20 @@
+{
+  "title": "Ores",
+  "text1": [
+    {
+      "text": "Two ores generate in the overworld if enabled, aluminum and copper."
+    }
+  ],
+  "text2": [
+    {
+      "text": "They generate in approximately equal proportions. Both aluminum and copper are components of most of the devices available to a tinkerer."
+    },
+    {
+      "text": "These ores will also complement Tinkers' Construct, and allow you to make aluminum brass. If aluminum brass is present, these recipes will also adapt to use it instead.",
+      "paragraph": true
+    }
+  ],
+  "image": {
+    "file": "images/ores.png"
+  }
+}

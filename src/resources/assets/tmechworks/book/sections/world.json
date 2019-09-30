@@ -1,0 +1,7 @@
+[
+  {
+    "name": "intro",
+    "type": "text with right image etch",
+    "data": "world/ores.json"
+  }
+]

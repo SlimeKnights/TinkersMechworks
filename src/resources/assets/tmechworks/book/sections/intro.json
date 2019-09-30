@@ -1,7 +1,7 @@
 [
   {
-    "name": "test",
+    "name": "intro",
     "type": "text",
-    "data": "intro/test.json"
+    "data": "intro/intro.json"
   }
 ]

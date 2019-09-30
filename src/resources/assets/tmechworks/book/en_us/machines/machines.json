@@ -1,0 +1,15 @@
+{
+    "text": [
+        {
+            "text": "Redstone machines are machines that are controlled by redstone or that control redstone. Redstone machines can be disguised to look like another block by placing said block in the disguise slot of the machine"
+        },
+        {
+            "text": "Machines that do not have a GUI can be shift+right-clicked with an empty hand to edit their disguise.",
+            "paragraph": true
+        },
+        {
+            "text": "Redstone machines are created with a blank upgrade at their core, which can be seen as a machine frame",
+            "paragraph": true
+        }
+    ]
+}

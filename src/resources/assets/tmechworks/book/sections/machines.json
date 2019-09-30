@@ -1,0 +1,32 @@
+[
+  {
+    "name": "machines",
+    "type": "text",
+    "data": "machines/machines.json"
+  },
+  {
+    "name": "machines2",
+    "type": "crafting",
+    "data": "machines/machines2.json"
+  },
+  {
+    "name": "firestarter",
+    "type": "text with left image etch",
+    "data": "machines/firestarter.json"
+  },
+  {
+    "name": "firestarter_craft",
+    "type": "crafting",
+    "data": "machines/firestarter_craft.json"
+  },
+  {
+    "name": "drawbridge",
+    "type": "text with left image etch",
+    "data": "machines/drawbridge.json"
+  },
+  {
+    "name": "drawbridge_craft",
+    "type": "crafting",
+    "data": "machines/drawbridge_craft.json"
+  }
+]

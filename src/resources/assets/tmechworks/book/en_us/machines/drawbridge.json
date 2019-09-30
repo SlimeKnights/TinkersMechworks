@@ -1,0 +1,23 @@
+{
+    "text1": [
+        {
+            "text": "The Drawbridge is a device that can extend a range of blocks in front of it when provided with a redstone signal."
+        }
+    ],
+    "text2": [
+        {
+            "text": "When provided with a redstone signal, the drawbridge will extend up to 16 blocks (configurable) outwards from the front face, and when that signal is removed, it will retract those blocks.",
+            "paragraph": true
+        },
+        {
+            "text": "Warning: any block drops that do not fit into the slot will be dropped into the world",
+            "paragraph": true,
+            "color": "dark_red"
+        }
+    ],
+    "image": {
+        "item": {
+            "id": "tmechworks:drawbridge"
+        }
+    }
+}

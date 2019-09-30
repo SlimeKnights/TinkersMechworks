@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "tmechworks:upgrade_blank"
+    }
+  ],
+  "result": {
+    "item": "tmechworks:book",
+    "count": 1
+  }
+}

@@ -1,0 +1,31 @@
+{
+    "text1": [
+        {
+            "text": "The Firestarter is a device that can set fire to the block in front of it when provided with a redstone signal."
+        }
+    ],
+    "text2": [
+        {
+            "text": "It has two modes that affect what it does when the redstone signal disappears, either to keep the fire lit or to extinguish it. You can tell apart between the two modes by the color of the corners on the sides of the block, either "
+        },
+        {
+            "text": "blue",
+            "color": "blue"
+        },
+        {
+            "text": " for extinguish or "
+        },
+        {
+            "text": "orange",
+            "color": "gold"
+        },
+        {
+            "text": " for keep lit."
+        }
+    ],
+    "image": {
+        "item": {
+            "id": "tmechworks:firestarter"
+        }
+    }
+}

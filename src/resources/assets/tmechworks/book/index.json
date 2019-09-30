@@ -4,16 +4,28 @@
     "data": "sections/intro.json",
     "icon": {
       "item": {
-        "id": "minecraft:lime_banner"
+        "id": "tmechworks:book"
       }
     }
   },
   {
-    "name": "intro2test",
-    "data": "sections/intro.json",
+    "name": "world",
+    "data": "sections/world.json",
     "icon": {
       "item": {
-        "id": "minecraft:apple"
+        "itemList": "items/ore.json"
+      }
+    }
+  },
+  {
+    "name": "machines",
+    "data": "sections/machines.json",
+    "icon": {
+      "item": {
+        "id": "tmechworks:drawbridge",
+        "nbt": {
+          "drawAdvanced": true
+        }
       }
     }
   }
