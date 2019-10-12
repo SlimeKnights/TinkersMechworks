@@ -1,6 +1,7 @@
 package slimeknights.tmechworks.common.event;
 
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -35,8 +36,13 @@ public class ModelBakeEventListener {
 
         for(int i = 0; i < registry.size(); i++){
             Map.Entry<ResourceLocation, IBakedModel> model = registry.get(i);
+
             String modelId = model.getKey().toString();
-            modelId = modelId.substring(0, modelId.indexOf("#"));
+
+            if(model.getKey() instanceof ModelResourceLocation) {
+                ModelResourceLocation modelRes = (ModelResourceLocation)model.getKey();
+                modelId = modelRes.getNamespace() + ":" + modelRes.getPath();
+            }
 
             if(disguiseables.contains(modelId)) {
                 event.getModelRegistry().put(model.getKey(), new DisguiseBakedModel(model.getValue()));
