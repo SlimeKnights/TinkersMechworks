@@ -1,7 +1,7 @@
 package slimeknights.tmechworks.common.blocks.tileentity;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -17,10 +17,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import slimeknights.mantle.tileentity.InventoryTileEntity;
@@ -66,27 +64,32 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         if (isFirstTick)
             return;
 
-        Direction facing = getWorld().getBlockState(getPos()).get(RedstoneMachineBlock.FACING);
+        Direction facing = Direction.NORTH;
+
+        if (hasFacingDirection()) {
+            facing = getWorld().getBlockState(getPos()).get(RedstoneMachineBlock.FACING);
+        }
+
         int oldPow = redstoneState;
 
         Direction[] directions = Direction.values();
         int maxPow = 0;
 
-        for(Direction dir : directions) {
-            if(dir != facing){
+        for (Direction dir : directions) {
+            if (!hasFacingDirection() || dir != facing) {
                 int pow = world.getRedstonePower(pos.offset(dir), dir);
-                if(pow > maxPow)
+                if (pow > maxPow)
                     maxPow = pow;
             }
         }
 
         int downPow = world.getRedstonePower(pos, Direction.DOWN);
-        if(downPow > maxPow)
+        if (downPow > maxPow)
             maxPow = downPow;
 
         redstoneState = maxPow;
 
-        if(maxPow != oldPow) {
+        if (maxPow != oldPow) {
             onRedstoneUpdate();
         }
         onBlockUpdate();
@@ -105,7 +108,8 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     /**
      * Called when redstone state is updated, but the redstone state remains unchanged
      */
-    public void onBlockUpdate() {}
+    public void onBlockUpdate() {
+    }
 
     /**
      * @return The redstone power level
@@ -152,8 +156,8 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         boolean hasDisguise = !item.isEmpty() && item.getItem() instanceof BlockItem;
         state = state.with(RedstoneMachineBlock.HAS_DISGUISE, hasDisguise);
 
-        if(hasDisguise) {
-            BlockState disguiseState = ((BlockItem)item.getItem()).getBlock().getDefaultState();
+        if (hasDisguise) {
+            BlockState disguiseState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
 
             state = state.with(RedstoneMachineBlock.LIGHT_VALUE, Math.max(disguiseState.getBlock().getLightValue(disguiseState, getWorld(), getPos()), disguiseState.getBlock().getLightValue(disguiseState)));
         }
@@ -169,7 +173,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         tags.putInt("InventorySize", getSizeInventory());
         writeInventoryToNBT(tags);
 
-        if(this.hasCustomName()) {
+        if (this.hasCustomName()) {
             tags.putString("CustomName", ITextComponent.Serializer.toJson(this.inventoryTitle));
         }
 
@@ -192,7 +196,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     public void readItemData(CompoundNBT tags) {
         super.read(tags);
 
-        if(tags.contains("Disguise")){
+        if (tags.contains("Disguise")) {
             CompoundNBT itemNBT = tags.getCompound("Disguise");
 
             ItemStack disguise = ItemStack.read(itemNBT);
@@ -221,7 +225,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
     @Override
     public void writeInventoryToNBT(CompoundNBT tag) {
-        if(!isEmpty())
+        if (!isEmpty())
             super.writeInventoryToNBT(tag);
     }
 
@@ -266,7 +270,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
             }
 
             for (PlayerEntity player : world.getPlayers()) {
-                ((ServerPlayerEntity)player).connection.sendPacket(packetUpdateTileEntity);
+                ((ServerPlayerEntity) player).connection.sendPacket(packetUpdateTileEntity);
             }
         }
     }
@@ -279,7 +283,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
         stack.setTagInfo("BlockEntityTag", tags);
 
-        if(this.hasCustomName()){
+        if (this.hasCustomName()) {
             CompoundNBT name = new CompoundNBT();
             name.putString("Name", ITextComponent.Serializer.toJson(inventoryTitle));
 
@@ -297,7 +301,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
     @Override
     public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, PlayerEntity player) {
-        if(type != InformationType.BODY)
+        if (type != InformationType.BODY)
             return;
 
         info.add(new TranslationTextComponent("tooltip.waila.power", getRedstoneState()));
@@ -312,5 +316,16 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     @Override
     public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new DisguiseContainer(id, playerInventory, this);
+    }
+
+    public final boolean hasFacingDirection() {
+        BlockState state = getBlockState();
+
+        if(state.getBlock() instanceof RedstoneMachineBlock)
+        {
+            return ((RedstoneMachineBlock)state.getBlock()).hasFacingDirection();
+        }
+
+        return state.has(DirectionalBlock.FACING);
     }
 }

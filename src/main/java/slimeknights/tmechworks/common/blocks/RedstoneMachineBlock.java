@@ -48,9 +48,7 @@ import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -65,15 +63,20 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     protected RedstoneMachineBlock(Material material) {
         super(Block.Properties.create(material).hardnessAndResistance(3.5F));
         this.setDefaultState(this.stateContainer.getBaseState()
-                .with(FACING, Direction.NORTH)
                 .with(HAS_DISGUISE, false)
                 .with(LIGHT_VALUE, 0));
+
+        if(hasFacingDirection()) {
+            this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+        }
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        builder.add(FACING);
+        if(hasFacingDirection()) {
+            builder.add(FACING);
+        }
 
         // Disguise properties
         builder.add(HAS_DISGUISE);
@@ -116,10 +119,11 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        if (!hasFacingDirection())
+        if (!hasFacingDirection()) {
             return super.getStateForPlacement(context);
+        }
 
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+        return super.getStateForPlacement(context).with(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
