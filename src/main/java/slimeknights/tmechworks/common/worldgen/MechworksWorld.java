@@ -3,16 +3,17 @@ package slimeknights.tmechworks.common.worldgen;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.OverworldBiomeProvider;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
-import slimeknights.tmechworks.common.config.MechworksConfig;
+import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.tmechworks.common.MechworksContent;
+import slimeknights.tmechworks.common.config.MechworksConfig;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MechworksWorld {
     private static final List<OreProperties> OVERWORLD_ORES = ImmutableList.of(
@@ -25,7 +26,10 @@ public class MechworksWorld {
             return;
         }
 
-        for (Biome biome : OverworldBiomeProvider.BIOMES_TO_SPAWN_IN) {
+        /*
+         * TODO: https://github.com/MinecraftForge/MinecraftForge/pull/6250
+         */
+        for (Biome biome : ForgeRegistries.BIOMES.getValues().stream().filter(x -> x.getCategory() != Biome.Category.THEEND && x.getCategory() != Biome.Category.NETHER).collect(Collectors.toList())) {
             addOresTo(biome);
         }
     }
