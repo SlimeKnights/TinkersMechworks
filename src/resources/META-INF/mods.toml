@@ -1,7 +1,7 @@
 modLoader="javafml"
 loaderVersion="[24,)"
 issueTrackerURL="https://github.com/SlimeKnights/TinkersMechworks/issues"
-logoFile=""
+logoFile="TMechworks.png"
 
 [[mods]]
     modId="tmechworks"
