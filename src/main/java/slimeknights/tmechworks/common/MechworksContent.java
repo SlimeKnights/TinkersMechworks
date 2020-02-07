@@ -42,6 +42,8 @@ import slimeknights.tmechworks.common.items.MechworksBookItem;
 import slimeknights.tmechworks.common.items.MechworksItem;
 import slimeknights.tmechworks.common.worldgen.MechworksWorld;
 
+import javax.annotation.Nonnull;
+
 public class MechworksContent implements IRegisterUtil {
     private Logger log = LogManager.getLogger(TMechworks.modId + ".content");
 
@@ -50,35 +52,35 @@ public class MechworksContent implements IRegisterUtil {
 
     @ObjectHolder(TMechworks.modId)
     public static class Blocks {
-        public static final OreBlock aluminum_ore = null;
-        public static final OreBlock copper_ore = null;
-        public static final MetalBlock aluminum_block = null;
-        public static final MetalBlock copper_block = null;
-        public static final FirestarterBlock firestarter = null;
-        public static final DrawbridgeBlock drawbridge = null;
+        public static final OreBlock aluminum_ore = empty();
+        public static final OreBlock copper_ore = empty();
+        public static final MetalBlock aluminum_block = empty();
+        public static final MetalBlock copper_block = empty();
+        public static final FirestarterBlock firestarter = empty();
+        public static final DrawbridgeBlock drawbridge = empty();
     }
 
     @ObjectHolder(TMechworks.modId)
     public static class Items {
-        public static final MechworksBookItem book = null;
+        public static final MechworksBookItem book = empty();
 
         // Upgrades
-        public static final MechworksItem upgrade_blank = null;
-        public static final MachineUpgradeItem upgrade_drawbridge_advanced = null;
-        public static final MachineUpgradeItem upgrade_drawbridge_distance = null;
-        public static final MachineUpgradeItem upgrade_speed = null;
+        public static final MechworksItem upgrade_blank = empty();
+        public static final MachineUpgradeItem upgrade_drawbridge_advanced = empty();
+        public static final MachineUpgradeItem upgrade_drawbridge_distance = empty();
+        public static final MachineUpgradeItem upgrade_speed = empty();
     }
 
     @ObjectHolder(TMechworks.modId)
     public static class TileEntities {
-        public static final TileEntityType<?> firestarter = null;
-        public static final TileEntityType<?> drawbridge = null;
+        public static final TileEntityType<?> firestarter = empty();
+        public static final TileEntityType<?> drawbridge = empty();
     }
 
     @ObjectHolder(TMechworks.modId)
     public static class Containers {
-        public static final ContainerType<DisguiseContainer> disguise = null;
-        public static final ContainerType<DrawbridgeContainer> drawbridge = null;
+        public static final ContainerType<DisguiseContainer> disguise = empty();
+        public static final ContainerType<DrawbridgeContainer> drawbridge = empty();
     }
 
     @Override
@@ -172,5 +174,14 @@ public class MechworksContent implements IRegisterUtil {
     public BlockItem registerBlockItem(IForgeRegistry<Item> registry, Block block) {
         BlockItem itemBlock = new MechworksBlockItem(block, new Item.Properties().group(tabMechworks));
         return this.register(registry, itemBlock, block.getRegistryName());
+    }
+
+    /**
+     * Jank workaround to having to set all object holder items to null, will trick validator into not complaining about nulls
+     */
+    @Nonnull
+    private static <T> T empty() {
+        //noinspection ConstantConditions
+        return null;
     }
 }

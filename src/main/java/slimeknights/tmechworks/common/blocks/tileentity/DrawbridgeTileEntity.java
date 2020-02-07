@@ -481,34 +481,34 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         player.rotationYaw = 0;
         player.rotationPitch = 0;
-        player.posX = pos.getX();
-        player.posY = pos.getY();
-        player.posZ = pos.getZ();
+        float posX = pos.getX();
+        float posY = pos.getY();
+        float posZ = pos.getZ();
 
         switch (placeDirection) {
             case NORTH:
                 player.rotationYaw = 0;
-                player.posZ += 2;
+                posZ += 2;
                 break;
             case SOUTH:
                 player.rotationYaw = 180;
-                player.posZ -= 2;
+                posZ -= 2;
                 break;
             case UP:
                 player.rotationPitch = 90;
-                player.posY += 2;
+                posY += 2;
                 break;
             case DOWN:
                 player.rotationPitch = -90;
-                player.posY -= 2;
+                posY -= 2;
                 break;
             case EAST:
                 player.rotationYaw = 90;
-                player.posX -= 2;
+                posX -= 2;
                 break;
             case WEST:
                 player.rotationYaw = -90;
-                player.posX += 2;
+                posX += 2;
                 break;
         }
 
@@ -525,6 +525,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         player.prevRotationYaw = player.rotationYaw;
         player.rotationYawHead = player.rotationYaw;
         player.prevRotationYawHead = player.rotationYawHead;
+
+        player.setPosition(posX, posY, posZ);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package slimeknights.tmechworks.client;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.player.PlayerEntity;
 import slimeknights.mantle.client.book.BookLoader;
 import slimeknights.mantle.client.book.data.BookData;
@@ -21,13 +23,18 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         super.init();
 
-        ModelBakeEventListener.registerDisguiseBlock(MechworksContent.Blocks.drawbridge.getRegistryName());
-        ModelBakeEventListener.registerDisguiseBlock(MechworksContent.Blocks.firestarter.getRegistryName());
+        registerDisguiseBlock(MechworksContent.Blocks.drawbridge);
+        registerDisguiseBlock(MechworksContent.Blocks.firestarter);
     }
 
     @Override
     public void setupClient() {
         // TODO mod config gui
+    }
+
+    private void registerDisguiseBlock(Block block) {
+        ModelBakeEventListener.registerDisguiseBlock(block.getRegistryName());
+        RenderTypeLookup.setRenderLayer(block, rt -> true);
     }
 
     @Override
