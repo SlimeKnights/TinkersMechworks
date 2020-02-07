@@ -43,6 +43,12 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
 
                 if(RenderTypeLookup.canRenderInLayer(disguiseState, MinecraftForgeClient.getRenderLayer())) {
                     IBakedModel model = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(disguiseState);
+
+                    // Avoid infinite recursion when setting the disguise to another disguisable block
+                    if(model instanceof DisguiseBakedModel) {
+                        return ((DisguiseBakedModel) model).getSuperQuads(state, side, rand, extraData);
+                    }
+
                     return model.getQuads(disguiseState, side, rand, extraData);
                 } else {
                     return Collections.emptyList();
@@ -50,6 +56,10 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
             }
         }
 
+        return getSuperQuads(state, side, rand, extraData);
+    }
+
+    private List<BakedQuad> getSuperQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         return super.getQuads(state, side, rand, extraData);
     }
 
