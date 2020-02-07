@@ -63,7 +63,7 @@ public class MechworksWorld {
                 return;
             }
 
-            biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Biome.createDecoratedFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, state, frequency), Placement.COUNT_RANGE, countRange));
+            biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, state, frequency)).func_227228_a_(Placement.COUNT_RANGE.func_227446_a_(countRange)));
         }
     }
 }

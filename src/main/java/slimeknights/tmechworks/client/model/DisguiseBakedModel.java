@@ -3,16 +3,14 @@ package slimeknights.tmechworks.client.model;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
@@ -43,7 +41,7 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
                 if(disguiseState.has(DirectionalBlock.FACING))
                     disguiseState = disguiseState.with(DirectionalBlock.FACING, state.get(DirectionalBlock.FACING));
 
-                if(disguiseState.canRenderInLayer(MinecraftForgeClient.getRenderLayer())) {
+                if(RenderTypeLookup.canRenderInLayer(disguiseState, MinecraftForgeClient.getRenderLayer())) {
                     IBakedModel model = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(disguiseState);
                     return model.getQuads(disguiseState, side, rand, extraData);
                 } else {
@@ -57,7 +55,7 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
 
     @Nonnull
     @Override
-    public IModelData getModelData(@Nonnull IEnviromentBlockReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+    public IModelData getModelData(@Nonnull ILightReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
         return super.getModelData(world, pos, state, tileData);
     }
 }
