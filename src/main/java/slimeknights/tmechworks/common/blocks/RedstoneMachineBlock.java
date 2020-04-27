@@ -57,10 +57,8 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     public boolean dropState = true;
 
-    private TileEntity cachedTE;
-
     protected RedstoneMachineBlock(Material material) {
-        super(Block.Properties.create(material).hardnessAndResistance(3.5F));
+        super(Block.Properties.create(material).hardnessAndResistance(3.5F).notSolid());
         this.setDefaultState(this.stateContainer.getBaseState()
                 .with(HAS_DISGUISE, false)
                 .with(LIGHT_VALUE, 0));
@@ -296,11 +294,6 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         return true;
     }
 
-//    @Override
-//    public boolean isSolid(BlockState state) {
-//        return !state.get(HAS_DISGUISE) && state.get(LIGHT_VALUE) == 0;
-//    }
-
     @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.isNormalCube(worldIn, pos), () -> super.isNormalCube(state, worldIn, pos));
@@ -328,13 +321,8 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     @Override
     public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getOpacity(worldIn, pos), () -> super.getOpacity(state, worldIn, pos));
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getOpacity(worldIn, pos), worldIn::getMaxLightLevel);
     }
-
-//    @Override
-//    public boolean doesSideBlockRendering(BlockState state, IEnviromentBlockReader world, BlockPos pos, Direction face) {
-//        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.doesSideBlockRendering(world, pos, face), () -> super.doesSideBlockRendering(state, world, pos, face));
-//    }
 
     @Override
     public int getLightValue(BlockState state) {

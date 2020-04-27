@@ -164,7 +164,9 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         }
 
         getWorld().setBlockState(getPos(), state);
+
         getWorld().notifyBlockUpdate(getPos(), from, state, 3);
+        getWorld().getLightManager().checkBlock(getPos());
     }
 
     /**
