@@ -152,6 +152,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         markDirtyFast();
 
         BlockState state = getBlockState();
+        BlockState from = state;
         ItemStack item = getDisguiseBlock();
         boolean hasDisguise = !item.isEmpty() && item.getItem() instanceof BlockItem;
         state = state.with(RedstoneMachineBlock.HAS_DISGUISE, hasDisguise);
@@ -163,7 +164,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         }
 
         getWorld().setBlockState(getPos(), state);
-        getWorld().notifyBlockUpdate(getPos(), state, state, 3);
+        getWorld().notifyBlockUpdate(getPos(), from, state, 3);
     }
 
     /**

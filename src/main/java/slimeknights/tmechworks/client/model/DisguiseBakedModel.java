@@ -30,7 +30,7 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
     private final Predicate<RenderType> renderTypeLookup;
 
     public DisguiseBakedModel(IBakedModel originalModel) {
-        this(originalModel, RenderType.solid());
+        this(originalModel, RenderType.getSolid());
     }
 
     public DisguiseBakedModel(IBakedModel originalModel, RenderType defaultRenderType) {

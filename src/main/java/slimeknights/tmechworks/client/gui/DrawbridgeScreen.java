@@ -33,8 +33,8 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public DrawbridgeScreen(DrawbridgeContainer container, PlayerInventory inventory, ITextComponent name) {
         super(container, inventory, name);
 
-        isAdvanced = container.getTile().stats.isAdvanced;
-        slotCount = container.getTile().slots.getSizeInventory();
+        isAdvanced = container.getTileEntity().stats.isAdvanced;
+        slotCount = container.getTileEntity().slots.getSizeInventory();
     }
 
     public static DrawbridgeScreen create(DrawbridgeContainer container, PlayerInventory player, ITextComponent title){
@@ -64,11 +64,11 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public void tick() {
         super.tick();
 
-        DrawbridgeTileEntity te = container.getTile();
+        DrawbridgeTileEntity te = container.getTileEntity();
 
         // Reinitialize UI if the drawbridge size or type changes
         if(isAdvanced != te.stats.isAdvanced || slotCount != te.slots.getSizeInventory()) {
-            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(container.getTile().getPos()));
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(container.getTileEntity().getPos()));
         }
     }
 
@@ -114,7 +114,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
 
         if(!isAdvanced || this.hoveredSlot.getHasStack()) {
             super.renderHoveredToolTip(mouseX, mouseY);
-        } else if(hoveredSlot.inventory == getContainer().getTile().slots) {
+        } else if(hoveredSlot.inventory == getContainer().getTileEntity().slots) {
             renderTooltip(TextFormatting.GRAY + I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1), mouseX, mouseY);
         }
     }
@@ -123,7 +123,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public List<String> getTooltipFromItem(ItemStack stack) {
         List<String> list = super.getTooltipFromItem(stack);
 
-        if(isAdvanced && hoveredSlot.inventory == getContainer().getTile().slots) {
+        if(isAdvanced && hoveredSlot.inventory == getContainer().getTileEntity().slots) {
             list.add("");
             list.add(TextFormatting.GRAY + I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1));
         }
@@ -157,8 +157,8 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     }
 
     private void arrowClicked(ArrowWidget widget, ArrowWidget.Arrow arrow) {
-        PacketHandler.send(PacketDistributor.SERVER.noArg(), new UpdatePlaceDirectionPacket(container.getTile().getPos(), arrow.ordinal()));
-        container.getTile().setPlaceDirection(arrow.ordinal());
+        PacketHandler.send(PacketDistributor.SERVER.noArg(), new UpdatePlaceDirectionPacket(container.getTileEntity().getPos(), arrow.ordinal()));
+        container.getTileEntity().setPlaceDirection(arrow.ordinal());
         updateSelection(widget);
     }
 
@@ -168,8 +168,8 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
                 arrow.setState(a, ArrowWidget.ArrowState.ENABLED);
         }
 
-        arrow.setState(ArrowWidget.Arrow.values()[container.getTile().getRawPlaceDirection().ordinal()], ArrowWidget.ArrowState.SELECTED);
-        arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + container.getTile().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
+        arrow.setState(ArrowWidget.Arrow.values()[container.getTileEntity().getRawPlaceDirection().ordinal()], ArrowWidget.ArrowState.SELECTED);
+        arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + container.getTileEntity().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
     }
 
     private void drawSlicedBox(int x, int y, int width, int height, int u, int v) {
