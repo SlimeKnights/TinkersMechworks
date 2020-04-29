@@ -1,29 +1,23 @@
 package slimeknights.tmechworks.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.network.PacketDistributor;
-import slimeknights.tmechworks.client.gui.components.ArrowWidget;
-import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
+import slimeknights.tmechworks.TMechworks;
+import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
+import slimeknights.tmechworks.client.gui.components.DisguiseStateWidget;
+import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
 import slimeknights.tmechworks.common.inventory.DisguiseContainer;
-import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
-import slimeknights.tmechworks.common.network.PacketHandler;
-import slimeknights.tmechworks.common.network.packet.ServerReopenUiPacket;
-import slimeknights.tmechworks.common.network.packet.UpdatePlaceDirectionPacket;
-import slimeknights.tmechworks.library.Util;
-
-import java.util.List;
 
 public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
-    public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation("tmechworks", "textures/gui/generic_1.png");
+    public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/generic_1.png");
+
+    private DisguiseStateWidget disguiseWidget;
 
     public DisguiseScreen(DisguiseContainer container, PlayerInventory inventory, ITextComponent name) {
         super(container, inventory, name);
@@ -31,6 +25,29 @@ public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
 
     public static DisguiseScreen create(DisguiseContainer container, PlayerInventory player, ITextComponent title){
         return new DisguiseScreen(container, player, title);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        disguiseWidget = new DisguiseStateWidget(guiLeft + 99, guiTop + 30, container.getTileEntity());
+        addButton(disguiseWidget);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        RedstoneMachineTileEntity te = container.getTileEntity();
+        ItemStack disguise = te.getDisguiseBlock();
+
+        if (disguise.getItem() instanceof BlockItem) {
+            BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().getDefaultState();
+            disguiseWidget.setState(DisguiseStates.getForState(disguiseState), te.getDisguiseState());
+        } else {
+            disguiseWidget.setState(null, null);
+        }
     }
 
     @Override
@@ -42,7 +59,7 @@ public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(SCREEN_LOCATION);
 
         blit(guiLeft, guiTop, 0, 0, xSize, ySize); // Background

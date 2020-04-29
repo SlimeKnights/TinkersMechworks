@@ -78,4 +78,7 @@ public class Util
 
         return namespaceValid && pathValid;
     }
+
+    // Does nothing
+    public static void sink(Object object) { }
 }

@@ -10,6 +10,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTTypes;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -19,6 +21,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import slimeknights.mantle.tileentity.InventoryTileEntity;
@@ -33,6 +36,7 @@ import java.util.List;
 
 public abstract class RedstoneMachineTileEntity extends InventoryTileEntity implements ITickableTileEntity, IInformationProvider {
     private Inventory disguiseInventory;
+    private String disguiseState;
 
     private int redstoneState;
     private boolean isFirstTick = true;
@@ -132,7 +136,9 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
      * Gets called the first tick this tile exists
      */
     public void init() {
-        disguiseInventory.addListener(inv -> refreshDisguise());
+        disguiseInventory.addListener(inv -> {
+            refreshDisguise();
+        });
     }
 
     public ItemStack getDisguiseBlock() {
@@ -141,6 +147,15 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
     public void setDisguiseBlock(ItemStack disguise) {
         disguiseInventory.setInventorySlotContents(0, disguise);
+    }
+
+    public String getDisguiseState() {
+        return disguiseState;
+    }
+
+    public void setDisguiseState(String state) {
+        disguiseState = state;
+        refreshDisguise();
     }
 
     public Inventory getDisguiseInventory() {
@@ -188,6 +203,8 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
             itemNBT = disguise.write(itemNBT);
 
             tags.put("Disguise", itemNBT);
+            if(disguiseState != null)
+                tags.putString("DisguiseState", disguiseState);
         }
 
         return tags;
@@ -203,6 +220,10 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
             CompoundNBT itemNBT = tags.getCompound("Disguise");
 
             ItemStack disguise = ItemStack.read(itemNBT);
+
+            if(tags.contains("DisguiseState", Constants.NBT.TAG_STRING)) {
+                disguiseState = tags.getString("DisguiseState");
+            }
 
             setDisguiseBlock(disguise);
         }
@@ -299,7 +320,10 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     @Nonnull
     @Override
     public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(DisguiseBakedModel.DISGUISE, getDisguiseBlock()).build();
+        return new ModelDataMap.Builder()
+                .withInitial(DisguiseBakedModel.DISGUISE, getDisguiseBlock())
+                .withInitial(DisguiseBakedModel.DISGUISE_STATE, getDisguiseState())
+                .build();
     }
 
     @Override
