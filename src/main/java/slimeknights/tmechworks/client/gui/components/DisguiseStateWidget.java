@@ -52,8 +52,19 @@ public class DisguiseStateWidget extends Widget {
         for(Object obj : states) {
             String state = obj != null ? obj.toString() : "null";
 
-            int xPos = x + MathHelper.floor(i / 3F) * 8;
-            int yPos = y + i % 3 * 8;
+            int rem = states.size() - i;
+            int col = MathHelper.floor(i / 3F);
+            int row = i % 3;
+
+            int xPos = x + col * 8;
+            int yPos = y + row * 8;
+
+            if(row == 0 && rem == 1)
+                yPos += 12;
+            else if(row == 0 && rem == 2)
+                yPos += 4;
+            else if(row == 1 && rem == 1)
+                yPos += 4;
 
             boolean isActive = state.equals(stateString);
             boolean isHovered = false;
@@ -91,7 +102,7 @@ public class DisguiseStateWidget extends Widget {
         if(state == null)
             return 0;
 
-        return MathHelper.clamp(MathHelper.floor(state.getAllowedValues().size() / 3F), 0, 3);
+        return MathHelper.clamp(MathHelper.ceil(state.getAllowedValues().size() / 3F), 0, 3);
     }
 
     @Override
