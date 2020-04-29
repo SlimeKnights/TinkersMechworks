@@ -24,12 +24,12 @@ public class UpdateDisguiseStatePacket {
 
     public static void encode(UpdateDisguiseStatePacket msg, PacketBuffer buf) {
         buf.writeBlockPos(msg.pos);
-        buf.writeString(msg.state);
+        buf.writeString(msg.state, 256);
     }
 
     public static UpdateDisguiseStatePacket decode(PacketBuffer buf) {
         BlockPos pos = buf.readBlockPos();
-        String state = buf.readString();
+        String state = buf.readString(256);
 
         return new UpdateDisguiseStatePacket(pos, state);
     }
