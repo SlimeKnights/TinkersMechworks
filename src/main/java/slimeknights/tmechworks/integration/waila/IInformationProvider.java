@@ -31,7 +31,7 @@ public interface IInformationProvider {
     }
 
     default void requireSneak(List<ITextComponent> tooltip, PlayerEntity player, Runnable action) {
-        if(!player.isSneaking()) {
+        if(!player.isCrouching()) {
             tooltip.add(new TranslationTextComponent("tooltip.waila.sneak_for_details").applyTextStyle(TextFormatting.ITALIC));
         } else {
             action.run();

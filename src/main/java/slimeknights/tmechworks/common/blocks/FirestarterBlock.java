@@ -91,8 +91,8 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(player.isSneaking())
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(player.isCrouching())
             return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
 
         state = state.cycle(EXTINGUISH);
@@ -100,7 +100,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         worldIn.setBlockState(pos, state);
         worldIn.playSound(player, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @OnlyIn(Dist.CLIENT)

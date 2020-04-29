@@ -26,7 +26,7 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
     public final ImmutableList<Slot> mainSlots;
 
     public DrawbridgeContainer(int id, PlayerInventory playerInventory, DrawbridgeTileEntity te) {
-        super(MechworksContent.Containers.drawbridge, id, te);
+        super(MechworksContent.Containers.drawbridge, id, playerInventory, te);
 
         this.playerInventory = playerInventory;
         te.openInventory(playerInventory.player);
@@ -42,7 +42,7 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
 
         addSlot(new ValidatingSlot(tile.getDisguiseInventory(), 0, 178, 137));
 
-        addPlayerInventory(playerInventory, 8, 84);
+        addInventorySlots();
     }
 
     protected ImmutableList<Slot> addDrawbridgeSlots(){

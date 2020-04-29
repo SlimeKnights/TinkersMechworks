@@ -20,7 +20,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
@@ -32,7 +32,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
@@ -58,10 +57,8 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     public boolean dropState = true;
 
-    private TileEntity cachedTE;
-
     protected RedstoneMachineBlock(Material material) {
-        super(Block.Properties.create(material).hardnessAndResistance(3.5F));
+        super(Block.Properties.create(material).hardnessAndResistance(3.5F).notSolid());
         this.setDefaultState(this.stateContainer.getBaseState()
                 .with(HAS_DISGUISE, false)
                 .with(LIGHT_VALUE, 0));
@@ -255,11 +252,12 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote)
-            return this.openGui(player, worldIn, pos);
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isRemote) {
+            this.openGui(player, worldIn, pos);
+        }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override
@@ -297,16 +295,6 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public boolean isSolid(BlockState state) {
-        return !state.get(HAS_DISGUISE) && state.get(LIGHT_VALUE) == 0;
-    }
-
-    @Override
-    public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
-        return true;
-    }
-
-    @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.isNormalCube(worldIn, pos), () -> super.isNormalCube(state, worldIn, pos));
     }
@@ -333,12 +321,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     @Override
     public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getOpacity(worldIn, pos), () -> super.getOpacity(state, worldIn, pos));
-    }
-
-    @Override
-    public boolean doesSideBlockRendering(BlockState state, IEnviromentBlockReader world, BlockPos pos, Direction face) {
-        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.doesSideBlockRendering(world, pos, face), () -> super.doesSideBlockRendering(state, world, pos, face));
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getOpacity(worldIn, pos), worldIn::getMaxLightLevel);
     }
 
     @Override
