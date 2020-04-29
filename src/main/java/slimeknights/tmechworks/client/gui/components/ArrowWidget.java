@@ -1,17 +1,18 @@
 package slimeknights.tmechworks.client.gui.components;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import slimeknights.tmechworks.TMechworks;
 
 import java.util.Arrays;
 
 public class ArrowWidget extends Widget {
-    public static final ResourceLocation ARROW_WIDGET = new ResourceLocation("tmechworks", "textures/gui/arrows.png");
+    public static final ResourceLocation ARROW_WIDGET = new ResourceLocation(TMechworks.modId, "textures/gui/arrows.png");
 
     public static final String[] LABELS_DEFAULT = {
             "tmechworks:widget.arrow.down",
@@ -89,9 +90,9 @@ public class ArrowWidget extends Widget {
     public void renderButton(int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translatef(x, y, 0F);
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef(x, y, 0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         mc.getTextureManager().bindTexture(ARROW_WIDGET);
 
@@ -127,10 +128,10 @@ public class ArrowWidget extends Widget {
             int indexX = arrow.indexX * arrow.w + arrow.subX * arrow.subW;
             int indexY = (arrow.indexY + state.ordinal() * ARROW_ROWS) * arrow.h + arrow.subY * arrow.subH;
 
-            blit((int) arrow.x, (int) arrow.y, indexX, indexY, arrow.subW, arrow.subH);
+            blit(arrow.x, arrow.y, indexX, indexY, arrow.subW, arrow.subH);
         }
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
         if (hoveredArrow == null)
             return;
@@ -140,6 +141,7 @@ public class ArrowWidget extends Widget {
         }
     }
 
+    @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
         if (hoveredArrow != null) {
             this.playDownSound(Minecraft.getInstance().getSoundHandler());

@@ -1,18 +1,23 @@
 package slimeknights.tmechworks.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.network.PacketDistributor;
+import slimeknights.tmechworks.TMechworks;
+import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
+import slimeknights.tmechworks.client.gui.components.DisguiseStateWidget;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
@@ -24,8 +29,10 @@ import slimeknights.tmechworks.library.Util;
 import java.util.List;
 
 public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
-    public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation("tmechworks", "textures/gui/drawbridge.png");
-    public static final ResourceLocation ADVANCED_LOCATION = new ResourceLocation("tmechworks", "textures/gui/drawbridge_advanced.png");
+    public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/drawbridge.png");
+    public static final ResourceLocation ADVANCED_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/drawbridge_advanced.png");
+
+    public DisguiseStateWidget disguiseWidget;
 
     public final boolean isAdvanced;
     private final int slotCount;
@@ -58,6 +65,9 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         ArrowWidget arrow = new ArrowWidget(aX, aY, width, height, true, this::arrowClicked);
         updateSelection(arrow);
         addButton(arrow);
+
+        disguiseWidget = new DisguiseStateWidget(guiLeft + 198, guiTop + 133, container.getTileEntity());
+        addButton(disguiseWidget);
     }
 
     @Override
@@ -70,6 +80,16 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         if(isAdvanced != te.stats.isAdvanced || slotCount != te.slots.getSizeInventory()) {
             PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(container.getTileEntity().getPos()));
         }
+
+        // Update disguise state controls
+        ItemStack disguise = te.getDisguiseBlock();
+
+        if (disguise.getItem() instanceof BlockItem) {
+            BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().getDefaultState();
+            disguiseWidget.setState(DisguiseStates.getForState(disguiseState), te.getDisguiseState());
+        } else {
+            disguiseWidget.setState(null, null);
+        }
     }
 
     @Override
@@ -81,12 +101,18 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(SCREEN_LOCATION);
 
         blit(guiLeft, guiTop, 0, 0, xSize, ySize); // Background
         blit(guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60); // Upgrades cutout
+
         blit(guiLeft + xSize - 3, guiTop + ySize - 37, 52, 182, 29, 32); // Disguise cutout
+        // 75 182
+        if(disguiseWidget.getColumnCount() > 0) {
+            blit(guiLeft + xSize + 22, guiTop + ySize - 37, disguiseWidget.getColumnCount() * 8 + 2, 32, 75, 76, 182, 214);
+            blit(guiLeft + xSize + 22 + disguiseWidget.getColumnCount() * 8 + 2, guiTop + ySize - 37, 3, 32, 78, 81, 183, 214);
+        }
 
         if(!isAdvanced) {
 //        drawSlicedBox(guiLeft + 34, guiTop + 35, 18, 18, 17, 166); // Disguise slot
@@ -150,10 +176,10 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         float scale = .75F;
         float invScale = 1 / scale;
 
-        GlStateManager.scalef(scale, scale, scale);
+        RenderSystem.scalef(scale, scale, scale);
         String upgrades = I18n.format(Util.prefix("gui.upgrades"));
         font.drawString(upgrades, 47 / 2F - font.getStringWidth(upgrades) / 2F - 50, (xSize - 69) * invScale, 4210752);
-        GlStateManager.scalef(invScale, invScale, invScale);
+        RenderSystem.scalef(invScale, invScale, invScale);
     }
 
     private void arrowClicked(ArrowWidget widget, ArrowWidget.Arrow arrow) {
