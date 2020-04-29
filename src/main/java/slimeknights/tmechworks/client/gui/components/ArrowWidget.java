@@ -1,7 +1,7 @@
 package slimeknights.tmechworks.client.gui.components;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
@@ -89,9 +89,9 @@ public class ArrowWidget extends Widget {
     public void renderButton(int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translatef(x, y, 0F);
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef(x, y, 0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         mc.getTextureManager().bindTexture(ARROW_WIDGET);
 
@@ -127,10 +127,11 @@ public class ArrowWidget extends Widget {
             int indexX = arrow.indexX * arrow.w + arrow.subX * arrow.subW;
             int indexY = (arrow.indexY + state.ordinal() * ARROW_ROWS) * arrow.h + arrow.subY * arrow.subH;
 
-            blit((int) arrow.x, (int) arrow.y, indexX, indexY, arrow.subW, arrow.subH);
+            blit(arrow.x, arrow.y, indexX, indexY, arrow.subW, arrow.subH);
         }
 
-        GlStateManager.popMatrix();
+        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        RenderSystem.popMatrix();
 
         if (hoveredArrow == null)
             return;

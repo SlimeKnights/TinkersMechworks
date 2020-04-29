@@ -1,6 +1,6 @@
 package slimeknights.tmechworks.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
@@ -81,7 +81,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(SCREEN_LOCATION);
 
         blit(guiLeft, guiTop, 0, 0, xSize, ySize); // Background
@@ -150,10 +150,10 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         float scale = .75F;
         float invScale = 1 / scale;
 
-        GlStateManager.scalef(scale, scale, scale);
+        RenderSystem.scalef(scale, scale, scale);
         String upgrades = I18n.format(Util.prefix("gui.upgrades"));
         font.drawString(upgrades, 47 / 2F - font.getStringWidth(upgrades) / 2F - 50, (xSize - 69) * invScale, 4210752);
-        GlStateManager.scalef(invScale, invScale, invScale);
+        RenderSystem.scalef(invScale, invScale, invScale);
     }
 
     private void arrowClicked(ArrowWidget widget, ArrowWidget.Arrow arrow) {
