@@ -60,7 +60,7 @@ public class DisguiseStateWidget extends Widget {
             int yPos = y + row * 8;
 
             if(row == 0 && rem == 1)
-                yPos += 12;
+                yPos += 8;
             else if(row == 0 && rem == 2)
                 yPos += 4;
             else if(row == 1 && rem == 1)

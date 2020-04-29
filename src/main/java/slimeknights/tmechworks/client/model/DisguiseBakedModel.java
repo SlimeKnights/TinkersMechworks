@@ -56,7 +56,7 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
                 BlockItem disguiseItem = (BlockItem) disguise.getItem();
 
                 BlockState disguiseState = disguiseItem.getBlock().getDefaultState();
-                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, extraData.getData(DISGUISE_STATE));
+                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, extraData.getData(DISGUISE_STATE), state.get(BlockStateProperties.FACING));
 
                 if (RenderTypeLookup.canRenderInLayer(disguiseState, MinecraftForgeClient.getRenderLayer())) {
                     IBakedModel model = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(disguiseState);

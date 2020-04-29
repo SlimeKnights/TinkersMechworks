@@ -287,7 +287,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
             if (disguise.getItem() instanceof BlockItem) {
                 BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().getDefaultState();
-                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, ((RedstoneMachineTileEntity) te).getDisguiseState());
+                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, ((RedstoneMachineTileEntity) te).getDisguiseState(), state.get(BlockStateProperties.FACING));
 
                 return func.apply(disguiseState);
             }
