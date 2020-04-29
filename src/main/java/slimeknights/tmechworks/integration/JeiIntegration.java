@@ -49,7 +49,12 @@ public class JeiIntegration implements IModPlugin {
                 int ySize = gui.getYSize();
 
                 rects.add(new Rectangle2d(guiLeft - 44, guiTop + ySize - 65, 47, 60)); // Upgrades cutout
-                rects.add(new Rectangle2d(guiLeft + xSize - 3, guiTop + ySize - 37, 29, 32)); // Disguise cutout
+
+                int disguiseStateWidth = 0;
+                if(gui.disguiseWidget.getColumnCount() > 0){
+                    disguiseStateWidth += 5 + gui.disguiseWidget.getColumnCount() * 8;
+                }
+                rects.add(new Rectangle2d(guiLeft + xSize - 3, guiTop + ySize - 37, 29 + disguiseStateWidth, 32)); // Disguise cutout
 
                 if(gui.isAdvanced){
                     rects.add(new Rectangle2d(guiLeft - 18, guiTop - 80, 213, 148)); // Advanced UI

@@ -7,11 +7,12 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import slimeknights.tmechworks.TMechworks;
 
 import java.util.Arrays;
 
 public class ArrowWidget extends Widget {
-    public static final ResourceLocation ARROW_WIDGET = new ResourceLocation("tmechworks", "textures/gui/arrows.png");
+    public static final ResourceLocation ARROW_WIDGET = new ResourceLocation(TMechworks.modId, "textures/gui/arrows.png");
 
     public static final String[] LABELS_DEFAULT = {
             "tmechworks:widget.arrow.down",
@@ -130,7 +131,6 @@ public class ArrowWidget extends Widget {
             blit(arrow.x, arrow.y, indexX, indexY, arrow.subW, arrow.subH);
         }
 
-        RenderSystem.color4f(1F, 1F, 1F, 1F);
         RenderSystem.popMatrix();
 
         if (hoveredArrow == null)
@@ -141,6 +141,7 @@ public class ArrowWidget extends Widget {
         }
     }
 
+    @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
         if (hoveredArrow != null) {
             this.playDownSound(Minecraft.getInstance().getSoundHandler());

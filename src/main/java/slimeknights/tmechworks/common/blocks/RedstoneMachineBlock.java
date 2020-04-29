@@ -19,6 +19,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -42,6 +43,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.network.NetworkHooks;
 import slimeknights.mantle.tileentity.InventoryTileEntity;
+import slimeknights.tmechworks.api.disguisestate.DisguiseState;
+import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
 import slimeknights.tmechworks.library.Util;
 
@@ -279,10 +282,14 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         TileEntity te = worldIn.getTileEntity(pos);
 
         if (te instanceof RedstoneMachineTileEntity) {
-            ItemStack disguise = ((RedstoneMachineTileEntity) te).getDisguiseBlock();
+            RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
+            ItemStack disguise = machine.getDisguiseBlock();
 
             if (disguise.getItem() instanceof BlockItem) {
-                return func.apply(((BlockItem) disguise.getItem()).getBlock().getDefaultState());
+                BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().getDefaultState();
+                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, ((RedstoneMachineTileEntity) te).getDisguiseState());
+
+                return func.apply(disguiseState);
             }
         }
 
