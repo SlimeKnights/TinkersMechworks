@@ -17,7 +17,9 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootContext;
@@ -25,11 +27,13 @@ import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.ForgeEventFactory;
-import slimeknights.tmechworks.common.config.MechworksConfig;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
+import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.inventory.FragmentedInventory;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
@@ -62,6 +66,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     private int extendedLength;
     private float cooldown;
 
+    private static boolean isCapAccess;
+
     private long lastWorldTime;
 
     public DrawbridgeTileEntity() {
@@ -69,6 +75,10 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
         slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !DrawbridgeBlock.BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))).overrideStackLimit(64);
+
+        itemHandlerCap.invalidate();
+        itemHandler = new DrawbridgeItemHandler(this);
+        itemHandlerCap = LazyOptional.of(() -> itemHandler);
     }
 
     @Override
@@ -537,6 +547,17 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             computeStats();
     }
 
+    @Override
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+        if(!isCapAccess)
+            return false;
+
+        if(!slots.isSlotInInventory(slot - slots.getStartSlot()))
+            return false;
+
+        return super.isItemValidForSlot(slot, stack) && slots.isItemValidForSlot(slot - slots.getStartSlot(), stack);
+    }
+
     public FakePlayer getFakePlayer(BlockPos pos) {
         updateFakePlayer(pos);
 
@@ -681,6 +702,59 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         @Override
         public BlockPos getPos() {
             return rayTraceResult.getPos();
+        }
+    }
+
+    private static class DrawbridgeItemHandler extends InvWrapper {
+        private DrawbridgeTileEntity te;
+
+        public DrawbridgeItemHandler(DrawbridgeTileEntity inv) {
+            super(inv);
+
+            te = inv;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem(int slotAbs, @Nonnull ItemStack stack, boolean simulate) {
+            int slot = slotAbs - te.slots.getStartSlot();
+
+            // Disallow inserting anywhere but in main inventory slots
+            if(slot < 0 || slot >= te.slots.getSizeInventory())
+                return stack;
+
+            isCapAccess = true;
+            ItemStack out = super.insertItem(slotAbs, stack, simulate);
+            isCapAccess = false;
+            return out;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack extractItem(int slotAbs, int amount, boolean simulate) {
+            int slot = slotAbs - te.slots.getStartSlot();
+
+            // Disallow inserting anywhere but in main inventory slots
+            if(slot < 0 || slot >= te.slots.getSizeInventory())
+                return ItemStack.EMPTY;
+
+            isCapAccess = true;
+            ItemStack out = super.extractItem(slotAbs, amount, simulate);
+            isCapAccess = false;
+            return out;
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            isCapAccess = true;
+            boolean out = super.isItemValid(slot, stack);
+            isCapAccess = false;
+            return out;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return te.slots.getInventoryStackLimit();
         }
     }
 
