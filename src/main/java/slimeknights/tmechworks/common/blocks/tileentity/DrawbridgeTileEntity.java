@@ -619,7 +619,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         if (!(itemstack.getItem() instanceof BucketItem)) // if not bucket
             world.captureBlockSnapshots = true;
 
-        ItemStack copy = itemstack.isDamageable() ? itemstack.copy() : ItemStack.EMPTY;
+        ItemStack copy = itemstack.copy();
         ActionResultType ret = item.tryPlace(context);
         if (itemstack.isEmpty())
             ForgeEventFactory.onPlayerDestroyItem(player, copy, context.getHand());
