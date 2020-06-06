@@ -479,9 +479,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     public void updateFakePlayer(BlockPos pos) {
-        if (fakePlayer == null || fakePlayer.get() == null) {
-            fakePlayer = Util.createFakePlayer(world);
-        }
+        fakePlayer = Util.getFakePlayer(world);
 
         if (fakePlayer == null) {
             return;

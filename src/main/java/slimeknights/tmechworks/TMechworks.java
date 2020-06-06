@@ -1,6 +1,7 @@
 package slimeknights.tmechworks;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +16,7 @@ import slimeknights.tmechworks.client.ClientProxy;
 import slimeknights.tmechworks.common.CommonProxy;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.config.MechworksConfig;
+import slimeknights.tmechworks.common.entities.MechworksFakePlayer;
 import slimeknights.tmechworks.common.network.PacketHandler;
 
 import java.nio.file.Path;
@@ -42,6 +44,8 @@ public class TMechworks {
         bus.addListener(this::init);
         bus.addListener(this::postInit);
         bus.addListener(this::setupClient);
+
+        MinecraftForge.EVENT_BUS.addListener(MechworksFakePlayer::onWorldUnload);
 
         content = new MechworksContent();
         bus.register(content);
