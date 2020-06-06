@@ -133,7 +133,7 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
-        return validItems.test(itemStack) && parent.isItemValidForSlot(getSlot(slot), itemStack);
+        return isItemValidForValidatingSlot(slot, itemStack);
     }
 
     public boolean isSlotInInventory(int i) {

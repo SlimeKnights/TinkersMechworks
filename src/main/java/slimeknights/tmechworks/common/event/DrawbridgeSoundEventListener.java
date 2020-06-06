@@ -7,6 +7,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.StringUtils;
 import slimeknights.tmechworks.TMechworks;
+import slimeknights.tmechworks.common.entities.MechworksFakePlayer;
 import slimeknights.tmechworks.library.Util;
 
 @Mod.EventBusSubscriber(modid = TMechworks.modId)
@@ -18,7 +19,7 @@ public class DrawbridgeSoundEventListener {
     @SubscribeEvent
     public static void onSound(PlaySoundAtEntityEvent event){
         Entity entity = event.getEntity();
-        if(entity instanceof FakePlayer && StringUtils.equals(((FakePlayer) entity).getGameProfile().getName(), Util.FAKEPLAYER_NAME))
+        if(entity instanceof FakePlayer && StringUtils.equals(((FakePlayer) entity).getGameProfile().getName(), MechworksFakePlayer.NAME))
             event.setCanceled(true);
     }
 }
