@@ -1,33 +1,30 @@
 package slimeknights.tmechworks.library;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import org.apache.commons.lang3.StringUtils;
 import slimeknights.tmechworks.TMechworks;
+import slimeknights.tmechworks.common.entities.MechworksFakePlayer;
 
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.Random;
-import java.util.UUID;
 
 public class Util
 {
     public static final String RESOURCE = TMechworks.modId;
     public static final Random rand = new Random();
-    public static final String FAKEPLAYER_NAME = "MechworksWorker";
 
-    public static WeakReference<FakePlayer> createFakePlayer (World world)
+    public static WeakReference<FakePlayer> getFakePlayer(World world)
     {
         if (!(world instanceof ServerWorld))
         {
             return null;
         }
 
-        return new WeakReference<>(FakePlayerFactory.get((ServerWorld) world, new GameProfile(UUID.randomUUID(), FAKEPLAYER_NAME)));
+        return MechworksFakePlayer.getInstance((ServerWorld)world);
     }
 
     /**
