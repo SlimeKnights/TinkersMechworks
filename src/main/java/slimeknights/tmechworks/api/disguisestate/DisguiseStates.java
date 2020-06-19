@@ -1,8 +1,8 @@
 package slimeknights.tmechworks.api.disguisestate;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
+import slimeknights.tmechworks.api.disguisestate.facing.FacingProviders;
 
 import java.util.ArrayList;
 
@@ -33,8 +33,7 @@ public final class DisguiseStates {
     }
 
     public static BlockState processDisguiseStates(BlockState state, String disguiseState, Direction facing) {
-        if (state.has(BlockStateProperties.FACING))
-            state = state.with(BlockStateProperties.FACING, facing);
+        state = FacingProviders.processFacingFor(state, facing);
 
         DisguiseState<?> ds = getForState(state);
         if(ds != null) {
