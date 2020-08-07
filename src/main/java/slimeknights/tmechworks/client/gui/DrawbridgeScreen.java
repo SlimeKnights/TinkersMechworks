@@ -57,15 +57,24 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     protected void init() {
         super.init();
 
-        int aX = 0, aY = 0;
+        int aX, aY, screenLeft, screenTop;
 
         if(isAdvanced) {
             aX = guiLeft + 192;
             aY = guiTop + 10;
+
+            screenLeft = -18;
+            screenTop = -80;
         } else {
             aX = (this.width - this.xSize) / 2 + 110;
             aY = (this.height - this.ySize) / 2 + 20;
-        }            //blit(guiLeft + 191, guiTop + 4, 0, 196, 63, 60);
+
+            screenLeft = 0;
+            screenTop = 0;
+        }
+
+        titleX = screenLeft + 8;
+        titleY = screenTop + 6;
 
         ArrowWidget arrow = new ArrowWidget(aX, aY, width, height, true, this::arrowClicked);
         updateSelection(arrow);
@@ -120,7 +129,6 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         }
 
         if(!isAdvanced) {
-//        drawSlicedBox(guiLeft + 34, guiTop + 35, 18, 18, 17, 166); // Disguise slot
             drawSlicedBox(stack, guiLeft + 75, guiTop + 31, 26, 26, 17, 166); // Drawbridge slot
         } else {
             this.minecraft.getTextureManager().bindTexture(ADVANCED_LOCATION);
@@ -170,13 +178,6 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
-
-        int screenTop = isAdvanced ? -80  : 0;
-
-//        String s = title.getFormattedText();
-//        font.drawString(s, xSize / 2F - font.getStringWidth(s) / 2F, screenTop + 6, 4210752);
-//
-//        font.drawString(playerInventory.getDisplayName().getFormattedText(), 8, ySize - 96 + 2, 4210752);
 
         float scale = .75F;
         float invScale = 1 / scale;
