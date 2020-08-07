@@ -681,8 +681,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     public static class DrawbridgeStats {
-        public int extendLength = MechworksConfig.DRAWBRIDGE.extendLength.get();
-        public float extendDelay = MechworksConfig.DRAWBRIDGE.delay.get().floatValue();
+        public int extendLength = MechworksConfig.COMMON_CONFIG.drawbridge.extendLength.get();
+        public float extendDelay = MechworksConfig.COMMON_CONFIG.drawbridge.delay.get().floatValue();
         public boolean isAdvanced = false;
     }
 

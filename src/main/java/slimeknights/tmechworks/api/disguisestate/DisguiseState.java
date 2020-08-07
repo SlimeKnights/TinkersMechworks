@@ -22,8 +22,8 @@ public abstract class DisguiseState<T extends Comparable<T>> {
     }
 
     @OnlyIn(Dist.CLIENT)
+    @SuppressWarnings("unchecked")
     public final int unsafeGetIconFor(Object value) {
-        //noinspection unchecked
         return getIconFor((T) value);
     }
 

@@ -72,8 +72,8 @@ public class MechworksContent {
         // Upgrades
         public static final ItemObject<Item> upgrade_blank = ITEMS.register("upgrade_blank", MechworksItem::new);
         public static final ItemObject<MachineUpgradeItem> upgrade_drawbridge_advanced = ITEMS.register("upgrade_drawbridge_advanced", () -> new MachineUpgradeItem(stats -> stats.isAdvanced = true));
-        public static final ItemObject<MechworksItem> upgrade_drawbridge_distance = ITEMS.register("upgrade_drawbridge_distance", () -> new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.DRAWBRIDGE.extendUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.extendUpgradeValue.get()}));
-        public static final ItemObject<MechworksItem> upgrade_speed = ITEMS.register("upgrade_speed", () -> new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.DRAWBRIDGE.speedUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.speedUpgradeValue.get()}));
+        public static final ItemObject<MechworksItem> upgrade_drawbridge_distance = ITEMS.register("upgrade_drawbridge_distance", () -> new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.COMMON_CONFIG.drawbridge.extendUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.COMMON_CONFIG.drawbridge.extendUpgradeValue.get()}));
+        public static final ItemObject<MechworksItem> upgrade_speed = ITEMS.register("upgrade_speed", () -> new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.COMMON_CONFIG.drawbridge.speedUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.COMMON_CONFIG.drawbridge.speedUpgradeValue.get()}));
     }
 
     public static class TileEntities {
