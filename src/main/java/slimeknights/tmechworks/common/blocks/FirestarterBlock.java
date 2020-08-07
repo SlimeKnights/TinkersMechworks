@@ -8,11 +8,13 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -35,7 +37,7 @@ import java.util.List;
 
 public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItemConstruct
 {
-    public static final BlockTags.Wrapper WHITELIST = new BlockTags.Wrapper(new ResourceLocation("tmechworks:firestarter_extinguish_whitelist"));
+    public static final ITag.INamedTag<Block> WHITELIST = BlockTags.makeWrapperTag("tmechworks:firestarter_extinguish_whitelist");
     public static final BooleanProperty EXTINGUISH = BooleanProperty.create("extinguish");
 
     public FirestarterBlock()
@@ -95,7 +97,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         if(player.isCrouching())
             return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
 
-        state = state.cycle(EXTINGUISH);
+        state = state.func_235896_a_(EXTINGUISH); // func_235896_a_ => cycleValue
 
         worldIn.setBlockState(pos, state);
         worldIn.playSound(player, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
@@ -113,7 +115,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
             shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
-        tooltip.add(new TranslationTextComponent(Util.prefix("tooltip.behaviour"), I18n.format(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent(Util.prefix("tooltip.behaviour"), I18n.format(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).mergeStyle(TextFormatting.GRAY));
     }
 
     @Override
@@ -127,7 +129,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
 
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
-        item.addPropertyOverride(new ResourceLocation("extinguish"), (stack, world, entity) -> {
+        ItemModelsProperties.func_239418_a_(item, new ResourceLocation("extinguish"), (stack, world, entity) -> {
             boolean shouldExtinguish = true;
 
             if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))

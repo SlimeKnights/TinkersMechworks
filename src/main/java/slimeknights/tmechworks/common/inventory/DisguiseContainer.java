@@ -13,7 +13,7 @@ import slimeknights.tmechworks.common.inventory.slots.ValidatingSlot;
 
 public class DisguiseContainer extends BaseContainer<RedstoneMachineTileEntity> {
     public DisguiseContainer(int windowId, PlayerInventory playerInventory, RedstoneMachineTileEntity tile) {
-        super(MechworksContent.Containers.disguise, windowId, playerInventory, tile);
+        super(MechworksContent.Containers.disguise.get(), windowId, playerInventory, tile);
 
         tile.openInventory(playerInventory.player);
 

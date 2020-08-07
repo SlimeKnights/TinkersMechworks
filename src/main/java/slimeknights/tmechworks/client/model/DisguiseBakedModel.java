@@ -1,7 +1,6 @@
 package slimeknights.tmechworks.client.model;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -12,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
@@ -48,7 +47,8 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(BlockState state, Direction side, @Nonnull Random rand, IModelData extraData) {
+
         if (extraData.hasProperty(DISGUISE)) {
             ItemStack disguise = extraData.getData(DISGUISE);
 
@@ -86,7 +86,7 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
 
     @Nonnull
     @Override
-    public IModelData getModelData(@Nonnull ILightReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+    public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
         return super.getModelData(world, pos, state, tileData);
     }
 }

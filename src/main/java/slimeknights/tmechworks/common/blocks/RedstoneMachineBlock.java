@@ -14,6 +14,8 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.BooleanProperty;
@@ -35,15 +37,12 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.network.NetworkHooks;
 import slimeknights.mantle.tileentity.InventoryTileEntity;
-import slimeknights.tmechworks.api.disguisestate.DisguiseState;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
 import slimeknights.tmechworks.library.Util;
@@ -199,7 +198,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
             if (tags.contains("Disguise", Constants.NBT.TAG_COMPOUND)) {
                 ItemStack disguise = ItemStack.read(tags.getCompound("Disguise"));
                 if (disguise != ItemStack.EMPTY) {
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.disguise")).applyTextStyles(TextFormatting.GRAY, TextFormatting.BOLD));
+                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.disguise")).mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
                     tooltip.add(disguise.getDisplayName());
                 }
             }
@@ -208,7 +207,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
                 ListNBT items = tags.getList("Items", Constants.NBT.TAG_LIST);
 
                 if (items.size() > 0) {
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.items")).applyTextStyles(TextFormatting.GRAY, TextFormatting.BOLD));
+                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.items")).mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
                 }
 
                 for (int i = 0; i < items.size(); ++i) {
@@ -216,7 +215,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
                     int slot = itemTag.getByte("Slot") & 255;
 
                     ItemStack item = ItemStack.read(itemTag);
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.slot"), slot, item.getDisplayName(), item.getCount()).applyTextStyles(TextFormatting.GRAY, TextFormatting.BOLD));
+                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.slot"), slot, item.getDisplayName(), item.getCount()).mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
                 }
             }
         }
@@ -301,10 +300,12 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         return true;
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.isNormalCube(worldIn, pos), () -> super.isNormalCube(state, worldIn, pos));
-    }
+
+//    @Override
+//    public boolean isNormalCube(IBlockReader worldIn, BlockPos pos) {
+//        BlockState state = worldIn.getBlockState(pos);
+//        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.isNormalCube(worldIn, pos), () -> super.isNormalCube(worldIn, pos));
+//    }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -332,12 +333,13 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public int getLightValue(BlockState state) {
-        return state.get(HAS_DISGUISE) ? state.get(LIGHT_VALUE) : 0;
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.getLightValue(world, pos), () -> super.getLightValue(state, world, pos));
     }
 
-    @Override
-    public boolean canBeConnectedTo(BlockState state, IBlockReader world, BlockPos pos, Direction facing) {
-        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.canBeConnectedTo(world, pos, facing), () -> super.canBeConnectedTo(state, world, pos, facing));
-    }
+    //TODO seems hardcoded for now
+//    @Override
+//    public boolean canBeConnectedTo(BlockState state, IBlockReader world, BlockPos pos, Direction facing) {
+//        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.canBeConnectedTo(world, pos, facing), () -> super.canBeConnectedTo(state, world, pos, facing));
+//    }
 }

@@ -6,7 +6,7 @@ import net.minecraft.util.Direction;
 
 public class FacingProvider {
     public boolean canApplyTo(BlockState state, Direction facing) {
-        return state.has(BlockStateProperties.FACING);
+        return state.hasProperty(BlockStateProperties.FACING);
     }
 
     public BlockState applyTo(BlockState state, Direction facing) {

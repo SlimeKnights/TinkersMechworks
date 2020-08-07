@@ -4,9 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import slimeknights.mantle.client.book.BookLoader;
 import slimeknights.mantle.client.book.data.BookData;
 import slimeknights.mantle.client.book.repository.FileRepository;
+import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.CommonProxy;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.event.ModelBakeEventListener;
@@ -23,12 +26,14 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         super.init();
 
-        registerDisguiseBlock(MechworksContent.Blocks.drawbridge);
-        registerDisguiseBlock(MechworksContent.Blocks.firestarter);
+        registerDisguiseBlock(MechworksContent.Blocks.drawbridge.get());
+        registerDisguiseBlock(MechworksContent.Blocks.firestarter.get());
     }
 
     @Override
     public void setupClient() {
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> TMechworks.content::registerScreenFactories);
+
         // TODO mod config gui
     }
 

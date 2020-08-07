@@ -11,19 +11,19 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.*;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayer;
@@ -71,7 +71,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     private long lastWorldTime;
 
     public DrawbridgeTileEntity() {
-        super(MechworksContent.TileEntities.drawbridge, new TranslationTextComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1);
+        super(MechworksContent.TileEntities.drawbridge.get(), new TranslationTextComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1);
 
         upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
         slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !DrawbridgeBlock.BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))).overrideStackLimit(64);
@@ -234,8 +234,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         }
 
         player.setItemStackToSlot(EquipmentSlotType.MAINHAND, stack);
-        ItemUseContext ctx = new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(pos.getX() + 0.5D, pos.getY() + yOffset, pos.getZ() + 0.5D), getPlaceDirection(), pos, false));
-        return doPlaceBlock(new DrawbridgeItemUseContext(ctx)) == ActionResultType.SUCCESS;
+        ItemUseContext ctx = new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(pos.getX() + 0.5D, pos.getY() + yOffset, pos.getZ() + 0.5D), getPlaceDirection(), pos, false));
+        return doPlaceBlock(new DrawbridgeItemUseContext(ctx)).isSuccessOrConsume();
     }
 
     public boolean breakBlock(BlockPos pos, int targetSlot) {
@@ -330,15 +330,15 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     @Override
-    public void read(CompoundNBT tags) {
-        super.read(tags);
+    public void read(BlockState state, CompoundNBT tags) {
+        super.read(state, tags);
 
-        CompoundNBT state = tags.getCompound("DrawbridgeState");
+        CompoundNBT stats = tags.getCompound("DrawbridgeState");
 
-        extendedLength = state.getInt("ExtendLength");
-        isExtended = state.getBoolean("Extended");
-        isMoving = state.getBoolean("Moving");
-        cooldown = state.getFloat("Cooldown");
+        extendedLength = stats.getInt("ExtendLength");
+        isExtended = stats.getBoolean("Extended");
+        isMoving = stats.getBoolean("Moving");
+        cooldown = stats.getFloat("Cooldown");
     }
 
     @Nonnull
@@ -359,8 +359,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     @Override
-    public void readItemData(CompoundNBT tags) {
-        super.readItemData(tags);
+    public void readItemData(BlockState state, CompoundNBT tags) {
+        super.readItemData(state, tags);
 
         rawPlaceDirection = Direction.values()[tags.getInt("PlaceDirectionRaw")];
         placeAngle = Angle.values()[tags.getInt("PlaceAngle")];
@@ -563,7 +563,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     @Override
-    public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, CompoundNBT serverData, PlayerEntity player) {
+    public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, CompoundNBT serverData, PlayerEntity player) {
         super.getInformation(info, type, serverData, player);
 
         if (type != InformationType.BODY) {
@@ -624,7 +624,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         world.captureBlockSnapshots = false;
 
-        if (ret == ActionResultType.SUCCESS) {
+        if (ret.isSuccessOrConsume()) {
             // save new item data
             int newSize = itemstack.getCount();
             CompoundNBT newNBT = null;
@@ -665,12 +665,12 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
                     int updateFlag = snap.getFlag();
                     BlockState oldBlock = snap.getReplacedBlock();
                     BlockState newBlock = world.getBlockState(snap.getPos());
-                    if (!newBlock.getBlock().hasTileEntity(newBlock)) // Containers get placed automatically
+                    if (!newBlock.hasTileEntity()) // Containers get placed automatically
                     {
                         newBlock.onBlockAdded(world, snap.getPos(), oldBlock, false);
                     }
 
-                    world.markAndNotifyBlock(snap.getPos(), null, oldBlock, newBlock, updateFlag);
+                    world.markAndNotifyBlock(snap.getPos(), world.getChunkAt(snap.getPos()), oldBlock, newBlock, updateFlag, 512);
                 }
                 player.addStat(Stats.ITEM_USED.get(item));
             }
@@ -681,8 +681,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     public static class DrawbridgeStats {
-        public int extendLength = MechworksConfig.DRAWBRIDGE.extendLength.get();
-        public float extendDelay = MechworksConfig.DRAWBRIDGE.delay.get().floatValue();
+        public int extendLength = MechworksConfig.COMMON_CONFIG.drawbridge.extendLength.get();
+        public float extendDelay = MechworksConfig.COMMON_CONFIG.drawbridge.delay.get().floatValue();
         public boolean isAdvanced = false;
     }
 
@@ -704,7 +704,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     private static class DrawbridgeItemHandler extends InvWrapper {
-        private DrawbridgeTileEntity te;
+        private final DrawbridgeTileEntity te;
 
         public DrawbridgeItemHandler(DrawbridgeTileEntity inv) {
             super(inv);

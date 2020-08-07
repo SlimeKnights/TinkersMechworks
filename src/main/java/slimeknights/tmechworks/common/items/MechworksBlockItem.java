@@ -7,12 +7,11 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import slimeknights.mantle.util.LocUtils;
 import slimeknights.tmechworks.common.blocks.IBlockItemConstruct;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
+import slimeknights.tmechworks.library.TranslationUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -69,7 +68,7 @@ public class MechworksBlockItem extends BlockItem {
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         if (I18n.hasKey(getTranslationKey(stack) + ".tooltip")) {
-            tooltip.addAll(LocUtils.getTooltips(I18n.format(getTranslationKey(stack) + ".tooltip", tooltipFormatSupplier.get())).stream().map(x -> x.applyTextStyle(TextFormatting.GRAY)).collect(Collectors.toList()));
+            tooltip.addAll(TranslationUtil.getTooltips(I18n.format(getTranslationKey(stack) + ".tooltip", tooltipFormatSupplier.get())));
         }
 
         super.addInformation(stack, world, tooltip, flag);
