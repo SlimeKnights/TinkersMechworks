@@ -28,7 +28,7 @@
   "item.tmechworks.upgrade_speed.tooltip": "Reduces the drawbridge extend delay by %f",
 
   // Creative Tabs
-  "itemGroup.TinkersMechworks": "Tinkers' Mechworks",
+  "itemGroup.tmechworks.TinkersMechworks": "Tinkers' Mechworks",
 
   // HUD
   "tmechworks:tooltip.behaviour": "Behaviour: %s",

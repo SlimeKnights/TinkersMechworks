@@ -8,6 +8,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.config.MechworksConfig;
@@ -17,8 +18,8 @@ import java.util.stream.Collectors;
 
 public class MechworksWorld {
     private static final List<OreProperties> OVERWORLD_ORES = ImmutableList.of(
-            new OreProperties(MechworksContent.Blocks.copper_ore.getDefaultState(), new CountRangeConfig(8, 40, 0, 75), 8, MechworksConfig.WORLD_GENERATION.COPPER),
-            new OreProperties(MechworksContent.Blocks.aluminum_ore.getDefaultState(), new CountRangeConfig(8, 40, 0, 75), 8, MechworksConfig.WORLD_GENERATION.ALUMINUM)
+            new OreProperties(MechworksContent.Blocks.copper_ore.get().getDefaultState(), new CountRangeConfig(8, 40, 0, 75), 8, MechworksConfig.WORLD_GENERATION.COPPER),
+            new OreProperties(MechworksContent.Blocks.aluminum_ore.get().getDefaultState(), new CountRangeConfig(8, 40, 0, 75), 8, MechworksConfig.WORLD_GENERATION.ALUMINUM)
     );
 
     public static void registerWorldGeneration() {
@@ -26,10 +27,7 @@ public class MechworksWorld {
             return;
         }
 
-        /*
-         * TODO: https://github.com/MinecraftForge/MinecraftForge/pull/6250
-         */
-        for (Biome biome : ForgeRegistries.BIOMES.getValues().stream().filter(x -> x.getCategory() != Biome.Category.THEEND && x.getCategory() != Biome.Category.NETHER).collect(Collectors.toList())) {
+        for (Biome biome : BiomeDictionary.getBiomes(BiomeDictionary.Type.OVERWORLD)) {
             addOresTo(biome);
         }
     }

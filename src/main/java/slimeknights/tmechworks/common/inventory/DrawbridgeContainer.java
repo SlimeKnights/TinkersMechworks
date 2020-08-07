@@ -7,9 +7,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import slimeknights.mantle.inventory.BaseContainer;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
@@ -26,7 +23,7 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
     public final ImmutableList<Slot> mainSlots;
 
     public DrawbridgeContainer(int id, PlayerInventory playerInventory, DrawbridgeTileEntity te) {
-        super(MechworksContent.Containers.drawbridge, id, playerInventory, te);
+        super(MechworksContent.Containers.drawbridge.get(), id, playerInventory, te);
 
         this.playerInventory = playerInventory;
         te.openInventory(playerInventory.player);

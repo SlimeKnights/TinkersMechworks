@@ -1,9 +1,14 @@
 package slimeknights.tmechworks.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldVertexBufferUploader;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -11,8 +16,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.*;
 import net.minecraftforge.fml.network.PacketDistributor;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
@@ -40,8 +45,8 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public DrawbridgeScreen(DrawbridgeContainer container, PlayerInventory inventory, ITextComponent name) {
         super(container, inventory, name);
 
-        isAdvanced = container.getTileEntity().stats.isAdvanced;
-        slotCount = container.getTileEntity().slots.getSizeInventory();
+        isAdvanced = container.getTile().stats.isAdvanced;
+        slotCount = container.getTile().slots.getSizeInventory();
     }
 
     public static DrawbridgeScreen create(DrawbridgeContainer container, PlayerInventory player, ITextComponent title){
@@ -66,7 +71,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         updateSelection(arrow);
         addButton(arrow);
 
-        disguiseWidget = new DisguiseStateWidget(guiLeft + 198, guiTop + 133, container.getTileEntity());
+        disguiseWidget = new DisguiseStateWidget(guiLeft + 198, guiTop + 133, container.getTile());
         addButton(disguiseWidget);
     }
 
@@ -74,11 +79,11 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public void tick() {
         super.tick();
 
-        DrawbridgeTileEntity te = container.getTileEntity();
+        DrawbridgeTileEntity te = container.getTile();
 
         // Reinitialize UI if the drawbridge size or type changes
         if(isAdvanced != te.stats.isAdvanced || slotCount != te.slots.getSizeInventory()) {
-            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(container.getTileEntity().getPos()));
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(container.getTile().getPos()));
         }
 
         // Update disguise state controls
@@ -93,98 +98,98 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground();
-        super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.func_230459_a_(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(SCREEN_LOCATION);
 
-        blit(guiLeft, guiTop, 0, 0, xSize, ySize); // Background
-        blit(guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60); // Upgrades cutout
+        blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize); // Background
+        blit(stack, guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60); // Upgrades cutout
 
-        blit(guiLeft + xSize - 3, guiTop + ySize - 37, 52, 182, 29, 32); // Disguise cutout
+        blit(stack, guiLeft + xSize - 3, guiTop + ySize - 37, 52, 182, 29, 32); // Disguise cutout
         // 75 182
         if(disguiseWidget.getColumnCount() > 0) {
-            blit(guiLeft + xSize + 22, guiTop + ySize - 37, disguiseWidget.getColumnCount() * 8 + 2, 32, 75, 76, 182, 214);
-            blit(guiLeft + xSize + 22 + disguiseWidget.getColumnCount() * 8 + 2, guiTop + ySize - 37, 3, 32, 78, 81, 183, 214);
+            blit(stack, guiLeft + xSize + 22, guiTop + ySize - 37, disguiseWidget.getColumnCount() * 8 + 2, 32, 75, 76, 182, 214);
+            blit(stack, guiLeft + xSize + 22 + disguiseWidget.getColumnCount() * 8 + 2, guiTop + ySize - 37, 3, 32, 78, 81, 183, 214);
         }
 
         if(!isAdvanced) {
 //        drawSlicedBox(guiLeft + 34, guiTop + 35, 18, 18, 17, 166); // Disguise slot
-            drawSlicedBox(guiLeft + 75, guiTop + 31, 26, 26, 17, 166); // Drawbridge slot
+            drawSlicedBox(stack, guiLeft + 75, guiTop + 31, 26, 26, 17, 166); // Drawbridge slot
         } else {
             this.minecraft.getTextureManager().bindTexture(ADVANCED_LOCATION);
 
-            blit(guiLeft - 18, guiTop - 80, 0, 0, 213, 148); // Advanced cutout
-            blit(guiLeft + 191, guiTop + 4, 0, 196, 63, 60); // Arrow cutout
+            blit(stack, guiLeft - 18, guiTop - 80, 0, 0, 213, 148); // Advanced cutout
+            blit(stack, guiLeft + 191, guiTop + 4, 0, 196, 63, 60); // Arrow cutout
 
-            drawAdvancedSlots();
+            drawAdvancedSlots(stack);
         }
     }
 
-    private void drawAdvancedSlots() {
+    private void drawAdvancedSlots(MatrixStack stack) {
         for(Slot s : container.mainSlots){
-            blit(guiLeft + s.xPos - 1, guiTop + s.yPos - 1, 0, 166, 18, 18);
+            blit(stack, guiLeft + s.xPos - 1, guiTop + s.yPos - 1, 0, 166, 18, 18);
         }
     }
 
     @Override
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
+    protected void func_230459_a_(MatrixStack stack, int mouseX, int mouseY) {
         if(this.hoveredSlot == null)
             return;
 
         if(!isAdvanced || this.hoveredSlot.getHasStack()) {
-            super.renderHoveredToolTip(mouseX, mouseY);
-        } else if(hoveredSlot.inventory == getContainer().getTileEntity().slots) {
-            renderTooltip(TextFormatting.GRAY + I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1), mouseX, mouseY);
+            super.func_230459_a_(stack, mouseX, mouseY); // func_230459_a_ => renderHoveredTooltip
+        } else if(hoveredSlot.inventory == getContainer().getTile().slots) {
+            renderTooltip(stack, ITextProperties.func_240653_a_(I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1), Style.EMPTY.applyFormatting(TextFormatting.GRAY)), mouseX, mouseY);
         }
     }
 
     @Override
-    public List<String> getTooltipFromItem(ItemStack stack) {
-        List<String> list = super.getTooltipFromItem(stack);
+    public List<ITextComponent> getTooltipFromItem(ItemStack stack) {
+        List<ITextComponent> list = super.getTooltipFromItem(stack);
 
-        if(isAdvanced && hoveredSlot.inventory == getContainer().getTileEntity().slots) {
-            list.add("");
-            list.add(TextFormatting.GRAY + I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1));
+        if(isAdvanced && hoveredSlot.inventory == getContainer().getTile().slots) {
+            list.add(StringTextComponent.EMPTY);
+            list.add(new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).mergeStyle(TextFormatting.GRAY));
         }
 
         if(DrawbridgeBlock.BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))) {
-            list.add("");
-            list.add(I18n.format(Util.prefix("gui.blacklisted")));
+            list.add(StringTextComponent.EMPTY);
+            list.add(new TranslationTextComponent(Util.prefix("gui.blacklisted")));
         }
 
         return list;
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
 
         int screenTop = isAdvanced ? -80  : 0;
 
-        String s = title.getFormattedText();
-        font.drawString(s, xSize / 2F - font.getStringWidth(s) / 2F, screenTop + 6, 4210752);
-
-        font.drawString(playerInventory.getDisplayName().getFormattedText(), 8, ySize - 96 + 2, 4210752);
+//        String s = title.getFormattedText();
+//        font.drawString(s, xSize / 2F - font.getStringWidth(s) / 2F, screenTop + 6, 4210752);
+//
+//        font.drawString(playerInventory.getDisplayName().getFormattedText(), 8, ySize - 96 + 2, 4210752);
 
         float scale = .75F;
         float invScale = 1 / scale;
 
         RenderSystem.scalef(scale, scale, scale);
         String upgrades = I18n.format(Util.prefix("gui.upgrades"));
-        font.drawString(upgrades, 47 / 2F - font.getStringWidth(upgrades) / 2F - 50, (xSize - 69) * invScale, 4210752);
+        font.drawString(stack, upgrades, 47 / 2F - font.getStringWidth(upgrades) / 2F - 50, (xSize - 69) * invScale, 4210752);
         RenderSystem.scalef(invScale, invScale, invScale);
     }
 
     private void arrowClicked(ArrowWidget widget, ArrowWidget.Arrow arrow) {
-        PacketHandler.send(PacketDistributor.SERVER.noArg(), new UpdatePlaceDirectionPacket(container.getTileEntity().getPos(), arrow.ordinal()));
-        container.getTileEntity().setPlaceDirection(arrow.ordinal());
+        PacketHandler.send(PacketDistributor.SERVER.noArg(), new UpdatePlaceDirectionPacket(container.getTile().getPos(), arrow.ordinal()));
+        container.getTile().setPlaceDirection(arrow.ordinal());
         updateSelection(widget);
     }
 
@@ -194,32 +199,44 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
                 arrow.setState(a, ArrowWidget.ArrowState.ENABLED);
         }
 
-        arrow.setState(ArrowWidget.Arrow.values()[container.getTileEntity().getRawPlaceDirection().ordinal()], ArrowWidget.ArrowState.SELECTED);
-        arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + container.getTileEntity().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
+        arrow.setState(ArrowWidget.Arrow.values()[container.getTile().getRawPlaceDirection().ordinal()], ArrowWidget.ArrowState.SELECTED);
+        arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + container.getTile().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
     }
 
-    private void drawSlicedBox(int x, int y, int width, int height, int u, int v) {
+    private void drawSlicedBox(MatrixStack stack, int x, int y, int width, int height, int u, int v) {
         // Corners
-        blit(x, y, u, v, 4, 4); // Top Left
-        blit(x + width - 4, y, u + 12, v, 4, 4); // Top Right
-        blit(x, y + height - 4, u, v + 12, 4, 4); // Bottom Left
-        blit(x + width - 4, y + height - 4, u + 12, v + 12, 4, 4); // Bottom Right
+        blit(stack, x, y, u, v, 4, 4); // Top Left
+        blit(stack, x + width - 4, y, u + 12, v, 4, 4); // Top Right
+        blit(stack, x, y + height - 4, u, v + 12, 4, 4); // Bottom Left
+        blit(stack, x + width - 4, y + height - 4, u + 12, v + 12, 4, 4); // Bottom Right
 
         // Sides
-        blit(x + 4, y, width - 8, 4, u + 6, u + 10, v, v + 4); // Top
-        blit(x + 4, y + height - 4, width - 8, 4, u + 6, u + 10, v + 12, v + 16); // Bottom
-        blit(x, y + 4, 4, height - 8, u, u + 4, v + 6, v + 10); // Left
-        blit(x + width - 4, y + 4, 4, height - 8, u + 12, u + 16, v + 6, v + 10); // Right
+        blit(stack, x + 4, y, width - 8, 4, u + 6, u + 10, v, v + 4); // Top
+        blit(stack, x + 4, y + height - 4, width - 8, 4, u + 6, u + 10, v + 12, v + 16); // Bottom
+        blit(stack, x, y + 4, 4, height - 8, u, u + 4, v + 6, v + 10); // Left
+        blit(stack, x + width - 4, y + 4, 4, height - 8, u + 12, u + 16, v + 6, v + 10); // Right
 
         // Center
-        blit(x + 4, y + 4, width - 8, height - 8, u + 6, u + 10, v + 6, v + 10);
+        blit(stack, x + 4, y + 4, width - 8, height - 8, u + 6, u + 10, v + 6, v + 10);
     }
 
-    public static void blit(int x, int y, int w, int h, int minU, int maxU, int minV, int maxV) {
-        blit(x, y, w, h, minU, maxU, minV, maxV, 256F, 256F);
+    public static void blit(MatrixStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV) {
+        blit(stack, x, y, w, h, minU, maxU, minV, maxV, 256F, 256F);
     }
 
-    public static void blit(int x, int y, int w, int h, int minU, int maxU, int minV, int maxV, float tw, float th) {
-        innerBlit(x, x + w, y, y + h, 0, minU / tw, maxU / tw, minV / th, maxV / th);
+    public static void blit(MatrixStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV, float tw, float th) {
+        innerBlit(stack.getLast().getMatrix(), x, x + w, y, y + h, 0, minU / tw, maxU / tw, minV / th, maxV / th);
+    }
+
+    private static void innerBlit(Matrix4f matrix, int x1, int x2, int y1, int y2, int blitOffset, float minU, float maxU, float minV, float maxV) {
+        BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos(matrix, (float)x1, (float)y2, (float)blitOffset).tex(minU, maxV).endVertex();
+        bufferbuilder.pos(matrix, (float)x2, (float)y2, (float)blitOffset).tex(maxU, maxV).endVertex();
+        bufferbuilder.pos(matrix, (float)x2, (float)y1, (float)blitOffset).tex(maxU, minV).endVertex();
+        bufferbuilder.pos(matrix, (float)x1, (float)y1, (float)blitOffset).tex(minU, minV).endVertex();
+        bufferbuilder.finishDrawing();
+        RenderSystem.enableAlphaTest();
+        WorldVertexBufferUploader.draw(bufferbuilder);
     }
 }

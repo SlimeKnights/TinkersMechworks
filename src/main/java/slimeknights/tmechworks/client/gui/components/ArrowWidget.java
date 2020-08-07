@@ -1,14 +1,19 @@
 package slimeknights.tmechworks.client.gui.components;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import slimeknights.tmechworks.TMechworks;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public class ArrowWidget extends Widget {
@@ -40,7 +45,7 @@ public class ArrowWidget extends Widget {
     }
 
     public ArrowWidget(int x, int y, int screenW, int screenH, boolean drawAdditionalArrows, IArrowPressed onClick) {
-        super(x, y, "");
+        super(x, y, 0, 0, new StringTextComponent(""));
 
         setLabels(LABELS_DEFAULT);
         Arrays.fill(states, ArrowState.ENABLED);
@@ -87,7 +92,7 @@ public class ArrowWidget extends Widget {
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(@Nonnull MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
 
         RenderSystem.pushMatrix();
@@ -128,7 +133,7 @@ public class ArrowWidget extends Widget {
             int indexX = arrow.indexX * arrow.w + arrow.subX * arrow.subW;
             int indexY = (arrow.indexY + state.ordinal() * ARROW_ROWS) * arrow.h + arrow.subY * arrow.subH;
 
-            blit(arrow.x, arrow.y, indexX, indexY, arrow.subW, arrow.subH);
+            blit(stack, arrow.x, arrow.y, indexX, indexY, arrow.subW, arrow.subH);
         }
 
         RenderSystem.popMatrix();
@@ -136,8 +141,9 @@ public class ArrowWidget extends Widget {
         if (hoveredArrow == null)
             return;
 
+        // ITextProperties.func_240652_a_ -> create
         if (labels != null && states[hoveredArrow.ordinal()] == ArrowState.HOVER && !labels[hoveredArrow.ordinal()].trim().isEmpty()) {
-            GuiUtils.drawHoveringText(ImmutableList.of(I18n.format(labels[hoveredArrow.ordinal()])), mouseX, mouseY, screenW, screenH, 100, Minecraft.getInstance().fontRenderer);
+            GuiUtils.drawHoveringText(stack, ImmutableList.of(ITextProperties.func_240652_a_(I18n.format(labels[hoveredArrow.ordinal()]))), mouseX, mouseY, screenW, screenH, 100, Minecraft.getInstance().fontRenderer);
         }
     }
 

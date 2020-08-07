@@ -42,7 +42,8 @@ public class UpdatePlaceDirectionPacket {
             if(context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 player = context.getSender();
 
-                PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.dimension), msg);
+                // World.func_234923_W_ => getDimension
+                PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.world.func_234923_W_()), msg);
             } else {
                 player = TMechworks.proxy.getPlayer();
             }

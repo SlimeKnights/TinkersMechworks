@@ -7,7 +7,7 @@ import net.minecraft.util.Direction;
 public class AxisFacingProvider extends FacingProvider {
     @Override
     public boolean canApplyTo(BlockState state, Direction facing) {
-        return state.has(BlockStateProperties.AXIS);
+        return state.hasProperty(BlockStateProperties.AXIS);
     }
 
     @Override

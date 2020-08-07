@@ -48,6 +48,7 @@ public class TMechworks {
         MinecraftForge.EVENT_BUS.addListener(MechworksFakePlayer::onWorldUnload);
 
         content = new MechworksContent();
+        content.initRegisters();
         bus.register(content);
     }
 
@@ -58,7 +59,6 @@ public class TMechworks {
         proxy.preInit();
 
         content.preInit(event);
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> content::registerScreenFactories);
 
         PacketHandler.register();
     }
