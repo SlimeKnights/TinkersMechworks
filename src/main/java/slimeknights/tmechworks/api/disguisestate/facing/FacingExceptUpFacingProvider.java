@@ -7,7 +7,7 @@ import net.minecraft.util.Direction;
 public class FacingExceptUpFacingProvider extends FacingProvider {
     @Override
     public boolean canApplyTo(BlockState state, Direction facing) {
-        return state.has(BlockStateProperties.FACING_EXCEPT_UP) && facing != Direction.UP;
+        return state.hasProperty(BlockStateProperties.FACING_EXCEPT_UP) && facing != Direction.UP;
     }
 
     @Override

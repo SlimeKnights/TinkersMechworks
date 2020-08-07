@@ -31,7 +31,7 @@ repositories {
     }
 	maven {
 		name "Tehnut Maven FS"
-		url "http://tehnut.info/maven"
+		url "http://maven.tehnut.info"
     }
 }
 
@@ -82,8 +82,11 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
-	
-    compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+
+    // Compile against the Hwyla API, but do not include it at runtime
+    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}_${minecraft_version}:api")
+    // At runtime, use the full Hwyla jar
+    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}_${minecraft_version}")
 }
 
 sourceSets {

@@ -1,9 +1,11 @@
 package slimeknights.tmechworks.client.gui.components;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import slimeknights.tmechworks.api.disguisestate.DisguiseState;
 import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
@@ -21,7 +23,7 @@ public class DisguiseStateWidget extends Widget {
     private final RedstoneMachineTileEntity te;
 
     public DisguiseStateWidget(int x, int y, RedstoneMachineTileEntity te) {
-        super(x, y, "");
+        super(x, y, 0, 0, new StringTextComponent(""));
 
         this.te = te;
     }
@@ -35,7 +37,7 @@ public class DisguiseStateWidget extends Widget {
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         if(state == null)
             return;
 
@@ -88,7 +90,7 @@ public class DisguiseStateWidget extends Widget {
             int indexX = index % 32;
             int indexY = MathHelper.floor(index / 32F);
 
-            blit(xPos, yPos, indexX * 8, indexY * 8, 8, 8);
+            blit(stack, xPos, yPos, indexX * 8, indexY * 8, 8, 8);
 
             i++;
             if(i >= 9)

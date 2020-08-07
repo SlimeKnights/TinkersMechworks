@@ -8,6 +8,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.config.MechworksConfig;
@@ -17,19 +18,16 @@ import java.util.stream.Collectors;
 
 public class MechworksWorld {
     private static final List<OreProperties> OVERWORLD_ORES = ImmutableList.of(
-            new OreProperties(MechworksContent.Blocks.copper_ore.getDefaultState(), new CountRangeConfig(8, 40, 0, 75), 8, MechworksConfig.WORLD_GENERATION.COPPER),
-            new OreProperties(MechworksContent.Blocks.aluminum_ore.getDefaultState(), new CountRangeConfig(8, 40, 0, 75), 8, MechworksConfig.WORLD_GENERATION.ALUMINUM)
+            new OreProperties(MechworksContent.Blocks.copper_ore.get().getDefaultState(), new CountRangeConfig(8, 40, 0, 75), 8, MechworksConfig.COMMON_CONFIG.worldGen.copper),
+            new OreProperties(MechworksContent.Blocks.aluminum_ore.get().getDefaultState(), new CountRangeConfig(8, 40, 0, 75), 8, MechworksConfig.COMMON_CONFIG.worldGen.aluminum)
     );
 
     public static void registerWorldGeneration() {
-        if (!MechworksConfig.WORLD_GENERATION.enabled.get()) {
+        if (!MechworksConfig.COMMON_CONFIG.worldGen.enabled.get()) {
             return;
         }
 
-        /*
-         * TODO: https://github.com/MinecraftForge/MinecraftForge/pull/6250
-         */
-        for (Biome biome : ForgeRegistries.BIOMES.getValues().stream().filter(x -> x.getCategory() != Biome.Category.THEEND && x.getCategory() != Biome.Category.NETHER).collect(Collectors.toList())) {
+        for (Biome biome : BiomeDictionary.getBiomes(BiomeDictionary.Type.OVERWORLD)) {
             addOresTo(biome);
         }
     }
@@ -42,9 +40,9 @@ public class MechworksWorld {
         private final BlockState state;
         private final CountRangeConfig countRange;
         private final int frequency;
-        private final MechworksConfig.WorldGeneration.Ore config;
+        private final MechworksConfig.Common.WorldGeneration.Ore config;
 
-        OreProperties(BlockState state, CountRangeConfig countRange, int frequency, MechworksConfig.WorldGeneration.Ore config) {
+        OreProperties(BlockState state, CountRangeConfig countRange, int frequency, MechworksConfig.Common.WorldGeneration.Ore config) {
             this.state = state;
             this.countRange = countRange;
             this.frequency = frequency;

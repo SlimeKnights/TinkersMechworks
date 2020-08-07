@@ -7,7 +7,7 @@ import net.minecraft.util.Direction;
 public class HorizontalFacingProvider extends FacingProvider {
     @Override
     public boolean canApplyTo(BlockState state, Direction facing) {
-        return state.has(BlockStateProperties.HORIZONTAL_FACING) && facing != Direction.UP && facing != Direction.DOWN;
+        return state.hasProperty(BlockStateProperties.HORIZONTAL_FACING) && facing != Direction.UP && facing != Direction.DOWN;
     }
 
     @Override

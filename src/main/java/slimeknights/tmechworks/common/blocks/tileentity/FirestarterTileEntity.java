@@ -22,7 +22,7 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
 {
     public FirestarterTileEntity()
     {
-        super(MechworksContent.TileEntities.firestarter, new TranslationTextComponent(Util.prefix("inventory.firestarter")), 0);
+        super(MechworksContent.TileEntities.firestarter.get(), new TranslationTextComponent(Util.prefix("inventory.firestarter")), 0);
     }
 
     @Override public void onRedstoneUpdate()
@@ -65,7 +65,7 @@ public class FirestarterTileEntity extends RedstoneMachineTileEntity
     }
 
     @Override
-    public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, PlayerEntity player) {
+    public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, PlayerEntity player) {
         super.getInformation(info, type, player);
         if(type != InformationType.BODY) {
             return;

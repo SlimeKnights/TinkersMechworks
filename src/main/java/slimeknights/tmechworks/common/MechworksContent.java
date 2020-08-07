@@ -5,26 +5,22 @@ import net.minecraft.block.OreBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.extensions.IForgeContainerType;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import slimeknights.mantle.client.CreativeTab;
-import slimeknights.mantle.common.IRegisterUtil;
+import slimeknights.mantle.registration.deferred.*;
+import slimeknights.mantle.registration.object.ItemObject;
+import slimeknights.mantle.util.SupplierItemGroup;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.client.gui.DisguiseScreen;
 import slimeknights.tmechworks.client.gui.DrawbridgeScreen;
@@ -37,127 +33,79 @@ import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.inventory.DisguiseContainer;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
-import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.common.items.MechworksBookItem;
 import slimeknights.tmechworks.common.items.MechworksItem;
 import slimeknights.tmechworks.common.worldgen.MechworksWorld;
 
-import javax.annotation.Nonnull;
+import java.util.function.Function;
 
-public class MechworksContent implements IRegisterUtil {
-    private Logger log = LogManager.getLogger(TMechworks.modId + ".content");
+public class MechworksContent {
+    private final Logger log = LogManager.getLogger(TMechworks.modId + ".content");
+
+    private static final BlockDeferredRegister BLOCKS = new BlockDeferredRegister(TMechworks.modId);
+    private static final ItemDeferredRegister ITEMS = new ItemDeferredRegister(TMechworks.modId);
+    private static final TileEntityTypeDeferredRegister TILE_ENTITIES = new TileEntityTypeDeferredRegister(TMechworks.modId);
+    private static final ContainerTypeDeferredRegister CONTAINERS = new ContainerTypeDeferredRegister(TMechworks.modId);
 
     // Creative tabs
-    public static CreativeTab tabMechworks = new CreativeTab("TinkersMechworks", new ItemStack(net.minecraft.item.Items.LIME_BANNER));
+    public static ItemGroup tabMechworks = new SupplierItemGroup(TMechworks.modId, "TinkersMechworks", () -> new ItemStack(Items.book));
 
-    @ObjectHolder(TMechworks.modId)
+    private static final Function<Block, ? extends BlockItem> DEFAULT_BLOCK_ITEM = (b) -> new BlockItem(b, new Item.Properties().group(tabMechworks));
+
     public static class Blocks {
-        public static final OreBlock aluminum_ore = empty();
-        public static final OreBlock copper_ore = empty();
-        public static final MetalBlock aluminum_block = empty();
-        public static final MetalBlock copper_block = empty();
-        public static final FirestarterBlock firestarter = empty();
-        public static final DrawbridgeBlock drawbridge = empty();
+        public static final ItemObject<OreBlock> aluminum_ore = BLOCKS.register("aluminum_ore", () -> new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getHarvestLevel())), DEFAULT_BLOCK_ITEM);
+        public static final ItemObject<OreBlock> copper_ore = BLOCKS.register("copper_ore", () -> new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getHarvestLevel())), DEFAULT_BLOCK_ITEM);
+        public static final ItemObject<MetalBlock> aluminum_block = BLOCKS.register("aluminum_block", MetalBlock::new, DEFAULT_BLOCK_ITEM);
+        public static final ItemObject<MetalBlock> copper_block = BLOCKS.register("copper_block", MetalBlock::new, DEFAULT_BLOCK_ITEM);
+        public static final ItemObject<FirestarterBlock> firestarter = BLOCKS.register("firestarter", FirestarterBlock::new, DEFAULT_BLOCK_ITEM);
+        public static final ItemObject<DrawbridgeBlock> drawbridge = BLOCKS.register("drawbridge", DrawbridgeBlock::new, DEFAULT_BLOCK_ITEM);
     }
 
-    @ObjectHolder(TMechworks.modId)
     public static class Items {
-        public static final MechworksBookItem book = empty();
+        public static final ItemObject<MechworksBookItem> book = ITEMS.register("book", MechworksBookItem::new);
+
+        public static final ItemObject<MechworksItem> copper_ingot = ITEMS.register("copper_ingot", MechworksItem::new);
+        public static final ItemObject<MechworksItem> aluminum_ingot = ITEMS.register("aluminum_ingot", MechworksItem::new);
+        public static final ItemObject<MechworksItem> copper_nugget = ITEMS.register("copper_nugget", MechworksItem::new);
+        public static final ItemObject<MechworksItem> aluminum_nugget = ITEMS.register("aluminum_nugget", MechworksItem::new);
 
         // Upgrades
-        public static final MechworksItem upgrade_blank = empty();
-        public static final MachineUpgradeItem upgrade_drawbridge_advanced = empty();
-        public static final MachineUpgradeItem upgrade_drawbridge_distance = empty();
-        public static final MachineUpgradeItem upgrade_speed = empty();
+        public static final ItemObject<Item> upgrade_blank = ITEMS.register("upgrade_blank", MechworksItem::new);
+        public static final ItemObject<MachineUpgradeItem> upgrade_drawbridge_advanced = ITEMS.register("upgrade_drawbridge_advanced", () -> new MachineUpgradeItem(stats -> stats.isAdvanced = true));
+        public static final ItemObject<MechworksItem> upgrade_drawbridge_distance = ITEMS.register("upgrade_drawbridge_distance", () -> new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.COMMON_CONFIG.drawbridge.extendUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.COMMON_CONFIG.drawbridge.extendUpgradeValue.get()}));
+        public static final ItemObject<MechworksItem> upgrade_speed = ITEMS.register("upgrade_speed", () -> new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.COMMON_CONFIG.drawbridge.speedUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.COMMON_CONFIG.drawbridge.speedUpgradeValue.get()}));
     }
 
-    @ObjectHolder(TMechworks.modId)
     public static class TileEntities {
-        public static final TileEntityType<?> firestarter = empty();
-        public static final TileEntityType<?> drawbridge = empty();
+        public static final RegistryObject<TileEntityType<FirestarterTileEntity>> firestarter = TILE_ENTITIES.register("firestarter", FirestarterTileEntity::new, Blocks.firestarter);
+        public static final RegistryObject<TileEntityType<DrawbridgeTileEntity>> drawbridge = TILE_ENTITIES.register("drawbridge", DrawbridgeTileEntity::new, Blocks.drawbridge);
     }
 
-    @ObjectHolder(TMechworks.modId)
     public static class Containers {
-        public static final ContainerType<DisguiseContainer> disguise = empty();
-        public static final ContainerType<DrawbridgeContainer> drawbridge = empty();
-    }
-
-    @Override
-    public String getModId() {
-        return TMechworks.modId;
-    }
-
-    @SubscribeEvent
-    public void registerBlocks(final RegistryEvent.Register<Block> event) {
-        IForgeRegistry<Block> registry = event.getRegistry();
-
-        // Ores
-        register(registry, new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getHarvestLevel())), "aluminum_ore");
-        register(registry, new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getHarvestLevel())), "copper_ore");
-
-        // Metals
-        register(registry, new MetalBlock(), "aluminum_block");
-        register(registry, new MetalBlock(), "copper_block");
-
-        // Machines
-        register(registry, new FirestarterBlock(), "firestarter");
-        register(registry, new DrawbridgeBlock(), "drawbridge");
-    }
-
-    @SubscribeEvent
-    public void registerItems(final RegistryEvent.Register<Item> event) {
-        IForgeRegistry<Item> registry = event.getRegistry();
-
-        register(registry, new MechworksBookItem(), "book");
-
-        // Ores
-        registerBlockItem(registry, Blocks.aluminum_ore);
-        registerBlockItem(registry, Blocks.copper_ore);
-
-        // Metals
-        registerBlockItem(registry, Blocks.copper_block);
-        registerBlockItem(registry, Blocks.aluminum_block);
-
-        register(registry, new MechworksItem(), "copper_ingot");
-        register(registry, new MechworksItem(), "aluminum_ingot");
-        register(registry, new MechworksItem(), "copper_nugget");
-        register(registry, new MechworksItem(), "aluminum_nugget");
-
-        // Machines
-        registerBlockItem(registry, Blocks.firestarter);
-        registerBlockItem(registry, Blocks.drawbridge);
-
-        // Machine Upgrades
-        register(registry, new MechworksItem(), "upgrade_blank");
-        register(registry, new MachineUpgradeItem(stats -> stats.isAdvanced = true), "upgrade_drawbridge_advanced");
-        register(registry, new MachineUpgradeItem(stats -> stats.extendLength += MechworksConfig.DRAWBRIDGE.extendUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.extendUpgradeValue.get()}), "upgrade_drawbridge_distance");
-        register(registry, new MachineUpgradeItem(stats -> stats.extendDelay -= MechworksConfig.DRAWBRIDGE.speedUpgradeValue.get()).setTooltipFormatSupplier(() -> new Object[]{MechworksConfig.DRAWBRIDGE.speedUpgradeValue.get()}), "upgrade_speed");
-    }
-
-    @SubscribeEvent
-    public void registerTileEntities(final RegistryEvent.Register<TileEntityType<?>> event) {
-        IForgeRegistry<TileEntityType<?>> registry = event.getRegistry();
-
-        registerTE(registry, FirestarterTileEntity::new, "firestarter", Blocks.firestarter);
-        registerTE(registry, DrawbridgeTileEntity::new, "drawbridge", Blocks.drawbridge);
-    }
-
-    @SubscribeEvent
-    public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
-        IForgeRegistry<ContainerType<?>> registry = event.getRegistry();
-
-        register(registry, IForgeContainerType.create(DisguiseContainer::factory), "disguise");
-        register(registry, IForgeContainerType.create(DrawbridgeContainer::factory), "drawbridge");
+        public static final RegistryObject<ContainerType<DisguiseContainer>> disguise = CONTAINERS.register("disguise", DisguiseContainer::factory);
+        public static final RegistryObject<ContainerType<DrawbridgeContainer>> drawbridge = CONTAINERS.register("drawbridge", DrawbridgeContainer::factory);
     }
 
     @OnlyIn(Dist.CLIENT)
     public void registerScreenFactories() {
-        ScreenManager.registerFactory(Containers.disguise, DisguiseScreen::create);
-        ScreenManager.registerFactory(Containers.drawbridge, DrawbridgeScreen::create);
+        ScreenManager.registerFactory(Containers.disguise.get(), DisguiseScreen::create);
+        ScreenManager.registerFactory(Containers.drawbridge.get(), DrawbridgeScreen::create);
     }
 
-//    public void registerEntities(final RegistryEvent.Register<EntityType<?>> event){}
+    public void initRegisters() {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        createRegister(BLOCKS, bus, Blocks.aluminum_block);
+        createRegister(ITEMS, bus, Items.aluminum_ingot);
+        createRegister(TILE_ENTITIES, bus, TileEntities.drawbridge);
+        createRegister(CONTAINERS, bus, Containers.disguise);
+    }
+
+    /**
+     * Exists to force static initialization of the necessary subclass, takes an object from the subclass as parameter
+     */
+    private void createRegister(DeferredRegisterWrapper<?> wrapper, IEventBus bus, Object anything) {
+        wrapper.register(bus);
+    }
 
     public void preInit(FMLCommonSetupEvent event) {
     }
@@ -166,22 +114,6 @@ public class MechworksContent implements IRegisterUtil {
     }
 
     public void postInit(InterModProcessEvent event) {
-        tabMechworks.setDisplayIcon(new ItemStack(Items.book));
         MechworksWorld.registerWorldGeneration();
-    }
-
-    @Override
-    public BlockItem registerBlockItem(IForgeRegistry<Item> registry, Block block) {
-        BlockItem itemBlock = new MechworksBlockItem(block, new Item.Properties().group(tabMechworks));
-        return this.register(registry, itemBlock, block.getRegistryName());
-    }
-
-    /**
-     * Jank workaround to having to set all object holder items to null, will trick validator into not complaining about nulls
-     */
-    @Nonnull
-    private static <T> T empty() {
-        //noinspection ConstantConditions
-        return null;
     }
 }

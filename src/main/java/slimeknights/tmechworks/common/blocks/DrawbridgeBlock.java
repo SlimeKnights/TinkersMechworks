@@ -5,11 +5,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +26,7 @@ import javax.annotation.Nonnull;
 
 public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemConstruct
 {
-    public static final BlockTags.Wrapper BLACKLIST = new BlockTags.Wrapper(new ResourceLocation("tmechworks:drawbridge_blacklist"));
+    public static final ITag.INamedTag<Block> BLACKLIST = BlockTags.makeWrapperTag("tmechworks:drawbridge_blacklist");
     public static final BooleanProperty ADVANCED = BooleanProperty.create("advanced");
 
     public DrawbridgeBlock()
@@ -59,10 +61,6 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new DrawbridgeTileEntity();
     }
-    @Override
-    public BlockState getExtendedState(BlockState state, IBlockReader world, BlockPos pos) {
-        return Blocks.STONE.getDefaultState();
-    }
 
     @Override
     public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState) {
@@ -76,7 +74,8 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
 
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
-        item.addPropertyOverride(new ResourceLocation("advanced"), (stack, world, entity) -> {
+        // func_239418_a_ => registerPropertyForItem
+        ItemModelsProperties.func_239418_a_(item, new ResourceLocation("advanced"), (stack, world, entity) -> {
             boolean advanced = false;
 
             if(stack.hasTag() && stack.getTag().contains("drawAdvanced", Constants.NBT.TAG_BYTE))

@@ -172,12 +172,6 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         boolean hasDisguise = !item.isEmpty() && item.getItem() instanceof BlockItem;
         state = state.with(RedstoneMachineBlock.HAS_DISGUISE, hasDisguise);
 
-        if (hasDisguise) {
-            BlockState disguiseState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-
-            state = state.with(RedstoneMachineBlock.LIGHT_VALUE, Math.max(disguiseState.getBlock().getLightValue(disguiseState, getWorld(), getPos()), disguiseState.getBlock().getLightValue(disguiseState)));
-        }
-
         getWorld().setBlockState(getPos(), state);
 
         getWorld().notifyBlockUpdate(getPos(), from, state, 3);
@@ -213,8 +207,8 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     /**
      * Reads inventory information
      */
-    public void readItemData(CompoundNBT tags) {
-        super.read(tags);
+    public void readItemData(BlockState state, CompoundNBT tags) {
+        super.read(state, tags);
 
         if (tags.contains("Disguise")) {
             CompoundNBT itemNBT = tags.getCompound("Disguise");
@@ -241,8 +235,8 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     @Override
-    public void read(CompoundNBT tags) {
-        readItemData(tags);
+    public void read(BlockState state, CompoundNBT tags) {
+        readItemData(state, tags);
 
         redstoneState = tags.getInt("Redstone");
     }
@@ -267,7 +261,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT tags = pkt.getNbtCompound();
 
-        handleUpdateTag(tags);
+        handleUpdateTag(getBlockState(), tags);
     }
 
     @Override
@@ -275,9 +269,10 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         return write(new CompoundNBT());
     }
 
+
     @Override
-    public void handleUpdateTag(@Nonnull CompoundNBT tag) {
-        read(tag);
+    public void handleUpdateTag(BlockState state, @Nonnull CompoundNBT tag) {
+        read(state, tag);
 
         // Mark block range for render update (if still needed)
     }
@@ -327,7 +322,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     @Override
-    public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, PlayerEntity player) {
+    public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, PlayerEntity player) {
         if (type != InformationType.BODY)
             return;
 
@@ -335,7 +330,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     @Override
-    public void getInformation(@Nonnull List<ITextComponent> info, InformationType type, CompoundNBT serverData, PlayerEntity player) {
+    public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, CompoundNBT serverData, PlayerEntity player) {
         getInformation(info, type, player);
     }
 
@@ -353,6 +348,6 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
             return ((RedstoneMachineBlock)state.getBlock()).hasFacingDirection();
         }
 
-        return state.has(DirectionalBlock.FACING);
+        return state.hasProperty(DirectionalBlock.FACING);
     }
 }
