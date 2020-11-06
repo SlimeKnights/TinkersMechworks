@@ -27,7 +27,7 @@
             "tag": "forge:storage_blocks/lapis"
           },
           "S": {
-            "item": "minecraft:chest"
+            "tag": "forge:chests/wooden"
           }
         },
         "result": {
@@ -64,7 +64,7 @@
             "tag": "forge:storage_blocks/lapis"
           },
           "S": {
-            "item": "minecraft:chest"
+            "tag": "forge:chests/wooden"
           }
         },
         "result": {
