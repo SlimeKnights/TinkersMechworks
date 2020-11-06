@@ -129,7 +129,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
 
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
-        ItemModelsProperties.func_239418_a_(item, new ResourceLocation("extinguish"), (stack, world, entity) -> {
+        ItemModelsProperties.registerProperty(item, new ResourceLocation("extinguish"), (stack, world, entity) -> {
             boolean shouldExtinguish = true;
 
             if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))

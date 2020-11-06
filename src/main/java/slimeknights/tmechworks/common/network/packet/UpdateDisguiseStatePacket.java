@@ -43,7 +43,7 @@ public class UpdateDisguiseStatePacket {
                 player = context.getSender();
 
                 // World.func_234923_W_ => getDimension
-                PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.world.func_234923_W_()), msg);
+                PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.world.getDimensionKey()), msg);
             } else {
                 player = TMechworks.proxy.getPlayer();
             }

@@ -2,6 +2,7 @@ modLoader="javafml"
 loaderVersion="[24,)"
 issueTrackerURL="https://github.com/SlimeKnights/TinkersMechworks/issues"
 logoFile="TMechworks.png"
+license="Creative Commons 3"
 
 [[mods]]
     modId="tmechworks"
@@ -21,4 +22,4 @@ logoFile="TMechworks.png"
     [[dependencies.tmechworks]]
         modId="mantle"
         mandatory=true
-        versionRange="[1.5.15,)"
+        versionRange="[1.6.40,)"
