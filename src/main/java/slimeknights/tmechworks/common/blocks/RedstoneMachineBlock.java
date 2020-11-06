@@ -149,7 +149,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
             ItemStack item = new ItemStack(this, 1);
 
-            writeAdditionalItemData(state, builder.getWorld(), builder.get(LootParameters.POSITION), item);
+            writeAdditionalItemData(state, builder.getWorld(), new BlockPos(builder.get(LootParameters.field_237457_g_)), item);
 
             if (dropState)
                 machine.storeTileData(item);
@@ -184,6 +184,8 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     public boolean blockMatches(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         return state.getBlock() == newState.getBlock();
     }
+
+
 
     @OnlyIn(Dist.CLIENT)
     @Override

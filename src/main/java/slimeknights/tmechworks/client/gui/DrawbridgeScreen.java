@@ -110,7 +110,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.func_230459_a_(stack, mouseX, mouseY);
+        this.renderHoveredTooltip(stack, mouseX, mouseY);
     }
 
     @Override
@@ -147,14 +147,14 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     }
 
     @Override
-    protected void func_230459_a_(MatrixStack stack, int mouseX, int mouseY) {
+    protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if(this.hoveredSlot == null)
             return;
 
         if(!isAdvanced || this.hoveredSlot.getHasStack()) {
-            super.func_230459_a_(stack, mouseX, mouseY); // func_230459_a_ => renderHoveredTooltip
+            super.renderHoveredTooltip(stack, mouseX, mouseY); // func_230459_a_ => renderHoveredTooltip
         } else if(hoveredSlot.inventory == getContainer().getTile().slots) {
-            renderTooltip(stack, ITextProperties.func_240653_a_(I18n.format(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1), Style.EMPTY.applyFormatting(TextFormatting.GRAY)), mouseX, mouseY);
+            renderTooltip(stack, new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).setStyle(Style.EMPTY.applyFormatting(TextFormatting.GRAY)), mouseX, mouseY);
         }
     }
 

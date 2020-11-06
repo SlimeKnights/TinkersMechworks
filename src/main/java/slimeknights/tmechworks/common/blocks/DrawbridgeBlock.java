@@ -75,7 +75,7 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
         // func_239418_a_ => registerPropertyForItem
-        ItemModelsProperties.func_239418_a_(item, new ResourceLocation("advanced"), (stack, world, entity) -> {
+        ItemModelsProperties.registerProperty(item, new ResourceLocation("advanced"), (stack, world, entity) -> {
             boolean advanced = false;
 
             if(stack.hasTag() && stack.getTag().contains("drawAdvanced", Constants.NBT.TAG_BYTE))
