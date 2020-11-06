@@ -19,6 +19,7 @@ import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.entities.MechworksFakePlayer;
 import slimeknights.tmechworks.common.network.PacketHandler;
+import slimeknights.tmechworks.common.worldgen.MechworksWorld;
 
 @Mod(TMechworks.modId)
 public class TMechworks {
@@ -48,6 +49,8 @@ public class TMechworks {
         content = new MechworksContent();
         content.initRegisters();
         bus.register(content);
+
+        MinecraftForge.EVENT_BUS.register(new MechworksWorld());
     }
 
     private void preInit(final FMLCommonSetupEvent event) {

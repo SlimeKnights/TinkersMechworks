@@ -35,9 +35,10 @@ repositories {
     }
 }
 
-group = "slimeknights"
+group = "slimeknights.tmechworks"
 
 version = "${minecraft_version}-${mod_version}"
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
     mappings channel: mappings_channel, version: mappings_version
@@ -84,9 +85,9 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
     // Compile against the Hwyla API, but do not include it at runtime
-    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}_${minecraft_version}:api")
+    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
     // At runtime, use the full Hwyla jar
-    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}_${minecraft_version}")
+    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 }
 
 sourceSets {

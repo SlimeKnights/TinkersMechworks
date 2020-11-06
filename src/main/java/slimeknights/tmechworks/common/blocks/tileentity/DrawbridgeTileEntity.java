@@ -255,7 +255,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         context.withNullableParameter(LootParameters.BLOCK_ENTITY, world.getTileEntity(pos))
                 .withRandom(world.rand)
-                .withParameter(LootParameters.POSITION, pos)
+                .withParameter(LootParameters.field_237457_g_, Vector3d.copyCentered(pos))
                 .withParameter(LootParameters.TOOL, tool);
 
         ItemStack stack = slots.getStackInSlot(targetSlot);
@@ -699,7 +699,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         @Override
         public BlockPos getPos() {
-            return rayTraceResult.getPos();
+            return func_242401_i().getPos();
         }
     }
 

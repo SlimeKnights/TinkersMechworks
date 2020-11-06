@@ -322,15 +322,19 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     @Override
-    public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, PlayerEntity player) {
-        if (type != InformationType.BODY)
-            return;
+    public void syncInformation(CompoundNBT nbt, ServerPlayerEntity player) {
+        nbt.putInt("power", getRedstoneState());
+    }
 
-        info.add(new TranslationTextComponent("tooltip.waila.power", getRedstoneState()));
+    @Override
+    public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, PlayerEntity player) {
     }
 
     @Override
     public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, CompoundNBT serverData, PlayerEntity player) {
+        if (type == InformationType.BODY && !serverData.isEmpty())
+            info.add(new TranslationTextComponent("tooltip.waila.power", serverData.getInt("power")));
+
         getInformation(info, type, player);
     }
 
