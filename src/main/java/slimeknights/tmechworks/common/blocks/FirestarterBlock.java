@@ -37,7 +37,6 @@ import java.util.List;
 
 public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItemConstruct
 {
-    public static final ITag.INamedTag<Block> WHITELIST = BlockTags.makeWrapperTag("tmechworks:firestarter_extinguish_whitelist");
     public static final BooleanProperty EXTINGUISH = BooleanProperty.create("extinguish");
 
     public FirestarterBlock()

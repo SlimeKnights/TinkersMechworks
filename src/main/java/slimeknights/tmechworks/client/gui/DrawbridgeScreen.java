@@ -23,6 +23,7 @@ import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
 import slimeknights.tmechworks.client.gui.components.DisguiseStateWidget;
+import slimeknights.tmechworks.common.MechworksTags;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
@@ -167,7 +168,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
             list.add(new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).mergeStyle(TextFormatting.GRAY));
         }
 
-        if(DrawbridgeBlock.BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))) {
+        if(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))) {
             list.add(StringTextComponent.EMPTY);
             list.add(new TranslationTextComponent(Util.prefix("gui.blacklisted")));
         }

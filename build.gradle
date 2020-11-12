@@ -69,6 +69,21 @@ minecraft {
                 }
             }
         }
+
+        data {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'tmechworks', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                tmechworks {
+                    source sourceSets.main
+                }
+            }
+        }
     }
 }
 
@@ -93,7 +108,12 @@ dependencies {
 sourceSets {
     main {
         resources {
-            srcDir 'src/resources'
+            srcDirs = [
+                    'src/resources',
+                    'src/generated/resources'
+            ]
+            //But exclude the cache of the generated data from what gets built
+            exclude '.cache'
         }
     }
 }
