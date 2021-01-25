@@ -31,6 +31,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import slimeknights.tmechworks.common.MechworksContent;
+import slimeknights.tmechworks.common.MechworksTags;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
 import slimeknights.tmechworks.common.config.MechworksConfig;
@@ -74,7 +75,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         super(MechworksContent.TileEntities.drawbridge.get(), new TranslationTextComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1);
 
         upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
-        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !DrawbridgeBlock.BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))).overrideStackLimit(64);
+        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))).overrideStackLimit(64);
 
         itemHandlerCap.invalidate();
         itemHandler = new DrawbridgeItemHandler(this);
@@ -210,7 +211,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             return false;
         if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
             return false;
-        if(DrawbridgeBlock.BLACKLIST.contains(Block.getBlockFromItem(stack.getItem())))
+        if(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.getBlockFromItem(stack.getItem())))
             return false;
         if(Block.getBlockFromItem(stack.getItem()).getDefaultState().getBlockHardness(getWorld(), getPos()) < 0)
             return false;
@@ -245,7 +246,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             return false;
 
         BlockState state = world.getBlockState(pos);
-        if (state.isAir(world, pos) || state.getBlockHardness(getWorld(), getPos()) < 0 || DrawbridgeBlock.BLACKLIST.contains(state.getBlock())) {
+        if (state.isAir(world, pos) || state.getBlockHardness(getWorld(), getPos()) < 0 || MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(state.getBlock())) {
             return false;
         }
 

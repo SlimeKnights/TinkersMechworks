@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "tmechworks:upgrades",
+  "pattern": [
+    "ACA",
+    "PBP",
+    " A "
+  ],
+  "key": {
+    "B": {
+      "item": "tmechworks:upgrade_blank"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "C": {
+      "tag": "forge:ingots/copper"
+    },
+    "A": {
+      "tag": "forge:ingots/aluminum"
+    }
+  },
+  "result": {
+    "item": "tmechworks:upgrade_drawbridge_distance"
+  }
+}

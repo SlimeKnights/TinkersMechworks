@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "tmechworks:upgrades",
+  "pattern": [
+    "CHC",
+    "LBL",
+    "ASA"
+  ],
+  "key": {
+    "B": {
+      "item": "tmechworks:upgrade_blank"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    },
+    "C": {
+      "tag": "forge:ingots/copper"
+    },
+    "A": {
+      "tag": "forge:ingots/aluminum"
+    },
+    "L": {
+      "tag": "forge:storage_blocks/lapis"
+    },
+    "S": {
+      "tag": "forge:chests/wooden"
+    }
+  },
+  "result": {
+    "item": "tmechworks:upgrade_drawbridge_advanced"
+  }
+}

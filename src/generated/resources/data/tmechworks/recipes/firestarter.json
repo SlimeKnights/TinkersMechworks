@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "tmechworks:machines",
+  "pattern": [
+    "RAR",
+    "FBF",
+    "ACA"
+  ],
+  "key": {
+    "C": {
+      "tag": "forge:ingots/copper"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "A": {
+      "tag": "forge:ingots/aluminum"
+    },
+    "B": {
+      "item": "tmechworks:upgrade_blank"
+    },
+    "F": {
+      "item": "minecraft:flint_and_steel"
+    }
+  },
+  "result": {
+    "item": "tmechworks:firestarter"
+  }
+}

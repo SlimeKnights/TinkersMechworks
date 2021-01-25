@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 
 public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemConstruct
 {
-    public static final ITag.INamedTag<Block> BLACKLIST = BlockTags.makeWrapperTag("tmechworks:drawbridge_blacklist");
     public static final BooleanProperty ADVANCED = BooleanProperty.create("advanced");
 
     public DrawbridgeBlock()

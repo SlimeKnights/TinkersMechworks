@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "tmechworks:aluminum_ingot_from_smelting"
+    ]
+  },
+  "criteria": {
+    "has_aluminum_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "tmechworks:aluminum_ore"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "tmechworks:aluminum_ingot_from_smelting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_aluminum_ore",
+      "has_the_recipe"
+    ]
+  ]
+}

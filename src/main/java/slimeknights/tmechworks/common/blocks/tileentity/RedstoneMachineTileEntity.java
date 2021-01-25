@@ -186,7 +186,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         writeInventoryToNBT(tags);
 
         if (this.hasCustomName()) {
-            tags.putString("CustomName", ITextComponent.Serializer.toJson(this.inventoryTitle));
+            tags.putString("CustomName", ITextComponent.Serializer.toJson(this.getCustomName()));
         }
 
         ItemStack disguise = getDisguiseBlock();
@@ -304,7 +304,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
         if (this.hasCustomName()) {
             CompoundNBT name = new CompoundNBT();
-            name.putString("Name", ITextComponent.Serializer.toJson(inventoryTitle));
+            name.putString("Name", ITextComponent.Serializer.toJson(this.getCustomName()));
 
             stack.setTagInfo("display", name);
         }
