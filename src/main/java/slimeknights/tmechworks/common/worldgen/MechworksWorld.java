@@ -2,6 +2,8 @@ package slimeknights.tmechworks.common.worldgen;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
@@ -9,22 +11,32 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.config.MechworksConfig;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MechworksWorld {
+    private static final Logger log = LogManager.getLogger(TMechworks.modId + ".world");
+
     private static final List<OreProperties> OVERWORLD_ORES = ImmutableList.of(
             new OreProperties(() -> MechworksContent.Blocks.copper_ore.get().getDefaultState(), 8, ore -> ore.range(64).square().func_242731_b(20), MechworksConfig.COMMON_CONFIG.worldGen.copper),
             new OreProperties(() -> MechworksContent.Blocks.aluminum_ore.get().getDefaultState(), 8, ore -> ore.range(64).square().func_242731_b(20), MechworksConfig.COMMON_CONFIG.worldGen.aluminum)
     );
 
     public void setupWorldGeneration() {
+        Registry<ConfiguredFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_FEATURE;
+
         for (OreProperties ore : OVERWORLD_ORES) {
             ore.preconfigureFeature();
+
+            Registry.register(registry, Objects.requireNonNull(ore.state.get().getBlock().getRegistryName()), ore.preconfiguredFeature);
         }
     }
 
@@ -62,6 +74,11 @@ public class MechworksWorld {
             if(!config.enabled.get())
                 return;
 
+            if(preconfiguredFeature == null) {
+                log.error("Preconfigured feature for " + state.get().getBlock().getRegistryName() + " is null, skipping...");
+                return;
+            }
+
             boolean isWhitelist = config.isWhitelist.get();
             List<? extends String> filter = config.filter.get();
             boolean matches = filter.stream().anyMatch(biome::equals);
@@ -69,9 +86,6 @@ public class MechworksWorld {
             if((isWhitelist && !matches) || (!isWhitelist && matches)) {
                 return;
             }
-
-            if(preconfiguredFeature == null)
-                preconfigureFeature();
 
             generation.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, preconfiguredFeature);
         }
