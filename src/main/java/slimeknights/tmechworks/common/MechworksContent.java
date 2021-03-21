@@ -115,6 +115,7 @@ public class MechworksContent {
     }
 
     public void init(InterModEnqueueEvent event) {
+        MechworksWorld.getInstance().setupWorldGeneration();
     }
 
     public void postInit(InterModProcessEvent event) {

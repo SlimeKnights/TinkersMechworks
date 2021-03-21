@@ -23,12 +23,22 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MechworksWorld {
+    private static MechworksWorld INSTANCE;
+
     private static final Logger log = LogManager.getLogger(TMechworks.modId + ".world");
 
     private static final List<OreProperties> OVERWORLD_ORES = ImmutableList.of(
             new OreProperties(() -> MechworksContent.Blocks.copper_ore.get().getDefaultState(), 8, ore -> ore.range(64).square().func_242731_b(20), MechworksConfig.COMMON_CONFIG.worldGen.copper),
             new OreProperties(() -> MechworksContent.Blocks.aluminum_ore.get().getDefaultState(), 8, ore -> ore.range(64).square().func_242731_b(20), MechworksConfig.COMMON_CONFIG.worldGen.aluminum)
     );
+
+    public MechworksWorld() {
+        INSTANCE = this;
+    }
+
+    public static MechworksWorld getInstance() {
+        return INSTANCE;
+    }
 
     public void setupWorldGeneration() {
         Registry<ConfiguredFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_FEATURE;
