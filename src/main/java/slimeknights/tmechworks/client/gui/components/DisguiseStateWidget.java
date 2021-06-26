@@ -37,7 +37,7 @@ public class DisguiseStateWidget extends Widget {
     }
 
     @Override
-    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         if(state == null)
             return;
 

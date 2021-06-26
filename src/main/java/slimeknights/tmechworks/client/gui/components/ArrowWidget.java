@@ -92,7 +92,7 @@ public class ArrowWidget extends Widget {
     }
 
     @Override
-    public void renderButton(@Nonnull MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
 
         RenderSystem.pushMatrix();

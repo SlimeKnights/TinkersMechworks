@@ -28,8 +28,8 @@ public class MechworksWorld {
     private static final Logger log = LogManager.getLogger(TMechworks.modId + ".world");
 
     private static final List<OreProperties> OVERWORLD_ORES = ImmutableList.of(
-            new OreProperties(() -> MechworksContent.Blocks.copper_ore.get().getDefaultState(), 8, ore -> ore.range(64).square().func_242731_b(20), MechworksConfig.COMMON_CONFIG.worldGen.copper),
-            new OreProperties(() -> MechworksContent.Blocks.aluminum_ore.get().getDefaultState(), 8, ore -> ore.range(64).square().func_242731_b(20), MechworksConfig.COMMON_CONFIG.worldGen.aluminum)
+            new OreProperties(() -> MechworksContent.Blocks.copper_ore.get().getDefaultState(), 8, ore -> ore.range(64).square().count(20), MechworksConfig.COMMON_CONFIG.worldGen.copper),
+            new OreProperties(() -> MechworksContent.Blocks.aluminum_ore.get().getDefaultState(), 8, ore -> ore.range(64).square().count(20), MechworksConfig.COMMON_CONFIG.worldGen.aluminum)
     );
 
     public MechworksWorld() {

@@ -9,11 +9,10 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
     }
 }
 
@@ -38,7 +37,7 @@ repositories {
 group = "slimeknights.tmechworks"
 
 version = "${minecraft_version}-${mod_version}"
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
     mappings channel: mappings_channel, version: mappings_version
@@ -128,7 +127,11 @@ processResources {
         include 'META-INF/mods.toml'
 
         // replace version and mcversion
-        expand 'version': mod_version, 'MCversion': minecraft_version, 'forge_version': forge_version_toml
+        expand 'version': mod_version,
+                'minecraft_version': minecraft_version_toml,
+                'forge_version': forge_version_toml,
+                'mantle_version': mantle_version,
+                'loader_version': loader_version_toml
     }
 
     // copy everything else
