@@ -35,6 +35,8 @@ public class ItemTags extends ItemTagsProvider {
 
         addNugget(MechworksTags.Items.NUGGETS_ALUMINUM, MechworksContent.Items.aluminum_nugget.get());
         addNugget(MechworksTags.Items.NUGGETS_COPPER, MechworksContent.Items.copper_nugget.get());
+
+        getOrCreateBuilder(net.minecraft.tags.ItemTags.LECTERN_BOOKS).add(MechworksContent.Items.book.get());
     }
 
     private void addIngot(ITag.INamedTag<Item> tag, Item... item) {

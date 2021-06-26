@@ -52,7 +52,7 @@ public class MechworksContent {
     private static final ContainerTypeDeferredRegister CONTAINERS = new ContainerTypeDeferredRegister(TMechworks.modId);
 
     // Creative tabs
-    public static ItemGroup tabMechworks = new SupplierItemGroup(TMechworks.modId, "TinkersMechworks", () -> new ItemStack(Items.book)).setTabPath("");
+    public static ItemGroup tabMechworks = new SupplierItemGroup(TMechworks.modId, "TinkersMechworks", () -> new ItemStack(Items.book)).setGroupPath("");
 
     private static final Function<Block, ? extends BlockItem> DEFAULT_BLOCK_ITEM = (b) -> new BlockItem(b, new Item.Properties().group(tabMechworks));
 
