@@ -96,7 +96,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         if(player.isCrouching())
             return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
 
-        state = state.func_235896_a_(EXTINGUISH); // func_235896_a_ => cycleValue
+        state = state.cycleValue(EXTINGUISH);
 
         worldIn.setBlockState(pos, state);
         worldIn.playSound(player, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);

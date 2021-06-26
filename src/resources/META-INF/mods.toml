@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[24,)"
+loaderVersion="${loader_version}"
 issueTrackerURL="https://github.com/SlimeKnights/TinkersMechworks/issues"
 logoFile="TMechworks.png"
 license="Creative Commons 3"
@@ -16,10 +16,14 @@ license="Creative Commons 3"
     [[dependencies.tmechworks]]
         modId="forge"
         mandatory=true
-        versionRange="[${forge_version},)"
+        versionRange="${forge_version}"
         ordering="NONE"
         side="BOTH"
     [[dependencies.tmechworks]]
         modId="mantle"
         mandatory=true
-        versionRange="[1.6.40,)"
+        versionRange="[${mantle_version},)"
+    [[dependencies.tmechworks]]
+        modId="minecraft"
+        mandatory=true
+        versionRange="${minecraft_version}"

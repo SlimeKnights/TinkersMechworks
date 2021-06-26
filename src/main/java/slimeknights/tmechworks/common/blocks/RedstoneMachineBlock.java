@@ -149,7 +149,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
             ItemStack item = new ItemStack(this, 1);
 
-            writeAdditionalItemData(state, builder.getWorld(), new BlockPos(builder.get(LootParameters.field_237457_g_)), item);
+            writeAdditionalItemData(state, builder.getWorld(), new BlockPos(builder.get(LootParameters.ORIGIN)), item);
 
             if (dropState)
                 machine.storeTileData(item);

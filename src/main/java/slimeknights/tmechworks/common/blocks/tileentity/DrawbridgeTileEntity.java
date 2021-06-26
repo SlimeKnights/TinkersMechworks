@@ -256,7 +256,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         context.withNullableParameter(LootParameters.BLOCK_ENTITY, world.getTileEntity(pos))
                 .withRandom(world.rand)
-                .withParameter(LootParameters.field_237457_g_, Vector3d.copyCentered(pos))
+                .withParameter(LootParameters.ORIGIN, Vector3d.copyCentered(pos))
                 .withParameter(LootParameters.TOOL, tool);
 
         ItemStack stack = slots.getStackInSlot(targetSlot);
