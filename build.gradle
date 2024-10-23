@@ -28,9 +28,12 @@ repositories {
         name 'forge'
         url 'http://files.minecraftforge.net/maven'
     }
-	maven {
-		name "Tehnut Maven FS"
-		url "http://maven.tehnut.info"
+    maven {
+        name "Curse Maven"
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -98,10 +101,7 @@ dependencies {
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
-    // Compile against the Hwyla API, but do not include it at runtime
-    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
-    // At runtime, use the full Hwyla jar
-    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    implementation fg.deobf("curse.maven:jade-324717:${jade_version_id}")
 }
 
 sourceSets {
