@@ -34,6 +34,7 @@ public class MechworksTags {
         public static final TagKey<Item> ORES_ALL = tag("ores");
 
         // Forge
+        public static final TagKey<Item> RAW_ALUMINUM = forgeTag("raw_materials/aluminum");
         public static final TagKey<Item> INGOTS_ALUMINUM = forgeTag("ingots/aluminum");
         public static final TagKey<Item> NUGGETS_ALUMINUM = forgeTag("nuggets/aluminum");
         public static final TagKey<Item> ORES_ALUMINUM = forgeTag("ores/aluminum");

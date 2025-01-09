@@ -12,6 +12,7 @@
   "item.tmechworks.book": "Mechanical Tinkering",
   "item.tmechworks.book.tooltip": "The best kind of book\\nby Da Vinci",
   //// Materials
+  "item.tmechworks.raw_aluminum": "Raw Aluminum",
   "item.tmechworks.aluminum_ingot": "Aluminum Ingot",
   "item.tmechworks.aluminum_nugget": "Aluminum Nugget",
 

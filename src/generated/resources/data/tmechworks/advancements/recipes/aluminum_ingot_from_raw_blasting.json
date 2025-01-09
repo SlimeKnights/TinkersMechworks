@@ -2,17 +2,17 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "tmechworks:aluminum_ingot_from_blasting"
+      "tmechworks:aluminum_ingot_from_raw_blasting"
     ]
   },
   "criteria": {
-    "has_aluminum_ore": {
+    "has_raw_aluminum": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "tmechworks:aluminum_ore"
+              "tmechworks:raw_aluminum"
             ]
           }
         ]
@@ -21,13 +21,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "tmechworks:aluminum_ingot_from_blasting"
+        "recipe": "tmechworks:aluminum_ingot_from_raw_blasting"
       }
     }
   },
   "requirements": [
     [
-      "has_aluminum_ore",
+      "has_raw_aluminum",
       "has_the_recipe"
     ]
   ]

@@ -32,7 +32,7 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
     @Override
     protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> out) {
         // Metals
-        registerMetal(out, aluminum_ore, aluminum_nugget, aluminum_ingot, aluminum_block);
+        registerMetal(out, aluminum_ore, aluminum_nugget, aluminum_ingot, aluminum_block, raw_aluminum);
 
         wrap(ShapelessRecipeBuilder.shapeless(book).requires(Items.BOOK).requires(upgrade_blank), Items.BOOK).save(out);
 
@@ -105,16 +105,21 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
                 .save(out);
     }
 
-    private void registerMetal(@Nonnull Consumer<FinishedRecipe> out, ItemLike ore, ItemLike nugget, ItemLike ingot, ItemLike storageBlock) {
+    private void registerMetal(@Nonnull Consumer<FinishedRecipe> out, ItemLike ore, ItemLike nugget, ItemLike ingot, ItemLike storageBlock, ItemLike raw) {
         String format = Util.prefix("%s_from_%s");
 
         String nuggetName = nugget.asItem().getRegistryName().getPath();
         String ingotName = ingot.asItem().getRegistryName().getPath();
         String storageBlockName = storageBlock.asItem().getRegistryName().getPath();
+        String rawName = raw.asItem().getRegistryName().getPath();
 
         // Smelting
-        wrap(SimpleCookingRecipeBuilder.smelting(Ingredient.of(ore), ingot, 1F, standardSmeltingTime), ore).save(out, String.format(format, ingotName, "smelting"));
-        wrap(SimpleCookingRecipeBuilder.blasting(Ingredient.of(ore), ingot, 1F, standardBlastingTime), ore).save(out, String.format(format, ingotName, "blasting"));
+        wrap(SimpleCookingRecipeBuilder.smelting(Ingredient.of(ore), ingot, 1F, standardSmeltingTime), ore).save(out, String.format(format, ingotName, "ore_smelting"));
+        wrap(SimpleCookingRecipeBuilder.blasting(Ingredient.of(ore), ingot, 1F, standardBlastingTime), ore).save(out, String.format(format, ingotName, "ore_blasting"));
+
+        // Raw ore smelting
+        wrap(SimpleCookingRecipeBuilder.smelting(Ingredient.of(raw), ingot, 1F, standardSmeltingTime), raw).save(out, String.format(format, ingotName, "raw_smelting"));
+        wrap(SimpleCookingRecipeBuilder.blasting(Ingredient.of(raw), ingot, 1F, standardBlastingTime), raw).save(out, String.format(format, ingotName, "raw_blasting"));
 
         // Compression
         compress(ingot, storageBlock).group(Util.prefix(storageBlockName)).save(out, String.format(format, storageBlockName, ingotName));

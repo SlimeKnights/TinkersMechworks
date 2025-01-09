@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "tmechworks:aluminum_ingot_from_smelting"
+      "tmechworks:aluminum_ingot_from_ore_smelting"
     ]
   },
   "criteria": {
@@ -21,7 +21,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "tmechworks:aluminum_ingot_from_smelting"
+        "recipe": "tmechworks:aluminum_ingot_from_ore_smelting"
       }
     }
   },

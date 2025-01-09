@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.stream.Collectors;
 
 import static slimeknights.tmechworks.common.MechworksContent.Blocks.*;
+import static slimeknights.tmechworks.common.MechworksContent.Items.*;
 
 public class BlockLootTables extends net.minecraft.data.loot.BlockLoot {
     @Nonnull
@@ -24,8 +25,9 @@ public class BlockLootTables extends net.minecraft.data.loot.BlockLoot {
         noDrop(drawbridge.get());
 
         dropSelf(aluminum_block.get());
-        dropSelf(aluminum_ore.get());
-        dropSelf(deepslate_aluminum_ore.get());
+
+        this.add(aluminum_ore.get(), createOreDrop(aluminum_ore.get(), raw_aluminum.get()));
+        this.add(deepslate_aluminum_ore.get(), createOreDrop(deepslate_aluminum_ore.get(), raw_aluminum.get()));
     }
 
     private void noDrop(Block block) {

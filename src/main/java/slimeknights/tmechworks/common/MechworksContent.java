@@ -68,6 +68,7 @@ public class MechworksContent {
     public static class Items {
         public static final ItemObject<MechworksBookItem> book = ITEMS.register("book", MechworksBookItem::new);
 
+        public static final ItemObject<MechworksItem> raw_aluminum = ITEMS.register("raw_aluminum", MechworksItem::new);
         public static final ItemObject<MechworksItem> aluminum_ingot = ITEMS.register("aluminum_ingot", MechworksItem::new);
         public static final ItemObject<MechworksItem> aluminum_nugget = ITEMS.register("aluminum_nugget", MechworksItem::new);
 

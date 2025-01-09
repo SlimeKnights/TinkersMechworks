@@ -15,6 +15,7 @@ import slimeknights.tmechworks.common.MechworksTags;
 import static net.minecraft.tags.ItemTags.*;
 
 public class ItemTags extends ItemTagsProvider {
+    private TagsProvider.TagAppender<Item> allRawMaterialTags;
     private TagsProvider.TagAppender<Item> allIngotTags;
     private TagsProvider.TagAppender<Item> allNuggetTags;
 
@@ -30,6 +31,7 @@ public class ItemTags extends ItemTagsProvider {
         copy(MechworksTags.Blocks.ORES_ALUMINUM, MechworksTags.Items.ORES_ALUMINUM);
         copy(MechworksTags.Blocks.STORAGE_BLOCKS_ALUMINUM, MechworksTags.Items.STORAGE_BLOCKS_ALUMINUM);
 
+        addRawMaterial(MechworksTags.Items.RAW_ALUMINUM, MechworksContent.Items.raw_aluminum.get());
         addIngot(MechworksTags.Items.INGOTS_ALUMINUM, MechworksContent.Items.aluminum_ingot.get());
         addNugget(MechworksTags.Items.NUGGETS_ALUMINUM, MechworksContent.Items.aluminum_nugget.get());
 
@@ -43,6 +45,15 @@ public class ItemTags extends ItemTagsProvider {
                 MechworksContent.Items.upgrade_drawbridge_advanced.get(),
                 MechworksContent.Items.upgrade_drawbridge_distance.get()
         );
+    }
+
+    private void addRawMaterial(TagKey<Item> tag, Item... item) {
+        tag(tag).add(item);
+
+        if(allRawMaterialTags == null)
+            allRawMaterialTags = tag(Tags.Items.RAW_MATERIALS);
+
+        allRawMaterialTags.add(item);
     }
 
     private void addIngot(TagKey<Item> tag, Item... item) {

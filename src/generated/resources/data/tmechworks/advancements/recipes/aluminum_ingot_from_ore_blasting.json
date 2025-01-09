@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "tmechworks:aluminum_ingot_from_ore_blasting"
+    ]
+  },
+  "criteria": {
+    "has_aluminum_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tmechworks:aluminum_ore"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "tmechworks:aluminum_ingot_from_ore_blasting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_aluminum_ore",
+      "has_the_recipe"
+    ]
+  ]
+}
