@@ -17,16 +17,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class MechworksBookItem extends LecternBookItem {
     public MechworksBookItem() {
-        super(new Item.Properties().group(MechworksContent.tabMechworks).maxStackSize(1));
+        super(new Item.Properties().tab(MechworksContent.tabMechworks).stacksTo(1));
     }
 
     @Override
     @Nonnull
     @ParametersAreNonnullByDefault
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
-        ItemStack stack = playerIn.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand) {
+        ItemStack stack = playerIn.getItemInHand(hand);
 
-        if(worldIn.isRemote){
+        if(worldIn.isClientSide){
             ClientProxy.book.openGui(hand, stack);
         }
 

@@ -32,7 +32,7 @@ public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
     protected void init() {
         super.init();
 
-        disguiseWidget = new DisguiseStateWidget(guiLeft + 99, guiTop + 30, container.getTile());
+        disguiseWidget = new DisguiseStateWidget(leftPos + 99, topPos + 30, menu.getTile());
         addButton(disguiseWidget);
     }
 
@@ -40,11 +40,11 @@ public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
     public void tick() {
         super.tick();
 
-        RedstoneMachineTileEntity te = container.getTile();
+        RedstoneMachineTileEntity te = menu.getTile();
         ItemStack disguise = te.getDisguiseBlock();
 
         if (disguise.getItem() instanceof BlockItem) {
-            BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().getDefaultState();
+            BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().defaultBlockState();
             disguiseWidget.setState(DisguiseStates.getForState(disguiseState), te.getDisguiseState());
         } else {
             disguiseWidget.setState(null, null);
@@ -55,15 +55,15 @@ public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(SCREEN_LOCATION);
+        this.minecraft.getTextureManager().bind(SCREEN_LOCATION);
 
-        blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize); // Background
+        blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight); // Background
     }
 
 //    @Override

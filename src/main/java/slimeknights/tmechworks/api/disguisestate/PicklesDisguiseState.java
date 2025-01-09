@@ -4,7 +4,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 
 public class PicklesDisguiseState extends BasicDisguiseState<Integer> {
     public PicklesDisguiseState() {
-        super(BlockStateProperties.PICKLES_1_4, 1);
+        super(BlockStateProperties.PICKLES, 1);
     }
 
     @Override

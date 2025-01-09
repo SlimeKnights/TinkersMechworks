@@ -36,13 +36,13 @@ public class ServerReopenUiPacket {
             PlayerEntity player = context.getSender();
 
             context.enqueueWork(() -> {
-                BlockState block = player.getEntityWorld().getBlockState(msg.pos);
+                BlockState block = player.getCommandSenderWorld().getBlockState(msg.pos);
 
                 if(block.getBlock() instanceof RedstoneMachineBlock) {
-                    ItemStack cursorStack = player.inventory.getItemStack();
-                    player.inventory.setItemStack(ItemStack.EMPTY);
-                    ((RedstoneMachineBlock)block.getBlock()).openGui(player, player.getEntityWorld(), msg.pos);
-                    player.inventory.setItemStack(cursorStack);
+                    ItemStack cursorStack = player.inventory.getCarried();
+                    player.inventory.setCarried(ItemStack.EMPTY);
+                    ((RedstoneMachineBlock)block.getBlock()).openGui(player, player.getCommandSenderWorld(), msg.pos);
+                    player.inventory.setCarried(cursorStack);
 
                     PacketHandler.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new ClientSetCursorStackPacket(cursorStack));
                 }

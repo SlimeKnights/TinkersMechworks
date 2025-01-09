@@ -41,18 +41,18 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
 
     public FirestarterBlock()
     {
-        super(Material.IRON);
-        setDefaultState(getDefaultState().with(EXTINGUISH, true));
+        super(Material.METAL);
+        registerDefaultState(defaultBlockState().setValue(EXTINGUISH, true));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(EXTINGUISH);
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
         ItemStack extinguishStack = new ItemStack(this, 1);
         ItemStack keepLitStack = new ItemStack(this, 1);
 
@@ -70,7 +70,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         super.writeAdditionalItemData(state, worldIn, pos, stack);
 
         CompoundNBT tags = stack.getOrCreateTag();
-        tags.putBoolean("extinguish", state.get(EXTINGUISH));
+        tags.putBoolean("extinguish", state.getValue(EXTINGUISH));
     }
 
     @Nonnull
@@ -83,38 +83,38 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean shouldExtinguish = true;
-        ItemStack stack = context.getItem();
+        ItemStack stack = context.getItemInHand();
 
         if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
             shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
-        return super.getStateForPlacement(context).with(EXTINGUISH, shouldExtinguish);
+        return super.getStateForPlacement(context).setValue(EXTINGUISH, shouldExtinguish);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(player.isCrouching())
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
 
-        state = state.cycleValue(EXTINGUISH);
+        state = state.cycle(EXTINGUISH);
 
-        worldIn.setBlockState(pos, state);
-        worldIn.playSound(player, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
+        worldIn.setBlockAndUpdate(pos, state);
+        worldIn.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
 
         return ActionResultType.SUCCESS;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
         boolean shouldExtinguish = true;
 
         if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
             shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
-        tooltip.add(new TranslationTextComponent(Util.prefix("tooltip.behaviour"), I18n.format(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).mergeStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent(Util.prefix("tooltip.behaviour"), I18n.get(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).withStyle(TextFormatting.GRAY));
     }
 
     @Override
@@ -128,7 +128,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
 
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("extinguish"), (stack, world, entity) -> {
+        ItemModelsProperties.register(item, new ResourceLocation("extinguish"), (stack, world, entity) -> {
             boolean shouldExtinguish = true;
 
             if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))

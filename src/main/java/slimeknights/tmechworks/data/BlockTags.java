@@ -21,9 +21,9 @@ public class BlockTags extends BlockTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
-        getOrCreateBuilder(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST);
-        getOrCreateBuilder(MechworksTags.Blocks.FIRESTARTER_WHITELIST)
+    protected void addTags() {
+        tag(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST);
+        tag(MechworksTags.Blocks.FIRESTARTER_WHITELIST)
                 .add(Blocks.FIRE)
                 .add(Blocks.NETHER_PORTAL);
 
@@ -35,19 +35,19 @@ public class BlockTags extends BlockTagsProvider {
     }
 
     private void addOre(ITag.INamedTag<Block> tag, Block... block) {
-        getOrCreateBuilder(tag).add(block);
+        tag(tag).add(block);
 
         if(allOreTags == null)
-            allOreTags = getOrCreateBuilder(Tags.Blocks.ORES);
+            allOreTags = tag(Tags.Blocks.ORES);
 
         allOreTags.add(block);
     }
 
     private void addStorageBlock(ITag.INamedTag<Block> tag, Block... block) {
-        getOrCreateBuilder(tag).add(block);
+        tag(tag).add(block);
 
         if(allStorageBlockTags == null)
-            allStorageBlockTags = getOrCreateBuilder(Tags.Blocks.STORAGE_BLOCKS);
+            allStorageBlockTags = tag(Tags.Blocks.STORAGE_BLOCKS);
 
         allStorageBlockTags.add(block);
     }

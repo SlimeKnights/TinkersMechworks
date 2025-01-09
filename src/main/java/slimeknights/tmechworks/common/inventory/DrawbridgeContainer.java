@@ -26,9 +26,9 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
         super(MechworksContent.Containers.drawbridge.get(), id, playerInventory, te);
 
         this.playerInventory = playerInventory;
-        te.openInventory(playerInventory.player);
+        te.startOpen(playerInventory.player);
 
-        rows = MathHelper.ceil((float)te.slots.getSizeInventory() / ADVANCED_COLUMNS);
+        rows = MathHelper.ceil((float)te.slots.getContainerSize() / ADVANCED_COLUMNS);
         mainSlots = addDrawbridgeSlots();
 
         for(int x = 0; x < 2; x++){
@@ -48,7 +48,7 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
         } else {
             ArrayList<Slot> slots = new ArrayList<>();
 
-            int slotCount = tile.slots.getSizeInventory();
+            int slotCount = tile.slots.getContainerSize();
 
             final int left = -18 + 7;
             final int width = 198;
@@ -75,7 +75,7 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
     public static DrawbridgeContainer factory(int id, PlayerInventory playerInventory, PacketBuffer extraData) {
         BlockPos pos = extraData.readBlockPos();
 
-        TileEntity te = playerInventory.player.world.getTileEntity(pos);
+        TileEntity te = playerInventory.player.level.getBlockEntity(pos);
         DrawbridgeTileEntity drawbridge = null;
 
         if(te instanceof DrawbridgeTileEntity)

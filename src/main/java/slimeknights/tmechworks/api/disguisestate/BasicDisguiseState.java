@@ -21,16 +21,16 @@ public abstract class BasicDisguiseState<T extends Comparable<T>> extends Disgui
 
     @Override
     public BlockState apply(BlockState state, String value) {
-        return state.with(property, getValueFrom(value));
+        return state.setValue(property, getValueFrom(value));
     }
 
     @Override
     public Collection<T> getAllowedValues() {
-        return property.getAllowedValues();
+        return property.getPossibleValues();
     }
 
     @Override
     public T getValueFrom(String value) {
-        return property.parseValue(value).orElse(defaultValue);
+        return property.getValue(value).orElse(defaultValue);
     }
 }

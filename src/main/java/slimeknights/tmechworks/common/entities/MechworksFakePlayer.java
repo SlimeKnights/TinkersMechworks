@@ -28,20 +28,20 @@ public class MechworksFakePlayer extends FakePlayer {
             instance = new MechworksFakePlayer(world, PROFILE);
         }
 
-        instance.world = world;
+        instance.level = world;
         return new WeakReference<>(instance);
     }
 
     private static void releaseInstance(IWorld world) {
         // If the fake player has a reference to the world getting unloaded,
         // null out the fake player so that the world can unload
-        if (instance != null && instance.world == world) {
+        if (instance != null && instance.level == world) {
             instance = null;
         }
     }
 
     @Override
-    public boolean isPotionApplicable(EffectInstance potioneffectIn) {
+    public boolean canBeAffected(EffectInstance potioneffectIn) {
         return false;
     }
 

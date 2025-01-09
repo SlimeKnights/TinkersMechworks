@@ -21,7 +21,7 @@ public class ItemTags extends ItemTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
+    protected void addTags() {
         copy(Tags.Blocks.ORES, Tags.Items.ORES);
         copy(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS);
 
@@ -36,23 +36,23 @@ public class ItemTags extends ItemTagsProvider {
         addNugget(MechworksTags.Items.NUGGETS_ALUMINUM, MechworksContent.Items.aluminum_nugget.get());
         addNugget(MechworksTags.Items.NUGGETS_COPPER, MechworksContent.Items.copper_nugget.get());
 
-        getOrCreateBuilder(net.minecraft.tags.ItemTags.LECTERN_BOOKS).add(MechworksContent.Items.book.get());
+        tag(net.minecraft.tags.ItemTags.LECTERN_BOOKS).add(MechworksContent.Items.book.get());
     }
 
     private void addIngot(ITag.INamedTag<Item> tag, Item... item) {
-        getOrCreateBuilder(tag).add(item);
+        tag(tag).add(item);
 
         if(allIngotTags == null)
-            allIngotTags = getOrCreateBuilder(Tags.Items.INGOTS);
+            allIngotTags = tag(Tags.Items.INGOTS);
 
         allIngotTags.add(item);
     }
 
     private void addNugget(ITag.INamedTag<Item> tag, Item... item) {
-        getOrCreateBuilder(tag).add(item);
+        tag(tag).add(item);
 
         if(allNuggetTags == null)
-            allNuggetTags = getOrCreateBuilder(Tags.Items.NUGGETS);
+            allNuggetTags = tag(Tags.Items.NUGGETS);
 
         allNuggetTags.add(item);
     }

@@ -12,6 +12,6 @@ public class HorizontalFacingProvider extends FacingProvider {
 
     @Override
     public BlockState applyTo(BlockState state, Direction facing) {
-        return state.with(BlockStateProperties.HORIZONTAL_FACING, facing);
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, facing);
     }
 }

@@ -13,6 +13,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
+import net.minecraft.item.Item.Properties;
+
 public class MechworksItem extends Item {
     private Object[] tooltipFormat;
     private Supplier<Object[]> tooltipFormatSupplier = () -> tooltipFormat;
@@ -22,7 +24,7 @@ public class MechworksItem extends Item {
     }
 
     public MechworksItem(Properties properties) {
-        super(properties.group(MechworksContent.tabMechworks));
+        super(properties.tab(MechworksContent.tabMechworks));
     }
 
     public MechworksItem setTooltipFormat(Object... format){
@@ -38,9 +40,9 @@ public class MechworksItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        if (I18n.hasKey(getTranslationKey(stack) + ".tooltip")) {
-            tooltip.addAll(TranslationUtil.getTooltips(I18n.format(getTranslationKey(stack) + ".tooltip", tooltipFormatSupplier.get())));
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        if (I18n.exists(getDescriptionId(stack) + ".tooltip")) {
+            tooltip.addAll(TranslationUtil.getTooltips(I18n.get(getDescriptionId(stack) + ".tooltip", tooltipFormatSupplier.get())));
         }
     }
 }

@@ -4,7 +4,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 
 public class LayersDisguiseState extends BasicDisguiseState<Integer> {
     public LayersDisguiseState() {
-        super(BlockStateProperties.LAYERS_1_8, 1);
+        super(BlockStateProperties.LAYERS, 1);
     }
 
     @Override

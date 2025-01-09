@@ -18,14 +18,14 @@ public class TranslationUtil {
                 String[] strings = new TranslationTextComponent(translate).getString().split("\n");
 
                 for (String string : strings) {
-                    list.add(new StringTextComponent(string).mergeStyle(TextFormatting.GRAY));
+                    list.add(new StringTextComponent(string).withStyle(TextFormatting.GRAY));
                 }
             }
             else {
                 String[] strings = new TranslationTextComponent(text).getString().split("\n");
 
                 for (String string : strings) {
-                    list.add(new StringTextComponent(string).mergeStyle(TextFormatting.GRAY));
+                    list.add(new StringTextComponent(string).withStyle(TextFormatting.GRAY));
                 }
             }
         }

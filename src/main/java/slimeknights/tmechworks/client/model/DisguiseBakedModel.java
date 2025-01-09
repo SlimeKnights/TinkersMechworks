@@ -32,7 +32,7 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
     private final Predicate<RenderType> renderTypeLookup;
 
     public DisguiseBakedModel(IBakedModel originalModel) {
-        this(originalModel, RenderType.getSolid());
+        this(originalModel, RenderType.solid());
     }
 
     public DisguiseBakedModel(IBakedModel originalModel, RenderType defaultRenderType) {
@@ -55,11 +55,11 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
             if (disguise != null && disguise.getItem() instanceof BlockItem) {
                 BlockItem disguiseItem = (BlockItem) disguise.getItem();
 
-                BlockState disguiseState = disguiseItem.getBlock().getDefaultState();
-                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, extraData.getData(DISGUISE_STATE), state.get(BlockStateProperties.FACING));
+                BlockState disguiseState = disguiseItem.getBlock().defaultBlockState();
+                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, extraData.getData(DISGUISE_STATE), state.getValue(BlockStateProperties.FACING));
 
                 if (RenderTypeLookup.canRenderInLayer(disguiseState, MinecraftForgeClient.getRenderLayer())) {
-                    IBakedModel model = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(disguiseState);
+                    IBakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(disguiseState);
 
                     // Avoid infinite recursion when setting the disguise to another disguisable block
                     if (model instanceof DisguiseBakedModel) {

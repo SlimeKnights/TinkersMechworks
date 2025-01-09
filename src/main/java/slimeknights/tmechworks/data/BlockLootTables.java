@@ -23,13 +23,13 @@ public class BlockLootTables extends net.minecraft.data.loot.BlockLootTables {
         noDrop(firestarter.get());
         noDrop(drawbridge.get());
 
-        registerDropSelfLootTable(aluminum_block.get());
-        registerDropSelfLootTable(copper_block.get());
-        registerDropSelfLootTable(aluminum_ore.get());
-        registerDropSelfLootTable(copper_ore.get());
+        dropSelf(aluminum_block.get());
+        dropSelf(copper_block.get());
+        dropSelf(aluminum_ore.get());
+        dropSelf(copper_ore.get());
     }
 
     private void noDrop(Block block) {
-        registerLootTable(block, blockNoDrop());
+        add(block, noDrop());
     }
 }

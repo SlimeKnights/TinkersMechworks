@@ -4,7 +4,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 
 public class LevelDisguiseState extends BasicDisguiseState<Integer> {
     public LevelDisguiseState() {
-        super(BlockStateProperties.LEVEL_0_8, 1);
+        super(BlockStateProperties.LEVEL_COMPOSTER, 1);
     }
 
     @Override

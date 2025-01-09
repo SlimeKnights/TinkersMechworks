@@ -24,14 +24,14 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return size;
     }
 
     @Override
     public boolean isEmpty() {
-        for (int i = 0; i < getSizeInventory(); i++) {
-            if (!getStackInSlot(i).isEmpty()) {
+        for (int i = 0; i < getContainerSize(); i++) {
+            if (!getItem(i).isEmpty()) {
                 return false;
             }
         }
@@ -40,33 +40,33 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
+    public ItemStack getItem(int slot) {
         if (!isSlotInInventory(slot))
             return ItemStack.EMPTY;
 
-        return parent.getStackInSlot(getSlot(slot));
+        return parent.getItem(getSlot(slot));
     }
 
     @Override
-    public ItemStack decrStackSize(int slot, int count) {
+    public ItemStack removeItem(int slot, int count) {
         if (!isSlotInInventory(slot))
             return ItemStack.EMPTY;
 
-        return parent.decrStackSize(getSlot(slot), count);
+        return parent.removeItem(getSlot(slot), count);
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int slot) {
+    public ItemStack removeItemNoUpdate(int slot) {
         if (!isSlotInInventory(slot))
             return ItemStack.EMPTY;
 
-        return parent.removeStackFromSlot(getSlot(slot));
+        return parent.removeItemNoUpdate(getSlot(slot));
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack itemStack) {
+    public void setItem(int slot, ItemStack itemStack) {
         if (isSlotInInventory(slot))
-            parent.setInventorySlotContents(getSlot(slot), itemStack);
+            parent.setItem(getSlot(slot), itemStack);
     }
 
     public int getSlot(int slot){
@@ -74,8 +74,8 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
     }
 
     @Override
-    public void markDirty() {
-        parent.markDirty();
+    public void setChanged() {
+        parent.setChanged();
     }
 
     /**
@@ -85,27 +85,27 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
         if (parent instanceof MantleTileEntity)
             ((MantleTileEntity) parent).markDirtyFast();
         else
-            markDirty();
+            setChanged();
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity playerEntity) {
-        return parent.isUsableByPlayer(playerEntity);
+    public boolean stillValid(PlayerEntity playerEntity) {
+        return parent.stillValid(playerEntity);
     }
 
     @Override
-    public void clear() {
-        for (int slot = 0; slot < getSizeInventory(); slot++) {
-            setInventorySlotContents(slot, ItemStack.EMPTY);
+    public void clearContent() {
+        for (int slot = 0; slot < getContainerSize(); slot++) {
+            setItem(slot, ItemStack.EMPTY);
         }
     }
 
     @Override
-    public int getInventoryStackLimit() {
+    public int getMaxStackSize() {
         if(overrideStackLimit)
             return stackLimit;
 
-        return parent.getInventoryStackLimit();
+        return parent.getMaxStackSize();
     }
 
     public FragmentedInventory overrideStackLimit(int stackLimit) {
@@ -122,22 +122,22 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
     }
 
     @Override
-    public void openInventory(PlayerEntity player) {
-        parent.openInventory(player);
+    public void startOpen(PlayerEntity player) {
+        parent.startOpen(player);
     }
 
     @Override
-    public void closeInventory(PlayerEntity player) {
-        parent.closeInventory(player);
+    public void stopOpen(PlayerEntity player) {
+        parent.stopOpen(player);
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
+    public boolean canPlaceItem(int slot, ItemStack itemStack) {
         return isItemValidForValidatingSlot(slot, itemStack);
     }
 
     public boolean isSlotInInventory(int i) {
-        return i >= 0 && i < size && i + startSlot < parent.getSizeInventory();
+        return i >= 0 && i < size && i + startSlot < parent.getContainerSize();
     }
 
     public void resize(int newSize){

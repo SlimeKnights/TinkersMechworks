@@ -12,6 +12,6 @@ public class AxisFacingProvider extends FacingProvider {
 
     @Override
     public BlockState applyTo(BlockState state, Direction facing) {
-        return state.with(BlockStateProperties.AXIS, facing.getAxis());
+        return state.setValue(BlockStateProperties.AXIS, facing.getAxis());
     }
 }

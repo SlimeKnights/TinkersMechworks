@@ -24,12 +24,12 @@ public class UpdateDisguiseStatePacket {
 
     public static void encode(UpdateDisguiseStatePacket msg, PacketBuffer buf) {
         buf.writeBlockPos(msg.pos);
-        buf.writeString(msg.state, 256);
+        buf.writeUtf(msg.state, 256);
     }
 
     public static UpdateDisguiseStatePacket decode(PacketBuffer buf) {
         BlockPos pos = buf.readBlockPos();
-        String state = buf.readString(256);
+        String state = buf.readUtf(256);
 
         return new UpdateDisguiseStatePacket(pos, state);
     }
@@ -42,14 +42,14 @@ public class UpdateDisguiseStatePacket {
             if(context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 player = context.getSender();
 
-                // World.func_234923_W_ => getDimension
-                PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.world.getDimensionKey()), msg);
+                // World.dimension => getDimension
+                PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.level.dimension()), msg);
             } else {
                 player = TMechworks.proxy.getPlayer();
             }
 
             context.enqueueWork(() -> {
-                TileEntity te = player.getEntityWorld().getTileEntity(msg.pos);
+                TileEntity te = player.getCommandSenderWorld().getBlockEntity(msg.pos);
 
                 if(te instanceof RedstoneMachineTileEntity)
                     ((RedstoneMachineTileEntity)te).setDisguiseState(msg.state);

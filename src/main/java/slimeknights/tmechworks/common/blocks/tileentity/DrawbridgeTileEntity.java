@@ -46,6 +46,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import slimeknights.tmechworks.integration.waila.IInformationProvider.InformationType;
+
 public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements IPlaceDirection {
     private static final float TICK_TIME = 0.05F;
 
@@ -75,7 +77,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         super(MechworksContent.TileEntities.drawbridge.get(), new TranslationTextComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1);
 
         upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
-        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))).overrideStackLimit(64);
+        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.byItem(stack.getItem()))).overrideStackLimit(64);
 
         itemHandlerCap.invalidate();
         itemHandler = new DrawbridgeItemHandler(this);
@@ -86,8 +88,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     public void tick() {
         super.tick();
 
-        float delta = (getWorld().getGameTime() - lastWorldTime) * TICK_TIME;
-        lastWorldTime = getWorld().getGameTime();
+        float delta = (getLevel().getGameTime() - lastWorldTime) * TICK_TIME;
+        lastWorldTime = getLevel().getGameTime();
 
         if (placeDirection == null)
             setPlaceDirectionRelativeToBlock(Direction.NORTH);
@@ -110,13 +112,13 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
                 int extend = extendedLength + 1;
 
-                Direction dir = getWorld().getBlockState(getPos()).get(DrawbridgeBlock.FACING);
-                BlockPos pos = new BlockPos(getPos().getX() + dir.getXOffset() * extend, getPos().getY() + dir.getYOffset() * extend, getPos().getZ() + dir.getZOffset() * extend);
+                Direction dir = getLevel().getBlockState(getBlockPos()).getValue(DrawbridgeBlock.FACING);
+                BlockPos pos = new BlockPos(getBlockPos().getX() + dir.getStepX() * extend, getBlockPos().getY() + dir.getStepY() * extend, getBlockPos().getZ() + dir.getStepZ() * extend);
 
-                if (placeBlock(pos, slots.getStackInSlot(getSlot()))) {
+                if (placeBlock(pos, slots.getItem(getSlot()))) {
                     extendedLength++;
                     cooldown = stats.extendDelay;
-                    world.playSound(null, pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.25F, Util.rand.nextFloat() * 0.25F + 0.6F);
+                    level.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundCategory.BLOCKS, 0.25F, Util.rand.nextFloat() * 0.25F + 0.6F);
                 } else {
                     isMoving = false;
 
@@ -137,13 +139,13 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
                 int extend = extendedLength;
 
-                Direction dir = getWorld().getBlockState(getPos()).get(DrawbridgeBlock.FACING);
-                BlockPos pos = new BlockPos(getPos().getX() + dir.getXOffset() * extend, getPos().getY() + dir.getYOffset() * extend, getPos().getZ() + dir.getZOffset() * extend);
+                Direction dir = getLevel().getBlockState(getBlockPos()).getValue(DrawbridgeBlock.FACING);
+                BlockPos pos = new BlockPos(getBlockPos().getX() + dir.getStepX() * extend, getBlockPos().getY() + dir.getStepY() * extend, getBlockPos().getZ() + dir.getStepZ() * extend);
 
                 if (breakBlock(pos, getSlot())) {
                     extendedLength--;
                     cooldown = stats.extendDelay;
-                    world.playSound(null, pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.25F, Util.rand.nextFloat() * 0.15F + 0.6F);
+                    level.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundCategory.BLOCKS, 0.25F, Util.rand.nextFloat() * 0.15F + 0.6F);
                 } else {
                     isMoving = false;
                     extendedLength = 0;
@@ -170,7 +172,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         computeStats();
 
-        lastWorldTime = world.getGameTime();
+        lastWorldTime = level.getGameTime();
     }
 
     @Override
@@ -181,14 +183,14 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             isExtended = false;
             isMoving = true;
 
-            Direction dir = getWorld().getBlockState(getPos()).get(DrawbridgeBlock.FACING);
-            World world = getWorld();
+            Direction dir = getLevel().getBlockState(getBlockPos()).getValue(DrawbridgeBlock.FACING);
+            World world = getLevel();
 
             // Clamp extended state to nearest air block
             for (int i = 1; i <= extendedLength; i++) {
-                BlockPos pos = new BlockPos(getPos().getX() + dir.getXOffset() * i, getPos().getY() + dir.getYOffset() * i, getPos().getZ() + dir.getZOffset() * i);
+                BlockPos pos = new BlockPos(getBlockPos().getX() + dir.getStepX() * i, getBlockPos().getY() + dir.getStepY() * i, getBlockPos().getZ() + dir.getStepZ() * i);
 
-                if (world.isAirBlock(pos)) {
+                if (world.isEmptyBlock(pos)) {
                     extendedLength = i - 1;
                     break;
                 }
@@ -207,13 +209,13 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     public boolean placeBlock(BlockPos pos, ItemStack stack) {
-        if (getWorld().isRemote)
+        if (getLevel().isClientSide)
             return false;
         if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
             return false;
-        if(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.getBlockFromItem(stack.getItem())))
+        if(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.byItem(stack.getItem())))
             return false;
-        if(Block.getBlockFromItem(stack.getItem()).getDefaultState().getBlockHardness(getWorld(), getPos()) < 0)
+        if(Block.byItem(stack.getItem()).defaultBlockState().getDestroySpeed(getLevel(), getBlockPos()) < 0)
             return false;
 
         FakePlayer player = getFakePlayer(pos);
@@ -234,19 +236,19 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
                 break;
         }
 
-        player.setItemStackToSlot(EquipmentSlotType.MAINHAND, stack);
+        player.setItemSlot(EquipmentSlotType.MAINHAND, stack);
         ItemUseContext ctx = new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(pos.getX() + 0.5D, pos.getY() + yOffset, pos.getZ() + 0.5D), getPlaceDirection(), pos, false));
-        return doPlaceBlock(new DrawbridgeItemUseContext(ctx)).isSuccessOrConsume();
+        return doPlaceBlock(new DrawbridgeItemUseContext(ctx)).consumesAction();
     }
 
     public boolean breakBlock(BlockPos pos, int targetSlot) {
-        World world = getWorld();
+        World world = getLevel();
 
-        if (world.isRemote)
+        if (world.isClientSide)
             return false;
 
         BlockState state = world.getBlockState(pos);
-        if (state.isAir(world, pos) || state.getBlockHardness(getWorld(), getPos()) < 0 || MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(state.getBlock())) {
+        if (state.isAir(world, pos) || state.getDestroySpeed(getLevel(), getBlockPos()) < 0 || MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(state.getBlock())) {
             return false;
         }
 
@@ -254,24 +256,24 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         LootContext.Builder context = new LootContext.Builder((ServerWorld) world);
 
-        context.withNullableParameter(LootParameters.BLOCK_ENTITY, world.getTileEntity(pos))
-                .withRandom(world.rand)
-                .withParameter(LootParameters.ORIGIN, Vector3d.copyCentered(pos))
+        context.withOptionalParameter(LootParameters.BLOCK_ENTITY, world.getBlockEntity(pos))
+                .withRandom(world.random)
+                .withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(pos))
                 .withParameter(LootParameters.TOOL, tool);
 
-        ItemStack stack = slots.getStackInSlot(targetSlot);
+        ItemStack stack = slots.getItem(targetSlot);
         List<ItemStack> drops = state.getDrops(context).stream().filter(x -> !x.isEmpty()).collect(Collectors.toList());
 
         if (stack.isEmpty()) {
-            ItemStack target = drops.stream().filter(x -> slots.isItemValidForSlot(targetSlot, x)).findFirst().orElse(ItemStack.EMPTY);
+            ItemStack target = drops.stream().filter(x -> slots.canPlaceItem(targetSlot, x)).findFirst().orElse(ItemStack.EMPTY);
 
             if (!target.isEmpty() && drops.remove(target))
-                slots.setInventorySlotContents(targetSlot, target);
+                slots.setItem(targetSlot, target);
         } else {
-            ItemStack target = drops.stream().filter(x -> stack.isItemEqual(x) && ItemStack.areItemStackTagsEqual(stack, x)).findFirst().orElse(ItemStack.EMPTY);
+            ItemStack target = drops.stream().filter(x -> stack.sameItem(x) && ItemStack.tagMatches(stack, x)).findFirst().orElse(ItemStack.EMPTY);
 
             if (!target.isEmpty() && drops.remove(target)) {
-                int remainder = Math.max(stack.getCount() + target.getCount() - Math.min(stack.getMaxStackSize(), slots.getInventoryStackLimit()), 0);
+                int remainder = Math.max(stack.getCount() + target.getCount() - Math.min(stack.getMaxStackSize(), slots.getMaxStackSize()), 0);
                 int targetCount = target.getCount() - remainder;
 
                 stack.setCount(stack.getCount() + targetCount);
@@ -284,19 +286,19 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         }
 
         drops.forEach(x -> {
-            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), x);
+            InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), x);
         });
 
         world.removeBlock(pos, false);
-        state.getBlock().onPlayerDestroy(world, pos, state);
+        state.getBlock().destroy(world, pos, state);
         return true;
     }
 
     public void computeStats() {
         DrawbridgeStats stats = new DrawbridgeStats();
 
-        for (int i = 0; i < upgrades.getSizeInventory(); i++) {
-            Item item = upgrades.getStackInSlot(i).getItem();
+        for (int i = 0; i < upgrades.getContainerSize(); i++) {
+            Item item = upgrades.getItem(i).getItem();
 
             if (item instanceof MachineUpgradeItem)
                 ((MachineUpgradeItem) item).effect.accept(stats);
@@ -309,16 +311,16 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     public void onStatsUpdated() {
         int blockSlots = stats.isAdvanced ? stats.extendLength : 1;
 
-        World world = getWorld();
-        BlockPos pos = getPos();
+        World world = getLevel();
+        BlockPos pos = getBlockPos();
 
         // Drop items in removed slots
-        for (int i = slots.getSizeInventory() - 1; i >= blockSlots; i--) {
-            ItemStack stack = slots.getStackInSlot(i);
+        for (int i = slots.getContainerSize() - 1; i >= blockSlots; i--) {
+            ItemStack stack = slots.getItem(i);
 
             if (!stack.isEmpty()) {
-                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-                slots.setInventorySlotContents(i, ItemStack.EMPTY);
+                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+                slots.setItem(i, ItemStack.EMPTY);
             }
         }
 
@@ -326,13 +328,13 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
         slots.resize(blockSlots);
         slots.overrideStackLimit(stats.isAdvanced ? 1 : 64);
 
-        BlockState state = getWorld().getBlockState(getPos());
-        getWorld().setBlockState(getPos(), state.with(DrawbridgeBlock.ADVANCED, stats.isAdvanced));
+        BlockState state = getLevel().getBlockState(getBlockPos());
+        getLevel().setBlockAndUpdate(getBlockPos(), state.setValue(DrawbridgeBlock.ADVANCED, stats.isAdvanced));
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tags) {
-        super.read(state, tags);
+    public void load(BlockState state, CompoundNBT tags) {
+        super.load(state, tags);
 
         CompoundNBT stats = tags.getCompound("DrawbridgeState");
 
@@ -344,8 +346,8 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
     @Nonnull
     @Override
-    public CompoundNBT write(CompoundNBT tags) {
-        tags = super.write(tags);
+    public CompoundNBT save(CompoundNBT tags) {
+        tags = super.save(tags);
 
         CompoundNBT state = new CompoundNBT();
 
@@ -408,18 +410,18 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
     public void setPlaceAngle(Angle angle) {
         placeAngle = angle;
-        markDirty();
+        setChanged();
     }
 
     public void setPlaceDirection(Direction direction) {
         placeDirection = direction;
-        markDirty();
+        setChanged();
     }
 
     public void setPlaceDirectionRelativeToBlock(Direction direction) {
         rawPlaceDirection = direction;
 
-        Direction facing = getWorld().getBlockState(getPos()).get(RedstoneMachineBlock.FACING);
+        Direction facing = getLevel().getBlockState(getBlockPos()).getValue(RedstoneMachineBlock.FACING);
 
         switch (direction) {
             case UP:
@@ -461,7 +463,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
                         setPlaceDirection(direction);
                         break;
                     default:
-                        setPlaceDirection(facing.rotateY());
+                        setPlaceDirection(facing.getClockWise());
                         break;
                 }
                 break;
@@ -472,7 +474,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
                         setPlaceDirection(direction);
                         break;
                     default:
-                        setPlaceDirection(facing.rotateYCCW());
+                        setPlaceDirection(facing.getCounterClockWise());
                         break;
                 }
                 break;
@@ -480,7 +482,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     public void updateFakePlayer(BlockPos pos) {
-        fakePlayer = Util.getFakePlayer(world);
+        fakePlayer = Util.getFakePlayer(level);
 
         if (fakePlayer == null) {
             return;
@@ -488,73 +490,73 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         FakePlayer player = fakePlayer.get();
 
-        player.rotationYaw = 0;
-        player.rotationPitch = 0;
+        player.yRot = 0;
+        player.xRot = 0;
         float posX = pos.getX();
         float posY = pos.getY();
         float posZ = pos.getZ();
 
         switch (placeDirection) {
             case NORTH:
-                player.rotationYaw = 0;
+                player.yRot = 0;
                 posZ += 2;
                 break;
             case SOUTH:
-                player.rotationYaw = 180;
+                player.yRot = 180;
                 posZ -= 2;
                 break;
             case UP:
-                player.rotationPitch = 90;
+                player.xRot = 90;
                 posY += 2;
                 break;
             case DOWN:
-                player.rotationPitch = -90;
+                player.xRot = -90;
                 posY -= 2;
                 break;
             case EAST:
-                player.rotationYaw = 90;
+                player.yRot = 90;
                 posX -= 2;
                 break;
             case WEST:
-                player.rotationYaw = -90;
+                player.yRot = -90;
                 posX += 2;
                 break;
         }
 
         switch (placeAngle) {
             case HIGH:
-                player.rotationPitch -= 45;
+                player.xRot -= 45;
                 break;
             case LOW:
-                player.rotationPitch += 45;
+                player.xRot += 45;
                 break;
         }
 
-        player.prevRotationPitch = player.rotationPitch;
-        player.prevRotationYaw = player.rotationYaw;
-        player.rotationYawHead = player.rotationYaw;
-        player.prevRotationYawHead = player.rotationYawHead;
+        player.xRotO = player.xRot;
+        player.yRotO = player.yRot;
+        player.yHeadRot = player.yRot;
+        player.yHeadRotO = player.yHeadRot;
 
-        player.setPosition(posX, posY, posZ);
+        player.setPos(posX, posY, posZ);
     }
 
     @Override
-    public void setInventorySlotContents(int slot, @Nonnull ItemStack itemstack) {
-        super.setInventorySlotContents(slot, itemstack);
+    public void setItem(int slot, @Nonnull ItemStack itemstack) {
+        super.setItem(slot, itemstack);
 
         if (upgrades.isSlotInInventory(slot))
             computeStats();
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+    public boolean canPlaceItem(int slot, @Nonnull ItemStack stack) {
         if(!isCapAccess)
             return false;
 
         if(!slots.isSlotInInventory(slot - slots.getStartSlot()))
             return false;
 
-        return super.isItemValidForSlot(slot, stack) && slots.isItemValidForSlot(slot - slots.getStartSlot(), stack);
+        return super.canPlaceItem(slot, stack) && slots.canPlaceItem(slot - slots.getStartSlot(), stack);
     }
 
     public FakePlayer getFakePlayer(BlockPos pos) {
@@ -598,11 +600,11 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
      * Adaptation of ForgeHooks.onPlaceItemIntoWorld that passes the context straight into tryPlace
      */
     public ActionResultType doPlaceBlock(DrawbridgeItemUseContext context) {
-        ItemStack itemstack = context.getItem();
-        World world = context.getWorld();
+        ItemStack itemstack = context.getItemInHand();
+        World world = context.getLevel();
 
         PlayerEntity player = context.getPlayer();
-        if (player != null && !player.abilities.allowEdit && !itemstack.canPlaceOn(world.getTags(), new CachedBlockInfo(world, context.getPos(), false)))
+        if (player != null && !player.abilities.mayBuild && !itemstack.hasAdventureModePlaceTagForBlock(world.getTagManager(), new CachedBlockInfo(world, context.getClickedPos(), false)))
             return ActionResultType.PASS;
 
         if (!(itemstack.getItem() instanceof BlockItem))
@@ -619,13 +621,13 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             world.captureBlockSnapshots = true;
 
         ItemStack copy = itemstack.copy();
-        ActionResultType ret = item.tryPlace(context);
+        ActionResultType ret = item.place(context);
         if (itemstack.isEmpty())
             ForgeEventFactory.onPlayerDestroyItem(player, copy, context.getHand());
 
         world.captureBlockSnapshots = false;
 
-        if (ret.isSuccessOrConsume()) {
+        if (ret.consumesAction()) {
             // save new item data
             int newSize = itemstack.getCount();
             CompoundNBT newNBT = null;
@@ -640,7 +642,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             itemstack.setCount(size);
             itemstack.setTag(nbt);
 
-            Direction side = context.getFace();
+            Direction side = context.getClickedFace();
 
             boolean eventResult = false;
             if (blockSnapshots.size() > 1) {
@@ -668,12 +670,12 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
                     BlockState newBlock = world.getBlockState(snap.getPos());
                     if (!newBlock.hasTileEntity()) // Containers get placed automatically
                     {
-                        newBlock.onBlockAdded(world, snap.getPos(), oldBlock, false);
+                        newBlock.onPlace(world, snap.getPos(), oldBlock, false);
                     }
 
                     world.markAndNotifyBlock(snap.getPos(), world.getChunkAt(snap.getPos()), oldBlock, newBlock, updateFlag, 512);
                 }
-                player.addStat(Stats.ITEM_USED.get(item));
+                player.awardStat(Stats.ITEM_USED.get(item));
             }
         }
         world.capturedBlockSnapshots.clear();
@@ -694,13 +696,13 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     public static class DrawbridgeItemUseContext extends BlockItemUseContext {
-        public DrawbridgeItemUseContext(ItemUseContext p_i47813_1_) {
-            super(p_i47813_1_);
+        public DrawbridgeItemUseContext(ItemUseContext pContext) {
+            super(pContext);
         }
 
         @Override
-        public BlockPos getPos() {
-            return func_242401_i().getPos();
+        public BlockPos getClickedPos() {
+            return getHitResult().getBlockPos();
         }
     }
 
@@ -719,7 +721,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             int slot = slotAbs - te.slots.getStartSlot();
 
             // Disallow inserting anywhere but in main inventory slots
-            if(slot < 0 || slot >= te.slots.getSizeInventory())
+            if(slot < 0 || slot >= te.slots.getContainerSize())
                 return stack;
 
             isCapAccess = true;
@@ -734,7 +736,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             int slot = slotAbs - te.slots.getStartSlot();
 
             // Disallow inserting anywhere but in main inventory slots
-            if(slot < 0 || slot >= te.slots.getSizeInventory())
+            if(slot < 0 || slot >= te.slots.getContainerSize())
                 return ItemStack.EMPTY;
 
             isCapAccess = true;
@@ -753,7 +755,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
         @Override
         public int getSlotLimit(int slot) {
-            return te.slots.getInventoryStackLimit();
+            return te.slots.getMaxStackSize();
         }
     }
 
@@ -767,9 +769,9 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
             AXE = new ItemStack(Items.DIAMOND_AXE);
             SHOVEL = new ItemStack(Items.DIAMOND_SHOVEL);
 
-            PICKAXE.addEnchantment(Enchantments.SILK_TOUCH, 1);
-            AXE.addEnchantment(Enchantments.SILK_TOUCH, 1);
-            SHOVEL.addEnchantment(Enchantments.SILK_TOUCH, 1);
+            PICKAXE.enchant(Enchantments.SILK_TOUCH, 1);
+            AXE.enchant(Enchantments.SILK_TOUCH, 1);
+            SHOVEL.enchant(Enchantments.SILK_TOUCH, 1);
         }
 
         public static ItemStack getByType(ToolType type) {

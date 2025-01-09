@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class HoneyLevelDisguiseState extends BasicDisguiseState<Integer> {
     public HoneyLevelDisguiseState() {
-        super(BlockStateProperties.HONEY_LEVEL, 1);
+        super(BlockStateProperties.LEVEL_HONEY, 1);
     }
 
     @Override

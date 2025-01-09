@@ -45,7 +45,7 @@ public class DisguiseStateWidget extends Widget {
 
         Minecraft mc = Minecraft.getInstance();
 
-        mc.getTextureManager().bindTexture(state.getIconSheet());
+        mc.getTextureManager().bind(state.getIconSheet());
 
         hoveredState = null;
         boolean canHover = true;
@@ -113,7 +113,7 @@ public class DisguiseStateWidget extends Widget {
             return false;
 
         if (hoveredState != null) {
-            this.playDownSound(Minecraft.getInstance().getSoundHandler());
+            this.playDownSound(Minecraft.getInstance().getSoundManager());
             onClick(p_mouseClicked_1_, p_mouseClicked_3_);
             return true;
         }
@@ -127,7 +127,7 @@ public class DisguiseStateWidget extends Widget {
             return;
 
         super.onClick(p_onClick_1_, p_onClick_3_);
-        PacketHandler.send(PacketDistributor.SERVER.noArg(), new UpdateDisguiseStatePacket(te.getPos(), hoveredState));
+        PacketHandler.send(PacketDistributor.SERVER.noArg(), new UpdateDisguiseStatePacket(te.getBlockPos(), hoveredState));
         te.setDisguiseState(hoveredState);
     }
 

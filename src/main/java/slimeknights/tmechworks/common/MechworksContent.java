@@ -52,13 +52,13 @@ public class MechworksContent {
     private static final ContainerTypeDeferredRegister CONTAINERS = new ContainerTypeDeferredRegister(TMechworks.modId);
 
     // Creative tabs
-    public static ItemGroup tabMechworks = new SupplierItemGroup(TMechworks.modId, "TinkersMechworks", () -> new ItemStack(Items.book)).setGroupPath("");
+    public static ItemGroup tabMechworks = new SupplierItemGroup(TMechworks.modId, "TinkersMechworks", () -> new ItemStack(Items.book)).setRecipeFolderName("");
 
-    private static final Function<Block, ? extends BlockItem> DEFAULT_BLOCK_ITEM = (b) -> new BlockItem(b, new Item.Properties().group(tabMechworks));
+    private static final Function<Block, ? extends BlockItem> DEFAULT_BLOCK_ITEM = (b) -> new BlockItem(b, new Item.Properties().tab(tabMechworks));
 
     public static class Blocks {
-        public static final ItemObject<OreBlock> aluminum_ore = BLOCKS.register("aluminum_ore", () -> new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getHarvestLevel())), DEFAULT_BLOCK_ITEM);
-        public static final ItemObject<OreBlock> copper_ore = BLOCKS.register("copper_ore", () -> new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getHarvestLevel())), DEFAULT_BLOCK_ITEM);
+        public static final ItemObject<OreBlock> aluminum_ore = BLOCKS.register("aluminum_ore", () -> new OreBlock(Block.Properties.of(Material.STONE).strength(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getLevel())), DEFAULT_BLOCK_ITEM);
+        public static final ItemObject<OreBlock> copper_ore = BLOCKS.register("copper_ore", () -> new OreBlock(Block.Properties.of(Material.STONE).strength(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getLevel())), DEFAULT_BLOCK_ITEM);
         public static final ItemObject<MetalBlock> aluminum_block = BLOCKS.register("aluminum_block", MetalBlock::new, DEFAULT_BLOCK_ITEM);
         public static final ItemObject<MetalBlock> copper_block = BLOCKS.register("copper_block", MetalBlock::new, DEFAULT_BLOCK_ITEM);
         public static final ItemObject<FirestarterBlock> firestarter = BLOCKS.register("firestarter", FirestarterBlock::new, DEFAULT_BLOCK_ITEM);
@@ -92,8 +92,8 @@ public class MechworksContent {
 
     @OnlyIn(Dist.CLIENT)
     public void registerScreenFactories() {
-        ScreenManager.registerFactory(Containers.disguise.get(), DisguiseScreen::create);
-        ScreenManager.registerFactory(Containers.drawbridge.get(), DrawbridgeScreen::create);
+        ScreenManager.register(Containers.disguise.get(), DisguiseScreen::create);
+        ScreenManager.register(Containers.drawbridge.get(), DrawbridgeScreen::create);
     }
 
     public void initRegisters() {

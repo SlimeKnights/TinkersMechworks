@@ -47,7 +47,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         super(container, inventory, name);
 
         isAdvanced = container.getTile().stats.isAdvanced;
-        slotCount = container.getTile().slots.getSizeInventory();
+        slotCount = container.getTile().slots.getContainerSize();
     }
 
     public static DrawbridgeScreen create(DrawbridgeContainer container, PlayerInventory player, ITextComponent title){
@@ -61,27 +61,27 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         int aX, aY, screenLeft, screenTop;
 
         if(isAdvanced) {
-            aX = guiLeft + 192;
-            aY = guiTop + 10;
+            aX = leftPos + 192;
+            aY = topPos + 10;
 
             screenLeft = -18;
             screenTop = -80;
         } else {
-            aX = (this.width - this.xSize) / 2 + 110;
-            aY = (this.height - this.ySize) / 2 + 20;
+            aX = (this.width - this.imageWidth) / 2 + 110;
+            aY = (this.height - this.imageHeight) / 2 + 20;
 
             screenLeft = 0;
             screenTop = 0;
         }
 
-        titleX = screenLeft + 8;
-        titleY = screenTop + 6;
+        titleLabelX = screenLeft + 8;
+        titleLabelY = screenTop + 6;
 
         ArrowWidget arrow = new ArrowWidget(aX, aY, width, height, true, this::arrowClicked);
         updateSelection(arrow);
         addButton(arrow);
 
-        disguiseWidget = new DisguiseStateWidget(guiLeft + 198, guiTop + 133, container.getTile());
+        disguiseWidget = new DisguiseStateWidget(leftPos + 198, topPos + 133, menu.getTile());
         addButton(disguiseWidget);
     }
 
@@ -89,18 +89,18 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public void tick() {
         super.tick();
 
-        DrawbridgeTileEntity te = container.getTile();
+        DrawbridgeTileEntity te = menu.getTile();
 
         // Reinitialize UI if the drawbridge size or type changes
-        if(isAdvanced != te.stats.isAdvanced || slotCount != te.slots.getSizeInventory()) {
-            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(container.getTile().getPos()));
+        if(isAdvanced != te.stats.isAdvanced || slotCount != te.slots.getContainerSize()) {
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ServerReopenUiPacket(menu.getTile().getBlockPos()));
         }
 
         // Update disguise state controls
         ItemStack disguise = te.getDisguiseBlock();
 
         if (disguise.getItem() instanceof BlockItem) {
-            BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().getDefaultState();
+            BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().defaultBlockState();
             disguiseWidget.setState(DisguiseStates.getForState(disguiseState), te.getDisguiseState());
         } else {
             disguiseWidget.setState(null, null);
@@ -111,51 +111,51 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+        this.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(SCREEN_LOCATION);
+        this.minecraft.getTextureManager().bind(SCREEN_LOCATION);
 
-        blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize); // Background
-        blit(stack, guiLeft - 44, guiTop + ySize - 65, 0, 182, 47, 60); // Upgrades cutout
+        blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight); // Background
+        blit(stack, leftPos - 44, topPos + imageHeight - 65, 0, 182, 47, 60); // Upgrades cutout
 
-        blit(stack, guiLeft + xSize - 3, guiTop + ySize - 37, 52, 182, 29, 32); // Disguise cutout
+        blit(stack, leftPos + imageWidth - 3, topPos + imageHeight - 37, 52, 182, 29, 32); // Disguise cutout
         // 75 182
         if(disguiseWidget.getColumnCount() > 0) {
-            blit(stack, guiLeft + xSize + 22, guiTop + ySize - 37, disguiseWidget.getColumnCount() * 8 + 2, 32, 75, 76, 182, 214);
-            blit(stack, guiLeft + xSize + 22 + disguiseWidget.getColumnCount() * 8 + 2, guiTop + ySize - 37, 3, 32, 78, 81, 183, 214);
+            blit(stack, leftPos + imageWidth + 22, topPos + imageHeight - 37, disguiseWidget.getColumnCount() * 8 + 2, 32, 75, 76, 182, 214);
+            blit(stack, leftPos + imageWidth + 22 + disguiseWidget.getColumnCount() * 8 + 2, topPos + imageHeight - 37, 3, 32, 78, 81, 183, 214);
         }
 
         if(!isAdvanced) {
-            drawSlicedBox(stack, guiLeft + 75, guiTop + 31, 26, 26, 17, 166); // Drawbridge slot
+            drawSlicedBox(stack, leftPos + 75, topPos + 31, 26, 26, 17, 166); // Drawbridge slot
         } else {
-            this.minecraft.getTextureManager().bindTexture(ADVANCED_LOCATION);
+            this.minecraft.getTextureManager().bind(ADVANCED_LOCATION);
 
-            blit(stack, guiLeft - 18, guiTop - 80, 0, 0, 213, 148); // Advanced cutout
-            blit(stack, guiLeft + 191, guiTop + 4, 0, 196, 63, 60); // Arrow cutout
+            blit(stack, leftPos - 18, topPos - 80, 0, 0, 213, 148); // Advanced cutout
+            blit(stack, leftPos + 191, topPos + 4, 0, 196, 63, 60); // Arrow cutout
 
             drawAdvancedSlots(stack);
         }
     }
 
     private void drawAdvancedSlots(MatrixStack stack) {
-        for(Slot s : container.mainSlots){
-            blit(stack, guiLeft + s.xPos - 1, guiTop + s.yPos - 1, 0, 166, 18, 18);
+        for(Slot s : menu.mainSlots){
+            blit(stack, leftPos + s.x - 1, topPos + s.y - 1, 0, 166, 18, 18);
         }
     }
 
     @Override
-    protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    protected void renderTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if(this.hoveredSlot == null)
             return;
 
-        if(!isAdvanced || this.hoveredSlot.getHasStack()) {
-            super.renderHoveredTooltip(stack, mouseX, mouseY); // func_230459_a_ => renderHoveredTooltip
-        } else if(hoveredSlot.inventory == getContainer().getTile().slots) {
-            renderTooltip(stack, new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).setStyle(Style.EMPTY.applyFormatting(TextFormatting.GRAY)), mouseX, mouseY);
+        if(!isAdvanced || this.hoveredSlot.hasItem()) {
+            super.renderTooltip(stack, mouseX, mouseY); // renderTooltip => renderHoveredTooltip
+        } else if(hoveredSlot.container == getMenu().getTile().slots) {
+            renderTooltip(stack, new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)), mouseX, mouseY);
         }
     }
 
@@ -163,12 +163,12 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public List<ITextComponent> getTooltipFromItem(ItemStack stack) {
         List<ITextComponent> list = super.getTooltipFromItem(stack);
 
-        if(isAdvanced && hoveredSlot.inventory == getContainer().getTile().slots) {
+        if(isAdvanced && hoveredSlot.container == getMenu().getTile().slots) {
             list.add(StringTextComponent.EMPTY);
-            list.add(new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).mergeStyle(TextFormatting.GRAY));
+            list.add(new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).withStyle(TextFormatting.GRAY));
         }
 
-        if(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.getBlockFromItem(stack.getItem()))) {
+        if(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.byItem(stack.getItem()))) {
             list.add(StringTextComponent.EMPTY);
             list.add(new TranslationTextComponent(Util.prefix("gui.blacklisted")));
         }
@@ -177,21 +177,21 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
+    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+        super.renderLabels(stack, mouseX, mouseY);
 
         float scale = .75F;
         float invScale = 1 / scale;
 
         RenderSystem.scalef(scale, scale, scale);
-        String upgrades = I18n.format(Util.prefix("gui.upgrades"));
-        font.drawString(stack, upgrades, 47 / 2F - font.getStringWidth(upgrades) / 2F - 50, (xSize - 69) * invScale, 4210752);
+        String upgrades = I18n.get(Util.prefix("gui.upgrades"));
+        font.draw(stack, upgrades, 47 / 2F - font.width(upgrades) / 2F - 50, (imageWidth - 69) * invScale, 4210752);
         RenderSystem.scalef(invScale, invScale, invScale);
     }
 
     private void arrowClicked(ArrowWidget widget, ArrowWidget.Arrow arrow) {
-        PacketHandler.send(PacketDistributor.SERVER.noArg(), new UpdatePlaceDirectionPacket(container.getTile().getPos(), arrow.ordinal()));
-        container.getTile().setPlaceDirection(arrow.ordinal());
+        PacketHandler.send(PacketDistributor.SERVER.noArg(), new UpdatePlaceDirectionPacket(menu.getTile().getBlockPos(), arrow.ordinal()));
+        menu.getTile().setPlaceDirection(arrow.ordinal());
         updateSelection(widget);
     }
 
@@ -201,8 +201,8 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
                 arrow.setState(a, ArrowWidget.ArrowState.ENABLED);
         }
 
-        arrow.setState(ArrowWidget.Arrow.values()[container.getTile().getRawPlaceDirection().ordinal()], ArrowWidget.ArrowState.SELECTED);
-        arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + container.getTile().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
+        arrow.setState(ArrowWidget.Arrow.values()[menu.getTile().getRawPlaceDirection().ordinal()], ArrowWidget.ArrowState.SELECTED);
+        arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + menu.getTile().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
     }
 
     private void drawSlicedBox(MatrixStack stack, int x, int y, int width, int height, int u, int v) {
@@ -227,18 +227,18 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     }
 
     public static void blit(MatrixStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV, float tw, float th) {
-        innerBlit(stack.getLast().getMatrix(), x, x + w, y, y + h, 0, minU / tw, maxU / tw, minV / th, maxV / th);
+        innerBlit(stack.last().pose(), x, x + w, y, y + h, 0, minU / tw, maxU / tw, minV / th, maxV / th);
     }
 
     private static void innerBlit(Matrix4f matrix, int x1, int x2, int y1, int y2, int blitOffset, float minU, float maxU, float minV, float maxV) {
-        BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+        BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(matrix, (float)x1, (float)y2, (float)blitOffset).tex(minU, maxV).endVertex();
-        bufferbuilder.pos(matrix, (float)x2, (float)y2, (float)blitOffset).tex(maxU, maxV).endVertex();
-        bufferbuilder.pos(matrix, (float)x2, (float)y1, (float)blitOffset).tex(maxU, minV).endVertex();
-        bufferbuilder.pos(matrix, (float)x1, (float)y1, (float)blitOffset).tex(minU, minV).endVertex();
-        bufferbuilder.finishDrawing();
+        bufferbuilder.vertex(matrix, (float)x1, (float)y2, (float)blitOffset).uv(minU, maxV).endVertex();
+        bufferbuilder.vertex(matrix, (float)x2, (float)y2, (float)blitOffset).uv(maxU, maxV).endVertex();
+        bufferbuilder.vertex(matrix, (float)x2, (float)y1, (float)blitOffset).uv(maxU, minV).endVertex();
+        bufferbuilder.vertex(matrix, (float)x1, (float)y1, (float)blitOffset).uv(minU, minV).endVertex();
+        bufferbuilder.end();
         RenderSystem.enableAlphaTest();
-        WorldVertexBufferUploader.draw(bufferbuilder);
+        WorldVertexBufferUploader.end(bufferbuilder);
     }
 }

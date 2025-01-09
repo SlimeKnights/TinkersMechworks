@@ -15,7 +15,7 @@ public class DisguiseContainer extends BaseContainer<RedstoneMachineTileEntity> 
     public DisguiseContainer(int windowId, PlayerInventory playerInventory, RedstoneMachineTileEntity tile) {
         super(MechworksContent.Containers.disguise.get(), windowId, playerInventory, tile);
 
-        tile.openInventory(playerInventory.player);
+        tile.startOpen(playerInventory.player);
 
         addSlot(new ValidatingSlot(tile.getDisguiseInventory(), 0, 80, 34));
         addInventorySlots();
@@ -24,7 +24,7 @@ public class DisguiseContainer extends BaseContainer<RedstoneMachineTileEntity> 
     public static DisguiseContainer factory(int id, PlayerInventory playerInventory, PacketBuffer extraData) {
         BlockPos pos = extraData.readBlockPos();
 
-        TileEntity te = playerInventory.player.world.getTileEntity(pos);
+        TileEntity te = playerInventory.player.level.getBlockEntity(pos);
         RedstoneMachineTileEntity machine = null;
 
         if(te instanceof RedstoneMachineTileEntity)

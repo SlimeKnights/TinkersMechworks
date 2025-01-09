@@ -24,80 +24,80 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
     }
 
     @Override
-    protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> out) {
+    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> out) {
         // Metals
         registerMetal(out, aluminum_ore, aluminum_nugget, aluminum_ingot, aluminum_block);
         registerMetal(out, copper_ore, copper_nugget, copper_ingot, copper_block);
 
-        wrap(ShapelessRecipeBuilder.shapelessRecipe(book).addIngredient(Items.BOOK).addIngredient(upgrade_blank), Items.BOOK).build(out);
+        wrap(ShapelessRecipeBuilder.shapeless(book).requires(Items.BOOK).requires(upgrade_blank), Items.BOOK).save(out);
 
         // Machines
-        wrap(ShapedRecipeBuilder.shapedRecipe(drawbridge)
-                .setGroup(Util.prefix("machines"))
-                .key('R', DUSTS_REDSTONE)
-                .key('A', INGOTS_ALUMINUM)
-                .key('U', upgrade_drawbridge_distance)
-                .key('P', Items.PISTON)
-                .patternLine("RAR")
-                .patternLine("PUP")
-                .patternLine("RAR"), copper_ingot)
-                .build(out);
+        wrap(ShapedRecipeBuilder.shaped(drawbridge)
+                .group(Util.prefix("machines"))
+                .define('R', DUSTS_REDSTONE)
+                .define('A', INGOTS_ALUMINUM)
+                .define('U', upgrade_drawbridge_distance)
+                .define('P', Items.PISTON)
+                .pattern("RAR")
+                .pattern("PUP")
+                .pattern("RAR"), copper_ingot)
+                .save(out);
 
-        wrap(ShapedRecipeBuilder.shapedRecipe(firestarter)
-                .setGroup(Util.prefix("machines"))
-                .key('C', INGOTS_COPPER)
-                .key('R', DUSTS_REDSTONE)
-                .key('A', INGOTS_ALUMINUM)
-                .key('B', upgrade_blank)
-                .key('F', Items.FLINT_AND_STEEL)
-                .patternLine("RAR")
-                .patternLine("FBF")
-                .patternLine("ACA"), copper_ingot)
-                .build(out);
+        wrap(ShapedRecipeBuilder.shaped(firestarter)
+                .group(Util.prefix("machines"))
+                .define('C', INGOTS_COPPER)
+                .define('R', DUSTS_REDSTONE)
+                .define('A', INGOTS_ALUMINUM)
+                .define('B', upgrade_blank)
+                .define('F', Items.FLINT_AND_STEEL)
+                .pattern("RAR")
+                .pattern("FBF")
+                .pattern("ACA"), copper_ingot)
+                .save(out);
 
-        wrap(ShapedRecipeBuilder.shapedRecipe(upgrade_blank)
-                .setGroup(Util.prefix("upgrades"))
-                .key('I', INGOTS_IRON)
-                .key('C', INGOTS_COPPER)
-                .key('R', DUSTS_REDSTONE)
-                .key('A', INGOTS_ALUMINUM)
-                .patternLine("IAI")
-                .patternLine("RIR")
-                .patternLine("ACA"), Items.REDSTONE)
-                .build(out);
+        wrap(ShapedRecipeBuilder.shaped(upgrade_blank)
+                .group(Util.prefix("upgrades"))
+                .define('I', INGOTS_IRON)
+                .define('C', INGOTS_COPPER)
+                .define('R', DUSTS_REDSTONE)
+                .define('A', INGOTS_ALUMINUM)
+                .pattern("IAI")
+                .pattern("RIR")
+                .pattern("ACA"), Items.REDSTONE)
+                .save(out);
 
-        wrap(ShapedRecipeBuilder.shapedRecipe(upgrade_drawbridge_advanced)
-                .setGroup(Util.prefix("upgrades"))
-                .key('B', upgrade_blank)
-                .key('H', Items.HOPPER)
-                .key('C', INGOTS_COPPER)
-                .key('A', INGOTS_ALUMINUM)
-                .key('L', STORAGE_BLOCKS_LAPIS)
-                .key('S', CHESTS_WOODEN)
-                .patternLine("CHC")
-                .patternLine("LBL")
-                .patternLine("ASA"), upgrade_blank)
-                .build(out);
+        wrap(ShapedRecipeBuilder.shaped(upgrade_drawbridge_advanced)
+                .group(Util.prefix("upgrades"))
+                .define('B', upgrade_blank)
+                .define('H', Items.HOPPER)
+                .define('C', INGOTS_COPPER)
+                .define('A', INGOTS_ALUMINUM)
+                .define('L', STORAGE_BLOCKS_LAPIS)
+                .define('S', CHESTS_WOODEN)
+                .pattern("CHC")
+                .pattern("LBL")
+                .pattern("ASA"), upgrade_blank)
+                .save(out);
 
-        wrap(ShapedRecipeBuilder.shapedRecipe(upgrade_drawbridge_distance)
-                .setGroup(Util.prefix("upgrades"))
-                .key('B', upgrade_blank)
-                .key('P', Items.PISTON)
-                .key('C', INGOTS_COPPER)
-                .key('A', INGOTS_ALUMINUM)
-                .patternLine("ACA")
-                .patternLine("PBP")
-                .patternLine(" A "), upgrade_blank)
-                .build(out);
+        wrap(ShapedRecipeBuilder.shaped(upgrade_drawbridge_distance)
+                .group(Util.prefix("upgrades"))
+                .define('B', upgrade_blank)
+                .define('P', Items.PISTON)
+                .define('C', INGOTS_COPPER)
+                .define('A', INGOTS_ALUMINUM)
+                .pattern("ACA")
+                .pattern("PBP")
+                .pattern(" A "), upgrade_blank)
+                .save(out);
 
-        wrap(ShapedRecipeBuilder.shapedRecipe(upgrade_speed)
-                .setGroup(Util.prefix("upgrades"))
-                .key('B', upgrade_blank)
-                .key('S', Items.SUGAR)
-                .patternLine(" S ")
-                .patternLine("SBS")
-                .patternLine(" S "), upgrade_blank)
-                .build(out);
+        wrap(ShapedRecipeBuilder.shaped(upgrade_speed)
+                .group(Util.prefix("upgrades"))
+                .define('B', upgrade_blank)
+                .define('S', Items.SUGAR)
+                .pattern(" S ")
+                .pattern("SBS")
+                .pattern(" S "), upgrade_blank)
+                .save(out);
     }
 
     private void registerMetal(@Nonnull Consumer<IFinishedRecipe> out, IItemProvider ore, IItemProvider nugget, IItemProvider ingot, IItemProvider storageBlock) {
@@ -108,38 +108,38 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
         String storageBlockName = storageBlock.asItem().getRegistryName().getPath();
 
         // Smelting
-        wrap(CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(ore), ingot, 1F, standardSmeltingTime), ore).build(out, String.format(format, ingotName, "smelting"));
-        wrap(CookingRecipeBuilder.blastingRecipe(Ingredient.fromItems(ore), ingot, 1F, standardBlastingTime), ore).build(out, String.format(format, ingotName, "blasting"));
+        wrap(CookingRecipeBuilder.smelting(Ingredient.of(ore), ingot, 1F, standardSmeltingTime), ore).save(out, String.format(format, ingotName, "smelting"));
+        wrap(CookingRecipeBuilder.blasting(Ingredient.of(ore), ingot, 1F, standardBlastingTime), ore).save(out, String.format(format, ingotName, "blasting"));
 
         // Compression
-        compress(ingot, storageBlock).setGroup(Util.prefix(storageBlockName)).build(out, String.format(format, storageBlockName, ingotName));
-        decompress(storageBlock, ingot).setGroup(Util.prefix(ingotName)).build(out, String.format(format, ingotName, storageBlockName));
-        compress(nugget, ingot).setGroup(Util.prefix(ingotName)).build(out, String.format(format, ingotName, nuggetName));
-        decompress(ingot, nugget).setGroup(Util.prefix(nuggetName)).build(out, String.format(format, nuggetName, ingotName));
+        compress(ingot, storageBlock).group(Util.prefix(storageBlockName)).save(out, String.format(format, storageBlockName, ingotName));
+        decompress(storageBlock, ingot).group(Util.prefix(ingotName)).save(out, String.format(format, ingotName, storageBlockName));
+        compress(nugget, ingot).group(Util.prefix(ingotName)).save(out, String.format(format, ingotName, nuggetName));
+        decompress(ingot, nugget).group(Util.prefix(nuggetName)).save(out, String.format(format, nuggetName, ingotName));
     }
 
     private static ShapelessRecipeBuilder wrap(ShapelessRecipeBuilder builder, IItemProvider input) {
-        return builder.addCriterion("has_" + input.asItem().getRegistryName().getPath(), hasItem(input));
+        return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
     }
 
     private static ShapedRecipeBuilder wrap(ShapedRecipeBuilder builder, IItemProvider input) {
-        return builder.addCriterion("has_" + input.asItem().getRegistryName().getPath(), hasItem(input));
+        return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
     }
 
     private static CookingRecipeBuilder wrap(CookingRecipeBuilder builder, IItemProvider input) {
-        return builder.addCriterion("has_" + input.asItem().getRegistryName().getPath(), hasItem(input));
+        return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
     }
 
     private static ShapedRecipeBuilder compress(IItemProvider input, IItemProvider result) {
-        return wrap(ShapedRecipeBuilder.shapedRecipe(result)
-                .key('#', input)
-                .patternLine("###")
-                .patternLine("###")
-                .patternLine("###"), input);
+        return wrap(ShapedRecipeBuilder.shaped(result)
+                .define('#', input)
+                .pattern("###")
+                .pattern("###")
+                .pattern("###"), input);
     }
 
     private static ShapelessRecipeBuilder decompress(IItemProvider input, IItemProvider result) {
-        return wrap(ShapelessRecipeBuilder.shapelessRecipe(result, 9).addIngredient(input), input);
+        return wrap(ShapelessRecipeBuilder.shapeless(result, 9).requires(input), input);
     }
 
     @Nonnull

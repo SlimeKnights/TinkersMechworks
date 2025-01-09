@@ -60,19 +60,19 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     public boolean dropState = true;
 
     protected RedstoneMachineBlock(Material material) {
-        super(Block.Properties.create(material).hardnessAndResistance(3.5F).notSolid());
-        this.setDefaultState(this.stateContainer.getBaseState()
-                .with(HAS_DISGUISE, false)
-                .with(LIGHT_VALUE, 0));
+        super(Block.Properties.of(material).strength(3.5F).noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(HAS_DISGUISE, false)
+                .setValue(LIGHT_VALUE, 0));
 
         if(hasFacingDirection()) {
-            this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+            this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
         }
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         if(hasFacingDirection()) {
             builder.add(FACING);
         }
@@ -84,7 +84,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     public boolean openGui(PlayerEntity player, World world, BlockPos pos) {
         if (player instanceof ServerPlayerEntity && !(player instanceof FakePlayer)) {
-            TileEntity te = world.getTileEntity(pos);
+            TileEntity te = world.getBlockEntity(pos);
 
             if (!(te instanceof INamedContainerProvider))
                 return false;
@@ -99,7 +99,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
-        RedstoneMachineTileEntity logicBase = (RedstoneMachineTileEntity) worldIn.getTileEntity(pos);
+        RedstoneMachineTileEntity logicBase = (RedstoneMachineTileEntity) worldIn.getBlockEntity(pos);
 
         if (logicBase != null) {
             logicBase.updateRedstone();
@@ -122,26 +122,26 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
             return super.getStateForPlacement(context);
         }
 
-        return super.getStateForPlacement(context).with(FACING, context.getNearestLookingDirection().getOpposite());
+        return super.getStateForPlacement(context).setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nonnull LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nonnull LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
 
         // set custom name from named stack
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
 
             if (tileentity instanceof InventoryTileEntity) {
-                ((InventoryTileEntity) tileentity).setCustomName(stack.getDisplayName());
+                ((InventoryTileEntity) tileentity).setCustomName(stack.getHoverName());
             }
         }
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity te = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
 
         if (te instanceof RedstoneMachineTileEntity) {
             List<ItemStack> drops = NonNullList.create();
@@ -149,7 +149,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
             ItemStack item = new ItemStack(this, 1);
 
-            writeAdditionalItemData(state, builder.getWorld(), new BlockPos(builder.get(LootParameters.ORIGIN)), item);
+            writeAdditionalItemData(state, builder.getLevel(), new BlockPos(builder.getOptionalParameter(LootParameters.ORIGIN)), item);
 
             if (dropState)
                 machine.storeTileData(item);
@@ -162,20 +162,20 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (blockMatches(state, worldIn, pos, newState, isMoving))
             return;
 
-        TileEntity te = worldIn.getTileEntity(pos);
+        TileEntity te = worldIn.getBlockEntity(pos);
 
         if (te instanceof IInventory) {
             if (!dropState)
-                InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) te);
+                InventoryHelper.dropContents(worldIn, pos, (IInventory) te);
 
-            worldIn.updateComparatorOutputLevel(pos, this);
+            worldIn.updateNeighbourForOutputSignal(pos, this);
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
@@ -189,7 +189,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (!stack.hasTag())
             return;
 
@@ -198,10 +198,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
             CompoundNBT tags = compound.getCompound("BlockEntityTag");
 
             if (tags.contains("Disguise", Constants.NBT.TAG_COMPOUND)) {
-                ItemStack disguise = ItemStack.read(tags.getCompound("Disguise"));
+                ItemStack disguise = ItemStack.of(tags.getCompound("Disguise"));
                 if (disguise != ItemStack.EMPTY) {
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.disguise")).mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
-                    tooltip.add(disguise.getDisplayName());
+                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.disguise")).withStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+                    tooltip.add(disguise.getHoverName());
                 }
             }
 
@@ -209,15 +209,15 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
                 ListNBT items = tags.getList("Items", Constants.NBT.TAG_LIST);
 
                 if (items.size() > 0) {
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.items")).mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.items")).withStyle(TextFormatting.GRAY, TextFormatting.BOLD));
                 }
 
                 for (int i = 0; i < items.size(); ++i) {
                     CompoundNBT itemTag = items.getCompound(i);
                     int slot = itemTag.getByte("Slot") & 255;
 
-                    ItemStack item = ItemStack.read(itemTag);
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.slot"), slot, item.getDisplayName(), item.getCount()).mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+                    ItemStack item = ItemStack.of(itemTag);
+                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.slot"), slot, item.getHoverName(), item.getCount()).withStyle(TextFormatting.GRAY, TextFormatting.BOLD));
                 }
             }
         }
@@ -235,10 +235,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
      * changes.
      */
     @Override
-    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
-        super.eventReceived(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(id, param);
+    public boolean triggerEvent(BlockState state, World worldIn, BlockPos pos, int id, int param) {
+        super.triggerEvent(state, worldIn, pos, id, param);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
     /////////////////////////
@@ -256,8 +256,8 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide) {
             this.openGui(player, worldIn, pos);
         }
 
@@ -277,18 +277,18 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     // Disguise Overrides //
     ////////////////////////
     public <T> T runOnDisguiseBlock(BlockState state, IBlockReader worldIn, BlockPos pos, Function<BlockState, T> func, Supplier<T> orElse) {
-        if (!state.get(HAS_DISGUISE))
+        if (!state.getValue(HAS_DISGUISE))
             return orElse.get();
 
-        TileEntity te = worldIn.getTileEntity(pos);
+        TileEntity te = worldIn.getBlockEntity(pos);
 
         if (te instanceof RedstoneMachineTileEntity) {
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
             ItemStack disguise = machine.getDisguiseBlock();
 
             if (disguise.getItem() instanceof BlockItem) {
-                BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().getDefaultState();
-                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, ((RedstoneMachineTileEntity) te).getDisguiseState(), state.get(BlockStateProperties.FACING));
+                BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().defaultBlockState();
+                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, ((RedstoneMachineTileEntity) te).getDisguiseState(), state.getValue(BlockStateProperties.FACING));
 
                 return func.apply(disguiseState);
             }
@@ -298,7 +298,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public boolean isVariableOpacity() {
+    public boolean hasDynamicShape() {
         return true;
     }
 
@@ -315,8 +315,8 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getRenderShape(worldIn, pos), () -> super.getRenderShape(state, worldIn, pos));
+    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getOcclusionShape(worldIn, pos), () -> super.getOcclusionShape(state, worldIn, pos));
     }
 
     @Override
@@ -330,8 +330,8 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getOpacity(worldIn, pos), worldIn::getMaxLightLevel);
+    public int getLightBlock(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getLightBlock(worldIn, pos), worldIn::getMaxLightLevel);
     }
 
     @Override

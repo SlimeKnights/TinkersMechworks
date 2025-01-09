@@ -17,11 +17,11 @@ public class ClientSetCursorStackPacket {
     }
 
     public static void encode(ClientSetCursorStackPacket msg, PacketBuffer buf) {
-        buf.writeItemStack(msg.stack);
+        buf.writeItem(msg.stack);
     }
 
     public static ClientSetCursorStackPacket decode(PacketBuffer buf) {
-        ItemStack stack = buf.readItemStack();
+        ItemStack stack = buf.readItem();
 
         return new ClientSetCursorStackPacket(stack);
     }
@@ -32,7 +32,7 @@ public class ClientSetCursorStackPacket {
             PlayerEntity player = TMechworks.proxy.getPlayer();
 
             context.enqueueWork(() -> {
-                player.inventory.setItemStack(msg.stack);
+                player.inventory.setCarried(msg.stack);
             });
 
             context.setPacketHandled(true);

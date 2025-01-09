@@ -34,6 +34,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import slimeknights.tmechworks.integration.waila.IInformationProvider.InformationType;
+
 public abstract class RedstoneMachineTileEntity extends InventoryTileEntity implements ITickableTileEntity, IInformationProvider {
     private Inventory disguiseInventory;
     private String disguiseState;
@@ -50,12 +52,12 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
         disguiseInventory = new Inventory(1) {
             @Override
-            public boolean isItemValidForSlot(int index, ItemStack stack) {
+            public boolean canPlaceItem(int index, ItemStack stack) {
                 return stack.getItem() instanceof BlockItem;
             }
 
             @Override
-            public int getInventoryStackLimit() {
+            public int getMaxStackSize() {
                 return 1;
             }
         };
@@ -71,7 +73,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         Direction facing = Direction.NORTH;
 
         if (hasFacingDirection()) {
-            facing = getWorld().getBlockState(getPos()).get(RedstoneMachineBlock.FACING);
+            facing = getLevel().getBlockState(getBlockPos()).getValue(RedstoneMachineBlock.FACING);
         }
 
         int oldPow = redstoneState;
@@ -81,13 +83,13 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
         for (Direction dir : directions) {
             if (!hasFacingDirection() || dir != facing) {
-                int pow = world.getRedstonePower(pos.offset(dir), dir);
+                int pow = level.getSignal(worldPosition.relative(dir), dir);
                 if (pow > maxPow)
                     maxPow = pow;
             }
         }
 
-        int downPow = world.getRedstonePower(pos, Direction.DOWN);
+        int downPow = level.getSignal(worldPosition, Direction.DOWN);
         if (downPow > maxPow)
             maxPow = downPow;
 
@@ -142,11 +144,11 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     public ItemStack getDisguiseBlock() {
-        return disguiseInventory.getStackInSlot(0);
+        return disguiseInventory.getItem(0);
     }
 
     public void setDisguiseBlock(ItemStack disguise) {
-        disguiseInventory.setInventorySlotContents(0, disguise);
+        disguiseInventory.setItem(0, disguise);
     }
 
     public String getDisguiseState() {
@@ -170,19 +172,19 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         BlockState from = state;
         ItemStack item = getDisguiseBlock();
         boolean hasDisguise = !item.isEmpty() && item.getItem() instanceof BlockItem;
-        state = state.with(RedstoneMachineBlock.HAS_DISGUISE, hasDisguise);
+        state = state.setValue(RedstoneMachineBlock.HAS_DISGUISE, hasDisguise);
 
-        getWorld().setBlockState(getPos(), state);
+        getLevel().setBlockAndUpdate(getBlockPos(), state);
 
-        getWorld().notifyBlockUpdate(getPos(), from, state, 3);
-        getWorld().getLightManager().checkBlock(getPos());
+        getLevel().sendBlockUpdated(getBlockPos(), from, state, 3);
+        getLevel().getLightEngine().checkBlock(getBlockPos());
     }
 
     /**
      * Writes inventory information
      */
     public CompoundNBT writeItemData(CompoundNBT tags) {
-        tags.putInt("InventorySize", getSizeInventory());
+        tags.putInt("InventorySize", getContainerSize());
         writeInventoryToNBT(tags);
 
         if (this.hasCustomName()) {
@@ -194,7 +196,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         if (!disguise.isEmpty()) {
             CompoundNBT itemNBT = new CompoundNBT();
 
-            itemNBT = disguise.write(itemNBT);
+            itemNBT = disguise.save(itemNBT);
 
             tags.put("Disguise", itemNBT);
             if(disguiseState != null)
@@ -208,12 +210,12 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
      * Reads inventory information
      */
     public void readItemData(BlockState state, CompoundNBT tags) {
-        super.read(state, tags);
+        super.load(state, tags);
 
         if (tags.contains("Disguise")) {
             CompoundNBT itemNBT = tags.getCompound("Disguise");
 
-            ItemStack disguise = ItemStack.read(itemNBT);
+            ItemStack disguise = ItemStack.of(itemNBT);
 
             if(tags.contains("DisguiseState", Constants.NBT.TAG_STRING)) {
                 disguiseState = tags.getString("DisguiseState");
@@ -225,8 +227,8 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
 
     @Override
     @Nonnull
-    public CompoundNBT write(CompoundNBT tags) {
-        super.write(tags);
+    public CompoundNBT save(CompoundNBT tags) {
+        super.save(tags);
         tags = writeItemData(tags);
 
         tags.putInt("Redstone", redstoneState);
@@ -235,7 +237,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tags) {
+    public void load(BlockState state, CompoundNBT tags) {
         readItemData(state, tags);
 
         redstoneState = tags.getInt("Redstone");
@@ -252,33 +254,33 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT tags = new CompoundNBT();
 
-        write(tags);
+        save(tags);
 
-        return new SUpdateTileEntityPacket(pos, 0, tags);
+        return new SUpdateTileEntityPacket(worldPosition, 0, tags);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT tags = pkt.getNbtCompound();
+        CompoundNBT tags = pkt.getTag();
 
         handleUpdateTag(getBlockState(), tags);
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
+        return save(new CompoundNBT());
     }
 
 
     @Override
     public void handleUpdateTag(BlockState state, @Nonnull CompoundNBT tag) {
-        read(state, tag);
+        load(state, tag);
 
         // Mark block range for render update (if still needed)
     }
 
     public void sync() {
-        markDirty();
+        setChanged();
         // Mark block range for render update (if still needed)
 
         if (EffectiveSide.get() == LogicalSide.SERVER) {
@@ -288,8 +290,8 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
                 return;
             }
 
-            for (PlayerEntity player : world.getPlayers()) {
-                ((ServerPlayerEntity) player).connection.sendPacket(packetUpdateTileEntity);
+            for (PlayerEntity player : level.players()) {
+                ((ServerPlayerEntity) player).connection.send(packetUpdateTileEntity);
             }
         }
     }
@@ -300,13 +302,13 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     public ItemStack storeTileData(ItemStack stack) {
         CompoundNBT tags = writeItemData(new CompoundNBT());
 
-        stack.setTagInfo("BlockEntityTag", tags);
+        stack.addTagElement("BlockEntityTag", tags);
 
         if (this.hasCustomName()) {
             CompoundNBT name = new CompoundNBT();
             name.putString("Name", ITextComponent.Serializer.toJson(this.getCustomName()));
 
-            stack.setTagInfo("display", name);
+            stack.addTagElement("display", name);
         }
 
         return stack;

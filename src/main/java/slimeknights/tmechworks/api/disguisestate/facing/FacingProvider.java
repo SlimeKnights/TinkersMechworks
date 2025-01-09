@@ -10,6 +10,6 @@ public class FacingProvider {
     }
 
     public BlockState applyTo(BlockState state, Direction facing) {
-        return state.with(BlockStateProperties.FACING, facing);
+        return state.setValue(BlockStateProperties.FACING, facing);
     }
 }

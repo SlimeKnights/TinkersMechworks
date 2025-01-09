@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import net.minecraft.item.Item.Properties;
+
 public class MechworksBlockItem extends BlockItem {
     private Object[] tooltipFormat;
     private Supplier<Object[]> tooltipFormatSupplier = () -> tooltipFormat;
@@ -66,11 +68,11 @@ public class MechworksBlockItem extends BlockItem {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        if (I18n.hasKey(getTranslationKey(stack) + ".tooltip")) {
-            tooltip.addAll(TranslationUtil.getTooltips(I18n.format(getTranslationKey(stack) + ".tooltip", tooltipFormatSupplier.get())));
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        if (I18n.exists(getDescriptionId(stack) + ".tooltip")) {
+            tooltip.addAll(TranslationUtil.getTooltips(I18n.get(getDescriptionId(stack) + ".tooltip", tooltipFormatSupplier.get())));
         }
 
-        super.addInformation(stack, world, tooltip, flag);
+        super.appendHoverText(stack, world, tooltip, flag);
     }
 }

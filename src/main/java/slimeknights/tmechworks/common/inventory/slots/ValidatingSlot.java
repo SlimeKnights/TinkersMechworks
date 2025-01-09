@@ -10,10 +10,10 @@ public class ValidatingSlot extends Slot {
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack) {
-        if(inventory instanceof ISlotValidate)
-            return ((ISlotValidate)inventory).isItemValidForValidatingSlot(getSlotIndex(), stack);
+    public boolean mayPlace(ItemStack stack) {
+        if(container instanceof ISlotValidate)
+            return ((ISlotValidate)container).isItemValidForValidatingSlot(getSlotIndex(), stack);
         else
-            return inventory.isItemValidForSlot(getSlotIndex(), stack);
+            return container.canPlaceItem(getSlotIndex(), stack);
     }
 }

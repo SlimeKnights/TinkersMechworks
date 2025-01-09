@@ -42,14 +42,14 @@ public class UpdatePlaceDirectionPacket {
             if(context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 player = context.getSender();
 
-                // World.func_234923_W_ => getDimension
-                PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.world.getDimensionKey()), msg);
+                // World.dimension => getDimension
+                PacketHandler.send(PacketDistributor.DIMENSION.with(() -> player.level.dimension()), msg);
             } else {
                 player = TMechworks.proxy.getPlayer();
             }
 
             context.enqueueWork(() -> {
-                TileEntity te = player.getEntityWorld().getTileEntity(msg.pos);
+                TileEntity te = player.getCommandSenderWorld().getBlockEntity(msg.pos);
 
                 if(te instanceof IPlaceDirection)
                     ((IPlaceDirection)te).setPlaceDirection(msg.direction);

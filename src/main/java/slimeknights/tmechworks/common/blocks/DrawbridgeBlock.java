@@ -30,21 +30,21 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
 
     public DrawbridgeBlock()
     {
-        super(Material.IRON);
+        super(Material.METAL);
 
-        setDefaultState(getDefaultState().with(ADVANCED, false));
+        registerDefaultState(defaultBlockState().setValue(ADVANCED, false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
 
         builder.add(ADVANCED);
     }
 
     @Override
-    public void fillItemGroup(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
-        super.fillItemGroup(p_149666_1_, p_149666_2_);
+    public void fillItemCategory(ItemGroup pTab, NonNullList<ItemStack> pItems) {
+        super.fillItemCategory(pTab, pItems);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
         super.writeAdditionalItemData(state, worldIn, pos, stack);
 
         CompoundNBT tags = stack.getOrCreateTag();
-        tags.putBoolean("drawAdvanced", state.get(ADVANCED));
+        tags.putBoolean("drawAdvanced", state.getValue(ADVANCED));
     }
 
     @Nonnull
@@ -73,8 +73,8 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
 
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
-        // func_239418_a_ => registerPropertyForItem
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("advanced"), (stack, world, entity) -> {
+        // register => registerPropertyForItem
+        ItemModelsProperties.register(item, new ResourceLocation("advanced"), (stack, world, entity) -> {
             boolean advanced = false;
 
             if(stack.hasTag() && stack.getTag().contains("drawAdvanced", Constants.NBT.TAG_BYTE))

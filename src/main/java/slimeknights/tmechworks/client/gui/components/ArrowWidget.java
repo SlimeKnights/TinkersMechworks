@@ -99,7 +99,7 @@ public class ArrowWidget extends Widget {
         RenderSystem.translatef(x, y, 0F);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        mc.getTextureManager().bindTexture(ARROW_WIDGET);
+        mc.getTextureManager().bind(ARROW_WIDGET);
 
         hoveredArrow = null;
         boolean canHover = true;
@@ -141,16 +141,16 @@ public class ArrowWidget extends Widget {
         if (hoveredArrow == null)
             return;
 
-        // ITextProperties.func_240652_a_ -> create
+        // ITextProperties.of -> create
         if (labels != null && states[hoveredArrow.ordinal()] == ArrowState.HOVER && !labels[hoveredArrow.ordinal()].trim().isEmpty()) {
-            GuiUtils.drawHoveringText(stack, ImmutableList.of(ITextProperties.func_240652_a_(I18n.format(labels[hoveredArrow.ordinal()]))), mouseX, mouseY, screenW, screenH, 100, Minecraft.getInstance().fontRenderer);
+            GuiUtils.drawHoveringText(stack, ImmutableList.of(ITextProperties.of(I18n.get(labels[hoveredArrow.ordinal()]))), mouseX, mouseY, screenW, screenH, 100, Minecraft.getInstance().font);
         }
     }
 
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
         if (hoveredArrow != null) {
-            this.playDownSound(Minecraft.getInstance().getSoundHandler());
+            this.playDownSound(Minecraft.getInstance().getSoundManager());
             onClick(p_mouseClicked_1_, p_mouseClicked_3_);
             return true;
         }
