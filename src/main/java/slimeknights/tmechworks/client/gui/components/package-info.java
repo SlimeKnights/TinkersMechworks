@@ -1,0 +1,7 @@
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+package slimeknights.tmechworks.client.gui.components;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
+
+import javax.annotation.ParametersAreNonnullByDefault;

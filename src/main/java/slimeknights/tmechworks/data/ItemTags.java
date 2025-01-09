@@ -1,20 +1,22 @@
 package slimeknights.tmechworks.data;
 
-import net.minecraft.data.BlockTagsProvider;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.ItemTagsProvider;
-import net.minecraft.data.TagsProvider;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
+import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.MechworksTags;
 
+import static net.minecraft.tags.ItemTags.*;
+
 public class ItemTags extends ItemTagsProvider {
-    private TagsProvider.Builder<Item> allIngotTags;
-    private TagsProvider.Builder<Item> allNuggetTags;
+    private TagsProvider.TagAppender<Item> allIngotTags;
+    private TagsProvider.TagAppender<Item> allNuggetTags;
 
     public ItemTags(DataGenerator dataGenerator, BlockTagsProvider blockTagProvider, ExistingFileHelper helper) {
         super(dataGenerator, blockTagProvider, TMechworks.modId, helper);
@@ -26,20 +28,24 @@ public class ItemTags extends ItemTagsProvider {
         copy(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS);
 
         copy(MechworksTags.Blocks.ORES_ALUMINUM, MechworksTags.Items.ORES_ALUMINUM);
-        copy(MechworksTags.Blocks.ORES_COPPER, MechworksTags.Items.ORES_COPPER);
         copy(MechworksTags.Blocks.STORAGE_BLOCKS_ALUMINUM, MechworksTags.Items.STORAGE_BLOCKS_ALUMINUM);
-        copy(MechworksTags.Blocks.STORAGE_BLOCKS_COPPER, MechworksTags.Items.STORAGE_BLOCKS_COPPER);
 
         addIngot(MechworksTags.Items.INGOTS_ALUMINUM, MechworksContent.Items.aluminum_ingot.get());
-        addIngot(MechworksTags.Items.INGOTS_COPPER, MechworksContent.Items.copper_ingot.get());
-
         addNugget(MechworksTags.Items.NUGGETS_ALUMINUM, MechworksContent.Items.aluminum_nugget.get());
-        addNugget(MechworksTags.Items.NUGGETS_COPPER, MechworksContent.Items.copper_nugget.get());
 
-        tag(net.minecraft.tags.ItemTags.LECTERN_BOOKS).add(MechworksContent.Items.book.get());
+        tag(LECTERN_BOOKS).add(MechworksContent.Items.book.get());
+
+        copy(MechworksTags.Blocks.ORES_ALL, MechworksTags.Items.ORES_ALL);
+
+        tag(MechworksTags.Items.UPGRADES).add(
+                MechworksContent.Items.upgrade_blank.get(),
+                MechworksContent.Items.upgrade_speed.get(),
+                MechworksContent.Items.upgrade_drawbridge_advanced.get(),
+                MechworksContent.Items.upgrade_drawbridge_distance.get()
+        );
     }
 
-    private void addIngot(ITag.INamedTag<Item> tag, Item... item) {
+    private void addIngot(TagKey<Item> tag, Item... item) {
         tag(tag).add(item);
 
         if(allIngotTags == null)
@@ -48,7 +54,7 @@ public class ItemTags extends ItemTagsProvider {
         allIngotTags.add(item);
     }
 
-    private void addNugget(ITag.INamedTag<Item> tag, Item... item) {
+    private void addNugget(TagKey<Item> tag, Item... item) {
         tag(tag).add(item);
 
         if(allNuggetTags == null)

@@ -24,8 +24,6 @@
         }
     ],
     "image": {
-        "item": {
-            "id": "tmechworks:firestarter"
-        }
+        "item": "tmechworks:firestarter"
     }
 }

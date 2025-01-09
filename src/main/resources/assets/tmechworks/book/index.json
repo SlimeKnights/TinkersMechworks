@@ -3,9 +3,7 @@
     "name": "intro",
     "data": "sections/intro.json",
     "icon": {
-      "item": {
-        "id": "tmechworks:book"
-      }
+      "item": "tmechworks:book"
     }
   },
   {
@@ -13,7 +11,7 @@
     "data": "sections/world.json",
     "icon": {
       "item": {
-        "itemList": "items/ore.json"
+        "tag": "tmechworks:ores"
       }
     }
   },
@@ -22,7 +20,8 @@
     "data": "sections/machines.json",
     "icon": {
       "item": {
-        "id": "tmechworks:drawbridge",
+        "type": "forge:nbt",
+        "item": "tmechworks:drawbridge",
         "nbt": {
           "drawAdvanced": true
         }
@@ -34,7 +33,7 @@
     "data": "sections/upgrades.json",
     "icon": {
       "item": {
-        "itemList": "items/upgrades.json"
+        "tag": "tmechworks:upgrades"
       }
     }
   }

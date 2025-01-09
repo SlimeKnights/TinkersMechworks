@@ -1,45 +1,50 @@
 package slimeknights.tmechworks.integration.waila;
 
+import mcp.mobius.waila.api.BlockAccessor;
 import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IDataAccessor;
-import mcp.mobius.waila.api.IPluginConfig;
 import mcp.mobius.waila.api.IServerDataProvider;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import mcp.mobius.waila.api.ITooltip;
+import mcp.mobius.waila.api.config.IPluginConfig;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GenericTileDataProvider implements IServerDataProvider<TileEntity>, IComponentProvider {
+public class GenericTileDataProvider implements IServerDataProvider<BlockEntity>, IComponentProvider {
     public static final GenericTileDataProvider INSTANCE = new GenericTileDataProvider();
 
     @Override
-    public void appendServerData(CompoundNBT nbt, ServerPlayerEntity player, World world, TileEntity tile) {
+    public void appendServerData(CompoundTag nbt, ServerPlayer player, Level world, BlockEntity tile, boolean showDetails) {
         if(tile instanceof IInformationProvider)
             ((IInformationProvider)tile).syncInformation(nbt, player);
     }
 
     @Override
-    public void appendHead(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-        call(tooltip, accessor, IInformationProvider.InformationType.HEAD);
-    }
+    public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+        BlockEntity te = accessor.getBlockEntity();
+        if (te instanceof IInformationProvider) {
+            IInformationProvider provider = (IInformationProvider) te;
 
-    @Override
-    public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-        call(tooltip, accessor, IInformationProvider.InformationType.BODY);
-    }
+            IInformationProvider.InformationType type;
+            switch(accessor.getTooltipPosition()) {
+                case BODY -> type = IInformationProvider.InformationType.BODY;
+                case TAIL -> type = IInformationProvider.InformationType.TAIL;
+                case HEAD -> type = IInformationProvider.InformationType.HEAD;
+                default -> type = IInformationProvider.InformationType.BODY;
+            }
 
-    @Override
-    public void appendTail(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-        call(tooltip, accessor, IInformationProvider.InformationType.TAIL);
-    }
+            List<Component> info = new ArrayList<>();
+            provider.getInformation(info, type, accessor.getPlayer());
 
-    private void call(List<ITextComponent> tooltip, IDataAccessor accessor, IInformationProvider.InformationType type) {
-        TileEntity te = accessor.getTileEntity();
-
-        if(te instanceof IInformationProvider)
-            ((IInformationProvider)te).getInformation(tooltip, type, accessor.getServerData(), accessor.getPlayer());
+            if(!info.isEmpty()) {
+                for(Component s : info) {
+                    tooltip.add(s);
+                }
+            }
+        }
     }
 }

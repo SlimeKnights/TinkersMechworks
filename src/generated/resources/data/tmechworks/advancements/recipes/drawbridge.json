@@ -6,12 +6,14 @@
     ]
   },
   "criteria": {
-    "has_copper_ingot": {
+    "has_aluminum_ingot": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "tmechworks:copper_ingot"
+            "items": [
+              "tmechworks:aluminum_ingot"
+            ]
           }
         ]
       }
@@ -25,7 +27,7 @@
   },
   "requirements": [
     [
-      "has_copper_ingot",
+      "has_aluminum_ingot",
       "has_the_recipe"
     ]
   ]

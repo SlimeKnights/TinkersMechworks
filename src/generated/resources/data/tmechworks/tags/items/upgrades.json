@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "tmechworks:upgrade_blank",
+    "tmechworks:upgrade_speed",
+    "tmechworks:upgrade_drawbridge_advanced",
+    "tmechworks:upgrade_drawbridge_distance"
+  ]
+}

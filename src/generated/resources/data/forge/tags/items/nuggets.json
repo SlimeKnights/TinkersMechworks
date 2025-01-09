@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "tmechworks:aluminum_nugget",
-    "tmechworks:copper_nugget"
+    "tmechworks:aluminum_nugget"
   ]
 }

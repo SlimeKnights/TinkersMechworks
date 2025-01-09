@@ -1,8 +1,8 @@
 package slimeknights.tmechworks.library;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayer;
 import org.apache.commons.lang3.StringUtils;
 import slimeknights.tmechworks.TMechworks;
@@ -17,14 +17,14 @@ public class Util
     public static final String RESOURCE = TMechworks.modId;
     public static final Random rand = new Random();
 
-    public static WeakReference<FakePlayer> getFakePlayer(World world)
+    public static WeakReference<FakePlayer> getFakePlayer(Level world)
     {
-        if (!(world instanceof ServerWorld))
+        if (!(world instanceof ServerLevel))
         {
             return null;
         }
 
-        return MechworksFakePlayer.getInstance((ServerWorld)world);
+        return MechworksFakePlayer.getInstance((ServerLevel)world);
     }
 
     /**

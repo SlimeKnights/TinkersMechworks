@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:blasting",
-  "ingredient": {
-    "item": "tmechworks:copper_ore"
-  },
-  "result": "tmechworks:copper_ingot",
-  "experience": 1.0,
-  "cookingtime": 100
-}

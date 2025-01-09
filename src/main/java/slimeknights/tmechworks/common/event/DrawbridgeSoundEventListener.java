@@ -1,6 +1,6 @@
 package slimeknights.tmechworks.common.event;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

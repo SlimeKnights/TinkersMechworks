@@ -1,12 +1,14 @@
 package slimeknights.tmechworks.client.gui.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.network.PacketDistributor;
 import slimeknights.tmechworks.api.disguisestate.DisguiseState;
 import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
 import slimeknights.tmechworks.common.network.PacketHandler;
@@ -14,7 +16,7 @@ import slimeknights.tmechworks.common.network.packet.UpdateDisguiseStatePacket;
 
 import java.util.Collection;
 
-public class DisguiseStateWidget extends Widget {
+public class DisguiseStateWidget extends AbstractWidget {
     private DisguiseState<?> state;
     private String stateString;
 
@@ -23,7 +25,7 @@ public class DisguiseStateWidget extends Widget {
     private final RedstoneMachineTileEntity te;
 
     public DisguiseStateWidget(int x, int y, RedstoneMachineTileEntity te) {
-        super(x, y, 0, 0, new StringTextComponent(""));
+        super(x, y, 0, 0, new TextComponent(""));
 
         this.te = te;
     }
@@ -37,15 +39,14 @@ public class DisguiseStateWidget extends Widget {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         if(state == null)
             return;
 
         Collection<?> states = state.getAllowedValues();
 
-        Minecraft mc = Minecraft.getInstance();
-
-        mc.getTextureManager().bind(state.getIconSheet());
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, state.getIconSheet());
 
         hoveredState = null;
         boolean canHover = true;
@@ -55,7 +56,7 @@ public class DisguiseStateWidget extends Widget {
             String state = obj != null ? obj.toString() : "null";
 
             int rem = states.size() - i;
-            int col = MathHelper.floor(i / 3F);
+            int col = Mth.floor(i / 3F);
             int row = i % 3;
 
             int xPos = x + col * 8;
@@ -80,15 +81,15 @@ public class DisguiseStateWidget extends Widget {
             }
 
             if(isActive)
-                RenderSystem.color4f(.47F, .36F, .2F, 1F);
+                RenderSystem.setShaderColor(.47F, .36F, .2F, 1F);
             else if(isHovered)
-                RenderSystem.color4f(.17F, .08F, .01F, 1F);
+                RenderSystem.setShaderColor(.17F, .08F, .01F, 1F);
             else
-                RenderSystem.color4f(.38F, .16F, .05F, 1F);
+                RenderSystem.setShaderColor(.38F, .16F, .05F, 1F);
 
             int index = this.state.unsafeGetIconFor(obj);
             int indexX = index % 32;
-            int indexY = MathHelper.floor(index / 32F);
+            int indexY = Mth.floor(index / 32F);
 
             blit(stack, xPos, yPos, indexX * 8, indexY * 8, 8, 8);
 
@@ -97,14 +98,14 @@ public class DisguiseStateWidget extends Widget {
                 break;
         }
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     public int getColumnCount() {
         if(state == null)
             return 0;
 
-        return MathHelper.clamp(MathHelper.ceil(state.getAllowedValues().size() / 3F), 0, 3);
+        return Mth.clamp(Mth.ceil(state.getAllowedValues().size() / 3F), 0, 3);
     }
 
     @Override
@@ -133,5 +134,10 @@ public class DisguiseStateWidget extends Widget {
 
     private static boolean intersects(int x, int y, int mx, int my) {
         return mx > x && my > y && mx < x + 8 && my < y + 8;
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        defaultButtonNarrationText(narrationElementOutput);
     }
 }

@@ -1,10 +1,9 @@
 package slimeknights.tmechworks.common.network.packet;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 import slimeknights.tmechworks.TMechworks;
 
 import java.util.function.Supplier;
@@ -16,11 +15,11 @@ public class ClientSetCursorStackPacket {
         this.stack = stack;
     }
 
-    public static void encode(ClientSetCursorStackPacket msg, PacketBuffer buf) {
+    public static void encode(ClientSetCursorStackPacket msg, FriendlyByteBuf buf) {
         buf.writeItem(msg.stack);
     }
 
-    public static ClientSetCursorStackPacket decode(PacketBuffer buf) {
+    public static ClientSetCursorStackPacket decode(FriendlyByteBuf buf) {
         ItemStack stack = buf.readItem();
 
         return new ClientSetCursorStackPacket(stack);
@@ -29,10 +28,10 @@ public class ClientSetCursorStackPacket {
     public static class Handler {
         public static void handle(final ClientSetCursorStackPacket msg, Supplier<NetworkEvent.Context> ctx) {
             NetworkEvent.Context context = ctx.get();
-            PlayerEntity player = TMechworks.proxy.getPlayer();
+            Player player = TMechworks.proxy.getPlayer();
 
             context.enqueueWork(() -> {
-                player.inventory.setCarried(msg.stack);
+                player.containerMenu.setCarried(msg.stack);
             });
 
             context.setPacketHandled(true);

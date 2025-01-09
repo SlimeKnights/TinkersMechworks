@@ -1,30 +1,25 @@
 package slimeknights.tmechworks.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldVertexBufferUploader;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.*;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Matrix4f;
+import net.minecraftforge.network.PacketDistributor;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
 import slimeknights.tmechworks.client.gui.components.DisguiseStateWidget;
 import slimeknights.tmechworks.common.MechworksTags;
-import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.network.PacketHandler;
@@ -34,7 +29,13 @@ import slimeknights.tmechworks.library.Util;
 
 import java.util.List;
 
-public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+
+public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContainer> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/drawbridge.png");
     public static final ResourceLocation ADVANCED_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/drawbridge_advanced.png");
 
@@ -43,14 +44,14 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     public final boolean isAdvanced;
     private final int slotCount;
 
-    public DrawbridgeScreen(DrawbridgeContainer container, PlayerInventory inventory, ITextComponent name) {
+    public DrawbridgeScreen(DrawbridgeContainer container, Inventory inventory, Component name) {
         super(container, inventory, name);
 
         isAdvanced = container.getTile().stats.isAdvanced;
         slotCount = container.getTile().slots.getContainerSize();
     }
 
-    public static DrawbridgeScreen create(DrawbridgeContainer container, PlayerInventory player, ITextComponent title){
+    public static DrawbridgeScreen create(DrawbridgeContainer container, Inventory player, Component title){
         return new DrawbridgeScreen(container, player, title);
     }
 
@@ -79,15 +80,15 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
 
         ArrowWidget arrow = new ArrowWidget(aX, aY, width, height, true, this::arrowClicked);
         updateSelection(arrow);
-        addButton(arrow);
+        addRenderableWidget(arrow);
 
         disguiseWidget = new DisguiseStateWidget(leftPos + 198, topPos + 133, menu.getTile());
-        addButton(disguiseWidget);
+        addRenderableWidget(disguiseWidget);
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void containerTick() {
+        super.containerTick();
 
         DrawbridgeTileEntity te = menu.getTile();
 
@@ -108,16 +109,17 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(SCREEN_LOCATION);
+    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, SCREEN_LOCATION);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight); // Background
         blit(stack, leftPos - 44, topPos + imageHeight - 65, 0, 182, 47, 60); // Upgrades cutout
@@ -132,7 +134,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         if(!isAdvanced) {
             drawSlicedBox(stack, leftPos + 75, topPos + 31, 26, 26, 17, 166); // Drawbridge slot
         } else {
-            this.minecraft.getTextureManager().bind(ADVANCED_LOCATION);
+            RenderSystem.setShaderTexture(0, ADVANCED_LOCATION);
 
             blit(stack, leftPos - 18, topPos - 80, 0, 0, 213, 148); // Advanced cutout
             blit(stack, leftPos + 191, topPos + 4, 0, 196, 63, 60); // Arrow cutout
@@ -141,52 +143,52 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         }
     }
 
-    private void drawAdvancedSlots(MatrixStack stack) {
+    private void drawAdvancedSlots(PoseStack stack) {
         for(Slot s : menu.mainSlots){
             blit(stack, leftPos + s.x - 1, topPos + s.y - 1, 0, 166, 18, 18);
         }
     }
 
     @Override
-    protected void renderTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
         if(this.hoveredSlot == null)
             return;
 
         if(!isAdvanced || this.hoveredSlot.hasItem()) {
             super.renderTooltip(stack, mouseX, mouseY); // renderTooltip => renderHoveredTooltip
         } else if(hoveredSlot.container == getMenu().getTile().slots) {
-            renderTooltip(stack, new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)), mouseX, mouseY);
+            renderTooltip(stack, new TranslatableComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)), mouseX, mouseY);
         }
     }
 
     @Override
-    public List<ITextComponent> getTooltipFromItem(ItemStack stack) {
-        List<ITextComponent> list = super.getTooltipFromItem(stack);
+    public List<Component> getTooltipFromItem(ItemStack stack) {
+        List<Component> list = super.getTooltipFromItem(stack);
 
         if(isAdvanced && hoveredSlot.container == getMenu().getTile().slots) {
-            list.add(StringTextComponent.EMPTY);
-            list.add(new TranslationTextComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).withStyle(TextFormatting.GRAY));
+            list.add(TextComponent.EMPTY);
+            list.add(new TranslatableComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).withStyle(ChatFormatting.GRAY));
         }
 
-        if(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST.contains(Block.byItem(stack.getItem()))) {
-            list.add(StringTextComponent.EMPTY);
-            list.add(new TranslationTextComponent(Util.prefix("gui.blacklisted")));
+        if(Block.byItem(stack.getItem()).defaultBlockState().is(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST)) {
+            list.add(TextComponent.EMPTY);
+            list.add(new TranslatableComponent(Util.prefix("gui.blacklisted")));
         }
 
         return list;
     }
 
     @Override
-    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
         super.renderLabels(stack, mouseX, mouseY);
 
         float scale = .75F;
         float invScale = 1 / scale;
 
-        RenderSystem.scalef(scale, scale, scale);
+        stack.scale(scale, scale, scale);
         String upgrades = I18n.get(Util.prefix("gui.upgrades"));
         font.draw(stack, upgrades, 47 / 2F - font.width(upgrades) / 2F - 50, (imageWidth - 69) * invScale, 4210752);
-        RenderSystem.scalef(invScale, invScale, invScale);
+        stack.scale(invScale, invScale, invScale);
     }
 
     private void arrowClicked(ArrowWidget widget, ArrowWidget.Arrow arrow) {
@@ -205,7 +207,7 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + menu.getTile().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
     }
 
-    private void drawSlicedBox(MatrixStack stack, int x, int y, int width, int height, int u, int v) {
+    private void drawSlicedBox(PoseStack stack, int x, int y, int width, int height, int u, int v) {
         // Corners
         blit(stack, x, y, u, v, 4, 4); // Top Left
         blit(stack, x + width - 4, y, u + 12, v, 4, 4); // Top Right
@@ -222,23 +224,22 @@ public class DrawbridgeScreen extends ContainerScreen<DrawbridgeContainer> {
         blit(stack, x + 4, y + 4, width - 8, height - 8, u + 6, u + 10, v + 6, v + 10);
     }
 
-    public static void blit(MatrixStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV) {
+    public static void blit(PoseStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV) {
         blit(stack, x, y, w, h, minU, maxU, minV, maxV, 256F, 256F);
     }
 
-    public static void blit(MatrixStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV, float tw, float th) {
+    public static void blit(PoseStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV, float tw, float th) {
         innerBlit(stack.last().pose(), x, x + w, y, y + h, 0, minU / tw, maxU / tw, minV / th, maxV / th);
     }
 
     private static void innerBlit(Matrix4f matrix, int x1, int x2, int y1, int y2, int blitOffset, float minU, float maxU, float minV, float maxV) {
-        BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder.vertex(matrix, (float)x1, (float)y2, (float)blitOffset).uv(minU, maxV).endVertex();
         bufferbuilder.vertex(matrix, (float)x2, (float)y2, (float)blitOffset).uv(maxU, maxV).endVertex();
         bufferbuilder.vertex(matrix, (float)x2, (float)y1, (float)blitOffset).uv(maxU, minV).endVertex();
         bufferbuilder.vertex(matrix, (float)x1, (float)y1, (float)blitOffset).uv(minU, minV).endVertex();
         bufferbuilder.end();
-        RenderSystem.enableAlphaTest();
-        WorldVertexBufferUploader.end(bufferbuilder);
+        BufferUploader.end(bufferbuilder);
     }
 }

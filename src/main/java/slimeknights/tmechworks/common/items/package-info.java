@@ -1,0 +1,7 @@
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+package slimeknights.tmechworks.common.items;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
+
+import javax.annotation.ParametersAreNonnullByDefault;

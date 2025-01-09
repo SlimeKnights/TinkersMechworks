@@ -1,48 +1,50 @@
 package slimeknights.tmechworks.common.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.network.NetworkHooks;
-import slimeknights.mantle.tileentity.InventoryTileEntity;
+import net.minecraftforge.network.NetworkHooks;
+import slimeknights.mantle.block.entity.InventoryBlockEntity;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
 import slimeknights.tmechworks.library.Util;
@@ -53,7 +55,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class RedstoneMachineBlock extends DirectionalBlock {
+public abstract class RedstoneMachineBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty HAS_DISGUISE = BooleanProperty.create("has_disguise");
     public static final IntegerProperty LIGHT_VALUE = IntegerProperty.create("light_value", 0, 15);
 
@@ -71,7 +73,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         if(hasFacingDirection()) {
             builder.add(FACING);
@@ -82,21 +84,21 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         builder.add(LIGHT_VALUE);
     }
 
-    public boolean openGui(PlayerEntity player, World world, BlockPos pos) {
-        if (player instanceof ServerPlayerEntity && !(player instanceof FakePlayer)) {
-            TileEntity te = world.getBlockEntity(pos);
+    public boolean openGui(Player player, Level world, BlockPos pos) {
+        if (player instanceof ServerPlayer && !(player instanceof FakePlayer)) {
+            BlockEntity te = world.getBlockEntity(pos);
 
-            if (!(te instanceof INamedContainerProvider))
+            if (!(te instanceof MenuProvider))
                 return false;
 
-            NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) te, pos);
+            NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) te, pos);
         }
 
         return true;
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
         RedstoneMachineTileEntity logicBase = (RedstoneMachineTileEntity) worldIn.getBlockEntity(pos);
@@ -107,7 +109,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public boolean shouldCheckWeakPower(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
+    public boolean shouldCheckWeakPower(BlockState state, LevelReader world, BlockPos pos, Direction side) {
         return true;
     }
 
@@ -117,7 +119,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         if (!hasFacingDirection()) {
             return super.getStateForPlacement(context);
         }
@@ -126,22 +128,22 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nonnull LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nonnull LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
 
         // set custom name from named stack
         if (stack.hasCustomHoverName()) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            BlockEntity be = worldIn.getBlockEntity(pos);
 
-            if (tileentity instanceof InventoryTileEntity) {
-                ((InventoryTileEntity) tileentity).setCustomName(stack.getHoverName());
+            if (be instanceof InventoryBlockEntity) {
+                ((InventoryBlockEntity) be).setCustomName(stack.getHoverName());
             }
         }
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity te = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
+        BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 
         if (te instanceof RedstoneMachineTileEntity) {
             List<ItemStack> drops = NonNullList.create();
@@ -149,7 +151,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
             ItemStack item = new ItemStack(this, 1);
 
-            writeAdditionalItemData(state, builder.getLevel(), new BlockPos(builder.getOptionalParameter(LootParameters.ORIGIN)), item);
+            writeAdditionalItemData(state, builder.getLevel(), new BlockPos(builder.getOptionalParameter(LootContextParams.ORIGIN)), item);
 
             if (dropState)
                 machine.storeTileData(item);
@@ -162,15 +164,15 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (blockMatches(state, worldIn, pos, newState, isMoving))
             return;
 
-        TileEntity te = worldIn.getBlockEntity(pos);
+        BlockEntity te = worldIn.getBlockEntity(pos);
 
-        if (te instanceof IInventory) {
+        if (te instanceof Container) {
             if (!dropState)
-                InventoryHelper.dropContents(worldIn, pos, (IInventory) te);
+                Containers.dropContents(worldIn, pos, (Container) te);
 
             worldIn.updateNeighbourForOutputSignal(pos, this);
         }
@@ -178,10 +180,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
-    public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
+    public void writeAdditionalItemData(BlockState state, Level worldIn, BlockPos pos, ItemStack stack) {
     }
 
-    public boolean blockMatches(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public boolean blockMatches(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         return state.getBlock() == newState.getBlock();
     }
 
@@ -189,35 +191,35 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (!stack.hasTag())
             return;
 
-        CompoundNBT compound = stack.getTag();
-        if (compound.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND)) {
-            CompoundNBT tags = compound.getCompound("BlockEntityTag");
+        CompoundTag compound = stack.getTag();
+        if (compound.contains("BlockEntityTag", CompoundTag.TAG_COMPOUND)) {
+            CompoundTag tags = compound.getCompound("BlockEntityTag");
 
-            if (tags.contains("Disguise", Constants.NBT.TAG_COMPOUND)) {
+            if (tags.contains("Disguise", CompoundTag.TAG_COMPOUND)) {
                 ItemStack disguise = ItemStack.of(tags.getCompound("Disguise"));
                 if (disguise != ItemStack.EMPTY) {
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.disguise")).withStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+                    tooltip.add(new TranslatableComponent(Util.prefix("hud.disguise")).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
                     tooltip.add(disguise.getHoverName());
                 }
             }
 
-            if (tags.contains("Items", Constants.NBT.TAG_LIST)) {
-                ListNBT items = tags.getList("Items", Constants.NBT.TAG_LIST);
+            if (tags.contains("Items", CompoundTag.TAG_LIST)) {
+                ListTag items = tags.getList("Items", CompoundTag.TAG_LIST);
 
                 if (items.size() > 0) {
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.items")).withStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+                    tooltip.add(new TranslatableComponent(Util.prefix("hud.items")).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
                 }
 
                 for (int i = 0; i < items.size(); ++i) {
-                    CompoundNBT itemTag = items.getCompound(i);
+                    CompoundTag itemTag = items.getCompound(i);
                     int slot = itemTag.getByte("Slot") & 255;
 
                     ItemStack item = ItemStack.of(itemTag);
-                    tooltip.add(new TranslationTextComponent(Util.prefix("hud.slot"), slot, item.getHoverName(), item.getCount()).withStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+                    tooltip.add(new TranslatableComponent(Util.prefix("hud.slot"), slot, item.getHoverName(), item.getCount()).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
                 }
             }
         }
@@ -235,9 +237,9 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
      * changes.
      */
     @Override
-    public boolean triggerEvent(BlockState state, World worldIn, BlockPos pos, int id, int param) {
+    public boolean triggerEvent(BlockState state, Level worldIn, BlockPos pos, int id, int param) {
         super.triggerEvent(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
@@ -246,41 +248,42 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
     /////////////////////////
 
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
     @Nonnull
     @Override
-    public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
+    public abstract BlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             this.openGui(player, worldIn, pos);
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
+    public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
         return true;
     }
 
-    public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState) {
+    public void setDefaultNBT(CompoundTag nbt, CompoundTag blockState) {
         blockState.putInt("InventorySize", 0);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return RedstoneMachineTileEntity::ticker;
     }
 
     ////////////////////////
     // Disguise Overrides //
     ////////////////////////
-    public <T> T runOnDisguiseBlock(BlockState state, IBlockReader worldIn, BlockPos pos, Function<BlockState, T> func, Supplier<T> orElse) {
+    public <T> T runOnDisguiseBlock(BlockState state, BlockGetter worldIn, BlockPos pos, Function<BlockState, T> func, Supplier<T> orElse) {
         if (!state.getValue(HAS_DISGUISE))
             return orElse.get();
 
-        TileEntity te = worldIn.getBlockEntity(pos);
+        BlockEntity te = worldIn.getBlockEntity(pos);
 
         if (te instanceof RedstoneMachineTileEntity) {
             RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
@@ -310,33 +313,33 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock {
 //    }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getShape(worldIn, pos, context), () -> super.getShape(state, worldIn, pos, context));
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
         return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getOcclusionShape(worldIn, pos), () -> super.getOcclusionShape(state, worldIn, pos));
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getCollisionShape(worldIn, pos, context), () -> super.getCollisionShape(state, worldIn, pos, context));
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
         return runOnDisguiseBlock(state, reader, pos, disguise -> disguise.propagatesSkylightDown(reader, pos), () -> super.propagatesSkylightDown(state, reader, pos));
     }
 
     @Override
-    public int getLightBlock(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public int getLightBlock(BlockState state, BlockGetter worldIn, BlockPos pos) {
         return runOnDisguiseBlock(state, worldIn, pos, disguise -> disguise.getLightBlock(worldIn, pos), worldIn::getMaxLightLevel);
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.getLightValue(world, pos), () -> super.getLightValue(state, world, pos));
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+        return runOnDisguiseBlock(state, world, pos, disguise -> disguise.getLightEmission(world, pos), () -> super.getLightEmission(state, world, pos));
     }
 
     //TODO seems hardcoded for now

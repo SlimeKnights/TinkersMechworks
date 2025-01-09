@@ -1,7 +1,7 @@
 package slimeknights.tmechworks.api.disguisestate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import slimeknights.tmechworks.TMechworks;

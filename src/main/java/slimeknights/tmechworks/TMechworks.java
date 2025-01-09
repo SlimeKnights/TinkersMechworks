@@ -50,7 +50,7 @@ public class TMechworks {
         content.initRegisters();
         bus.register(content);
 
-        MinecraftForge.EVENT_BUS.register(new MechworksWorld());
+        MechworksWorld.initialize();
     }
 
     private void preInit(final FMLCommonSetupEvent event) {

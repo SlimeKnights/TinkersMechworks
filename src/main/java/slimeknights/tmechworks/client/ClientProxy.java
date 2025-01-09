@@ -1,9 +1,9 @@
 package slimeknights.tmechworks.client;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import slimeknights.mantle.client.book.BookLoader;
@@ -13,9 +13,10 @@ import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.CommonProxy;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.event.ModelBakeEventListener;
+import slimeknights.tmechworks.library.Util;
 
 public class ClientProxy extends CommonProxy {
-    public static final BookData book = BookLoader.registerBook("tmechworks:book", true, false, new FileRepository("tmechworks:book"));
+    public static final BookData book = BookLoader.registerBook(Util.getResource("book"), true, false, new FileRepository(Util.getResource("book")));
 
     @Override
     public void preInit() {
@@ -33,33 +34,15 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void setupClient() {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> TMechworks.content::registerScreenFactories);
-
-        // TODO mod config gui
     }
 
     private void registerDisguiseBlock(Block block) {
         ModelBakeEventListener.registerDisguiseBlock(block.getRegistryName());
-        RenderTypeLookup.setRenderLayer(block, rt -> true);
+        ItemBlockRenderTypes.setRenderLayer(block, rt -> true);
     }
 
     @Override
-    public PlayerEntity getPlayer() {
+    public Player getPlayer() {
         return Minecraft.getInstance().player;
     }
-
-    // Hack to enable config gui
-//    static {
-//        List<ModInfo> mods = ModList.get().getMods();
-//        ModInfo info = mods.stream().filter(x -> x.getModId().equals(TMechworks.modId)).findFirst().orElse(null);
-//
-//        if (info != null) {
-//            ModInfo newInfo = new ModInfo(info.getOwningFile(), info.getModConfig()) {
-//                public boolean hasConfigUI() {
-//                    return true;
-//                }
-//            };
-//
-//            mods.set(mods.indexOf(info), newInfo);
-//        }
-//    }
 }

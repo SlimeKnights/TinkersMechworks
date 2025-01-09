@@ -1,22 +1,22 @@
 package slimeknights.tmechworks.client.gui.components;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.TextComponent;
 import slimeknights.tmechworks.TMechworks;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-public class ArrowWidget extends Widget {
+public class ArrowWidget extends AbstractWidget {
     public static final ResourceLocation ARROW_WIDGET = new ResourceLocation(TMechworks.modId, "textures/gui/arrows.png");
 
     public static final String[] LABELS_DEFAULT = {
@@ -45,7 +45,7 @@ public class ArrowWidget extends Widget {
     }
 
     public ArrowWidget(int x, int y, int screenW, int screenH, boolean drawAdditionalArrows, IArrowPressed onClick) {
-        super(x, y, 0, 0, new StringTextComponent(""));
+        super(x, y, 0, 0, new TextComponent(""));
 
         setLabels(LABELS_DEFAULT);
         Arrays.fill(states, ArrowState.ENABLED);
@@ -92,14 +92,13 @@ public class ArrowWidget extends Widget {
     }
 
     @Override
-    public void render(@Nonnull MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        Minecraft mc = Minecraft.getInstance();
+    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        stack.pushPose();
+        stack.translate(x, y, 0F);
 
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(x, y, 0F);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-        mc.getTextureManager().bind(ARROW_WIDGET);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, ARROW_WIDGET);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         hoveredArrow = null;
         boolean canHover = true;
@@ -136,14 +135,15 @@ public class ArrowWidget extends Widget {
             blit(stack, arrow.x, arrow.y, indexX, indexY, arrow.subW, arrow.subH);
         }
 
-        RenderSystem.popMatrix();
+        stack.popPose();
 
         if (hoveredArrow == null)
             return;
 
         // ITextProperties.of -> create
         if (labels != null && states[hoveredArrow.ordinal()] == ArrowState.HOVER && !labels[hoveredArrow.ordinal()].trim().isEmpty()) {
-            GuiUtils.drawHoveringText(stack, ImmutableList.of(ITextProperties.of(I18n.get(labels[hoveredArrow.ordinal()]))), mouseX, mouseY, screenW, screenH, 100, Minecraft.getInstance().font);
+            // TODO: pass to parent
+            //GuiUtils.drawHoveringText(stack, ImmutableList.of(FormattedText.of(I18n.get(labels[hoveredArrow.ordinal()]))), mouseX, mouseY, screenW, screenH, 100, Minecraft.getInstance().font);
         }
     }
 
@@ -163,6 +163,11 @@ public class ArrowWidget extends Widget {
         super.onClick(p_onClick_1_, p_onClick_3_);
 
         onClick.onPress(this, hoveredArrow);
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        defaultButtonNarrationText(narrationElementOutput);
     }
 
     public enum Arrow {

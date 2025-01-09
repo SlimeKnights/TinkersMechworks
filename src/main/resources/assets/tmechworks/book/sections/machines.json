@@ -11,7 +11,7 @@
   },
   {
     "name": "firestarter",
-    "type": "text with left image etch",
+    "type": "text_left_image",
     "data": "machines/firestarter.json"
   },
   {
@@ -21,7 +21,7 @@
   },
   {
     "name": "drawbridge",
-    "type": "text with left image etch",
+    "type": "text_right_image",
     "data": "machines/drawbridge.json"
   },
   {

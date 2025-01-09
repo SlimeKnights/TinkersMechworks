@@ -1,9 +1,9 @@
 package slimeknights.tmechworks.common.entities;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.WorldEvent;
 import slimeknights.tmechworks.TMechworks;
@@ -19,11 +19,11 @@ public class MechworksFakePlayer extends FakePlayer {
 
     private static MechworksFakePlayer instance;
 
-    private MechworksFakePlayer(ServerWorld world, GameProfile name) {
+    private MechworksFakePlayer(ServerLevel world, GameProfile name) {
         super(world, name);
     }
 
-    public static WeakReference<FakePlayer> getInstance(ServerWorld world) {
+    public static WeakReference<FakePlayer> getInstance(ServerLevel world) {
         if (instance == null) {
             instance = new MechworksFakePlayer(world, PROFILE);
         }
@@ -32,7 +32,7 @@ public class MechworksFakePlayer extends FakePlayer {
         return new WeakReference<>(instance);
     }
 
-    private static void releaseInstance(IWorld world) {
+    private static void releaseInstance(LevelAccessor world) {
         // If the fake player has a reference to the world getting unloaded,
         // null out the fake player so that the world can unload
         if (instance != null && instance.level == world) {
@@ -41,12 +41,12 @@ public class MechworksFakePlayer extends FakePlayer {
     }
 
     @Override
-    public boolean canBeAffected(EffectInstance potioneffectIn) {
+    public boolean canBeAffected(MobEffectInstance potioneffectIn) {
         return false;
     }
 
     public static void onWorldUnload(WorldEvent.Unload event) {
-        if (event.getWorld() instanceof ServerWorld) {
+        if (event.getWorld() instanceof ServerLevel) {
             releaseInstance(event.getWorld());
         }
     }

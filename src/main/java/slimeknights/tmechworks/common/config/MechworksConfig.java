@@ -23,7 +23,6 @@ public class MechworksConfig {
         public static final class WorldGeneration {
             public final ForgeConfigSpec.BooleanValue enabled;
 
-            public final Ore copper;
             public final Ore aluminum;
 
             WorldGeneration(ForgeConfigSpec.Builder builder) {
@@ -33,7 +32,6 @@ public class MechworksConfig {
                         .comment("Whether world generation is enabled as a whole")
                         .define("enabled", true);
 
-                copper = new Ore(builder, "copper");
                 aluminum = new Ore(builder, "aluminum");
 
                 builder.pop();

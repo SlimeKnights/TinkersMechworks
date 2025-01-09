@@ -1,30 +1,31 @@
 package slimeknights.tmechworks.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.client.gui.components.DisguiseStateWidget;
 import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
 import slimeknights.tmechworks.common.inventory.DisguiseContainer;
 
-public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
+public class DisguiseScreen extends AbstractContainerScreen<DisguiseContainer> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/generic_1.png");
 
     private DisguiseStateWidget disguiseWidget;
 
-    public DisguiseScreen(DisguiseContainer container, PlayerInventory inventory, ITextComponent name) {
+    public DisguiseScreen(DisguiseContainer container, Inventory inventory, Component name) {
         super(container, inventory, name);
     }
 
-    public static DisguiseScreen create(DisguiseContainer container, PlayerInventory player, ITextComponent title){
+    public static DisguiseScreen create(DisguiseContainer container, Inventory player, Component title){
         return new DisguiseScreen(container, player, title);
     }
 
@@ -33,12 +34,12 @@ public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
         super.init();
 
         disguiseWidget = new DisguiseStateWidget(leftPos + 99, topPos + 30, menu.getTile());
-        addButton(disguiseWidget);
+        addRenderableWidget(disguiseWidget);
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void containerTick() {
+        super.containerTick();
 
         RedstoneMachineTileEntity te = menu.getTile();
         ItemStack disguise = te.getDisguiseBlock();
@@ -52,16 +53,17 @@ public class DisguiseScreen extends ContainerScreen<DisguiseContainer> {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(SCREEN_LOCATION);
+    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, SCREEN_LOCATION);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight); // Background
     }

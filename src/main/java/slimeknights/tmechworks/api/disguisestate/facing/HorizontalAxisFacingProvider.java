@@ -1,8 +1,8 @@
 package slimeknights.tmechworks.api.disguisestate.facing;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
 
 public class HorizontalAxisFacingProvider extends FacingProvider {
     @Override

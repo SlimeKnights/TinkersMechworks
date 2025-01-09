@@ -1,30 +1,29 @@
 package slimeknights.tmechworks.common.blocks.tileentity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTypes;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
-import slimeknights.mantle.tileentity.InventoryTileEntity;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
+import slimeknights.mantle.block.entity.InventoryBlockEntity;
 import slimeknights.tmechworks.client.model.DisguiseBakedModel;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
 import slimeknights.tmechworks.common.inventory.DisguiseContainer;
@@ -34,23 +33,21 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import slimeknights.tmechworks.integration.waila.IInformationProvider.InformationType;
-
-public abstract class RedstoneMachineTileEntity extends InventoryTileEntity implements ITickableTileEntity, IInformationProvider {
-    private Inventory disguiseInventory;
+public abstract class RedstoneMachineTileEntity extends InventoryBlockEntity implements IInformationProvider {
+    private SimpleContainer disguiseInventory;
     private String disguiseState;
 
     private int redstoneState;
     private boolean isFirstTick = true;
 
-    public RedstoneMachineTileEntity(TileEntityType<?> type, ITextComponent name, int inventorySize) {
-        this(type, name, inventorySize, 64);
+    public RedstoneMachineTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize) {
+        this(type, pos, state, name, inventorySize, 64);
     }
 
-    public RedstoneMachineTileEntity(TileEntityType<?> type, ITextComponent name, int inventorySize, int maxStackSize) {
-        super(type, name, inventorySize, maxStackSize);
+    public RedstoneMachineTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize, int maxStackSize) {
+        super(type, pos, state, name, false, inventorySize, maxStackSize);
 
-        disguiseInventory = new Inventory(1) {
+        disguiseInventory = new SimpleContainer(1) {
             @Override
             public boolean canPlaceItem(int index, ItemStack stack) {
                 return stack.getItem() instanceof BlockItem;
@@ -124,7 +121,6 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         return redstoneState;
     }
 
-    @Override
     public void tick() {
         if (isFirstTick) {
             isFirstTick = false;
@@ -160,13 +156,13 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         refreshDisguise();
     }
 
-    public Inventory getDisguiseInventory() {
+    public SimpleContainer getDisguiseInventory() {
         return disguiseInventory;
     }
 
     public void refreshDisguise() {
         requestModelDataUpdate();
-        markDirtyFast();
+        setChangedFast();
 
         BlockState state = getBlockState();
         BlockState from = state;
@@ -183,18 +179,18 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     /**
      * Writes inventory information
      */
-    public CompoundNBT writeItemData(CompoundNBT tags) {
+    public CompoundTag writeItemData(CompoundTag tags) {
         tags.putInt("InventorySize", getContainerSize());
         writeInventoryToNBT(tags);
 
         if (this.hasCustomName()) {
-            tags.putString("CustomName", ITextComponent.Serializer.toJson(this.getCustomName()));
+            tags.putString("CustomName", Component.Serializer.toJson(this.getCustomName()));
         }
 
         ItemStack disguise = getDisguiseBlock();
 
         if (!disguise.isEmpty()) {
-            CompoundNBT itemNBT = new CompoundNBT();
+            CompoundTag itemNBT = new CompoundTag();
 
             itemNBT = disguise.save(itemNBT);
 
@@ -209,15 +205,15 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     /**
      * Reads inventory information
      */
-    public void readItemData(BlockState state, CompoundNBT tags) {
-        super.load(state, tags);
+    public void readItemData(CompoundTag tags) {
+        super.load(tags);
 
         if (tags.contains("Disguise")) {
-            CompoundNBT itemNBT = tags.getCompound("Disguise");
+            CompoundTag itemNBT = tags.getCompound("Disguise");
 
             ItemStack disguise = ItemStack.of(itemNBT);
 
-            if(tags.contains("DisguiseState", Constants.NBT.TAG_STRING)) {
+            if(tags.contains("DisguiseState", CompoundTag.TAG_STRING)) {
                 disguiseState = tags.getString("DisguiseState");
             }
 
@@ -226,72 +222,43 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     @Override
-    @Nonnull
-    public CompoundNBT save(CompoundNBT tags) {
-        super.save(tags);
+    public void saveSynced(CompoundTag tags) {
+        super.saveSynced(tags);
         tags = writeItemData(tags);
 
         tags.putInt("Redstone", redstoneState);
-
-        return tags;
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tags) {
-        readItemData(state, tags);
+    public void load(CompoundTag tags) {
+        readItemData(tags);
 
         redstoneState = tags.getInt("Redstone");
     }
 
     @Override
-    public void writeInventoryToNBT(CompoundNBT tag) {
+    public void writeInventoryToNBT(CompoundTag tag) {
         if (!isEmpty())
             super.writeInventoryToNBT(tag);
     }
 
     @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT tags = new CompoundNBT();
-
-        save(tags);
-
-        return new SUpdateTileEntityPacket(worldPosition, 0, tags);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT tags = pkt.getTag();
-
-        handleUpdateTag(getBlockState(), tags);
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
-    }
-
-
-    @Override
-    public void handleUpdateTag(BlockState state, @Nonnull CompoundNBT tag) {
-        load(state, tag);
-
-        // Mark block range for render update (if still needed)
+    protected boolean shouldSyncOnUpdate() {
+        return true;
     }
 
     public void sync() {
         setChanged();
-        // Mark block range for render update (if still needed)
 
         if (EffectiveSide.get() == LogicalSide.SERVER) {
-            SUpdateTileEntityPacket packetUpdateTileEntity = getUpdatePacket();
+            ClientboundBlockEntityDataPacket packetUpdateTileEntity = getUpdatePacket();
 
             if (packetUpdateTileEntity == null) {
                 return;
             }
 
-            for (PlayerEntity player : level.players()) {
-                ((ServerPlayerEntity) player).connection.send(packetUpdateTileEntity);
+            for (Player player : level.players()) {
+                ((ServerPlayer) player).connection.send(packetUpdateTileEntity);
             }
         }
     }
@@ -300,13 +267,13 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
      * Stores information in an itemstack
      */
     public ItemStack storeTileData(ItemStack stack) {
-        CompoundNBT tags = writeItemData(new CompoundNBT());
+        CompoundTag tags = writeItemData(new CompoundTag());
 
         stack.addTagElement("BlockEntityTag", tags);
 
         if (this.hasCustomName()) {
-            CompoundNBT name = new CompoundNBT();
-            name.putString("Name", ITextComponent.Serializer.toJson(this.getCustomName()));
+            CompoundTag name = new CompoundTag();
+            name.putString("Name", Component.Serializer.toJson(this.getCustomName()));
 
             stack.addTagElement("display", name);
         }
@@ -324,25 +291,25 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
     }
 
     @Override
-    public void syncInformation(CompoundNBT nbt, ServerPlayerEntity player) {
+    public void syncInformation(CompoundTag nbt, ServerPlayer player) {
         nbt.putInt("power", getRedstoneState());
     }
 
     @Override
-    public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, PlayerEntity player) {
+    public void getInformation(@Nonnull List<Component> info, @Nonnull InformationType type, Player player) {
     }
 
     @Override
-    public void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, CompoundNBT serverData, PlayerEntity player) {
+    public void getInformation(@Nonnull List<Component> info, @Nonnull InformationType type, CompoundTag serverData, Player player) {
         if (type == InformationType.BODY && !serverData.isEmpty())
-            info.add(new TranslationTextComponent("tooltip.waila.power", serverData.getInt("power")));
+            info.add(new TranslatableComponent("tooltip.waila.power", serverData.getInt("power")));
 
         getInformation(info, type, player);
     }
 
     @Nullable
     @Override
-    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity) {
         return new DisguiseContainer(id, playerInventory, this);
     }
 
@@ -355,5 +322,11 @@ public abstract class RedstoneMachineTileEntity extends InventoryTileEntity impl
         }
 
         return state.hasProperty(DirectionalBlock.FACING);
+    }
+
+    public static void ticker(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        if(blockEntity instanceof RedstoneMachineTileEntity) {
+            ((RedstoneMachineTileEntity) blockEntity).tick();
+        }
     }
 }

@@ -2,19 +2,16 @@
 
 {
   // Blocks
-  "block.tmechworks.copper_block": "Block of Copper",
   "block.tmechworks.aluminum_block": "Block of Aluminum",
   "block.tmechworks.firestarter": "Firestarter",
   "block.tmechworks.drawbridge": "Drawbridge",
-  "block.tmechworks.copper_ore": "Copper Ore",
   "block.tmechworks.aluminum_ore": "Aluminum Ore",
+  "block.tmechworks.deepslate_aluminum_ore": "Deepslate Aluminum Ore",
 
   // Items
   "item.tmechworks.book": "Mechanical Tinkering",
   "item.tmechworks.book.tooltip": "The best kind of book\\nby Da Vinci",
   //// Materials
-  "item.tmechworks.copper_ingot": "Copper Ingot",
-  "item.tmechworks.copper_nugget": "Copper Nugget",
   "item.tmechworks.aluminum_ingot": "Aluminum Ingot",
   "item.tmechworks.aluminum_nugget": "Aluminum Nugget",
 

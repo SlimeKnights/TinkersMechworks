@@ -1,26 +1,22 @@
 package slimeknights.tmechworks.common.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
+import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
 
@@ -36,33 +32,33 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
 
         builder.add(ADVANCED);
     }
 
     @Override
-    public void fillItemCategory(ItemGroup pTab, NonNullList<ItemStack> pItems) {
+    public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {
         super.fillItemCategory(pTab, pItems);
     }
 
     @Override
-    public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
+    public void writeAdditionalItemData(BlockState state, Level worldIn, BlockPos pos, ItemStack stack) {
         super.writeAdditionalItemData(state, worldIn, pos, stack);
 
-        CompoundNBT tags = stack.getOrCreateTag();
+        CompoundTag tags = stack.getOrCreateTag();
         tags.putBoolean("drawAdvanced", state.getValue(ADVANCED));
     }
 
     @Nonnull
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new DrawbridgeTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new DrawbridgeTileEntity(pos, state);
     }
 
     @Override
-    public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState) {
+    public void setDefaultNBT(CompoundTag nbt, CompoundTag blockState) {
         super.setDefaultNBT(nbt, blockState);
 
         blockState.putInt("PlaceAngle", 1);
@@ -74,10 +70,10 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
         // register => registerPropertyForItem
-        ItemModelsProperties.register(item, new ResourceLocation("advanced"), (stack, world, entity) -> {
+        ItemProperties.register(item, Util.getResource("advanced"), (stack, world, entity, seed) -> {
             boolean advanced = false;
 
-            if(stack.hasTag() && stack.getTag().contains("drawAdvanced", Constants.NBT.TAG_BYTE))
+            if(stack.hasTag() && stack.getTag().contains("drawAdvanced", CompoundTag.TAG_BYTE))
                 advanced = stack.getTag().getBoolean("drawAdvanced");
 
             return advanced ? 1F : 0F;

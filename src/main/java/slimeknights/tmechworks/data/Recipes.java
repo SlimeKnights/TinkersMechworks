@@ -1,9 +1,9 @@
 package slimeknights.tmechworks.data;
 
 import net.minecraft.data.*;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import slimeknights.tmechworks.library.Util;
 
@@ -15,6 +15,12 @@ import static slimeknights.tmechworks.common.MechworksContent.Items.*;
 import static slimeknights.tmechworks.common.MechworksTags.Items.*;
 import static net.minecraftforge.common.Tags.Items.*;
 
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+
 public class Recipes extends RecipeProvider implements IConditionBuilder {
     private static final int standardSmeltingTime = 200;
     private static final int standardBlastingTime = standardSmeltingTime / 2;
@@ -24,10 +30,9 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> out) {
+    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> out) {
         // Metals
         registerMetal(out, aluminum_ore, aluminum_nugget, aluminum_ingot, aluminum_block);
-        registerMetal(out, copper_ore, copper_nugget, copper_ingot, copper_block);
 
         wrap(ShapelessRecipeBuilder.shapeless(book).requires(Items.BOOK).requires(upgrade_blank), Items.BOOK).save(out);
 
@@ -40,7 +45,7 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
                 .define('P', Items.PISTON)
                 .pattern("RAR")
                 .pattern("PUP")
-                .pattern("RAR"), copper_ingot)
+                .pattern("RAR"), aluminum_ingot)
                 .save(out);
 
         wrap(ShapedRecipeBuilder.shaped(firestarter)
@@ -52,7 +57,7 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
                 .define('F', Items.FLINT_AND_STEEL)
                 .pattern("RAR")
                 .pattern("FBF")
-                .pattern("ACA"), copper_ingot)
+                .pattern("ACA"), aluminum_ingot)
                 .save(out);
 
         wrap(ShapedRecipeBuilder.shaped(upgrade_blank)
@@ -100,7 +105,7 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
                 .save(out);
     }
 
-    private void registerMetal(@Nonnull Consumer<IFinishedRecipe> out, IItemProvider ore, IItemProvider nugget, IItemProvider ingot, IItemProvider storageBlock) {
+    private void registerMetal(@Nonnull Consumer<FinishedRecipe> out, ItemLike ore, ItemLike nugget, ItemLike ingot, ItemLike storageBlock) {
         String format = Util.prefix("%s_from_%s");
 
         String nuggetName = nugget.asItem().getRegistryName().getPath();
@@ -108,8 +113,8 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
         String storageBlockName = storageBlock.asItem().getRegistryName().getPath();
 
         // Smelting
-        wrap(CookingRecipeBuilder.smelting(Ingredient.of(ore), ingot, 1F, standardSmeltingTime), ore).save(out, String.format(format, ingotName, "smelting"));
-        wrap(CookingRecipeBuilder.blasting(Ingredient.of(ore), ingot, 1F, standardBlastingTime), ore).save(out, String.format(format, ingotName, "blasting"));
+        wrap(SimpleCookingRecipeBuilder.smelting(Ingredient.of(ore), ingot, 1F, standardSmeltingTime), ore).save(out, String.format(format, ingotName, "smelting"));
+        wrap(SimpleCookingRecipeBuilder.blasting(Ingredient.of(ore), ingot, 1F, standardBlastingTime), ore).save(out, String.format(format, ingotName, "blasting"));
 
         // Compression
         compress(ingot, storageBlock).group(Util.prefix(storageBlockName)).save(out, String.format(format, storageBlockName, ingotName));
@@ -118,19 +123,19 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
         decompress(ingot, nugget).group(Util.prefix(nuggetName)).save(out, String.format(format, nuggetName, ingotName));
     }
 
-    private static ShapelessRecipeBuilder wrap(ShapelessRecipeBuilder builder, IItemProvider input) {
+    private static ShapelessRecipeBuilder wrap(ShapelessRecipeBuilder builder, ItemLike input) {
         return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
     }
 
-    private static ShapedRecipeBuilder wrap(ShapedRecipeBuilder builder, IItemProvider input) {
+    private static ShapedRecipeBuilder wrap(ShapedRecipeBuilder builder, ItemLike input) {
         return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
     }
 
-    private static CookingRecipeBuilder wrap(CookingRecipeBuilder builder, IItemProvider input) {
+    private static SimpleCookingRecipeBuilder wrap(SimpleCookingRecipeBuilder builder, ItemLike input) {
         return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
     }
 
-    private static ShapedRecipeBuilder compress(IItemProvider input, IItemProvider result) {
+    private static ShapedRecipeBuilder compress(ItemLike input, ItemLike result) {
         return wrap(ShapedRecipeBuilder.shaped(result)
                 .define('#', input)
                 .pattern("###")
@@ -138,7 +143,7 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
                 .pattern("###"), input);
     }
 
-    private static ShapelessRecipeBuilder decompress(IItemProvider input, IItemProvider result) {
+    private static ShapelessRecipeBuilder decompress(ItemLike input, ItemLike result) {
         return wrap(ShapelessRecipeBuilder.shapeless(result, 9).requires(input), input);
     }
 

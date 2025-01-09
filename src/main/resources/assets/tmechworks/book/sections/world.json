@@ -1,7 +1,7 @@
 [
   {
     "name": "intro",
-    "type": "text with right image etch",
+    "type": "text_right_image",
     "data": "world/ores.json"
   }
 ]

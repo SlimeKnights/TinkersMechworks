@@ -1,30 +1,26 @@
 package slimeknights.tmechworks.common;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.OreBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.*;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.OreBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.registration.deferred.*;
 import slimeknights.mantle.registration.object.ItemObject;
-import slimeknights.mantle.util.SupplierItemGroup;
+import slimeknights.mantle.util.SupplierCreativeTab;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.client.gui.DisguiseScreen;
 import slimeknights.tmechworks.client.gui.DrawbridgeScreen;
@@ -37,30 +33,34 @@ import slimeknights.tmechworks.common.config.MechworksConfig;
 import slimeknights.tmechworks.common.inventory.DisguiseContainer;
 import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
+import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.common.items.MechworksBookItem;
 import slimeknights.tmechworks.common.items.MechworksItem;
-import slimeknights.tmechworks.common.worldgen.MechworksWorld;
 
 import java.util.function.Function;
+
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class MechworksContent {
     private final Logger log = LogManager.getLogger(TMechworks.modId + ".content");
 
     private static final BlockDeferredRegister BLOCKS = new BlockDeferredRegister(TMechworks.modId);
     private static final ItemDeferredRegister ITEMS = new ItemDeferredRegister(TMechworks.modId);
-    private static final TileEntityTypeDeferredRegister TILE_ENTITIES = new TileEntityTypeDeferredRegister(TMechworks.modId);
-    private static final ContainerTypeDeferredRegister CONTAINERS = new ContainerTypeDeferredRegister(TMechworks.modId);
+    private static final BlockEntityTypeDeferredRegister TILE_ENTITIES = new BlockEntityTypeDeferredRegister(TMechworks.modId);
+    private static final MenuTypeDeferredRegister CONTAINERS = new MenuTypeDeferredRegister(TMechworks.modId);
 
     // Creative tabs
-    public static ItemGroup tabMechworks = new SupplierItemGroup(TMechworks.modId, "TinkersMechworks", () -> new ItemStack(Items.book)).setRecipeFolderName("");
+    public static CreativeModeTab tabMechworks = new SupplierCreativeTab(TMechworks.modId, "TinkersMechworks", () -> new ItemStack(Items.book)).setRecipeFolderName("");
 
-    private static final Function<Block, ? extends BlockItem> DEFAULT_BLOCK_ITEM = (b) -> new BlockItem(b, new Item.Properties().tab(tabMechworks));
+    private static final Function<Block, ? extends BlockItem> DEFAULT_BLOCK_ITEM = (b) -> new MechworksBlockItem(b, new Item.Properties().tab(tabMechworks));
 
-    public static class Blocks {
-        public static final ItemObject<OreBlock> aluminum_ore = BLOCKS.register("aluminum_ore", () -> new OreBlock(Block.Properties.of(Material.STONE).strength(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getLevel())), DEFAULT_BLOCK_ITEM);
-        public static final ItemObject<OreBlock> copper_ore = BLOCKS.register("copper_ore", () -> new OreBlock(Block.Properties.of(Material.STONE).strength(3F).harvestTool(ToolType.PICKAXE).harvestLevel(ItemTier.IRON.getLevel())), DEFAULT_BLOCK_ITEM);
+    public static class Blocks { //TODO .harvestTool(ToolType.PICKAXE).harvestLevel(Tiers.IRON.getLevel())) tags
+        public static final ItemObject<OreBlock> aluminum_ore = BLOCKS.register("aluminum_ore", () -> new OreBlock(Block.Properties.of(Material.STONE).strength(3F)), DEFAULT_BLOCK_ITEM);
+        public static final ItemObject<OreBlock> deepslate_aluminum_ore = BLOCKS.register("deepslate_aluminum_ore", () -> new OreBlock(Block.Properties.of(Material.STONE).color(MaterialColor.DEEPSLATE).strength(4.5F, 3F).sound(SoundType.DEEPSLATE)), DEFAULT_BLOCK_ITEM);
         public static final ItemObject<MetalBlock> aluminum_block = BLOCKS.register("aluminum_block", MetalBlock::new, DEFAULT_BLOCK_ITEM);
-        public static final ItemObject<MetalBlock> copper_block = BLOCKS.register("copper_block", MetalBlock::new, DEFAULT_BLOCK_ITEM);
         public static final ItemObject<FirestarterBlock> firestarter = BLOCKS.register("firestarter", FirestarterBlock::new, DEFAULT_BLOCK_ITEM);
         public static final ItemObject<DrawbridgeBlock> drawbridge = BLOCKS.register("drawbridge", DrawbridgeBlock::new, DEFAULT_BLOCK_ITEM);
     }
@@ -68,9 +68,7 @@ public class MechworksContent {
     public static class Items {
         public static final ItemObject<MechworksBookItem> book = ITEMS.register("book", MechworksBookItem::new);
 
-        public static final ItemObject<MechworksItem> copper_ingot = ITEMS.register("copper_ingot", MechworksItem::new);
         public static final ItemObject<MechworksItem> aluminum_ingot = ITEMS.register("aluminum_ingot", MechworksItem::new);
-        public static final ItemObject<MechworksItem> copper_nugget = ITEMS.register("copper_nugget", MechworksItem::new);
         public static final ItemObject<MechworksItem> aluminum_nugget = ITEMS.register("aluminum_nugget", MechworksItem::new);
 
         // Upgrades
@@ -81,19 +79,19 @@ public class MechworksContent {
     }
 
     public static class TileEntities {
-        public static final RegistryObject<TileEntityType<FirestarterTileEntity>> firestarter = TILE_ENTITIES.register("firestarter", FirestarterTileEntity::new, Blocks.firestarter);
-        public static final RegistryObject<TileEntityType<DrawbridgeTileEntity>> drawbridge = TILE_ENTITIES.register("drawbridge", DrawbridgeTileEntity::new, Blocks.drawbridge);
+        public static final RegistryObject<BlockEntityType<FirestarterTileEntity>> firestarter = TILE_ENTITIES.register("firestarter", FirestarterTileEntity::new, Blocks.firestarter);
+        public static final RegistryObject<BlockEntityType<DrawbridgeTileEntity>> drawbridge = TILE_ENTITIES.register("drawbridge", DrawbridgeTileEntity::new, Blocks.drawbridge);
     }
 
     public static class Containers {
-        public static final RegistryObject<ContainerType<DisguiseContainer>> disguise = CONTAINERS.register("disguise", DisguiseContainer::factory);
-        public static final RegistryObject<ContainerType<DrawbridgeContainer>> drawbridge = CONTAINERS.register("drawbridge", DrawbridgeContainer::factory);
+        public static final RegistryObject<MenuType<DisguiseContainer>> disguise = CONTAINERS.register("disguise", DisguiseContainer::factory);
+        public static final RegistryObject<MenuType<DrawbridgeContainer>> drawbridge = CONTAINERS.register("drawbridge", DrawbridgeContainer::factory);
     }
 
     @OnlyIn(Dist.CLIENT)
     public void registerScreenFactories() {
-        ScreenManager.register(Containers.disguise.get(), DisguiseScreen::create);
-        ScreenManager.register(Containers.drawbridge.get(), DrawbridgeScreen::create);
+        MenuScreens.register(Containers.disguise.get(), DisguiseScreen::create);
+        MenuScreens.register(Containers.drawbridge.get(), DrawbridgeScreen::create);
     }
 
     public void initRegisters() {
@@ -115,7 +113,6 @@ public class MechworksContent {
     }
 
     public void init(InterModEnqueueEvent event) {
-        MechworksWorld.getInstance().setupWorldGeneration();
     }
 
     public void postInit(InterModProcessEvent event) {

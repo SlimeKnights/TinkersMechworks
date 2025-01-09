@@ -16,8 +16,6 @@
         }
     ],
     "image": {
-        "item": {
-            "id": "tmechworks:drawbridge"
-        }
+        "item": "tmechworks:drawbridge"
     }
 }

@@ -1,0 +1,7 @@
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+package slimeknights.tmechworks.integration.waila;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
+
+import javax.annotation.ParametersAreNonnullByDefault;

@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "tmechworks:aluminum_ore"
+            "items": [
+              "tmechworks:aluminum_ore"
+            ]
           }
         ]
       }

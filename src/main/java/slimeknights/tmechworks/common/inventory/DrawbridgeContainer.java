@@ -1,34 +1,34 @@
 package slimeknights.tmechworks.common.inventory;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import slimeknights.mantle.inventory.BaseContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import slimeknights.mantle.inventory.BaseContainerMenu;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
 import slimeknights.tmechworks.common.inventory.slots.ValidatingSlot;
 
 import java.util.ArrayList;
 
-public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
+public class DrawbridgeContainer extends BaseContainerMenu<DrawbridgeTileEntity> {
     public static final int ADVANCED_COLUMNS = 11;
 
-    public final PlayerInventory playerInventory;
+    public final Inventory playerInventory;
     public final int rows;
 
     public final ImmutableList<Slot> mainSlots;
 
-    public DrawbridgeContainer(int id, PlayerInventory playerInventory, DrawbridgeTileEntity te) {
+    public DrawbridgeContainer(int id, Inventory playerInventory, DrawbridgeTileEntity te) {
         super(MechworksContent.Containers.drawbridge.get(), id, playerInventory, te);
 
         this.playerInventory = playerInventory;
         te.startOpen(playerInventory.player);
 
-        rows = MathHelper.ceil((float)te.slots.getContainerSize() / ADVANCED_COLUMNS);
+        rows = Mth.ceil((float)te.slots.getContainerSize() / ADVANCED_COLUMNS);
         mainSlots = addDrawbridgeSlots();
 
         for(int x = 0; x < 2; x++){
@@ -72,10 +72,10 @@ public class DrawbridgeContainer extends BaseContainer<DrawbridgeTileEntity> {
         }
     }
 
-    public static DrawbridgeContainer factory(int id, PlayerInventory playerInventory, PacketBuffer extraData) {
+    public static DrawbridgeContainer factory(int id, Inventory playerInventory, FriendlyByteBuf extraData) {
         BlockPos pos = extraData.readBlockPos();
 
-        TileEntity te = playerInventory.player.level.getBlockEntity(pos);
+        BlockEntity te = playerInventory.player.level.getBlockEntity(pos);
         DrawbridgeTileEntity drawbridge = null;
 
         if(te instanceof DrawbridgeTileEntity)

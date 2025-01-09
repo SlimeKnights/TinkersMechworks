@@ -5,8 +5,6 @@
     }
   ],
   "image": {
-    "item": {
-      "id": "tmechworks:upgrade_drawbridge_distance"
-    }
+    "item": "tmechworks:upgrade_drawbridge_distance"
   }
 }

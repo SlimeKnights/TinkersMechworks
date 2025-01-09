@@ -1,6 +1,6 @@
 package slimeknights.tmechworks.data;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.tmechworks.TMechworks;
 
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import static slimeknights.tmechworks.common.MechworksContent.Blocks.*;
 
-public class BlockLootTables extends net.minecraft.data.loot.BlockLootTables {
+public class BlockLootTables extends net.minecraft.data.loot.BlockLoot {
     @Nonnull
     @Override
     protected Iterable<Block> getKnownBlocks() {
@@ -24,9 +24,8 @@ public class BlockLootTables extends net.minecraft.data.loot.BlockLootTables {
         noDrop(drawbridge.get());
 
         dropSelf(aluminum_block.get());
-        dropSelf(copper_block.get());
         dropSelf(aluminum_ore.get());
-        dropSelf(copper_ore.get());
+        dropSelf(deepslate_aluminum_ore.get());
     }
 
     private void noDrop(Block block) {

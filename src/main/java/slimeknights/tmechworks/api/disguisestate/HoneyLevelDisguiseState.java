@@ -1,7 +1,7 @@
 package slimeknights.tmechworks.api.disguisestate;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.util.Collection;
 

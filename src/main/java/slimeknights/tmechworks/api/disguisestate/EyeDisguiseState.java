@@ -1,6 +1,6 @@
 package slimeknights.tmechworks.api.disguisestate;
 
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class EyeDisguiseState extends BasicDisguiseState<Boolean> {
     public EyeDisguiseState() {

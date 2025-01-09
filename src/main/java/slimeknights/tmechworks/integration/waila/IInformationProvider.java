@@ -1,11 +1,11 @@
 package slimeknights.tmechworks.integration.waila;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -14,22 +14,22 @@ import java.util.List;
 
 public interface IInformationProvider {
     @OnlyIn(Dist.CLIENT)
-    default void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, PlayerEntity player) {
+    default void getInformation(@Nonnull List<Component> info, @Nonnull InformationType type, Player player) {
 
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void getInformation(@Nonnull List<ITextComponent> info, @Nonnull InformationType type, CompoundNBT serverData, PlayerEntity player) {
+    default void getInformation(@Nonnull List<Component> info, @Nonnull InformationType type, CompoundTag serverData, Player player) {
         getInformation(info, type, player);
     }
 
-    default void syncInformation(CompoundNBT nbt, ServerPlayerEntity player) {
+    default void syncInformation(CompoundTag nbt, ServerPlayer player) {
 
     }
 
-    default void requireSneak(List<ITextComponent> tooltip, PlayerEntity player, Runnable action) {
+    default void requireSneak(List<Component> tooltip, Player player, Runnable action) {
         if(!player.isCrouching()) {
-            tooltip.add(new TranslationTextComponent("tooltip.waila.sneak_for_details").withStyle(TextFormatting.ITALIC));
+            tooltip.add(new TranslatableComponent("tooltip.waila.sneak_for_details").withStyle(ChatFormatting.ITALIC));
         } else {
             action.run();
         }

@@ -1,7 +1,7 @@
 [
   {
     "name": "speed",
-    "type": "text with left image etch",
+    "type": "text_left_image",
     "data": "upgrades/speed.json"
   },
   {
@@ -11,7 +11,7 @@
   },
   {
     "name": "distance",
-    "type": "text with left image etch",
+    "type": "text_left_image",
     "data": "upgrades/distance.json"
   },
   {
@@ -21,7 +21,7 @@
   },
   {
     "name": "advanced",
-    "type": "text with left image etch",
+    "type": "text_left_image",
     "data": "upgrades/advanced.json"
   },
   {

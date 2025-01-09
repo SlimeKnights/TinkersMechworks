@@ -1,15 +1,15 @@
 package slimeknights.tmechworks.common.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import slimeknights.mantle.tileentity.MantleTileEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import slimeknights.mantle.block.entity.MantleBlockEntity;
 import slimeknights.tmechworks.common.inventory.slots.ISlotValidate;
 
 import java.util.function.Predicate;
 
-public class FragmentedInventory implements IInventory, ISlotValidate {
-    private final IInventory parent;
+public class FragmentedInventory implements Container, ISlotValidate {
+    private final Container parent;
     private final int startSlot;
     private int size;
 
@@ -17,7 +17,7 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
     private int stackLimit = 64;
     private Predicate<ItemStack> validItems = stack -> true;
 
-    public FragmentedInventory(IInventory parent, int startSlot, int size) {
+    public FragmentedInventory(Container parent, int startSlot, int size) {
         this.parent = parent;
         this.startSlot = startSlot;
         this.size = size;
@@ -82,14 +82,14 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
      * Calls regular markDirty if not child of MantleTileEntity
      */
     public void markDirtyFast() {
-        if (parent instanceof MantleTileEntity)
-            ((MantleTileEntity) parent).markDirtyFast();
+        if (parent instanceof MantleBlockEntity)
+            ((MantleBlockEntity) parent).setChangedFast();
         else
             setChanged();
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerEntity) {
+    public boolean stillValid(Player playerEntity) {
         return parent.stillValid(playerEntity);
     }
 
@@ -122,12 +122,12 @@ public class FragmentedInventory implements IInventory, ISlotValidate {
     }
 
     @Override
-    public void startOpen(PlayerEntity player) {
+    public void startOpen(Player player) {
         parent.startOpen(player);
     }
 
     @Override
-    public void stopOpen(PlayerEntity player) {
+    public void stopOpen(Player player) {
         parent.stopOpen(player);
     }
 

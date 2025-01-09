@@ -1,103 +1,108 @@
 package slimeknights.tmechworks.common.worldgen;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.core.Holder;
+import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.placement.*;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.config.MechworksConfig;
+import slimeknights.tmechworks.library.Util;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Supplier;
+
+import static net.minecraft.data.worldgen.features.OreFeatures.DEEPSLATE_ORE_REPLACEABLES;
+import static net.minecraft.data.worldgen.features.OreFeatures.STONE_ORE_REPLACEABLES;
 
 public class MechworksWorld {
-    private static MechworksWorld INSTANCE;
-
     private static final Logger log = LogManager.getLogger(TMechworks.modId + ".world");
 
-    private static final List<OreProperties> OVERWORLD_ORES = ImmutableList.of(
-            new OreProperties(() -> MechworksContent.Blocks.copper_ore.get().defaultBlockState(), 8, ore -> ore.range(64).squared().count(20), MechworksConfig.COMMON_CONFIG.worldGen.copper),
-            new OreProperties(() -> MechworksContent.Blocks.aluminum_ore.get().defaultBlockState(), 8, ore -> ore.range(64).squared().count(20), MechworksConfig.COMMON_CONFIG.worldGen.aluminum)
-    );
+    public static List<OreConfiguration.TargetBlockState> ORE_ALUMINUM_TARGET_LIST;
+    public static Holder<ConfiguredFeature<OreConfiguration, ?>> ORE_ALUMINUM_CF;
+    public static Holder<PlacedFeature> ORE_ALUMINUM_UPPER_PF;
+    public static Holder<PlacedFeature> ORE_ALUMINUM_MIDDLE_PF;
 
-    public MechworksWorld() {
-        INSTANCE = this;
+    private MechworksWorld() {}
+
+    public static void initialize() {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(MechworksWorld::setup);
+        MinecraftForge.EVENT_BUS.addListener(MechworksWorld::biomeModification);
     }
 
-    public static MechworksWorld getInstance() {
-        return INSTANCE;
-    }
-
-    public void setupWorldGeneration() {
-        Registry<ConfiguredFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_FEATURE;
-
-        for (OreProperties ore : OVERWORLD_ORES) {
-            ore.preconfigureFeature();
-
-            Registry.register(registry, Objects.requireNonNull(ore.state.get().getBlock().getRegistryName()), ore.preconfiguredFeature);
-        }
-    }
-
-    @SubscribeEvent
-    public void onBiomeLoad(BiomeLoadingEvent ev) {
-        if (!MechworksConfig.COMMON_CONFIG.worldGen.enabled.get()) {
-            return;
-        }
-
-        // TODO: biome dictionary check when forge updates
-        OVERWORLD_ORES.forEach(ore -> ore.addToBiome(ev.getName().toString(), ev.getGeneration()));
-    }
-
-    private static class OreProperties {
-        private final Supplier<BlockState> state;
-        private final Function<ConfiguredFeature<?, ?>, ConfiguredFeature<?, ?>> processor;
-        private final int frequency;
-        private final MechworksConfig.Common.WorldGeneration.Ore config;
-
-        private ConfiguredFeature<?, ?> preconfiguredFeature;
-
-        OreProperties(Supplier<BlockState> state, int frequency, Function<ConfiguredFeature<?, ?>, ConfiguredFeature<?, ?>> processor, MechworksConfig.Common.WorldGeneration.Ore config) {
-            this.state = state;
-            this.frequency = frequency;
-            this.processor = processor;
-            this.config = config;
-        }
-
-        private void preconfigureFeature() {
-            preconfiguredFeature = Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, state.get(), frequency));
-            preconfiguredFeature = processor.apply(preconfiguredFeature);
-        }
-
-        private void addToBiome(String biome, BiomeGenerationSettingsBuilder generation){
-            if(!config.enabled.get())
-                return;
-
-            if(preconfiguredFeature == null) {
-                log.error("Preconfigured feature for " + state.get().getBlock().getRegistryName() + " is null, skipping...");
+    private static void setup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            if(!MechworksConfig.COMMON_CONFIG.worldGen.enabled.get()) {
                 return;
             }
 
-            boolean isWhitelist = config.isWhitelist.get();
-            List<? extends String> filter = config.filter.get();
-            boolean matches = filter.stream().anyMatch(biome::equals);
+            ORE_ALUMINUM_TARGET_LIST = List.of(
+                    OreConfiguration.target(STONE_ORE_REPLACEABLES, MechworksContent.Blocks.aluminum_ore.get().defaultBlockState()),
+                    OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLES, MechworksContent.Blocks.deepslate_aluminum_ore.get().defaultBlockState())
+            );
+
+            ORE_ALUMINUM_CF = FeatureUtils.register(Util.prefix("ore_aluminum_cf"), Feature.ORE, new OreConfiguration(ORE_ALUMINUM_TARGET_LIST, 10));
+
+            ORE_ALUMINUM_UPPER_PF = PlacementUtils.register(Util.prefix("ore_iron_upper"), ORE_ALUMINUM_CF, commonOrePlacement(52, HeightRangePlacement.triangle(VerticalAnchor.absolute(70), VerticalAnchor.absolute(120))));
+            ORE_ALUMINUM_MIDDLE_PF = PlacementUtils.register(Util.prefix("ore_iron_middle"), ORE_ALUMINUM_CF, commonOrePlacement(20, HeightRangePlacement.triangle(VerticalAnchor.absolute(-30), VerticalAnchor.absolute(50))));
+        });
+    }
+
+    private static void biomeModification(final BiomeLoadingEvent event) {
+        if(!MechworksConfig.COMMON_CONFIG.worldGen.enabled.get()) {
+            return;
+        }
+
+        Biome.BiomeCategory category = event.getCategory();
+        if(category == Biome.BiomeCategory.NETHER || category == Biome.BiomeCategory.THEEND) {
+            return;
+        }
+
+        BiomeGenerationSettingsBuilder generation = event.getGeneration();
+        ResourceLocation biomeName = event.getName();
+
+        if(biomeName == null) {
+            log.error("Biome name is null, skipping...");
+            return;
+        }
+
+        placeOre(MechworksConfig.COMMON_CONFIG.worldGen.aluminum, generation, biomeName.toString());
+    }
+
+    private static void placeOre(MechworksConfig.Common.WorldGeneration.Ore ore, BiomeGenerationSettingsBuilder generation, String biomeName) {
+        if(ore.enabled.get()) {
+            boolean isWhitelist = ore.isWhitelist.get();
+            List<? extends String> filter = ore.filter.get();
+            boolean matches = filter.stream().anyMatch(biomeName::equals);
 
             if((isWhitelist && !matches) || (!isWhitelist && matches)) {
                 return;
             }
 
-            generation.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, preconfiguredFeature);
+            generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_UPPER_PF);
+            generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_ALUMINUM_MIDDLE_PF);
         }
+    }
+
+    // Copied from OrePlacements
+    private static List<PlacementModifier> orePlacement(PlacementModifier countModifier, PlacementModifier heightModifier) {
+        return List.of(countModifier, InSquarePlacement.spread(), heightModifier, BiomeFilter.biome());
+    }
+
+    private static List<PlacementModifier> commonOrePlacement(int count, PlacementModifier heightRange) {
+        return orePlacement(CountPlacement.of(count), heightRange);
     }
 }

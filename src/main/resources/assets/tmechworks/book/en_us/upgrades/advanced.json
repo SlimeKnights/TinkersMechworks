@@ -10,8 +10,6 @@
     }
   ],
   "image": {
-    "item": {
-      "id": "tmechworks:upgrade_drawbridge_advanced"
-    }
+    "item": "tmechworks:upgrade_drawbridge_advanced"
   }
 }

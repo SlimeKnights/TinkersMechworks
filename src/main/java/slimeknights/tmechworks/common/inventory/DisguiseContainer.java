@@ -1,18 +1,16 @@
 package slimeknights.tmechworks.common.inventory;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import slimeknights.mantle.inventory.BaseContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import slimeknights.mantle.inventory.BaseContainerMenu;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
 import slimeknights.tmechworks.common.inventory.slots.ValidatingSlot;
 
-public class DisguiseContainer extends BaseContainer<RedstoneMachineTileEntity> {
-    public DisguiseContainer(int windowId, PlayerInventory playerInventory, RedstoneMachineTileEntity tile) {
+public class DisguiseContainer extends BaseContainerMenu<RedstoneMachineTileEntity> {
+    public DisguiseContainer(int windowId, Inventory playerInventory, RedstoneMachineTileEntity tile) {
         super(MechworksContent.Containers.disguise.get(), windowId, playerInventory, tile);
 
         tile.startOpen(playerInventory.player);
@@ -21,10 +19,10 @@ public class DisguiseContainer extends BaseContainer<RedstoneMachineTileEntity> 
         addInventorySlots();
     }
 
-    public static DisguiseContainer factory(int id, PlayerInventory playerInventory, PacketBuffer extraData) {
+    public static DisguiseContainer factory(int id, Inventory playerInventory, FriendlyByteBuf extraData) {
         BlockPos pos = extraData.readBlockPos();
 
-        TileEntity te = playerInventory.player.level.getBlockEntity(pos);
+        BlockEntity te = playerInventory.player.level.getBlockEntity(pos);
         RedstoneMachineTileEntity machine = null;
 
         if(te instanceof RedstoneMachineTileEntity)

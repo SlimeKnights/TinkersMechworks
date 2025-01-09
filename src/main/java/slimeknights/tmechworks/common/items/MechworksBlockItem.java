@@ -1,13 +1,13 @@
 package slimeknights.tmechworks.common.items;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import slimeknights.tmechworks.common.blocks.IBlockItemConstruct;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
@@ -16,9 +16,6 @@ import slimeknights.tmechworks.library.TranslationUtil;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import net.minecraft.item.Item.Properties;
 
 public class MechworksBlockItem extends BlockItem {
     private Object[] tooltipFormat;
@@ -27,13 +24,14 @@ public class MechworksBlockItem extends BlockItem {
     public MechworksBlockItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
 
-        if(blockIn instanceof IBlockItemConstruct)
-            ((IBlockItemConstruct)blockIn).onBlockItemConstruct(this);
+        if(blockIn instanceof IBlockItemConstruct) {
+            ((IBlockItemConstruct) blockIn).onBlockItemConstruct(this);
+        }
     }
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         Block block = getBlock();
 
         if(!(block instanceof RedstoneMachineBlock))
@@ -42,9 +40,9 @@ public class MechworksBlockItem extends BlockItem {
         nbt = stack.getTag();
 
         if(nbt == null)
-            nbt = new CompoundNBT();
+            nbt = new CompoundTag();
 
-        CompoundNBT tags = new CompoundNBT();
+        CompoundTag tags = new CompoundTag();
         ((RedstoneMachineBlock)block).setDefaultNBT(nbt, tags);
 
         if(!tags.isEmpty() && !nbt.contains("BlockEntityTag"))
@@ -68,7 +66,7 @@ public class MechworksBlockItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         if (I18n.exists(getDescriptionId(stack) + ".tooltip")) {
             tooltip.addAll(TranslationUtil.getTooltips(I18n.get(getDescriptionId(stack) + ".tooltip", tooltipFormatSupplier.get())));
         }

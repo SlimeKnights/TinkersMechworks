@@ -1,32 +1,28 @@
 package slimeknights.tmechworks.common.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants;
 import slimeknights.tmechworks.common.blocks.tileentity.FirestarterTileEntity;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.library.Util;
@@ -34,6 +30,13 @@ import slimeknights.tmechworks.library.Util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 
 public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItemConstruct
 {
@@ -46,19 +49,19 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(EXTINGUISH);
     }
 
     @Override
-    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         ItemStack extinguishStack = new ItemStack(this, 1);
         ItemStack keepLitStack = new ItemStack(this, 1);
 
-        CompoundNBT extinguish = extinguishStack.getOrCreateTag();
+        CompoundTag extinguish = extinguishStack.getOrCreateTag();
         extinguish.putBoolean("extinguish", true);
-        CompoundNBT keepLit = keepLitStack.getOrCreateTag();
+        CompoundTag keepLit = keepLitStack.getOrCreateTag();
         keepLit.putBoolean("extinguish", false);
 
         items.add(extinguishStack);
@@ -66,59 +69,59 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
     }
 
     @Override
-    public void writeAdditionalItemData(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
+    public void writeAdditionalItemData(BlockState state, Level worldIn, BlockPos pos, ItemStack stack) {
         super.writeAdditionalItemData(state, worldIn, pos, stack);
 
-        CompoundNBT tags = stack.getOrCreateTag();
+        CompoundTag tags = stack.getOrCreateTag();
         tags.putBoolean("extinguish", state.getValue(EXTINGUISH));
     }
 
     @Nonnull
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FirestarterTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FirestarterTileEntity(pos, state);
     }
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean shouldExtinguish = true;
         ItemStack stack = context.getItemInHand();
 
-        if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
+        if(stack.hasTag() && stack.getTag().contains("extinguish", CompoundTag.TAG_BYTE))
             shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
         return super.getStateForPlacement(context).setValue(EXTINGUISH, shouldExtinguish);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if(player.isCrouching())
             return super.use(state, worldIn, pos, player, handIn, hit);
 
         state = state.cycle(EXTINGUISH);
 
         worldIn.setBlockAndUpdate(pos, state);
-        worldIn.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, 0.55F);
+        worldIn.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundSource.BLOCKS, 0.3F, 0.55F);
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
         boolean shouldExtinguish = true;
 
-        if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
+        if(stack.hasTag() && stack.getTag().contains("extinguish", CompoundTag.TAG_BYTE))
             shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
-        tooltip.add(new TranslationTextComponent(Util.prefix("tooltip.behaviour"), I18n.get(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).withStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslatableComponent(Util.prefix("tooltip.behaviour"), I18n.get(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public void setDefaultNBT(CompoundNBT nbt, CompoundNBT blockState) {
+    public void setDefaultNBT(CompoundTag nbt, CompoundTag blockState) {
         // Firestarter does not have an inventory
         //        super.setDefaultNBT(nbt, blockState);
 
@@ -128,10 +131,10 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
 
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
-        ItemModelsProperties.register(item, new ResourceLocation("extinguish"), (stack, world, entity) -> {
+        ItemProperties.register(item, new ResourceLocation("extinguish"), (stack, world, entity, seed) -> {
             boolean shouldExtinguish = true;
 
-            if(stack.hasTag() && stack.getTag().contains("extinguish", Constants.NBT.TAG_BYTE))
+            if(stack.hasTag() && stack.getTag().contains("extinguish", CompoundTag.TAG_BYTE))
                 shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
             return shouldExtinguish ? 1F : 0F;

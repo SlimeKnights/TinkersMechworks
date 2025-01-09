@@ -1,19 +1,17 @@
 package slimeknights.tmechworks.common.items;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.library.TranslationUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
-
-import net.minecraft.item.Item.Properties;
 
 public class MechworksItem extends Item {
     private Object[] tooltipFormat;
@@ -40,7 +38,7 @@ public class MechworksItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         if (I18n.exists(getDescriptionId(stack) + ".tooltip")) {
             tooltip.addAll(TranslationUtil.getTooltips(I18n.get(getDescriptionId(stack) + ".tooltip", tooltipFormatSupplier.get())));
         }

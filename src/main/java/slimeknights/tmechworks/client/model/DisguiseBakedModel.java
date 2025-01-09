@@ -1,17 +1,17 @@
 package slimeknights.tmechworks.client.model;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
@@ -25,21 +25,21 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
+public class DisguiseBakedModel extends BakedModelWrapper<BakedModel> {
     public static final ModelProperty<ItemStack> DISGUISE = new ModelProperty<>();
     public static final ModelProperty<String> DISGUISE_STATE = new ModelProperty<>();
 
     private final Predicate<RenderType> renderTypeLookup;
 
-    public DisguiseBakedModel(IBakedModel originalModel) {
+    public DisguiseBakedModel(BakedModel originalModel) {
         this(originalModel, RenderType.solid());
     }
 
-    public DisguiseBakedModel(IBakedModel originalModel, RenderType defaultRenderType) {
+    public DisguiseBakedModel(BakedModel originalModel, RenderType defaultRenderType) {
         this(originalModel, rt -> rt == defaultRenderType);
     }
 
-    public DisguiseBakedModel(IBakedModel originalModel, Predicate<RenderType> renderTypeLookup) {
+    public DisguiseBakedModel(BakedModel originalModel, Predicate<RenderType> renderTypeLookup) {
         super(originalModel);
 
         this.renderTypeLookup = renderTypeLookup;
@@ -58,8 +58,8 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
                 BlockState disguiseState = disguiseItem.getBlock().defaultBlockState();
                 disguiseState = DisguiseStates.processDisguiseStates(disguiseState, extraData.getData(DISGUISE_STATE), state.getValue(BlockStateProperties.FACING));
 
-                if (RenderTypeLookup.canRenderInLayer(disguiseState, MinecraftForgeClient.getRenderLayer())) {
-                    IBakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(disguiseState);
+                if (ItemBlockRenderTypes.canRenderInLayer(disguiseState, MinecraftForgeClient.getRenderType())) {
+                    BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(disguiseState);
 
                     // Avoid infinite recursion when setting the disguise to another disguisable block
                     if (model instanceof DisguiseBakedModel) {
@@ -77,7 +77,7 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
     }
 
     private List<BakedQuad> getSuperQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        if (renderTypeLookup.test(MinecraftForgeClient.getRenderLayer())) {
+        if (renderTypeLookup.test(MinecraftForgeClient.getRenderType())) {
             return super.getQuads(state, side, rand, extraData);
         } else {
             return Collections.emptyList();
@@ -86,7 +86,7 @@ public class DisguiseBakedModel extends BakedModelWrapper<IBakedModel> {
 
     @Nonnull
     @Override
-    public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+    public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
         return super.getModelData(world, pos, state, tileData);
     }
 }

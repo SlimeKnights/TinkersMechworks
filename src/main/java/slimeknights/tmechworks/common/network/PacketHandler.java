@@ -1,8 +1,8 @@
 package slimeknights.tmechworks.common.network;
 
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 import slimeknights.tmechworks.common.network.packet.ClientSetCursorStackPacket;
 import slimeknights.tmechworks.common.network.packet.ServerReopenUiPacket;
 import slimeknights.tmechworks.common.network.packet.UpdateDisguiseStatePacket;
