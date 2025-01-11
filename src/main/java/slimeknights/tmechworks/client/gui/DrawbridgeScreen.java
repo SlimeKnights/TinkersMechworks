@@ -234,20 +234,6 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
     }
 
     public static void blit(PoseStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV) {
-        blit(stack, x, y, w, h, minU, maxU, minV, maxV, 256F, 256F);
-    }
-
-    public static void blit(PoseStack stack, int x, int y, int w, int h, int minU, int maxU, int minV, int maxV, float tw, float th) {
-        innerBlit(stack.last().pose(), x, x + w, y, y + h, 0, minU / tw, maxU / tw, minV / th, maxV / th);
-    }
-
-    private static void innerBlit(Matrix4f matrix, int x1, int x2, int y1, int y2, int blitOffset, float minU, float maxU, float minV, float maxV) {
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder.vertex(matrix, (float)x1, (float)y2, (float)blitOffset).uv(minU, maxV).endVertex();
-        bufferbuilder.vertex(matrix, (float)x2, (float)y2, (float)blitOffset).uv(maxU, maxV).endVertex();
-        bufferbuilder.vertex(matrix, (float)x2, (float)y1, (float)blitOffset).uv(maxU, minV).endVertex();
-        bufferbuilder.vertex(matrix, (float)x1, (float)y1, (float)blitOffset).uv(minU, minV).endVertex();
-        BufferUploader.draw(bufferbuilder.end());
+        innerBlit(stack.last().pose(), x, x + w, y, y + h, 0, minU / 256F, maxU / 256F, minV / 256F, maxV / 256F);
     }
 }
