@@ -336,7 +336,7 @@ public class DrawbridgeBlockEntity extends RedstoneMachineBlockEntity implements
         slots.resize(blockSlots);
         slots.overrideStackLimit(stats.isAdvanced ? 1 : 64);
 
-        BlockState state = getLevel().getBlockState(getBlockPos());
+        BlockState state = getBlockState();
         getLevel().setBlockAndUpdate(getBlockPos(), state.setValue(DrawbridgeBlock.ADVANCED, stats.isAdvanced));
     }
 
@@ -350,6 +350,17 @@ public class DrawbridgeBlockEntity extends RedstoneMachineBlockEntity implements
         isExtended = stats.getBoolean("Extended");
         isMoving = stats.getBoolean("Moving");
         cooldown = stats.getFloat("Cooldown");
+
+        if(tags.contains("DrawbridgeStats")) {
+            CompoundTag statsTag = tags.getCompound("DrawbridgeStats");
+
+            this.stats = new DrawbridgeStats();
+            this.stats.extendLength = statsTag.getInt("ExtendLength");
+            this.stats.extendDelay = statsTag.getFloat("ExtendDelay");
+            this.stats.isAdvanced = statsTag.getBoolean("IsAdvanced");
+
+            onStatsUpdated();
+        }
     }
 
     @Nonnull
@@ -365,6 +376,23 @@ public class DrawbridgeBlockEntity extends RedstoneMachineBlockEntity implements
         state.putFloat("Cooldown", cooldown);
 
         tags.put("DrawbridgeState", state);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag base = super.getUpdateTag();
+
+        if(stats != null) {
+            CompoundTag stats = new CompoundTag();
+
+            stats.putInt("ExtendLength", this.stats.extendLength);
+            stats.putFloat("ExtendDelay", this.stats.extendDelay);
+            stats.putBoolean("IsAdvanced", this.stats.isAdvanced);
+
+            base.put("DrawbridgeStats", stats);
+        }
+
+        return base;
     }
 
     @Override

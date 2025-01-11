@@ -125,8 +125,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         // Firestarter does not have an inventory
         //        super.setDefaultNBT(nbt, blockState);
 
-        if(!nbt.contains("extinguish"))
-            nbt.putBoolean("extinguish", true);
+        nbt.putBoolean("extinguish", true);
     }
 
     @Override
