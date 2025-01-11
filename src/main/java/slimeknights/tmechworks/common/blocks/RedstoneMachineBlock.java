@@ -151,10 +151,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
             RedstoneMachineBlockEntity machine = (RedstoneMachineBlockEntity) te;
             ItemStack item = new ItemStack(this, 1);
 
-            writeAdditionalItemData(state, builder.getLevel(), new BlockPos(builder.getOptionalParameter(LootContextParams.ORIGIN)), item);
-
             if (dropState)
                 machine.storeTileData(item);
+
+            writeAdditionalItemData(state, builder.getLevel(), new BlockPos(builder.getOptionalParameter(LootContextParams.ORIGIN)), item);
 
             drops.add(item);
             return drops;

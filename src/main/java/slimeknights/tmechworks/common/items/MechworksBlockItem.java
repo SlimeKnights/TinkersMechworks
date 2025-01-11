@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import slimeknights.tmechworks.common.blocks.IBlockItemConstruct;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
 import slimeknights.tmechworks.library.TranslationUtil;
@@ -29,28 +28,33 @@ public class MechworksBlockItem extends BlockItem {
         }
     }
 
-    @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+    public ItemStack getDefaultInstance() {
         Block block = getBlock();
 
-        if(!(block instanceof RedstoneMachineBlock))
-            return super.initCapabilities(stack, nbt);
+        if (!(block instanceof RedstoneMachineBlock)) {
+            return super.getDefaultInstance();
+        }
 
-        nbt = stack.getTag();
+        ItemStack stack = super.getDefaultInstance();
 
-        if(nbt == null)
+        CompoundTag nbt = stack.getTag();
+        if (nbt == null) {
             nbt = new CompoundTag();
+        }
 
-        CompoundTag tags = new CompoundTag();
-        ((RedstoneMachineBlock)block).setDefaultNBT(nbt, tags);
+        CompoundTag blockState = new CompoundTag();
 
-        if(!tags.isEmpty() && !nbt.contains("BlockEntityTag"))
-            nbt.put("BlockEntityTag", tags);
-        if(!nbt.isEmpty())
+        ((RedstoneMachineBlock) block).setDefaultNBT(nbt, blockState);
+
+        if (!blockState.isEmpty() && !nbt.contains("BlockEntityTag")) {
+            nbt.put("BlockEntityTag", blockState);
+        }
+        if (!nbt.isEmpty()) {
             stack.setTag(nbt);
+        }
 
-        return null;
+        return stack;
     }
 
     public MechworksBlockItem setTooltipFormat(Object... format){

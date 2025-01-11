@@ -73,7 +73,7 @@ public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity im
         Direction facing = Direction.NORTH;
 
         if (hasFacingDirection()) {
-            facing = getLevel().getBlockState(getBlockPos()).getValue(RedstoneMachineBlock.FACING);
+            facing = getBlockState().getValue(RedstoneMachineBlock.FACING);
         }
 
         int oldPow = redstoneState;
@@ -209,8 +209,6 @@ public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity im
      * Reads inventory information
      */
     public void readItemData(CompoundTag tags) {
-        super.load(tags);
-
         if (tags.contains("Disguise")) {
             CompoundTag itemNBT = tags.getCompound("Disguise");
 
@@ -234,15 +232,9 @@ public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity im
 
     @Override
     public void load(CompoundTag tags) {
+        super.load(tags);
         readItemData(tags);
-
         redstoneState = tags.getInt("Redstone");
-    }
-
-    @Override
-    public void writeInventoryToNBT(CompoundTag tag) {
-        if (!isEmpty())
-            super.writeInventoryToNBT(tag);
     }
 
     @Override
