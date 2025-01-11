@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import slimeknights.mantle.client.book.BookLoader;
 import slimeknights.mantle.client.book.data.BookData;
@@ -19,11 +20,13 @@ public class ClientProxy extends CommonProxy {
     public static final BookData book = BookLoader.registerBook(Util.getResource("book"), true, false, new FileRepository(Util.getResource("book")));
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void preInit() {
         super.preInit();
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void init() {
         super.init();
 
@@ -32,16 +35,19 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void setupClient() {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> TMechworks.content::registerScreenFactories);
     }
 
+    @OnlyIn(Dist.CLIENT)
     private void registerDisguiseBlock(Block block) {
         ModelBakeEventListener.registerDisguiseBlock(block.getRegistryName());
         ItemBlockRenderTypes.setRenderLayer(block, rt -> true);
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public Player getPlayer() {
         return Minecraft.getInstance().player;
     }

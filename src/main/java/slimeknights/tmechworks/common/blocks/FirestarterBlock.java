@@ -23,6 +23,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 import slimeknights.tmechworks.common.blocks.entity.FirestarterBlockEntity;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.library.Util;
@@ -131,6 +132,11 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
 
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> registerItemProperties(item));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void registerItemProperties(MechworksBlockItem item) {
         ItemProperties.register(item, new ResourceLocation("extinguish"), (stack, world, entity, seed) -> {
             boolean shouldExtinguish = true;
 

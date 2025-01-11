@@ -13,6 +13,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 import slimeknights.tmechworks.common.blocks.entity.DrawbridgeBlockEntity;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.library.Util;
@@ -68,7 +71,11 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
 
     @Override
     public void onBlockItemConstruct(MechworksBlockItem item) {
-        // register => registerPropertyForItem
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> registerItemProperties(item));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void registerItemProperties(MechworksBlockItem item) {
         ItemProperties.register(item, Util.getResource("advanced"), (stack, world, entity, seed) -> {
             boolean advanced = false;
 
