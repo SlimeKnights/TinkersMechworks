@@ -46,7 +46,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.network.NetworkHooks;
 import slimeknights.mantle.block.entity.InventoryBlockEntity;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
-import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
+import slimeknights.tmechworks.common.blocks.entity.RedstoneMachineBlockEntity;
 import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
@@ -101,7 +101,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
-        RedstoneMachineTileEntity logicBase = (RedstoneMachineTileEntity) worldIn.getBlockEntity(pos);
+        RedstoneMachineBlockEntity logicBase = (RedstoneMachineBlockEntity) worldIn.getBlockEntity(pos);
 
         if (logicBase != null) {
             logicBase.updateRedstone();
@@ -145,10 +145,10 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 
-        if (te instanceof RedstoneMachineTileEntity) {
+        if (te instanceof RedstoneMachineBlockEntity) {
             List<ItemStack> drops = NonNullList.create();
 
-            RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
+            RedstoneMachineBlockEntity machine = (RedstoneMachineBlockEntity) te;
             ItemStack item = new ItemStack(this, 1);
 
             writeAdditionalItemData(state, builder.getLevel(), new BlockPos(builder.getOptionalParameter(LootContextParams.ORIGIN)), item);
@@ -273,7 +273,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return RedstoneMachineTileEntity::ticker;
+        return RedstoneMachineBlockEntity::ticker;
     }
 
     ////////////////////////
@@ -285,13 +285,13 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
 
         BlockEntity te = worldIn.getBlockEntity(pos);
 
-        if (te instanceof RedstoneMachineTileEntity) {
-            RedstoneMachineTileEntity machine = (RedstoneMachineTileEntity) te;
+        if (te instanceof RedstoneMachineBlockEntity) {
+            RedstoneMachineBlockEntity machine = (RedstoneMachineBlockEntity) te;
             ItemStack disguise = machine.getDisguiseBlock();
 
             if (disguise.getItem() instanceof BlockItem) {
                 BlockState disguiseState = ((BlockItem) disguise.getItem()).getBlock().defaultBlockState();
-                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, ((RedstoneMachineTileEntity) te).getDisguiseState(), state.getValue(BlockStateProperties.FACING));
+                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, ((RedstoneMachineBlockEntity) te).getDisguiseState(), state.getValue(BlockStateProperties.FACING));
 
                 return func.apply(disguiseState);
             }

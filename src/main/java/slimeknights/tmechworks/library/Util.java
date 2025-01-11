@@ -27,15 +27,6 @@ public class Util
         return MechworksFakePlayer.getInstance((ServerLevel)world);
     }
 
-    /**
-     * Returns the given Resource prefixed with tinkers resource location. Use this function instead of hardcoding
-     * resource locations.
-     */
-    public static String resource (String res)
-    {
-        return String.format("%s:%s", RESOURCE, res);
-    }
-
     public static ResourceLocation getResource (String res)
     {
         return new ResourceLocation(RESOURCE, res);

@@ -27,11 +27,11 @@ import slimeknights.tmechworks.client.gui.DrawbridgeScreen;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.FirestarterBlock;
 import slimeknights.tmechworks.common.blocks.MetalBlock;
-import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
-import slimeknights.tmechworks.common.blocks.tileentity.FirestarterTileEntity;
+import slimeknights.tmechworks.common.blocks.entity.DrawbridgeBlockEntity;
+import slimeknights.tmechworks.common.blocks.entity.FirestarterBlockEntity;
 import slimeknights.tmechworks.common.config.MechworksConfig;
-import slimeknights.tmechworks.common.inventory.DisguiseContainer;
-import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
+import slimeknights.tmechworks.common.inventory.DisguiseContainerMenu;
+import slimeknights.tmechworks.common.inventory.DrawbridgeContainerMenu;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.common.items.MechworksBookItem;
@@ -80,13 +80,13 @@ public class MechworksContent {
     }
 
     public static class TileEntities {
-        public static final RegistryObject<BlockEntityType<FirestarterTileEntity>> firestarter = TILE_ENTITIES.register("firestarter", FirestarterTileEntity::new, Blocks.firestarter);
-        public static final RegistryObject<BlockEntityType<DrawbridgeTileEntity>> drawbridge = TILE_ENTITIES.register("drawbridge", DrawbridgeTileEntity::new, Blocks.drawbridge);
+        public static final RegistryObject<BlockEntityType<FirestarterBlockEntity>> firestarter = TILE_ENTITIES.register("firestarter", FirestarterBlockEntity::new, Blocks.firestarter);
+        public static final RegistryObject<BlockEntityType<DrawbridgeBlockEntity>> drawbridge = TILE_ENTITIES.register("drawbridge", DrawbridgeBlockEntity::new, Blocks.drawbridge);
     }
 
     public static class Containers {
-        public static final RegistryObject<MenuType<DisguiseContainer>> disguise = CONTAINERS.register("disguise", DisguiseContainer::factory);
-        public static final RegistryObject<MenuType<DrawbridgeContainer>> drawbridge = CONTAINERS.register("drawbridge", DrawbridgeContainer::factory);
+        public static final RegistryObject<MenuType<DisguiseContainerMenu>> disguise = CONTAINERS.register("disguise", DisguiseContainerMenu::factory);
+        public static final RegistryObject<MenuType<DrawbridgeContainerMenu>> drawbridge = CONTAINERS.register("drawbridge", DrawbridgeContainerMenu::factory);
     }
 
     @OnlyIn(Dist.CLIENT)

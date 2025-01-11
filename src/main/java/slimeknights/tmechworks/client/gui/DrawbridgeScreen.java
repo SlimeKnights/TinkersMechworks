@@ -20,8 +20,8 @@ import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.client.gui.components.ArrowWidget;
 import slimeknights.tmechworks.client.gui.components.DisguiseStateWidget;
 import slimeknights.tmechworks.common.MechworksTags;
-import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
-import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
+import slimeknights.tmechworks.common.blocks.entity.DrawbridgeBlockEntity;
+import slimeknights.tmechworks.common.inventory.DrawbridgeContainerMenu;
 import slimeknights.tmechworks.common.network.PacketHandler;
 import slimeknights.tmechworks.common.network.packet.ServerReopenUiPacket;
 import slimeknights.tmechworks.common.network.packet.UpdatePlaceDirectionPacket;
@@ -35,7 +35,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
-public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContainer> {
+public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContainerMenu> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/drawbridge.png");
     public static final ResourceLocation ADVANCED_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/drawbridge_advanced.png");
 
@@ -44,14 +44,14 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
     public final boolean isAdvanced;
     private final int slotCount;
 
-    public DrawbridgeScreen(DrawbridgeContainer container, Inventory inventory, Component name) {
+    public DrawbridgeScreen(DrawbridgeContainerMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
 
         isAdvanced = container.getTile().stats.isAdvanced;
         slotCount = container.getTile().slots.getContainerSize();
     }
 
-    public static DrawbridgeScreen create(DrawbridgeContainer container, Inventory player, Component title){
+    public static DrawbridgeScreen create(DrawbridgeContainerMenu container, Inventory player, Component title){
         return new DrawbridgeScreen(container, player, title);
     }
 
@@ -90,7 +90,7 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
     public void containerTick() {
         super.containerTick();
 
-        DrawbridgeTileEntity te = menu.getTile();
+        DrawbridgeBlockEntity te = menu.getTile();
 
         // Reinitialize UI if the drawbridge size or type changes
         if(isAdvanced != te.stats.isAdvanced || slotCount != te.slots.getContainerSize()) {

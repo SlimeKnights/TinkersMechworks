@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.common.blocks.tileentity;
+package slimeknights.tmechworks.common.blocks.entity;
 
 public interface IPlaceDirection {
     void setPlaceDirection(int direction);

@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.common.blocks.tileentity;
+package slimeknights.tmechworks.common.blocks.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.Registry;
@@ -33,8 +33,8 @@ import slimeknights.tmechworks.common.MechworksTags;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
 import slimeknights.tmechworks.common.config.MechworksConfig;
-import slimeknights.tmechworks.common.inventory.DrawbridgeContainer;
-import slimeknights.tmechworks.common.inventory.FragmentedInventory;
+import slimeknights.tmechworks.common.inventory.DrawbridgeContainerMenu;
+import slimeknights.tmechworks.common.inventory.FragmentedContainer;
 import slimeknights.tmechworks.common.items.MachineUpgradeItem;
 import slimeknights.tmechworks.library.Util;
 
@@ -58,15 +58,15 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 
-public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements IPlaceDirection {
+public class DrawbridgeBlockEntity extends RedstoneMachineBlockEntity implements IPlaceDirection {
     private static final float TICK_TIME = 0.05F;
 
     public DrawbridgeStats stats;
 
     public static final int UPGRADES_SIZE = 4;
 
-    public final FragmentedInventory upgrades;
-    public final FragmentedInventory slots;
+    public final FragmentedContainer upgrades;
+    public final FragmentedContainer slots;
 
     private WeakReference<FakePlayer> fakePlayer;
 
@@ -83,11 +83,11 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
 
     private long lastWorldTime;
 
-    public DrawbridgeTileEntity(BlockPos pos, BlockState state) {
+    public DrawbridgeBlockEntity(BlockPos pos, BlockState state) {
         super(MechworksContent.TileEntities.drawbridge.get(), pos, state, new TranslatableComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1, 64, true);
 
-        upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
-        slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !Block.byItem(stack.getItem()).defaultBlockState().is(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST)).overrideStackLimit(64);
+        upgrades = new FragmentedContainer(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
+        slots = new FragmentedContainer(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !Block.byItem(stack.getItem()).defaultBlockState().is(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST)).overrideStackLimit(64);
 
         itemHandlerCap.invalidate();
         itemHandler = new DrawbridgeItemHandler(this);
@@ -391,7 +391,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity) {
-        return new DrawbridgeContainer(id, playerInventory, this);
+        return new DrawbridgeContainerMenu(id, playerInventory, this);
     }
 
     @Override
@@ -719,9 +719,9 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     }
 
     private static class DrawbridgeItemHandler extends InvWrapper {
-        private final DrawbridgeTileEntity te;
+        private final DrawbridgeBlockEntity te;
 
-        public DrawbridgeItemHandler(DrawbridgeTileEntity inv) {
+        public DrawbridgeItemHandler(DrawbridgeBlockEntity inv) {
             super(inv);
 
             te = inv;

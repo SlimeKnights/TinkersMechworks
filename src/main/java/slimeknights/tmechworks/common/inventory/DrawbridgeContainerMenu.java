@@ -9,12 +9,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import slimeknights.mantle.inventory.BaseContainerMenu;
 import slimeknights.tmechworks.common.MechworksContent;
-import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
+import slimeknights.tmechworks.common.blocks.entity.DrawbridgeBlockEntity;
 import slimeknights.tmechworks.common.inventory.slots.ValidatingSlot;
 
 import java.util.ArrayList;
 
-public class DrawbridgeContainer extends BaseContainerMenu<DrawbridgeTileEntity> {
+public class DrawbridgeContainerMenu extends BaseContainerMenu<DrawbridgeBlockEntity> {
     public static final int ADVANCED_COLUMNS = 11;
 
     public final Inventory playerInventory;
@@ -22,7 +22,7 @@ public class DrawbridgeContainer extends BaseContainerMenu<DrawbridgeTileEntity>
 
     public final ImmutableList<Slot> mainSlots;
 
-    public DrawbridgeContainer(int id, Inventory playerInventory, DrawbridgeTileEntity te) {
+    public DrawbridgeContainerMenu(int id, Inventory playerInventory, DrawbridgeBlockEntity te) {
         super(MechworksContent.Containers.drawbridge.get(), id, playerInventory, te);
 
         this.playerInventory = playerInventory;
@@ -72,15 +72,15 @@ public class DrawbridgeContainer extends BaseContainerMenu<DrawbridgeTileEntity>
         }
     }
 
-    public static DrawbridgeContainer factory(int id, Inventory playerInventory, FriendlyByteBuf extraData) {
+    public static DrawbridgeContainerMenu factory(int id, Inventory playerInventory, FriendlyByteBuf extraData) {
         BlockPos pos = extraData.readBlockPos();
 
         BlockEntity te = playerInventory.player.level.getBlockEntity(pos);
-        DrawbridgeTileEntity drawbridge = null;
+        DrawbridgeBlockEntity drawbridge = null;
 
-        if(te instanceof DrawbridgeTileEntity)
-            drawbridge = (DrawbridgeTileEntity) te;
+        if(te instanceof DrawbridgeBlockEntity)
+            drawbridge = (DrawbridgeBlockEntity) te;
 
-        return new DrawbridgeContainer(id, playerInventory, drawbridge);
+        return new DrawbridgeContainerMenu(id, playerInventory, drawbridge);
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.network.PacketDistributor;
 import slimeknights.tmechworks.api.disguisestate.DisguiseState;
-import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
+import slimeknights.tmechworks.common.blocks.entity.RedstoneMachineBlockEntity;
 import slimeknights.tmechworks.common.network.PacketHandler;
 import slimeknights.tmechworks.common.network.packet.UpdateDisguiseStatePacket;
 
@@ -22,9 +22,9 @@ public class DisguiseStateWidget extends AbstractWidget {
 
     private String hoveredState;
 
-    private final RedstoneMachineTileEntity te;
+    private final RedstoneMachineBlockEntity te;
 
-    public DisguiseStateWidget(int x, int y, RedstoneMachineTileEntity te) {
+    public DisguiseStateWidget(int x, int y, RedstoneMachineBlockEntity te) {
         super(x, y, 0, 0, new TextComponent(""));
 
         this.te = te;

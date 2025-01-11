@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.common.blocks.tileentity;
+package slimeknights.tmechworks.common.blocks.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -26,29 +25,29 @@ import net.minecraftforge.fml.util.thread.EffectiveSide;
 import slimeknights.mantle.block.entity.InventoryBlockEntity;
 import slimeknights.tmechworks.client.model.DisguiseBakedModel;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
-import slimeknights.tmechworks.common.inventory.DisguiseContainer;
+import slimeknights.tmechworks.common.inventory.DisguiseContainerMenu;
 import slimeknights.tmechworks.integration.waila.IInformationProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class RedstoneMachineTileEntity extends InventoryBlockEntity implements IInformationProvider {
+public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity implements IInformationProvider {
     private SimpleContainer disguiseInventory;
     private String disguiseState;
 
     private int redstoneState;
     private boolean isFirstTick = true;
 
-    public RedstoneMachineTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize) {
+    public RedstoneMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize) {
         this(type, pos, state, name, inventorySize, 64);
     }
 
-    public RedstoneMachineTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize, int maxStackSize) {
+    public RedstoneMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize, int maxStackSize) {
         this(type, pos, state, name, inventorySize, maxStackSize, false);
     }
 
-    public RedstoneMachineTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize, int maxStackSize, boolean saveSizeToNBT) {
+    public RedstoneMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize, int maxStackSize, boolean saveSizeToNBT) {
         super(type, pos, state, name, saveSizeToNBT, inventorySize, maxStackSize);
 
         disguiseInventory = new SimpleContainer(1) {
@@ -314,7 +313,7 @@ public abstract class RedstoneMachineTileEntity extends InventoryBlockEntity imp
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity) {
-        return new DisguiseContainer(id, playerInventory, this);
+        return new DisguiseContainerMenu(id, playerInventory, this);
     }
 
     public final boolean hasFacingDirection() {
@@ -329,8 +328,8 @@ public abstract class RedstoneMachineTileEntity extends InventoryBlockEntity imp
     }
 
     public static void ticker(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        if(blockEntity instanceof RedstoneMachineTileEntity) {
-            ((RedstoneMachineTileEntity) blockEntity).tick();
+        if(blockEntity instanceof RedstoneMachineBlockEntity) {
+            ((RedstoneMachineBlockEntity) blockEntity).tick();
         }
     }
 }

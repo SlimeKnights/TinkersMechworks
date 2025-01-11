@@ -23,7 +23,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import slimeknights.tmechworks.common.blocks.tileentity.FirestarterTileEntity;
+import slimeknights.tmechworks.common.blocks.entity.FirestarterBlockEntity;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.library.Util;
 
@@ -79,7 +79,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
     @Nonnull
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new FirestarterTileEntity(pos, state);
+        return new FirestarterBlockEntity(pos, state);
     }
 
     @Nullable

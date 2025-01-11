@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package slimeknights.tmechworks.common.blocks.tileentity;
+package slimeknights.tmechworks.common.blocks.entity;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

@@ -8,7 +8,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import slimeknights.tmechworks.TMechworks;
-import slimeknights.tmechworks.common.blocks.tileentity.IPlaceDirection;
+import slimeknights.tmechworks.common.blocks.entity.IPlaceDirection;
 import slimeknights.tmechworks.common.network.PacketHandler;
 
 import java.util.function.Supplier;

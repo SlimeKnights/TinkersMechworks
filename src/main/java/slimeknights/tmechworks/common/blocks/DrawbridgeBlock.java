@@ -11,10 +11,9 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import slimeknights.tmechworks.common.blocks.tileentity.DrawbridgeTileEntity;
+import slimeknights.tmechworks.common.blocks.entity.DrawbridgeBlockEntity;
 import slimeknights.tmechworks.common.items.MechworksBlockItem;
 import slimeknights.tmechworks.library.Util;
 
@@ -54,7 +53,7 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
     @Nonnull
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new DrawbridgeTileEntity(pos, state);
+        return new DrawbridgeBlockEntity(pos, state);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class DrawbridgeBlock extends RedstoneMachineBlock implements IBlockItemC
 
         blockState.putInt("PlaceAngle", 1);
         blockState.putInt("PlaceDirectionRaw", 2);
-        blockState.putInt("InventorySize", DrawbridgeTileEntity.UPGRADES_SIZE + 1);
+        blockState.putInt("InventorySize", DrawbridgeBlockEntity.UPGRADES_SIZE + 1);
         nbt.putBoolean("drawAdvanced", false);
     }
 

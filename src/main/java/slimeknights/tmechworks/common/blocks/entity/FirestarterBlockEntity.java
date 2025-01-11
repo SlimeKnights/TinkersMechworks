@@ -1,4 +1,4 @@
-package slimeknights.tmechworks.common.blocks.tileentity;
+package slimeknights.tmechworks.common.blocks.entity;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -19,11 +19,9 @@ import slimeknights.tmechworks.library.Util;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import slimeknights.tmechworks.integration.waila.IInformationProvider.InformationType;
-
-public class FirestarterTileEntity extends RedstoneMachineTileEntity
+public class FirestarterBlockEntity extends RedstoneMachineBlockEntity
 {
-    public FirestarterTileEntity(BlockPos pos, BlockState state)
+    public FirestarterBlockEntity(BlockPos pos, BlockState state)
     {
         super(MechworksContent.TileEntities.firestarter.get(), pos, state, new TranslatableComponent(Util.prefix("inventory.firestarter")), 0);
     }

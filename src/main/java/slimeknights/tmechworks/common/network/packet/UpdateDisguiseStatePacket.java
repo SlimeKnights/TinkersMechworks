@@ -8,7 +8,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import slimeknights.tmechworks.TMechworks;
-import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
+import slimeknights.tmechworks.common.blocks.entity.RedstoneMachineBlockEntity;
 import slimeknights.tmechworks.common.network.PacketHandler;
 
 import java.util.function.Supplier;
@@ -51,8 +51,8 @@ public class UpdateDisguiseStatePacket {
             context.enqueueWork(() -> {
                 BlockEntity te = player.getCommandSenderWorld().getBlockEntity(msg.pos);
 
-                if(te instanceof RedstoneMachineTileEntity)
-                    ((RedstoneMachineTileEntity)te).setDisguiseState(msg.state);
+                if(te instanceof RedstoneMachineBlockEntity)
+                    ((RedstoneMachineBlockEntity)te).setDisguiseState(msg.state);
             });
 
             context.setPacketHandled(true);

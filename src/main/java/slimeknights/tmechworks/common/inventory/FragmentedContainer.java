@@ -8,7 +8,7 @@ import slimeknights.tmechworks.common.inventory.slots.ISlotValidate;
 
 import java.util.function.Predicate;
 
-public class FragmentedInventory implements Container, ISlotValidate {
+public class FragmentedContainer implements Container, ISlotValidate {
     private final Container parent;
     private final int startSlot;
     private int size;
@@ -17,7 +17,7 @@ public class FragmentedInventory implements Container, ISlotValidate {
     private int stackLimit = 64;
     private Predicate<ItemStack> validItems = stack -> true;
 
-    public FragmentedInventory(Container parent, int startSlot, int size) {
+    public FragmentedContainer(Container parent, int startSlot, int size) {
         this.parent = parent;
         this.startSlot = startSlot;
         this.size = size;
@@ -108,14 +108,14 @@ public class FragmentedInventory implements Container, ISlotValidate {
         return parent.getMaxStackSize();
     }
 
-    public FragmentedInventory overrideStackLimit(int stackLimit) {
+    public FragmentedContainer overrideStackLimit(int stackLimit) {
         this.overrideStackLimit = true;
         this.stackLimit = stackLimit;
 
         return this;
     }
 
-    public FragmentedInventory setValidItemsPredicate(Predicate<ItemStack> validItemsPredicate) {
+    public FragmentedContainer setValidItemsPredicate(Predicate<ItemStack> validItemsPredicate) {
         validItems = validItemsPredicate;
 
         return this;

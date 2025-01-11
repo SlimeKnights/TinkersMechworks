@@ -13,19 +13,19 @@ import net.minecraft.network.chat.Component;
 import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 import slimeknights.tmechworks.client.gui.components.DisguiseStateWidget;
-import slimeknights.tmechworks.common.blocks.tileentity.RedstoneMachineTileEntity;
-import slimeknights.tmechworks.common.inventory.DisguiseContainer;
+import slimeknights.tmechworks.common.blocks.entity.RedstoneMachineBlockEntity;
+import slimeknights.tmechworks.common.inventory.DisguiseContainerMenu;
 
-public class DisguiseScreen extends AbstractContainerScreen<DisguiseContainer> {
+public class DisguiseScreen extends AbstractContainerScreen<DisguiseContainerMenu> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/generic_1.png");
 
     private DisguiseStateWidget disguiseWidget;
 
-    public DisguiseScreen(DisguiseContainer container, Inventory inventory, Component name) {
+    public DisguiseScreen(DisguiseContainerMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
     }
 
-    public static DisguiseScreen create(DisguiseContainer container, Inventory player, Component title){
+    public static DisguiseScreen create(DisguiseContainerMenu container, Inventory player, Component title){
         return new DisguiseScreen(container, player, title);
     }
 
@@ -41,7 +41,7 @@ public class DisguiseScreen extends AbstractContainerScreen<DisguiseContainer> {
     public void containerTick() {
         super.containerTick();
 
-        RedstoneMachineTileEntity te = menu.getTile();
+        RedstoneMachineBlockEntity te = menu.getTile();
         ItemStack disguise = te.getDisguiseBlock();
 
         if (disguise.getItem() instanceof BlockItem) {
