@@ -3,6 +3,7 @@ package slimeknights.tmechworks.client.gui;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -30,10 +31,6 @@ import slimeknights.tmechworks.library.Util;
 import java.util.List;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContainerMenu> {
     public static final ResourceLocation SCREEN_LOCATION = new ResourceLocation(TMechworks.modId, "textures/gui/drawbridge.png");
@@ -43,6 +40,8 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
 
     public final boolean isAdvanced;
     private final int slotCount;
+
+    private List<FormattedText> tooltip;
 
     public DrawbridgeScreen(DrawbridgeContainerMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
@@ -78,7 +77,7 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
         titleLabelX = screenLeft + 8;
         titleLabelY = screenTop + 6;
 
-        ArrowWidget arrow = new ArrowWidget(aX, aY, width, height, true, this::arrowClicked);
+        ArrowWidget arrow = new ArrowWidget(aX, aY, width, height, true, this::arrowClicked, this::setTooltip);
         updateSelection(arrow);
         addRenderableWidget(arrow);
 
@@ -151,8 +150,14 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
 
     @Override
     protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
-        if(this.hoveredSlot == null)
+        if (tooltip != null) {
+            renderComponentTooltip(stack, tooltip, mouseX, mouseY, font);
+            tooltip = null;
+        }
+
+        if(this.hoveredSlot == null) {
             return;
+        }
 
         if(!isAdvanced || this.hoveredSlot.hasItem()) {
             super.renderTooltip(stack, mouseX, mouseY); // renderTooltip => renderHoveredTooltip
@@ -205,6 +210,10 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
 
         arrow.setState(ArrowWidget.Arrow.values()[menu.getTile().getRawPlaceDirection().ordinal()], ArrowWidget.ArrowState.SELECTED);
         arrow.setState(ArrowWidget.Arrow.values()[Direction.values().length + menu.getTile().getPlaceAngle().ordinal()], ArrowWidget.ArrowState.SELECTED);
+    }
+
+    public void setTooltip(List<FormattedText> text) {
+        this.tooltip = text;
     }
 
     private void drawSlicedBox(PoseStack stack, int x, int y, int width, int height, int u, int v) {

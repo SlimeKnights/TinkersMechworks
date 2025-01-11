@@ -1,17 +1,22 @@
 package slimeknights.tmechworks.client.gui.components;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TextComponent;
 import slimeknights.tmechworks.TMechworks;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class ArrowWidget extends AbstractWidget {
     public static final ResourceLocation ARROW_WIDGET = new ResourceLocation(TMechworks.modId, "textures/gui/arrows.png");
@@ -36,12 +41,13 @@ public class ArrowWidget extends AbstractWidget {
     private Arrow hoveredArrow;
     private int screenW, screenH;
     private IArrowPressed onClick;
+    private Consumer<List<FormattedText>> setTooltip;
 
-    public ArrowWidget(int x, int y, int screenW, int screenH, IArrowPressed onClick) {
-        this(x, y, screenW, screenH, false, onClick);
+    public ArrowWidget(int x, int y, int screenW, int screenH, IArrowPressed onClick, Consumer<List<FormattedText>> setTooltip) {
+        this(x, y, screenW, screenH, false, onClick, setTooltip);
     }
 
-    public ArrowWidget(int x, int y, int screenW, int screenH, boolean drawAdditionalArrows, IArrowPressed onClick) {
+    public ArrowWidget(int x, int y, int screenW, int screenH, boolean drawAdditionalArrows, IArrowPressed onClick, Consumer<List<FormattedText>> setTooltip) {
         super(x, y, 0, 0, new TextComponent(""));
 
         setLabels(LABELS_DEFAULT);
@@ -56,6 +62,7 @@ public class ArrowWidget extends AbstractWidget {
         this.screenW = screenW;
         this.screenH = screenH;
         this.onClick = onClick;
+        this.setTooltip = setTooltip;
     }
 
     public ArrowWidget setLabels(String[] labels) {
@@ -98,24 +105,20 @@ public class ArrowWidget extends AbstractWidget {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         hoveredArrow = null;
-        boolean canHover = true;
         for (int i = 0; i < Arrow.values().length; i++) {
             Arrow arrow = Arrow.values()[i];
             ArrowState state = states[i];
 
-            if (state == ArrowState.NO_DRAW)
+            if (state == ArrowState.NO_DRAW) {
                 continue;
+            }
 
-            if (state != ArrowState.DISABLED && state != ArrowState.SELECTED) {
-                if (canHover && hoveredArrow == null && arrow.isHovered(x, y, mouseX, mouseY)) {
-                    states[i] = ArrowState.HOVER;
+            if(arrow.isHovered(x, y, mouseX, mouseY)) {
+                if(state != ArrowState.DISABLED) {
                     hoveredArrow = arrow;
-                    canHover = false;
-                } else {
-                    states[i] = ArrowState.ENABLED;
                 }
-            } else if (arrow.isHovered(x, y, mouseX, mouseY)) {
-                canHover = false;
+
+                break;
             }
         }
 
@@ -126,8 +129,13 @@ public class ArrowWidget extends AbstractWidget {
             if (state == ArrowState.NO_DRAW)
                 continue;
 
+            int stateIndex = state.ordinal();
+            if(arrow == hoveredArrow && state == ArrowState.ENABLED) {
+                stateIndex = 3; // Hovered arrow state
+            }
+
             int indexX = arrow.indexX * arrow.w + arrow.subX * arrow.subW;
-            int indexY = (arrow.indexY + state.ordinal() * ARROW_ROWS) * arrow.h + arrow.subY * arrow.subH;
+            int indexY = (arrow.indexY + stateIndex * ARROW_ROWS) * arrow.h + arrow.subY * arrow.subH;
 
             blit(stack, arrow.x, arrow.y, indexX, indexY, arrow.subW, arrow.subH);
         }
@@ -137,10 +145,8 @@ public class ArrowWidget extends AbstractWidget {
         if (hoveredArrow == null)
             return;
 
-        // ITextProperties.of -> create
-        if (labels != null && states[hoveredArrow.ordinal()] == ArrowState.HOVER && !labels[hoveredArrow.ordinal()].trim().isEmpty()) {
-            // TODO: pass to parent
-            //GuiUtils.drawHoveringText(stack, ImmutableList.of(FormattedText.of(I18n.get(labels[hoveredArrow.ordinal()]))), mouseX, mouseY, screenW, screenH, 100, Minecraft.getInstance().font);
+        if (labels != null && !labels[hoveredArrow.ordinal()].trim().isEmpty()) {
+            setTooltip.accept(ImmutableList.of(FormattedText.of(I18n.get(labels[hoveredArrow.ordinal()]))));
         }
     }
 
@@ -211,7 +217,6 @@ public class ArrowWidget extends AbstractWidget {
     public enum ArrowState {
         ENABLED,
         DISABLED,
-        HOVER,
         SELECTED,
         NO_DRAW
     }

@@ -57,7 +57,7 @@ public class MechworksContent {
 
     private static final Function<Block, ? extends BlockItem> DEFAULT_BLOCK_ITEM = (b) -> new MechworksBlockItem(b, new Item.Properties().tab(tabMechworks));
 
-    public static class Blocks { //TODO .harvestTool(ToolType.PICKAXE).harvestLevel(Tiers.IRON.getLevel())) tags
+    public static class Blocks {
         public static final ItemObject<OreBlock> aluminum_ore = BLOCKS.register("aluminum_ore", () -> new OreBlock(Block.Properties.of(Material.STONE).strength(3F)), DEFAULT_BLOCK_ITEM);
         public static final ItemObject<OreBlock> deepslate_aluminum_ore = BLOCKS.register("deepslate_aluminum_ore", () -> new OreBlock(Block.Properties.of(Material.STONE).color(MaterialColor.DEEPSLATE).strength(4.5F, 3F).sound(SoundType.DEEPSLATE)), DEFAULT_BLOCK_ITEM);
         public static final ItemObject<MetalBlock> aluminum_block = BLOCKS.register("aluminum_block", MetalBlock::new, DEFAULT_BLOCK_ITEM);
