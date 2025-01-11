@@ -162,7 +162,7 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
         if(!isAdvanced || this.hoveredSlot.hasItem()) {
             super.renderTooltip(stack, mouseX, mouseY); // renderTooltip => renderHoveredTooltip
         } else if(hoveredSlot.container == getMenu().getTile().slots) {
-            renderTooltip(stack, new TranslatableComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)), mouseX, mouseY);
+            renderTooltip(stack, Component.translatable(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)), mouseX, mouseY);
         }
     }
 
@@ -171,13 +171,13 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
         List<Component> list = super.getTooltipFromItem(stack);
 
         if(isAdvanced && hoveredSlot.container == getMenu().getTile().slots) {
-            list.add(TextComponent.EMPTY);
-            list.add(new TranslatableComponent(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).withStyle(ChatFormatting.GRAY));
+            list.add(Component.empty());
+            list.add(Component.translatable(Util.prefix("gui.blocknum"), hoveredSlot.getSlotIndex() + 1).withStyle(ChatFormatting.GRAY));
         }
 
         if(Block.byItem(stack.getItem()).defaultBlockState().is(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST)) {
-            list.add(TextComponent.EMPTY);
-            list.add(new TranslatableComponent(Util.prefix("gui.blacklisted")));
+            list.add(Component.empty());
+            list.add(Component.translatable(Util.prefix("gui.blacklisted")));
         }
 
         return list;
@@ -248,7 +248,6 @@ public class DrawbridgeScreen extends AbstractContainerScreen<DrawbridgeContaine
         bufferbuilder.vertex(matrix, (float)x2, (float)y2, (float)blitOffset).uv(maxU, maxV).endVertex();
         bufferbuilder.vertex(matrix, (float)x2, (float)y1, (float)blitOffset).uv(maxU, minV).endVertex();
         bufferbuilder.vertex(matrix, (float)x1, (float)y1, (float)blitOffset).uv(minU, minV).endVertex();
-        bufferbuilder.end();
-        BufferUploader.end(bufferbuilder);
+        BufferUploader.draw(bufferbuilder.end());
     }
 }

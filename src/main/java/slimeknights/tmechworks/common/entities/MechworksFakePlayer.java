@@ -5,7 +5,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import slimeknights.tmechworks.TMechworks;
 
 import java.lang.ref.WeakReference;
@@ -45,9 +45,9 @@ public class MechworksFakePlayer extends FakePlayer {
         return false;
     }
 
-    public static void onWorldUnload(WorldEvent.Unload event) {
-        if (event.getWorld() instanceof ServerLevel) {
-            releaseInstance(event.getWorld());
+    public static void onWorldUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof ServerLevel) {
+            releaseInstance(event.getLevel());
         }
     }
 }

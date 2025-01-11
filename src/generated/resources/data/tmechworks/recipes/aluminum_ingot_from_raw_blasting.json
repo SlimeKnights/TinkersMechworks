@@ -1,9 +1,9 @@
 {
   "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 1.0,
   "ingredient": {
     "item": "tmechworks:raw_aluminum"
   },
-  "result": "tmechworks:aluminum_ingot",
-  "experience": 1.0,
-  "cookingtime": 100
+  "result": "tmechworks:aluminum_ingot"
 }

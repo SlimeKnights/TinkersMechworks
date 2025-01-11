@@ -2,10 +2,6 @@ package slimeknights.tmechworks.common.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
-import slimeknights.tmechworks.library.Util;
-
-import java.util.Collections;
-import java.util.List;
 
 public class MechworksConfig {
     public static final Common COMMON_CONFIG;
@@ -21,51 +17,10 @@ public class MechworksConfig {
         }
 
         public static final class WorldGeneration {
-            public final ForgeConfigSpec.BooleanValue enabled;
-
-            public final Ore aluminum;
-
             WorldGeneration(ForgeConfigSpec.Builder builder) {
                 builder.comment("Everything to do with world generation").push("world");
-
-                enabled = builder
-                        .comment("Whether world generation is enabled as a whole")
-                        .define("enabled", true);
-
-                aluminum = new Ore(builder, "aluminum");
-
+                builder.comment("World generation configuration has been retired in favour of datapacks.");
                 builder.pop();
-            }
-
-            public static class Ore {
-                public ForgeConfigSpec.BooleanValue enabled;
-
-                public ForgeConfigSpec.BooleanValue isWhitelist;
-                public ForgeConfigSpec.ConfigValue<List<? extends String>> filter;
-
-                Ore(ForgeConfigSpec.Builder builder, String name) {
-                    this(builder, name, true);
-                }
-
-                Ore(ForgeConfigSpec.Builder builder, String name, boolean onByDefault) {
-                    this(builder, name, onByDefault, false, Collections.emptyList());
-                }
-
-                Ore(ForgeConfigSpec.Builder builder, String name, boolean onByDefault, boolean isWhitelist, List<String> filter) {
-                    builder.comment("Generation settings for " + name + " ore").push(name);
-
-                    enabled = builder
-                            .comment("Whether or not this ore is generated")
-                            .define("enabled", onByDefault);
-                    this.isWhitelist = builder
-                            .comment("If true, the filter will act as a whitelist, otherwise, blacklist")
-                            .define("isWhitelist", isWhitelist);
-                    this.filter = builder
-                            .comment("A list of fully qualified biome names, for example \"minecraft:river\"")
-                            .defineList("filter", filter, (obj) -> obj != null && Util.validateResourceName(obj.toString()));
-
-                    builder.pop();
-                }
             }
         }
 

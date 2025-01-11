@@ -1,10 +1,12 @@
 package slimeknights.tmechworks.data;
 
 import net.minecraft.data.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.tmechworks.library.Util;
 
 import javax.annotation.Nonnull;
@@ -108,10 +110,9 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
     private void registerMetal(@Nonnull Consumer<FinishedRecipe> out, ItemLike ore, ItemLike nugget, ItemLike ingot, ItemLike storageBlock, ItemLike raw) {
         String format = Util.prefix("%s_from_%s");
 
-        String nuggetName = nugget.asItem().getRegistryName().getPath();
-        String ingotName = ingot.asItem().getRegistryName().getPath();
-        String storageBlockName = storageBlock.asItem().getRegistryName().getPath();
-        String rawName = raw.asItem().getRegistryName().getPath();
+        String nuggetName = getRegistryName(nugget).getPath();
+        String ingotName = getRegistryName(ingot).getPath();
+        String storageBlockName = getRegistryName(storageBlock).getPath();
 
         // Smelting
         wrap(SimpleCookingRecipeBuilder.smelting(Ingredient.of(ore), ingot, 1F, standardSmeltingTime), ore).save(out, String.format(format, ingotName, "ore_smelting"));
@@ -129,15 +130,15 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
     }
 
     private static ShapelessRecipeBuilder wrap(ShapelessRecipeBuilder builder, ItemLike input) {
-        return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
+        return builder.unlockedBy("has_" + getRegistryName(input).getPath(), has(input));
     }
 
     private static ShapedRecipeBuilder wrap(ShapedRecipeBuilder builder, ItemLike input) {
-        return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
+        return builder.unlockedBy("has_" + getRegistryName(input).getPath(), has(input));
     }
 
     private static SimpleCookingRecipeBuilder wrap(SimpleCookingRecipeBuilder builder, ItemLike input) {
-        return builder.unlockedBy("has_" + input.asItem().getRegistryName().getPath(), has(input));
+        return builder.unlockedBy("has_" + getRegistryName(input).getPath(), has(input));
     }
 
     private static ShapedRecipeBuilder compress(ItemLike input, ItemLike result) {
@@ -150,6 +151,10 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
 
     private static ShapelessRecipeBuilder decompress(ItemLike input, ItemLike result) {
         return wrap(ShapelessRecipeBuilder.shapeless(result, 9).requires(input), input);
+    }
+
+    private static ResourceLocation getRegistryName(ItemLike item) {
+        return ForgeRegistries.ITEMS.getKey(item.asItem());
     }
 
     @Nonnull

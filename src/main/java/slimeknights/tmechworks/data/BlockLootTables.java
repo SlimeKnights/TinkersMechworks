@@ -15,7 +15,7 @@ public class BlockLootTables extends net.minecraft.data.loot.BlockLoot {
     @Override
     protected Iterable<Block> getKnownBlocks() {
         return ForgeRegistries.BLOCKS.getValues().stream()
-                .filter(block -> TMechworks.modId.equals(block.getRegistryName().getNamespace()))
+                .filter(block -> TMechworks.modId.equals(ForgeRegistries.BLOCKS.getKey(block).getNamespace()))
                 .collect(Collectors.toList());
     }
 

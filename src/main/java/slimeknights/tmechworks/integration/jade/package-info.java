@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package slimeknights.tmechworks.integration.waila;
+package slimeknights.tmechworks.integration.jade;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

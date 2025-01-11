@@ -1,21 +1,23 @@
-package slimeknights.tmechworks.integration.waila;
+package slimeknights.tmechworks.integration.jade;
 
-import mcp.mobius.waila.api.BlockAccessor;
-import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IServerDataProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import slimeknights.tmechworks.common.blocks.entity.RedstoneMachineBlockEntity;
+import slimeknights.tmechworks.library.Util;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.IServerDataProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericTileDataProvider implements IServerDataProvider<BlockEntity>, IComponentProvider {
+public class GenericTileDataProvider implements IServerDataProvider<BlockEntity>, IBlockComponentProvider {
     public static final GenericTileDataProvider INSTANCE = new GenericTileDataProvider();
 
     @Override
@@ -28,22 +30,14 @@ public class GenericTileDataProvider implements IServerDataProvider<BlockEntity>
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
         BlockEntity te = accessor.getBlockEntity();
         if (te instanceof IInformationProvider) {
-            if(te instanceof RedstoneMachineBlockEntity && !config.get(WailaIntegration.CONFIG_REDSTONE_MACHINE)) {
+            if(te instanceof RedstoneMachineBlockEntity && !config.get(JadeIntegration.CONFIG_REDSTONE_MACHINE)) {
                 return;
             }
 
             IInformationProvider provider = (IInformationProvider) te;
 
-            IInformationProvider.InformationType type;
-            switch(accessor.getTooltipPosition()) {
-                case BODY -> type = IInformationProvider.InformationType.BODY;
-                case TAIL -> type = IInformationProvider.InformationType.TAIL;
-                case HEAD -> type = IInformationProvider.InformationType.HEAD;
-                default -> type = IInformationProvider.InformationType.BODY;
-            }
-
             List<Component> info = new ArrayList<>();
-            provider.getInformation(info, type, accessor.getServerData(), accessor.getPlayer());
+            provider.getInformation(info, accessor.getServerData(), accessor.getPlayer());
 
             if(!info.isEmpty()) {
                 for(Component s : info) {
@@ -51,5 +45,10 @@ public class GenericTileDataProvider implements IServerDataProvider<BlockEntity>
                 }
             }
         }
+    }
+
+    @Override
+    public ResourceLocation getUid() {
+        return Util.getResource("generic");
     }
 }

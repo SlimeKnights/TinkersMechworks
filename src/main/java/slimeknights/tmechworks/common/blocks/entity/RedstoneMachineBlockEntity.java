@@ -17,16 +17,14 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import slimeknights.mantle.block.entity.InventoryBlockEntity;
 import slimeknights.tmechworks.client.model.DisguiseBakedModel;
 import slimeknights.tmechworks.common.blocks.RedstoneMachineBlock;
 import slimeknights.tmechworks.common.inventory.DisguiseContainerMenu;
-import slimeknights.tmechworks.integration.waila.IInformationProvider;
+import slimeknights.tmechworks.integration.jade.IInformationProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -198,7 +196,7 @@ public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity im
             itemNBT = disguise.save(itemNBT);
 
             tags.put("Disguise", itemNBT);
-            if(disguiseState != null)
+            if (disguiseState != null)
                 tags.putString("DisguiseState", disguiseState);
         }
 
@@ -216,7 +214,7 @@ public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity im
 
             ItemStack disguise = ItemStack.of(itemNBT);
 
-            if(tags.contains("DisguiseState", CompoundTag.TAG_STRING)) {
+            if (tags.contains("DisguiseState", CompoundTag.TAG_STRING)) {
                 disguiseState = tags.getString("DisguiseState");
             }
 
@@ -286,10 +284,10 @@ public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity im
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder()
-                .withInitial(DisguiseBakedModel.DISGUISE, getDisguiseBlock())
-                .withInitial(DisguiseBakedModel.DISGUISE_STATE, getDisguiseState())
+    public ModelData getModelData() {
+        return ModelData.builder()
+                .with(DisguiseBakedModel.DISGUISE, getDisguiseBlock())
+                .with(DisguiseBakedModel.DISGUISE_STATE, getDisguiseState())
                 .build();
     }
 
@@ -299,15 +297,15 @@ public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity im
     }
 
     @Override
-    public void getInformation(@Nonnull List<Component> info, @Nonnull InformationType type, Player player) {
+    public void getInformation(@Nonnull List<Component> info, Player player) {
     }
 
     @Override
-    public void getInformation(@Nonnull List<Component> info, @Nonnull InformationType type, CompoundTag serverData, Player player) {
-        if (type == InformationType.BODY && !serverData.isEmpty())
-            info.add(new TranslatableComponent("tooltip.waila.power", serverData.getInt("power")));
+    public void getInformation(@Nonnull List<Component> info, CompoundTag serverData, Player player) {
+        if (!serverData.isEmpty())
+            info.add(Component.translatable("tooltip.jade.power", serverData.getInt("power")));
 
-        getInformation(info, type, player);
+        getInformation(info, player);
     }
 
     @Nullable
@@ -319,16 +317,15 @@ public abstract class RedstoneMachineBlockEntity extends InventoryBlockEntity im
     public final boolean hasFacingDirection() {
         BlockState state = getBlockState();
 
-        if(state.getBlock() instanceof RedstoneMachineBlock)
-        {
-            return ((RedstoneMachineBlock)state.getBlock()).hasFacingDirection();
+        if (state.getBlock() instanceof RedstoneMachineBlock) {
+            return ((RedstoneMachineBlock) state.getBlock()).hasFacingDirection();
         }
 
         return state.hasProperty(DirectionalBlock.FACING);
     }
 
     public static void ticker(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        if(blockEntity instanceof RedstoneMachineBlockEntity) {
+        if (blockEntity instanceof RedstoneMachineBlockEntity) {
             ((RedstoneMachineBlockEntity) blockEntity).tick();
         }
     }

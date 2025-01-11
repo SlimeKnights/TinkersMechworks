@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "tmechworks:ore_aluminum_upper",
+    "tmechworks:ore_aluminum_middle"
+  ],
+  "step": "underground_ores"
+}

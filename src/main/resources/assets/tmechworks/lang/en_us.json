@@ -66,6 +66,7 @@
   "tmechworks:gui.blacklisted": "§4BLACKLISTED",
 
   // Integrations
-  "config.waila.plugin_tmechworks": "Tinkers' Mechworks",
-  "config.waila.plugin_tmechworks.redstone_machine": "Redstone Machines"
+  "config.jade.plugin_tmechworks": "Tinkers' Mechworks",
+  "config.jade.plugin_tmechworks.generic": "All Blocks",
+  "config.jade.plugin_tmechworks.redstone_machine": "Redstone Machines"
 }

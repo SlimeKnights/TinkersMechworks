@@ -1,9 +1,9 @@
 package slimeknights.tmechworks.client.model;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.BlockItem;
@@ -12,81 +12,95 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import slimeknights.tmechworks.api.disguisestate.DisguiseStates;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
 
 public class DisguiseBakedModel extends BakedModelWrapper<BakedModel> {
     public static final ModelProperty<ItemStack> DISGUISE = new ModelProperty<>();
     public static final ModelProperty<String> DISGUISE_STATE = new ModelProperty<>();
 
-    private final Predicate<RenderType> renderTypeLookup;
+    private final ChunkRenderTypeSet defaultRenderTypes;
 
     public DisguiseBakedModel(BakedModel originalModel) {
         this(originalModel, RenderType.solid());
     }
 
     public DisguiseBakedModel(BakedModel originalModel, RenderType defaultRenderType) {
-        this(originalModel, rt -> rt == defaultRenderType);
+        this(originalModel, ChunkRenderTypeSet.of(defaultRenderType));
     }
 
-    public DisguiseBakedModel(BakedModel originalModel, Predicate<RenderType> renderTypeLookup) {
+    public DisguiseBakedModel(BakedModel originalModel, ChunkRenderTypeSet defaultRenderTypes) {
         super(originalModel);
 
-        this.renderTypeLookup = renderTypeLookup;
+        this.defaultRenderTypes = defaultRenderTypes;
     }
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(BlockState state, Direction side, @Nonnull Random rand, IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType) {
+        BlockState disguiseState = getDisguiseState(state, extraData);
 
-        if (extraData.hasProperty(DISGUISE)) {
-            ItemStack disguise = extraData.getData(DISGUISE);
+        if (disguiseState != null) {
+            BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(disguiseState);
+            if (model instanceof DisguiseBakedModel) {
+                return ((DisguiseBakedModel) model).getSuperQuads(state, side, rand, extraData, renderType);
+            }
 
-            if (disguise != null && disguise.getItem() instanceof BlockItem) {
-                BlockItem disguiseItem = (BlockItem) disguise.getItem();
+            return model.getQuads(disguiseState, side, rand, extraData, renderType);
+        } else {
+            return getSuperQuads(state, side, rand, extraData, renderType);
+        }
+    }
 
+    private List<BakedQuad> getSuperQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
+        return super.getQuads(state, side, rand, extraData, renderType);
+    }
+
+    @Nonnull
+    @Override
+    public ModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull ModelData tileData) {
+        return super.getModelData(world, pos, state, tileData);
+    }
+
+    @Nullable
+    public BlockState getDisguiseState(@Nullable BlockState state, ModelData extraData) {
+        if (extraData.has(DISGUISE)) {
+            ItemStack disguise = extraData.get(DISGUISE);
+
+            if (disguise != null && disguise.getItem() instanceof BlockItem disguiseItem) {
                 BlockState disguiseState = disguiseItem.getBlock().defaultBlockState();
-                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, extraData.getData(DISGUISE_STATE), state.getValue(BlockStateProperties.FACING));
+                disguiseState = DisguiseStates.processDisguiseStates(disguiseState, extraData.get(DISGUISE_STATE), state.getValue(BlockStateProperties.FACING));
 
-                if (ItemBlockRenderTypes.canRenderInLayer(disguiseState, MinecraftForgeClient.getRenderType())) {
-                    BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(disguiseState);
-
-                    // Avoid infinite recursion when setting the disguise to another disguisable block
-                    if (model instanceof DisguiseBakedModel) {
-                        return ((DisguiseBakedModel) model).getSuperQuads(state, side, rand, extraData);
-                    }
-
-                    return model.getQuads(disguiseState, side, rand, extraData);
-                } else {
-                    return Collections.emptyList();
-                }
+                return disguiseState;
             }
         }
 
-        return getSuperQuads(state, side, rand, extraData);
+        return null;
     }
 
-    private List<BakedQuad> getSuperQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        if (renderTypeLookup.test(MinecraftForgeClient.getRenderType())) {
-            return super.getQuads(state, side, rand, extraData);
+    @Override
+    public ChunkRenderTypeSet getRenderTypes(BlockState state, RandomSource rand, ModelData data) {
+        BlockState disguiseState = getDisguiseState(state, data);
+        if (disguiseState != null) {
+            BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(disguiseState);
+            if (model instanceof DisguiseBakedModel) {
+                return ((DisguiseBakedModel) model).getSuperRenderTypes(state, rand, data);
+            }
+
+            return model.getRenderTypes(state, rand, data);
         } else {
-            return Collections.emptyList();
+            return defaultRenderTypes;
         }
     }
 
-    @Nonnull
-    @Override
-    public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
-        return super.getModelData(world, pos, state, tileData);
+    private ChunkRenderTypeSet getSuperRenderTypes(BlockState state, RandomSource rand, ModelData data) {
+        return super.getRenderTypes(state, rand, data);
     }
 }

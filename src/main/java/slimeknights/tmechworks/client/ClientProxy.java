@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.mantle.client.book.BookLoader;
 import slimeknights.mantle.client.book.data.BookData;
 import slimeknights.mantle.client.book.repository.FileRepository;
@@ -42,8 +43,7 @@ public class ClientProxy extends CommonProxy {
 
     @OnlyIn(Dist.CLIENT)
     private void registerDisguiseBlock(Block block) {
-        ModelBakeEventListener.registerDisguiseBlock(block.getRegistryName());
-        ItemBlockRenderTypes.setRenderLayer(block, rt -> true);
+        ModelBakeEventListener.registerDisguiseBlock(ForgeRegistries.BLOCKS.getKey(block));
     }
 
     @Override

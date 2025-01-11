@@ -1,25 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "tmechworks:machines",
+  "key": {
+    "A": {
+      "tag": "forge:ingots/aluminum"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "U": {
+      "item": "tmechworks:upgrade_drawbridge_distance"
+    }
+  },
   "pattern": [
     "RAR",
     "PUP",
     "RAR"
   ],
-  "key": {
-    "R": {
-      "tag": "forge:dusts/redstone"
-    },
-    "A": {
-      "tag": "forge:ingots/aluminum"
-    },
-    "U": {
-      "item": "tmechworks:upgrade_drawbridge_distance"
-    },
-    "P": {
-      "item": "minecraft:piston"
-    }
-  },
   "result": {
     "item": "tmechworks:drawbridge"
   }

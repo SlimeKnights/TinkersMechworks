@@ -5,7 +5,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +14,6 @@ import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.client.model.DisguiseBakedModel;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = TMechworks.modId, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
@@ -28,11 +27,11 @@ public class ModelBakeEventListener {
     }
 
     @SubscribeEvent
-    public static void onModelBake(ModelBakeEvent event){
+    public static void onModelBake(ModelEvent.BakingCompleted event){
         float time = System.nanoTime();
         log.info("Starting model bake at " + time);
 
-        List<Map.Entry<ResourceLocation, BakedModel>> registry = new ArrayList<>(event.getModelRegistry().entrySet());
+        List<Map.Entry<ResourceLocation, BakedModel>> registry = new ArrayList<>(event.getModels().entrySet());
 
         for(int i = 0; i < registry.size(); i++){
             Map.Entry<ResourceLocation, BakedModel> model = registry.get(i);
@@ -45,7 +44,7 @@ public class ModelBakeEventListener {
             }
 
             if(disguiseables.contains(modelId)) {
-                event.getModelRegistry().put(model.getKey(), new DisguiseBakedModel(model.getValue()));
+                event.getModels().put(model.getKey(), new DisguiseBakedModel(model.getValue()));
             }
         }
 

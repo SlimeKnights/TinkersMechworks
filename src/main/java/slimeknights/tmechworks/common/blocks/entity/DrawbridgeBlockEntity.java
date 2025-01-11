@@ -19,8 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -28,7 +26,6 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.MechworksTags;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
@@ -85,7 +82,7 @@ public class DrawbridgeBlockEntity extends RedstoneMachineBlockEntity implements
     private long lastWorldTime;
 
     public DrawbridgeBlockEntity(BlockPos pos, BlockState state) {
-        super(MechworksContent.TileEntities.drawbridge.get(), pos, state, new TranslatableComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1, 64, true);
+        super(MechworksContent.TileEntities.drawbridge.get(), pos, state, Component.translatable(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1, 64, true);
 
         upgrades = new FragmentedContainer(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
         slots = new FragmentedContainer(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !Block.byItem(stack.getItem()).defaultBlockState().is(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST)).overrideStackLimit(64);
@@ -579,23 +576,19 @@ public class DrawbridgeBlockEntity extends RedstoneMachineBlockEntity implements
     }
 
     @Override
-    public void getInformation(@Nonnull List<Component> info, @Nonnull InformationType type, CompoundTag serverData, Player player) {
-        super.getInformation(info, type, serverData, player);
+    public void getInformation(@Nonnull List<Component> info, CompoundTag serverData, Player player) {
+        super.getInformation(info, serverData, player);
 
-        if (type != InformationType.BODY) {
-            return;
-        }
-
-        info.add(new TranslatableComponent(Util.prefix("machine.stats")));
-        info.add(new TranslatableComponent(Util.prefix("drawbridge.stats.advanced"), stats.isAdvanced));
-        info.add(new TranslatableComponent(Util.prefix("drawbridge.stats.length"), stats.extendLength));
-        info.add(new TranslatableComponent(Util.prefix("drawbridge.stats.delay"), stats.extendDelay));
+        info.add(Component.translatable(Util.prefix("machine.stats")));
+        info.add(Component.translatable(Util.prefix("drawbridge.stats.advanced"), stats.isAdvanced));
+        info.add(Component.translatable(Util.prefix("drawbridge.stats.length"), stats.extendLength));
+        info.add(Component.translatable(Util.prefix("drawbridge.stats.delay"), stats.extendDelay));
 
         if(serverData.contains("showDetails") && serverData.getBoolean("showDetails")) {
-            info.add(new TranslatableComponent(Util.prefix("machine.state")));
-            info.add(new TranslatableComponent(Util.prefix("drawbridge.state.moving"), serverData.getBoolean("moving")));
-            info.add(new TranslatableComponent(Util.prefix("drawbridge.state.extended"), serverData.getBoolean("extended")));
-            info.add(new TranslatableComponent(Util.prefix("drawbridge.state.extendedcount"), serverData.getInt("extendedCount")));
+            info.add(Component.translatable(Util.prefix("machine.state")));
+            info.add(Component.translatable(Util.prefix("drawbridge.state.moving"), serverData.getBoolean("moving")));
+            info.add(Component.translatable(Util.prefix("drawbridge.state.extended"), serverData.getBoolean("extended")));
+            info.add(Component.translatable(Util.prefix("drawbridge.state.extendedcount"), serverData.getInt("extendedCount")));
         } else {
             showDetailsText(info, serverData);
         }

@@ -36,7 +36,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
@@ -91,7 +90,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
             if (!(te instanceof MenuProvider))
                 return false;
 
-            NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) te, pos);
+            NetworkHooks.openScreen((ServerPlayer) player, (MenuProvider) te, pos);
         }
 
         return true;
@@ -202,7 +201,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
             if (tags.contains("Disguise", CompoundTag.TAG_COMPOUND)) {
                 ItemStack disguise = ItemStack.of(tags.getCompound("Disguise"));
                 if (disguise != ItemStack.EMPTY) {
-                    tooltip.add(new TranslatableComponent(Util.prefix("hud.disguise")).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+                    tooltip.add(Component.translatable(Util.prefix("hud.disguise")).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
                     tooltip.add(disguise.getHoverName());
                 }
             }
@@ -211,7 +210,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
                 ListTag items = tags.getList("Items", CompoundTag.TAG_LIST);
 
                 if (items.size() > 0) {
-                    tooltip.add(new TranslatableComponent(Util.prefix("hud.items")).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+                    tooltip.add(Component.translatable(Util.prefix("hud.items")).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
                 }
 
                 for (int i = 0; i < items.size(); ++i) {
@@ -219,7 +218,7 @@ public abstract class RedstoneMachineBlock extends DirectionalBlock implements E
                     int slot = itemTag.getByte("Slot") & 255;
 
                     ItemStack item = ItemStack.of(itemTag);
-                    tooltip.add(new TranslatableComponent(Util.prefix("hud.slot"), slot, item.getHoverName(), item.getCount()).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+                    tooltip.add(Component.translatable(Util.prefix("hud.slot"), slot, item.getHoverName(), item.getCount()).withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
                 }
             }
         }

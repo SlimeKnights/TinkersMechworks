@@ -10,7 +10,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.MechworksTags;
 import slimeknights.tmechworks.common.blocks.FirestarterBlock;
@@ -23,7 +22,7 @@ public class FirestarterBlockEntity extends RedstoneMachineBlockEntity
 {
     public FirestarterBlockEntity(BlockPos pos, BlockState state)
     {
-        super(MechworksContent.TileEntities.firestarter.get(), pos, state, new TranslatableComponent(Util.prefix("inventory.firestarter")), 0);
+        super(MechworksContent.TileEntities.firestarter.get(), pos, state, Component.translatable(Util.prefix("inventory.firestarter")), 0);
     }
 
     @Override public void onRedstoneUpdate()
@@ -66,15 +65,12 @@ public class FirestarterBlockEntity extends RedstoneMachineBlockEntity
     }
 
     @Override
-    public void getInformation(@Nonnull List<Component> info, @Nonnull InformationType type, Player player) {
-        super.getInformation(info, type, player);
-        if(type != InformationType.BODY) {
-            return;
-        }
+    public void getInformation(@Nonnull List<Component> info, Player player) {
+        super.getInformation(info, player);
 
         BlockState state = getLevel().getBlockState(getBlockPos());
         boolean shouldExtinguish = state.getValue(FirestarterBlock.EXTINGUISH);
 
-        info.add(new TranslatableComponent(Util.prefix("tooltip.behaviour"), I18n.get(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))));
+        info.add(Component.translatable(Util.prefix("tooltip.behaviour"), I18n.get(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))));
     }
 }

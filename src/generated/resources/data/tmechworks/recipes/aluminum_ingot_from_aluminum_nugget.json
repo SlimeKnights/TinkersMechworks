@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "tmechworks:aluminum_ingot",
-  "pattern": [
-    "###",
-    "###",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "tmechworks:aluminum_nugget"
     }
   },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
   "result": {
     "item": "tmechworks:aluminum_ingot"
   }

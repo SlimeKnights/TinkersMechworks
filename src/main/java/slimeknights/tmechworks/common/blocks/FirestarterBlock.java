@@ -18,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -118,7 +117,7 @@ public class FirestarterBlock extends RedstoneMachineBlock implements IBlockItem
         if(stack.hasTag() && stack.getTag().contains("extinguish", CompoundTag.TAG_BYTE))
             shouldExtinguish = stack.getTag().getBoolean("extinguish");
 
-        tooltip.add(new TranslatableComponent(Util.prefix("tooltip.behaviour"), I18n.get(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(Util.prefix("tooltip.behaviour"), I18n.get(Util.prefix("tooltip.behaviour.firestarter." + (shouldExtinguish ? "extinguish" : "keep")))).withStyle(ChatFormatting.GRAY));
     }
 
     @Override

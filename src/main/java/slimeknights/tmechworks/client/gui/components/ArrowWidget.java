@@ -8,9 +8,9 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TextComponent;
 import slimeknights.tmechworks.TMechworks;
 
 import javax.annotation.Nonnull;
@@ -48,7 +48,7 @@ public class ArrowWidget extends AbstractWidget {
     }
 
     public ArrowWidget(int x, int y, int screenW, int screenH, boolean drawAdditionalArrows, IArrowPressed onClick, Consumer<List<FormattedText>> setTooltip) {
-        super(x, y, 0, 0, new TextComponent(""));
+        super(x, y, 0, 0, Component.literal(""));
 
         setLabels(LABELS_DEFAULT);
         Arrays.fill(states, ArrowState.ENABLED);
