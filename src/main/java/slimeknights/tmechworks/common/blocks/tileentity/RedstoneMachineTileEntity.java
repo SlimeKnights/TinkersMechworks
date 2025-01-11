@@ -45,7 +45,11 @@ public abstract class RedstoneMachineTileEntity extends InventoryBlockEntity imp
     }
 
     public RedstoneMachineTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize, int maxStackSize) {
-        super(type, pos, state, name, false, inventorySize, maxStackSize);
+        this(type, pos, state, name, inventorySize, maxStackSize, false);
+    }
+
+    public RedstoneMachineTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int inventorySize, int maxStackSize, boolean saveSizeToNBT) {
+        super(type, pos, state, name, saveSizeToNBT, inventorySize, maxStackSize);
 
         disguiseInventory = new SimpleContainer(1) {
             @Override

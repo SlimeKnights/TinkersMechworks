@@ -84,7 +84,7 @@ public class DrawbridgeTileEntity extends RedstoneMachineTileEntity implements I
     private long lastWorldTime;
 
     public DrawbridgeTileEntity(BlockPos pos, BlockState state) {
-        super(MechworksContent.TileEntities.drawbridge.get(), pos, state, new TranslatableComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1);
+        super(MechworksContent.TileEntities.drawbridge.get(), pos, state, new TranslatableComponent(Util.prefix("inventory.drawbridge")), UPGRADES_SIZE + 1, 64, true);
 
         upgrades = new FragmentedInventory(this, 0, UPGRADES_SIZE).overrideStackLimit(1).setValidItemsPredicate(stack -> stack.getItem() instanceof MachineUpgradeItem);
         slots = new FragmentedInventory(this, UPGRADES_SIZE, 1).setValidItemsPredicate(stack -> stack.getItem() instanceof BlockItem && !Block.byItem(stack.getItem()).defaultBlockState().is(MechworksTags.Blocks.DRAWBRIDGE_BLACKLIST)).overrideStackLimit(64);
