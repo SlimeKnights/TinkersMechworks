@@ -8,7 +8,7 @@ import slimeknights.tmechworks.library.Util;
 
 @WailaPlugin
 public class WailaIntegration implements IWailaPlugin {
-    private static final ResourceLocation CONFIG_REDSTONE_MACHINE = Util.getResource("redstone_machine");
+    public static final ResourceLocation CONFIG_REDSTONE_MACHINE = Util.getResource("redstone_machine");
 
     @Override
     public void register(IWailaCommonRegistration registration) {

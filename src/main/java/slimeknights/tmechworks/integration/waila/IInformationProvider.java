@@ -29,7 +29,7 @@ public interface IInformationProvider {
 
     default void requireSneak(List<Component> tooltip, Player player, Runnable action) {
         if(!player.isCrouching()) {
-            tooltip.add(new TranslatableComponent("tooltip.waila.sneak_for_details").withStyle(ChatFormatting.ITALIC));
+            tooltip.add(new TranslatableComponent("tmechworks.waila.sneak_for_details").withStyle(ChatFormatting.ITALIC));
         } else {
             action.run();
         }

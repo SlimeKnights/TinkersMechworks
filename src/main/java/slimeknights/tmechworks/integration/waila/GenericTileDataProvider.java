@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
+import slimeknights.tmechworks.common.blocks.entity.RedstoneMachineBlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,10 @@ public class GenericTileDataProvider implements IServerDataProvider<BlockEntity>
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
         BlockEntity te = accessor.getBlockEntity();
         if (te instanceof IInformationProvider) {
+            if(te instanceof RedstoneMachineBlockEntity && !config.get(WailaIntegration.CONFIG_REDSTONE_MACHINE)) {
+                return;
+            }
+
             IInformationProvider provider = (IInformationProvider) te;
 
             IInformationProvider.InformationType type;
@@ -38,7 +43,7 @@ public class GenericTileDataProvider implements IServerDataProvider<BlockEntity>
             }
 
             List<Component> info = new ArrayList<>();
-            provider.getInformation(info, type, accessor.getPlayer());
+            provider.getInformation(info, type, accessor.getServerData(), accessor.getPlayer());
 
             if(!info.isEmpty()) {
                 for(Component s : info) {

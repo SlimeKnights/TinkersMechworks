@@ -67,5 +67,6 @@
 
   // Integrations
   "config.waila.plugin_tmechworks": "Tinkers' Mechworks",
-  "config.waila.plugin_tmechworks.redstone_machine": "Redstone Machines"
+  "config.waila.plugin_tmechworks.redstone_machine": "Redstone Machines",
+  "tmechworks.waila.sneak_for_details": "Sneak for details"
 }

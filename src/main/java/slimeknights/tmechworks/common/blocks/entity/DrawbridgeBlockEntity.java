@@ -603,6 +603,7 @@ public class DrawbridgeBlockEntity extends RedstoneMachineBlockEntity implements
 
     @Override
     public void syncInformation(CompoundTag nbt, ServerPlayer player) {
+        super.syncInformation(nbt, player);
         nbt.putBoolean("extended", isExtended);
         nbt.putBoolean("moving", isMoving);
         nbt.putInt("extendedCount", extendedLength);
