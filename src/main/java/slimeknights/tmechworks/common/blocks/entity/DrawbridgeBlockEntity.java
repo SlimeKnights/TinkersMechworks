@@ -28,6 +28,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import slimeknights.tmechworks.TMechworks;
 import slimeknights.tmechworks.common.MechworksContent;
 import slimeknights.tmechworks.common.MechworksTags;
 import slimeknights.tmechworks.common.blocks.DrawbridgeBlock;
@@ -589,24 +590,26 @@ public class DrawbridgeBlockEntity extends RedstoneMachineBlockEntity implements
         info.add(new TranslatableComponent(Util.prefix("drawbridge.stats.advanced"), stats.isAdvanced));
         info.add(new TranslatableComponent(Util.prefix("drawbridge.stats.length"), stats.extendLength));
         info.add(new TranslatableComponent(Util.prefix("drawbridge.stats.delay"), stats.extendDelay));
-        info.add(new TextComponent(""));
 
-        if(!serverData.isEmpty()) {
-            requireSneak(info, player, () -> {
-                info.add(new TranslatableComponent(Util.prefix("machine.state")));
-                info.add(new TranslatableComponent(Util.prefix("drawbridge.state.moving"), serverData.getBoolean("moving")));
-                info.add(new TranslatableComponent(Util.prefix("drawbridge.state.extended"), serverData.getBoolean("extended")));
-                info.add(new TranslatableComponent(Util.prefix("drawbridge.state.extendedcount"), serverData.getInt("extendedCount")));
-            });
+        if(serverData.contains("showDetails") && serverData.getBoolean("showDetails")) {
+            info.add(new TranslatableComponent(Util.prefix("machine.state")));
+            info.add(new TranslatableComponent(Util.prefix("drawbridge.state.moving"), serverData.getBoolean("moving")));
+            info.add(new TranslatableComponent(Util.prefix("drawbridge.state.extended"), serverData.getBoolean("extended")));
+            info.add(new TranslatableComponent(Util.prefix("drawbridge.state.extendedcount"), serverData.getInt("extendedCount")));
+        } else {
+            showDetailsText(info, serverData);
         }
     }
 
     @Override
-    public void syncInformation(CompoundTag nbt, ServerPlayer player) {
-        super.syncInformation(nbt, player);
-        nbt.putBoolean("extended", isExtended);
-        nbt.putBoolean("moving", isMoving);
-        nbt.putInt("extendedCount", extendedLength);
+    public void syncInformation(CompoundTag nbt, ServerPlayer player, boolean showDetails) {
+        super.syncInformation(nbt, player, showDetails);
+
+        if (showDetails) {
+            nbt.putBoolean("extended", isExtended);
+            nbt.putBoolean("moving", isMoving);
+            nbt.putInt("extendedCount", extendedLength);
+        }
     }
 
     /**

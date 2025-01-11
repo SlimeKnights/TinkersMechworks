@@ -21,7 +21,7 @@ public class GenericTileDataProvider implements IServerDataProvider<BlockEntity>
     @Override
     public void appendServerData(CompoundTag nbt, ServerPlayer player, Level world, BlockEntity tile, boolean showDetails) {
         if(tile instanceof IInformationProvider)
-            ((IInformationProvider)tile).syncInformation(nbt, player);
+            ((IInformationProvider)tile).syncInformation(nbt, player, showDetails);
     }
 
     @Override

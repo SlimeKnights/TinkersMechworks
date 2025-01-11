@@ -1,5 +1,6 @@
 package slimeknights.tmechworks.integration.waila;
 
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -27,11 +28,15 @@ public interface IInformationProvider {
 
     }
 
-    default void requireSneak(List<Component> tooltip, Player player, Runnable action) {
-        if(!player.isCrouching()) {
-            tooltip.add(new TranslatableComponent("tmechworks.waila.sneak_for_details").withStyle(ChatFormatting.ITALIC));
-        } else {
-            action.run();
+    default void syncInformation(CompoundTag nbt, ServerPlayer player, boolean showDetails) {
+        syncInformation(nbt, player);
+        nbt.putBoolean("showDetails", showDetails);
+    }
+
+    default void showDetailsText(List<Component> tooltip, CompoundTag serverData) {
+        if (!serverData.getBoolean("showDetails")) {
+            tooltip.add(new TextComponent(""));
+            tooltip.add(new TranslatableComponent("config.waila.display_mode_lite_desc").withStyle(ChatFormatting.ITALIC));
         }
     }
 
